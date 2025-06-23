@@ -161,6 +161,30 @@
   overflow: hidden;
 }
 
+/** Style item menu  */
+.item-menu {
+  position: relative;
+}
+
+.item-menu::before {
+  content: "";
+  width: 100%;
+  position: absolute;
+  height: 2px;
+  bottom: -10px;
+  left: 0px;
+  background-color: var(--primary);
+  visibility: hidden;
+  transform: scale(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.item-menu:hover::before {
+  content: "";
+  visibility: visible;
+  transform: scale(1, 1)
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

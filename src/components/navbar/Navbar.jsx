@@ -2,6 +2,20 @@ import { ShoppingCart, Table, User } from 'lucide-react';
 import { Button } from '../UI/common';
 import PropTypes from 'prop-types';
 import { cn } from '@/ultils/cn';
+import { NavbarList } from './NavbarList';
+
+const listMenu = [
+   {
+      id: 1,
+      name: 'Realiza tu pedido',
+      path: '/product',
+   },
+   {
+      id: 2,
+      name: 'Localidades',
+      path: '/location',
+   },
+]
 
 export const Navbar = ({ className }) => {
    return (
@@ -9,20 +23,23 @@ export const Navbar = ({ className }) => {
          className={cn(
             `bg-menu gradient-radial-primary`,
             'shadow-primary rounded-2xl backdrop-blur-lg p-4',
-            'flex justify-end items-center gap-4',
-            'sticky top-0 z-10',
+            'flex justify-between items-center gap-4',
+            'sticky top-4 z-10',
             className,
          )}
       >
-         <User className='w-7 h-7 text-primary-foreground' />
+         <NavbarList data={listMenu} />
+         <ul className='flex gap-4 items-center'>
+            <User className='w-7 h-7 text-primary-foreground' />
 
-         <ShoppingCart className='w-7 h-7 text-primary-foreground' />
+            <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
-         <Button size={"lg"}>
-            Ordenar
-            <Table />
-         </Button>
-      </nav>
+            <Button size={"lg"}>
+               Ordenar
+               <Table />
+            </Button>
+         </ul>
+      </nav >
    )
 }
 
