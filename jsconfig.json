@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "src", // Asegúrate de que esta línea esté presente y correcta
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["*"]
     }
-  }
+  },
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

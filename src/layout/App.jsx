@@ -1,17 +1,17 @@
 import { Outlet } from 'react-router-dom';
-
+import { Navbar } from '../components/navbar';
+import { Footer } from '../components/footer';
 
 const Layout = () => {
   return (
-    <div>
-      {/* <NavBar /> */}
+    <div className='min-h-screen w-full flex flex-col'>
+      <Navbar className='mt-4 mx-auto w-[90%] max-w-6xl' />
       {/* <AppSidebar /> */}
       {/* <AppHeader /> */}
-
-      <main className="p-4 max-w-screen-2xl mx-auto md:p-6">
-        <Outlet />
-      </main>
-      {/* <Footer/> */}
+      {/* <div className="max-w-6xl w-[90%] mx-auto"> */}
+      {/* </div> */}
+      <Outlet />
+      <Footer className='mt-auto mx-auto' />
     </div>
   )
 }
