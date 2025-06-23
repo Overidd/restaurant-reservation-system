@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+
+<body>
+
+   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+   <div id="map" style="height: 500px;"></div>
+
+   <script>
+      const map = L.map('map').setView([-12.0464, -77.0428], 13); // Lima de ejemplo
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Agregar un marcador
+      L.marker([-12.0464, -77.0428]).addTo(map)
+         .bindPopup('Restaurante Ejemplo')
+         .openPopup();
+   </script>
+
+
+</body>
+
+</html>

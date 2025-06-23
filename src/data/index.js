@@ -1,1 +1,2 @@
-export * from './product';
+export * from './productData';
+export * from './locationData';
