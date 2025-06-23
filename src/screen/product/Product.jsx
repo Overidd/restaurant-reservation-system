@@ -1,26 +1,33 @@
-import { publicityData } from '@/data';
+import { publicityData, categoryData, productData } from '@/data';
 import { PromoCarousel } from '@/components/common';
 import { Title } from '@/components/UI/text';
 import { CategoryNav, ProductList, ProductSearch } from '@/components/product';
 
 export const ProductScreen = () => {
   return (
-    <div className='max-w-6xl w-[90%] mx-auto'>
-      <header>
-        <PromoCarousel data={publicityData} />
+    <div className='max-w-6xl w-[90%] mx-auto space-y-10'>
+      <header className='space-y-10'>
+        <PromoCarousel
+          className={'w-full mx-auto'}
+          data={publicityData}
+        />
         <Title
+          className={'mx-auto'}
           primary="Tus favoritos en un solo lugar"
           secondary="Mikuy Mikuy"
         />
       </header>
 
-      <main>
-        <section>
-          <CategoryNav />
+      <main className='space-y-10'>
+        <section className='flex flex-row items-center justify-between gap-4'>
+          <CategoryNav
+            className='w-[90%] max-w-2xl'
+            data={categoryData}
+          />
           <ProductSearch />
         </section>
 
-        <ProductList />
+        <ProductList data={productData} />
       </main>
 
     </div>

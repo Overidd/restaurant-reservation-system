@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
-export const Title = ({ primary, secondary }) => {
+export const Title = ({ className, primary, secondary }) => {
    return (
-      <h2 className="text-center w-fit">
+      <h2 className={`text-center w-fit ${className}`}>
          <span className="block text-red-500 text-base font-extrabold tracking-wide uppercase font-oswald">
             {primary}
          </span>
@@ -14,6 +14,7 @@ export const Title = ({ primary, secondary }) => {
 }
 
 Title.propTypes = {
+   className: PropTypes.string,
    primary: PropTypes.string,
    secondary: PropTypes.string,
 }

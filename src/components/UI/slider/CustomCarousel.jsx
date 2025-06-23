@@ -10,7 +10,7 @@ import {
 export function CustomCarousel({ className, component, data = [] }) {
    const ItemComponent = component;
    return (
-      <Carousel className={`w-full max-w-xs ${className}`}>
+      <Carousel className={`w-full ${className}`}>
          <CarouselContent>
             {
                data.map((value, index) => (

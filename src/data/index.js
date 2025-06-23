@@ -1,1 +1,1 @@
-export * from './publicity';
+export * from './product';
