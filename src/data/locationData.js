@@ -7,6 +7,7 @@ export const locationData = [
       latitud: -6.476290191744883,
       longitud: -76.38743536910783,
       image: './location/banda-de-shilcayo.webp',
+      linkMap: 'https://maps.app.goo.gl/ehKZMWPLbRXa7rxs5'
    },
    {
       id: 2,
@@ -15,7 +16,7 @@ export const locationData = [
       latitud: -6.490387717018885,
       longitud: -76.35606863303165,
       image: './location/morales.webp',
-
+      linkMap: 'https://maps.app.goo.gl/6vJM572sLx94zCDC8',
    },
    {
       id: 3,
@@ -24,6 +25,7 @@ export const locationData = [
       latitud: -6.487999855017108,
       longitud: -76.36207678129259,
       image: './location/tarapoto.webp',
+      linkMap: 'https://maps.app.goo.gl/G3NvUKpMM2sgtWo9A'
    }
 ]
 

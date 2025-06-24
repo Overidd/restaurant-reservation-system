@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 import { Button, Card, CardContent, CardFooter, CardImage } from '../UI/common';
 
-export const ItemLocation = ({ image, name, description }) => {
+export const ItemLocation = ({ image, name, description, linkMap }) => {
    return (
       <Card className={'w-full text-center'}>
          <CardImage
@@ -21,10 +21,17 @@ export const ItemLocation = ({ image, name, description }) => {
             </small>
          </CardContent>
          <CardFooter>
-            <Button className={'mx-auto'}>
-               Como llegar
-               <MapPin />
-            </Button>
+            <a
+               className={'mx-auto'}
+               href={linkMap}
+               target='_blank'
+               rel="noreferrer"
+            >
+               <Button>
+                  Como llegar
+                  <MapPin />
+               </Button>
+            </a>
          </CardFooter>
       </Card>
    )
