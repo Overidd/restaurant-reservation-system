@@ -27,56 +27,52 @@ export const ReservationStepDate = ({ className }) => {
    }
 
    return (
-      <Form
+      <section
          className={cn(
-            `bg-menu gradient-radial-primary`,
-            'shadow-primary rounded-2xl backdrop-blur-lg p-4',
+            'w-[50%] h-full mx-auto text-center space-y-10',
             className,
          )}
       >
          <Label>
             <ReservationTitle
+               className={'mx-auto'}
                title={'Selecionar'}
                subtitle={'Fecha'}
             />
          </Label>
 
-         <FormItem>
-            <DayPicker
-               name='date'
-               onChange={onValueChange}
-            />
-         </FormItem>
+         <DayPicker
+            name='date'
+            onChange={onValueChange}
+         />
 
-         <FormItem>
-            <Popover
-               className='w-fit'
-               placement='bottom'
-               content={
-                  <Calendar
-                     mode='single'
-                     selected={date}
-                     captionLayout='dropdown'
-                     disabled={(date) => date <= new Date(new Date().setDate(new Date().getDate() - 1))}
-                     onSelect={(date) => {
-                        setDate(date)
-                        onValueChange(date)
-                     }}
-                  />
-               }
+         <Popover
+            className='w-fit'
+            placement='bottom'
+            content={
+               <Calendar
+                  mode='single'
+                  selected={date}
+                  captionLayout='dropdown'
+                  disabled={(date) => date <= new Date(new Date().setDate(new Date().getDate() - 1))}
+                  onSelect={(date) => {
+                     setDate(date)
+                     onValueChange(date)
+                  }}
+               />
+            }
+         >
+            <Button
+               className='w-48 justify-between font-normal'
+               variant='outline'
+               type='button'
+               id='date'
             >
-               <Button
-                  className='w-48 justify-between font-normal'
-                  variant='outline'
-                  type='button'
-                  id='date'
-               >
-                  {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
-                  <ChevronDownIcon />
-               </Button>
-            </Popover>
-         </FormItem>
-      </Form>
+               {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
+               <ChevronDownIcon />
+            </Button>
+         </Popover>
+      </section>
    )
 }
 

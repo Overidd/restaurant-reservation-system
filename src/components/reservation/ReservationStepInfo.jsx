@@ -3,8 +3,6 @@ import { Button } from '../UI/common';
 import {
    Form,
    FormItem,
-   FormLabel,
-   FormMessage,
    Input,
    Select,
    SelectContent,
@@ -12,8 +10,10 @@ import {
    SelectTrigger,
    SelectValue
 } from '../UI/from';
+import { cn } from '@/ultils/cn';
 
 export const ReservationStepInfo = ({
+   className,
    schema,
    locationData = [],
    reasonData = []
@@ -40,19 +40,22 @@ export const ReservationStepInfo = ({
 
    return (
       <Form
-         className='bg-white'
+         className={cn(
+            'w-[50%] h-full mx-auto',
+            className
+         )}
          onSubmit={onSubmit}
       >
          <FormItem>
-            <FormLabel isError={locationValid}>
-               Ubicacion
-            </FormLabel>
-
             <Select
                defaultValue={location ?? ''}
                onValueChange={(value) => onValueChange({ name: 'location', value })}
             >
-               <SelectTrigger>
+               <SelectTrigger
+                  className={'w-full'}
+                  isError={!!locationValid}
+                  variant='crystal'
+               >
                   <SelectValue placeholder="Selecione una localia" />
                </SelectTrigger>
                <SelectContent>
@@ -65,20 +68,19 @@ export const ReservationStepInfo = ({
                   }
                </SelectContent>
             </Select>
-
-            <FormMessage error={locationValid} />
          </FormItem>
 
          <FormItem>
-            <FormLabel isError={reasonValid}>
-               Motivo
-            </FormLabel>
             <Select
                name='reason'
                defaultValue={reason ?? ''}
                onValueChange={(value) => onValueChange({ name: 'reason', value })}
             >
-               <SelectTrigger>
+               <SelectTrigger
+                  className={'w-full'}
+                  isError={!!reasonValid}
+                  variant='crystal'
+               >
                   <SelectValue placeholder="Selecione una motivo" />
                </SelectTrigger>
                <SelectContent>
@@ -91,30 +93,28 @@ export const ReservationStepInfo = ({
                   }
                </SelectContent>
             </Select>
-            <FormMessage error={reasonValid} />
          </FormItem>
 
          <FormItem>
-            <FormLabel isError={dinersValid}>
-               Comenzales
-            </FormLabel>
             <Input
+               max={12}
+               min={1}
                type='number'
                name='diners'
+               variant='crystal'
                value={diners ?? ''}
-               min={1}
-               max={12}
                onChange={onValueChange}
+               isError={!!dinersValid}
+               className={'!text-lg'}
             />
-            <FormMessage error={dinersValid} />
          </FormItem>
 
          <Button
             type='submit'
             disabled={!isFormValid}
          >
-            Next
+            Siguiente
          </Button>
-      </Form>
+      </Form >
    )
 }

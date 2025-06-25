@@ -1,8 +1,8 @@
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-export const NavbarList = ({ data = [] }) => {
+export const NavbarList = ({ className, data = [] }) => {
   return (
-    <ul className='text-accent-foreground space-x-5'>
+    <ul className={`text-accent-foreground space-x-5 ${className}`}>
       {
         data.map(({ name, path, id }, index) => (
           <li

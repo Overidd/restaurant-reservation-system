@@ -17,7 +17,11 @@ import {
    StepFormHeader
 } from '@/components/UI/stepForm';
 import { ChevronLeft } from 'lucide-react';
-import { Button } from '@/components/UI/common';
+
+import {
+   Button,
+   ProgressBar
+} from '@/components/UI/common';
 
 const reasonData = [
    {
@@ -60,9 +64,9 @@ const schema = {
 export const ReservationScreen = () => {
    return (
       <StepFormProvider
-         className={''}
+         className={'w-[45rem] h-[37rem] mx-auto space-y-10'}
       >
-         {/* <StepFormHeader>
+         <StepFormHeader>
             <StepFromContextProvider>
                {
                   ({ currentStepIndex }) => (
@@ -70,7 +74,7 @@ export const ReservationScreen = () => {
                   )
                }
             </StepFromContextProvider>
-         </StepFormHeader> */}
+         </StepFormHeader>
 
          <StepForm name='info'>
             <ReservationStepInfo
@@ -92,15 +96,17 @@ export const ReservationScreen = () => {
             <StepFromContextProvider>
                {
                   ({ prevStep, currentStepIndex }) => (
-                     <>
+                     <div className='flex flex-col justify-between gap-4'>
+                        <ProgressBar steps={3} currentStep={currentStepIndex} />
                         {currentStepIndex > 0 && (
                            <Button
+                              className={'mx-auto w-10 h-10 '}
                               onClick={prevStep}
                            >
                               <ChevronLeft />
                            </Button>
                         )}
-                     </>
+                     </div>
                   )
                }
             </StepFromContextProvider>

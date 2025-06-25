@@ -24,13 +24,23 @@ export const Navbar = ({ className }) => {
          className={cn(
             `bg-menu gradient-radial-primary`,
             'shadow-primary rounded-2xl backdrop-blur-lg p-4',
-            'flex justify-between items-center gap-4',
+            'flex items-center gap-4',
             'sticky top-4 z-10',
             className,
          )}
       >
+         <Link to={'/'}>
+            <figure className='w-[3rem] h-[3rem]'>
+               <img
+                  className='w-full h-full'
+                  src="./logo-while.png"
+                  alt="Logo de la empresa"
+               />
+            </figure>
+         </Link>
          <NavbarList data={listMenu} />
-         <ul className='flex gap-4 items-center'>
+
+         <ul className='ml-auto flex gap-2 items-center'>
             <User className='w-7 h-7 text-primary-foreground' />
 
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />

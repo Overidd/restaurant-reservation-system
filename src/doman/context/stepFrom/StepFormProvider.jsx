@@ -2,17 +2,23 @@ import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
 import { useStepForm } from '@/hook';
 import { StepFromContext } from './StepFromContext';
+
 import {
    isValidElement,
    Children,
    useMemo
 } from 'react';
+
 import {
    AnimatedStep,
    StepFormHeader,
    StepFormFooter,
    StepForm,
 } from '@/components/UI/stepForm';
+
+import {
+   ReservationCard
+} from '@/components/reservation/ReservationCard';
 
 export const StepFormProvider = ({
    className,
@@ -36,7 +42,7 @@ export const StepFormProvider = ({
 
    return (
       <StepFromContext.Provider value={{ multiStepForm }}>
-         <div
+         <ReservationCard
             className={cn(
                className
             )}
@@ -59,7 +65,7 @@ export const StepFormProvider = ({
                })}
             </div>
             {footer}
-         </div>
+         </ReservationCard>
       </StepFromContext.Provider>
    )
 }
