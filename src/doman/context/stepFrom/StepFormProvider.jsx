@@ -24,7 +24,6 @@ export const StepFormProvider = ({
    className,
    children
 }) => {
-
    const steps = useMemo(() => {
       return Children.toArray(children).filter(child => isValidElement(child) && child.type === StepForm)
    }, [children])

@@ -32,9 +32,8 @@ export const ReservationStepInfo = ({
       activeValidation: true
    });
 
-   const onSubmit = onSubmitForm((e) => {
-      console.log(e)
-      console.log('gaaaaa')
+   const onSubmit = onSubmitForm((value) => {
+      console.log(value)
       nextStep();
    })
 

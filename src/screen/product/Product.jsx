@@ -14,7 +14,7 @@ export const ProductScreen = () => {
         <Title
           className={'mx-auto'}
           primary="Tus favoritos en un solo lugar"
-          secondary="Mikuy Mikuy"
+          secondary="La Canga"
         />
       </header>
 
