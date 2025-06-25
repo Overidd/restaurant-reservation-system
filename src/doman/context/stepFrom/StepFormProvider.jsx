@@ -16,8 +16,6 @@ import {
 
 export const StepFormProvider = ({
    className,
-   schema,
-   form,
    children
 }) => {
 
@@ -34,7 +32,7 @@ export const StepFormProvider = ({
    }, [children])
 
    const stepNames = steps.map((step) => step.props.name);
-   const multiStepForm = useStepForm({ stepNames, schema, form });
+   const multiStepForm = useStepForm({ stepNames });
 
    return (
       <StepFromContext.Provider value={{ multiStepForm }}>

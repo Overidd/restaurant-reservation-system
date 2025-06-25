@@ -1,40 +1,21 @@
 import { useCallback, useState } from 'react';
 
 /**
- * @param {{ stepNames: string[], schema: any, form: {onInputChange: Function, onResetForm: Function, onSubmitForm: Function, onInitialFrom: Function, validateForm: Function } }} param0 
+ * @param {{ stepNames: string[] }} param0 
  * @returns 
  */
-export const useStepForm = ({ stepNames, schema, form }) => {
+export const useStepForm = ({ stepNames }) => {
    const [currentStepIndex, setCurrentStepIndex] = useState(0);
    const [direction, setDirection] = useState();  //'forward' | 'backward'
 
-   // Validamos el paso actual
-   const isStepValid = useCallback(() => {
-      const currentStepName = stepNames[currentStepIndex];
-      const currentStepSchema = schema[currentStepName];
-      if (!currentStepSchema) return;
-
-      form.onInitialFrom(currentStepSchema);
-      return form.validateForm()
-
-   }, [currentStepIndex, stepNames, schema, form]);
-
-
-   const nextStep = useCallback((e) => {
-      e.preventDefault();
-
-      const isValid = isStepValid();
-
-      if (!isValid) return;
-
-      if (isValid && currentStepIndex < stepNames.length - 1) {
+   const nextStep = useCallback(() => {
+      if (currentStepIndex < stepNames.length - 1) {
          setDirection('forward');
          setCurrentStepIndex((prev) => prev + 1);
       }
-   }, [currentStepIndex, isStepValid, stepNames.length]);
+   }, [currentStepIndex, stepNames.length]);
 
-   const prevStep = useCallback((e) => {
-      e.preventDefault();
+   const prevStep = useCallback(() => {
       if (currentStepIndex > 0) {
          setDirection('backward');
          setCurrentStepIndex((prev) => prev - 1);
@@ -42,11 +23,11 @@ export const useStepForm = ({ stepNames, schema, form }) => {
    }, [currentStepIndex]);
 
    const goToStep = useCallback((index) => {
-      if (index >= 0 && index < stepNames.length && isStepValid()) {
+      if (index >= 0 && index < stepNames.length) {
          setDirection(index > currentStepIndex ? 'forward' : 'backward');
          setCurrentStepIndex(index);
       }
-   }, [isStepValid, stepNames.length, currentStepIndex]);
+   }, [stepNames.length, currentStepIndex]);
 
    return {
       currentStepIndex,
@@ -54,6 +35,5 @@ export const useStepForm = ({ stepNames, schema, form }) => {
       nextStep,
       prevStep,
       goToStep,
-      form,
    }
 }

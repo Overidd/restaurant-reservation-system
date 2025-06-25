@@ -1,22 +1,111 @@
+import { locationData } from '@/data';
 
-export const Reservation = () => {
-  return (
-    <div>Reservation</div>
-  )
+import {
+   ReservationStepDate,
+   ReservationStepHour,
+   ReservationStepInfo
+} from '@/components/reservation';
+
+import {
+   StepFormProvider,
+   StepFromContextProvider
+} from '@/doman/context/stepFrom';
+
+import {
+   StepForm,
+   StepFormFooter,
+   StepFormHeader
+} from '@/components/UI/stepForm';
+import { ChevronLeft } from 'lucide-react';
+import { Button } from '@/components/UI/common';
+
+const reasonData = [
+   {
+      id: 1,
+      name: 'Cumpliaños',
+   },
+   {
+      id: 2,
+      name: 'Fiesta',
+   },
+   {
+      id: 3,
+      name: 'Otros',
+   },
+]
+
+const schema = {
+   info: {
+      valid: {
+         location: [
+            (value) => locationData.some((item) => item.name === value),
+            'Selecione una ubicación',
+         ],
+         reason: [
+            (value) => reasonData.some(item => item.name === value),
+            'Selecione un motivo',
+         ],
+         diners: [
+            (value) => value > 0,
+            'Selecione la cantidad de comensales',
+         ]
+      },
+      initial: {
+         location: '',
+         reason: '',
+         diners: 2
+      }
+   }
 }
+export const ReservationScreen = () => {
+   return (
+      <StepFormProvider
+         className={''}
+      >
+         {/* <StepFormHeader>
+            <StepFromContextProvider>
+               {
+                  ({ currentStepIndex }) => (
+                     <h1>{currentStepIndex}</h1>
+                  )
+               }
+            </StepFromContextProvider>
+         </StepFormHeader> */}
 
+         <StepForm name='info'>
+            <ReservationStepInfo
+               schema={schema.info}
+               locationData={locationData}
+               reasonData={reasonData}
+            />
+         </StepForm>
 
-<MultiStepFormHeader
-  className={'flex w-full flex-col justify-center space-y-6'}
->
-  <h2 className={'text-xl font-bold'}>Create your account</h2>
-  <MultiStepFormContextProvider>
-    {({ currentStepIndex }) => (
-      <Stepper
-        variant={'numbers'}
-        steps={['Account', 'Profile', 'Review']}
-        currentStep={currentStepIndex}
-      />
-    )}
-  </MultiStepFormContextProvider>
-</MultiStepFormHeader>
+         <StepForm name='date'>
+            <ReservationStepDate />
+         </StepForm>
+
+         <StepForm name='hour'>
+            <ReservationStepHour />
+         </StepForm>
+
+         <StepFormFooter>
+            <StepFromContextProvider>
+               {
+                  ({ prevStep, currentStepIndex }) => (
+                     <>
+                        {currentStepIndex > 0 && (
+                           <Button
+                              onClick={prevStep}
+                           >
+                              <ChevronLeft />
+                           </Button>
+                        )}
+                     </>
+                  )
+               }
+            </StepFromContextProvider>
+         </StepFormFooter>
+
+      </StepFormProvider>
+   )
+}

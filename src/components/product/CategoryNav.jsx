@@ -6,8 +6,8 @@ import { cn } from '@/ultils/cn';
 
 export const CategoryNav = ({ className, data = [] }) => {
   const container = useRef(null);
-  const btnLeft = useRef(null);
   const btnRight = useRef(null);
+  const btnLeft = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {

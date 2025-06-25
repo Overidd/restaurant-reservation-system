@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '../layout/App';
 import { ProductScreen } from '../screen/product';
 import { LocationScreen } from '../screen/location';
+import { ReservationScreen } from '@/screen/reservation';
 
 export const RouterApp = () => {
 
@@ -23,6 +24,10 @@ export const RouterApp = () => {
                <Route
                   path="/location"
                   element={<LocationScreen />}
+               />
+               <Route
+                  path="/reserve"
+                  element={<ReservationScreen />}
                />
                <Route
                   path="/*"

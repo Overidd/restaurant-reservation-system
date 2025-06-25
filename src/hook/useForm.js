@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 
 const defaultValidations = {
    email: [
@@ -25,6 +25,7 @@ const TYPEACTION = {
    VALIDATE_ALL: 'VALIDATE_ALL',
    VALIDATE_ONE: 'VALIDATE_ONE',
    RESET: 'RESET',
+   SET_VALIDATIONS: 'SET_VALIDATIONS',
 }
 
 const validateField = (key, state, validations) => {
@@ -74,13 +75,19 @@ const formReducer = (state, action) => {
             errors: {},
          };
       }
+
+      case TYPEACTION.SET_VALIDATIONS:
+         return {
+            ...state,
+            validations: action.validations,
+         };
+
       default:
          return state;
    }
 };
 
-export const useForm = ({ initialState = {}, activeValidation = false, validations = {} }) => {
-
+export const useForm = ({ initialState = {}, activeValidation = true, validations = {} }) => {
    const mergedValidations = { ...defaultValidations, ...validations };
 
    const [state, dispatch] = useReducer(formReducer, {
@@ -89,15 +96,15 @@ export const useForm = ({ initialState = {}, activeValidation = false, validatio
       validations: mergedValidations,
    });
 
-   // Efecto: si activeValidation, valida todo al cambiar values
-   useEffect(() => {
-      if (activeValidation) {
-         dispatch({ type: TYPEACTION.VALIDATE_ALL });
-      }
-   }, [state.values, activeValidation]);
+   const onInitialFrom = (newInitialState, newValidations) => {
+      dispatch({ type: TYPEACTION.SET_VALIDATIONS, validations: newValidations });
+      dispatch({ type: TYPEACTION.RESET, initialState: newInitialState });
+   };
 
-   const onInputChange = useCallback((e) => {
-      const { name, value } = e.target;
+   const onValueChange = useCallback((e) => {
+      const name = e.name || e.target.name;
+      const value = e.value || e.target.value;
+
       dispatch({ type: TYPEACTION.CHANGE, field: name, value });
       if (activeValidation) {
          dispatch({ type: TYPEACTION.VALIDATE_ONE, field: name });
@@ -105,10 +112,17 @@ export const useForm = ({ initialState = {}, activeValidation = false, validatio
    }, [activeValidation]);
 
    const validateForm = useCallback(() => {
+      const errors = {};
+      for (const key of Object.keys(state.values)) {
+         const [valid, msg] = validateField(key, state.values, state.validations);
+         errors[`${key}Valid`] = valid ? null : msg;
+      }
       dispatch({ type: TYPEACTION.VALIDATE_ALL });
-      const isValid = Object.values(state.errors).every((e) => e == null);
-      return isValid;
-   }, [state.errors]);
+      return {
+         isValid: Object.values(errors).every((e) => e == null),
+         errors,
+      };
+   }, [state.values, state.validations]);
 
    const onResetForm = useCallback(() => {
       dispatch({ type: TYPEACTION.RESET, initialState });
@@ -117,19 +131,31 @@ export const useForm = ({ initialState = {}, activeValidation = false, validatio
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
-         if (activeValidation && !validateForm()) return;
-         callback(event);
+         const { isValid, errors } = validateForm();
+         if (activeValidation && !isValid) {
+            // También puedes forzar un dispatch si quieres actualizar el estado de errores visualmente
+            dispatch({ type: TYPEACTION.VALIDATE_ALL });
+            return;
+         }
+         callback(errors);
       },
       [activeValidation, validateForm]
    );
+
+   const isFormValid = useCallback(() => {
+      return Object.values(state.errors).every((e) => e == null);
+   }, [state.errors]);
 
    return {
       ...state.values,
       ...state.errors,
       formState: state.values,
       formValidation: state.errors,
-      onInputChange,
+      validateForm,
+      onValueChange,
       onResetForm,
       onSubmitForm,
+      onInitialFrom,
+      isFormValid,
    };
 };

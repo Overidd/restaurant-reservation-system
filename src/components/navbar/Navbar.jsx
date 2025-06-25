@@ -3,6 +3,7 @@ import { Button } from '../UI/common';
 import PropTypes from 'prop-types';
 import { cn } from '@/ultils/cn';
 import { NavbarList } from './NavbarList';
+import { Link } from 'react-router-dom';
 
 const listMenu = [
    {
@@ -34,10 +35,12 @@ export const Navbar = ({ className }) => {
 
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
-            <Button size={"lg"}>
-               Ordenar
-               <Table />
-            </Button>
+            <Link to={'/reserve'}>
+               <Button size={"lg"}>
+                  Ordenar
+                  <Table />
+               </Button>
+            </Link>
          </ul>
       </nav >
    )

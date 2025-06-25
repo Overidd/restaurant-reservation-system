@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
 
-export const StepFromHeader = ({ className, children }) => {
+export const StepFormHeader = ({ className, children }) => {
 
   return (
     <div
