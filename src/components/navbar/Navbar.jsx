@@ -25,7 +25,7 @@ export const Navbar = ({ className }) => {
             `bg-menu gradient-radial-primary`,
             'shadow-primary rounded-2xl backdrop-blur-lg p-4',
             'flex items-center gap-4',
-            'sticky top-4 z-10',
+            'sticky top-4 z-50',
             className,
          )}
       >

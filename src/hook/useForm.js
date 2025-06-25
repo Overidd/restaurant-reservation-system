@@ -96,12 +96,13 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
       validations: mergedValidations,
    });
 
-   const onInitialFrom = (newInitialState, newValidations) => {
-      dispatch({ type: TYPEACTION.SET_VALIDATIONS, validations: newValidations });
+   const onInitialFrom = (newInitialState) => {
+      // dispatch({ type: TYPEACTION.SET_VALIDATIONS, validations: newValidations });
       dispatch({ type: TYPEACTION.RESET, initialState: newInitialState });
    };
 
    const onValueChange = useCallback((e) => {
+      if (!e) return;
       const name = e.name || e.target.name;
       const value = e.value || e.target.value;
 
@@ -131,15 +132,15 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
-         const { isValid, errors } = validateForm();
+         const { isValid } = validateForm();
          if (activeValidation && !isValid) {
             // También puedes forzar un dispatch si quieres actualizar el estado de errores visualmente
             dispatch({ type: TYPEACTION.VALIDATE_ALL });
             return;
          }
-         callback(errors);
+         callback(state.values);
       },
-      [activeValidation, validateForm]
+      [activeValidation, validateForm, state.values]
    );
 
    const isFormValid = useCallback(() => {

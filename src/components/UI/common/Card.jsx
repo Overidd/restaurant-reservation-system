@@ -40,7 +40,7 @@ export const CardImage = ({ className, src, alt, zoom, ...props }) => {
                'object-cover w-full h-full',
                zoom && 'hover:scale-105 transition-[scale] duration-500',
             )}
-            src={src}
+            src={src ?? './default-image.jpg'}
             alt={`Image of ${alt}`}
          />
       </figure>

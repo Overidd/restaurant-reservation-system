@@ -9,29 +9,31 @@ export const useStepForm = ({ stepNames }) => {
    const [currentStepIndex, setCurrentStepIndex] = useState(0);
    const [direction, setDirection] = useState();  //'forward' | 'backward'
 
-   const setStateValue = useCallback((newState) => {
+   const setStateValue = useCallback(({ value, name }) => {
       setFormState((prev) => ({
          ...prev,
-         ...newState,
+         [name]: value
       }));
    }, []);
 
-   const nextStep = useCallback(() => {
+   const nextStep = useCallback((data) => {
+      if (data) {
+         setStateValue(data);
+      }
+
       if (currentStepIndex < stepNames.length - 1) {
          setDirection('forward');
          setCurrentStepIndex((prev) => prev + 1);
       }
-   }, [currentStepIndex, stepNames.length]);
+   }, [currentStepIndex, stepNames.length, setStateValue]);
 
-   const prevStep = useCallback((value) => {
-      if (value) {
-         setStateValue(value);
-      }
+   const prevStep = useCallback(() => {
+
       if (currentStepIndex > 0) {
          setDirection('backward');
          setCurrentStepIndex((prev) => prev - 1);
       }
-   }, [currentStepIndex, setStateValue]);
+   }, [currentStepIndex,]);
 
    const goToStep = useCallback((index) => {
       if (index >= 0 && index < stepNames.length) {

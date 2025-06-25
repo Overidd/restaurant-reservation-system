@@ -198,7 +198,7 @@ export const Popover = ({
    const popoverContent = isOpen && (
       <div
          ref={contentRef}
-         className={`fixed z-50 rounded-lg shadow-lg overflow-hidden ${contentClassName}`}
+         className={`fixed rounded-lg shadow-lg overflow-hidden ${contentClassName}`}
          style={{
             top: position.top,
             left: position.left,

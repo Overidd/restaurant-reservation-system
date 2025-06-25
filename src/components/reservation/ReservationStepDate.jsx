@@ -1,13 +1,13 @@
+import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
 import { useStepFormContext } from '@/hook';
-import { Form, FormItem, Label } from '../UI/from';
 import { Button, Calendar, DayPicker, Popover } from '../UI/common';
 import { ChevronDownIcon } from 'lucide-react';
 import { ReservationTitle } from '.';
-import { cn } from '@/ultils/cn';
 import { useState } from 'react';
+import { Label } from '../UI/from';
 
-export const ReservationStepDate = ({ className }) => {
+export const ReservationStepDate = ({ className, name }) => {
    const { nextStep } = useStepFormContext();
    const [date, setDate] = useState(undefined)
 
@@ -23,7 +23,7 @@ export const ReservationStepDate = ({ className }) => {
       const newDate = new Date();
       newDate.setDate(date);
 
-      nextStep(newDate);
+      nextStep({ value: newDate, name: name });
    }
 
    return (

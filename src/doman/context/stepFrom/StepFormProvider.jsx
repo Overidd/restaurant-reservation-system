@@ -47,7 +47,7 @@ export const StepFormProvider = ({
             )}
          >
             {header}
-            <div className='relative transition-transform duration-500'>
+            <div className='relative transition-transform duration-200'>
                {steps.map((step, index) => {
                   const isActive = index === multiStepForm.currentStepIndex;
                   return (

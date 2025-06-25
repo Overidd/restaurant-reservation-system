@@ -45,6 +45,11 @@
   /* Fonts */
   --font-playfair: 'Playfair Display', serif;
   --font-oswald: 'Oswald', sans-serif;
+
+  /* Custom Color  */
+  --color-table-avaible: var(--table-avaible);
+  --color-table-busy: var(--table-busy);
+  --color-table-selected: var(--table-selected);
 }
 
 :root {
@@ -64,7 +69,7 @@
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: #8F521E;
   --accent-foreground: #fff;
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #D0534B;
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: #E0822D;
@@ -85,6 +90,10 @@
   --sidebar-ring: oklch(0.705 0.213 47.604);
 
   --width-search: 12rem;
+  --table-avaible: #4a977b;
+  --table-busy: #d9524e;
+  --table-selected: #5485CE;
+
 }
 
 .dark {
@@ -223,6 +232,27 @@
   content: "";
   visibility: visible;
   transform: scale(1, 1)
+}
+
+/** Style component Reservation  */
+.grid-table-container {
+  grid-template-areas:
+    "header header header"
+    "main main aside";
+  /* grid-template-columns: auto auto auto; */
+  /* grid-template-rows: auto auto auto; */
+}
+
+.grid-table-header {
+  grid-area: header;
+}
+
+.grid-table-main {
+  grid-area: main;
+}
+
+.grid-table-aside {
+  grid-area: aside;
 }
 
 @layer base {

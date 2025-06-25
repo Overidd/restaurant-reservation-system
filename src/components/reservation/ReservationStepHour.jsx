@@ -1,4 +1,5 @@
 import { cn } from '@/ultils/cn';
+import { useStepFormContext } from '@/hook';
 import { ReservationTitle } from '.';
 import { Button } from '../UI/common';
 import { Label } from '../UI/from';
@@ -24,7 +25,15 @@ const hoursData = [
 
 
 
-export const ReservationStepHour = ({ className }) => {
+export const ReservationStepHour = ({ className, name }) => {
+   const { nextStep, stateForm } = useStepFormContext();
+
+   const onValueChange = (hour) => {
+      nextStep({ value: hour, name: name });
+   }
+
+   console.log(stateForm)
+
    return (
       <section
          className={cn(
@@ -35,8 +44,8 @@ export const ReservationStepHour = ({ className }) => {
          <Label>
             <ReservationTitle
                className={'mx-auto'}
-               title={'Selecionar'}
-               subtitle={'Fecha'}
+               title={'Seleccionar'}
+               subtitle={'Hora'}
             />
          </Label>
 
@@ -44,6 +53,7 @@ export const ReservationStepHour = ({ className }) => {
             {
                hoursData.map((hour) => (
                   <Button
+                     onClick={() => onValueChange(hour.hour)}
                      type='button'
                      key={hour.id}
                   >

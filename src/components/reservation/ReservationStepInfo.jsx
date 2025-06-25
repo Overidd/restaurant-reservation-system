@@ -15,10 +15,11 @@ import { cn } from '@/ultils/cn';
 export const ReservationStepInfo = ({
    className,
    schema,
+   name,
    locationData = [],
    reasonData = []
 }) => {
-   const { nextStep } = useStepFormContext();
+   const { nextStep, stateForm } = useStepFormContext();
 
    const {
       formState: { location, reason, diners },
@@ -27,69 +28,64 @@ export const ReservationStepInfo = ({
       onValueChange,
       isFormValid,
    } = useForm({
-      initialState: schema.initial,
+      initialState: stateForm[name] || schema.initial,
       validations: schema.valid,
       activeValidation: true
    });
 
    const onSubmit = onSubmitForm((value) => {
-      console.log(value)
-      nextStep();
+      nextStep({ value: value, name: name });
    })
 
    return (
       <Form
+         onSubmit={onSubmit}
          className={cn(
-            'w-[50%] h-full mx-auto',
+            'w-[50%] h-full mx-auto space-y-4',
             className
          )}
-         onSubmit={onSubmit}
       >
          <FormItem>
             <Select
-               defaultValue={location ?? ''}
+               value={location || undefined}
                onValueChange={(value) => onValueChange({ name: 'location', value })}
             >
                <SelectTrigger
-                  className={'w-full'}
+                  className="w-full"
                   isError={!!locationValid}
-                  variant='crystal'
+                  variant="crystal"
                >
-                  <SelectValue placeholder="Selecione una localia" />
+                  <SelectValue placeholder="Seleccione una localidad" />
                </SelectTrigger>
                <SelectContent>
-                  {
-                     locationData.map((item) => (
-                        <SelectItem key={item.id} value={item.name}>
-                           {item.name}
-                        </SelectItem>
-                     ))
-                  }
+                  {locationData.map((item) => (
+                     <SelectItem key={item.id} value={item.name}>
+                        {item.name}
+                     </SelectItem>
+                  ))}
                </SelectContent>
             </Select>
+
          </FormItem>
 
          <FormItem>
             <Select
-               name='reason'
-               defaultValue={reason ?? ''}
+               value={reason || undefined}
                onValueChange={(value) => onValueChange({ name: 'reason', value })}
             >
                <SelectTrigger
-                  className={'w-full'}
+                  className="w-full"
                   isError={!!reasonValid}
-                  variant='crystal'
+                  variant="crystal"
                >
-                  <SelectValue placeholder="Selecione una motivo" />
+                  <SelectValue placeholder="Seleccione un motivo" />
                </SelectTrigger>
                <SelectContent>
-                  {
-                     reasonData.map((item) => (
-                        <SelectItem key={item.id} value={item.name}>
-                           {item.name}
-                        </SelectItem>
-                     ))
-                  }
+                  {reasonData.map((item) => (
+                     <SelectItem key={item.id} value={item.name}>
+                        {item.name}
+                     </SelectItem>
+                  ))}
                </SelectContent>
             </Select>
          </FormItem>

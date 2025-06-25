@@ -35,11 +35,11 @@ export const AnimatedStep = ({
    }
 
    const baseClasses =
-      ' top-0 left-0 w-full h-full transition-all duration-300 ease-in-out animate-in fade-in zoom-in-95';
+      ' top-0 left-0 w-full h-full transition-all duration-200 ease-in-out animate-in fade-in zoom-in-95';
    const visibilityClasses = isActive ? 'opacity-100' : 'opacity-0 absolute';
    const transformClasses = cn('translate-x-0', isActive ? {} : {
-      '-translate-x-full': direction === 'forward' || index < currentIndex,
-      'translate-x-full': direction === 'backward' || index > currentIndex,
+      '-translate-x-50 opacity-0': direction === 'forward' || index < currentIndex,
+      'translate-x-50 opacity-0': direction === 'backward' || index > currentIndex,
    });
 
    return (
