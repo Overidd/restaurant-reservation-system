@@ -36,7 +36,7 @@ export const Modal = ({
             setIsAnimating(true);
          }, 10);
 
-         // document.body.style.overflow = 'hidden';
+         document.body.style.overflow = 'hidden';
       } else {
          setIsAnimating(false);
 
@@ -49,7 +49,7 @@ export const Modal = ({
          // Espera la animación antes de ocultar
          closeTimeoutRef.current = setTimeout(() => {
             setIsVisible(false);
-            // document.body.style.overflow = 'unset';
+            document.body.style.overflow = 'unset';
          }, 300);
       }
 
@@ -57,7 +57,7 @@ export const Modal = ({
          // Limpiar timeouts si el componente se desmonta
          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current);
          if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
-         // document.body.style.overflow = 'unset';
+         document.body.style.overflow = 'unset';
       };
    }, [isOpen]);
 
@@ -85,7 +85,7 @@ export const Modal = ({
    }
 
    const getModalClasses = () => {
-      const baseClasses = 'rounded-lg shadow-xl transform transition-all duration-300 ease-out'
+      const baseClasses = 'transform transition-all duration-300 ease-out'
       const shakeClasses = shouldShake ? 'animate__animated animate__headShake' : ''
 
       let positionClasses = ''
@@ -121,8 +121,8 @@ export const Modal = ({
    const getOverlayClasses = () => {
       const baseClasses =
          direction === 'center'
-            ? 'fixed inset-0 bg-[#0004] bg-opacity-50 transition-opacity duration-300'
-            : 'fixed inset-0 bg-[#0004] bg-opacity-50 flex transition-opacity duration-300'
+            ? 'fixed inset-0 bg-backdrop-modal bg-opacity-50 transition-opacity duration-300'
+            : 'fixed inset-0 bg-backdrop-modal bg-opacity-50 flex transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }
@@ -130,16 +130,24 @@ export const Modal = ({
    if (!isVisible) return null
 
    return createPortal(
-      <div className={getOverlayClasses()} onClick={handleBackdropClick} style={{ zIndex: 9999 }}>
+      <div
+         className={getOverlayClasses()}
+         onClick={handleBackdropClick}
+         style={{ zIndex: 50 }}
+      >
          <Button
-            className='absolute top-4 right-4 z-10'
-            variant={'outline'}
+            className='absolute top-4 right-4'
+            // variant={'outline'}
             onClick={onClose}
             size={'icon'}
          >
-            <X />
+            <X className='h-4 w-4' />
          </Button>
-         <div ref={modalRef} className={getModalClasses()} onClick={(e) => e.stopPropagation()}>
+         <div
+            ref={modalRef}
+            className={getModalClasses()}
+            onClick={(e) => e.stopPropagation()}
+         >
             {children}
          </div>
       </div>,

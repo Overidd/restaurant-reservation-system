@@ -47,8 +47,9 @@ export const ReservationStepDate = ({ className, name }) => {
          </Label>
 
          <DayPicker
-            name='date'
+            className={'mx-auto'}
             onChange={onValueChange}
+            name='date'
          />
 
          <CalendarButton

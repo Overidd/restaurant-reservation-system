@@ -23,23 +23,23 @@ export const ReservationInfoTable = ({ className }) => {
          )}
          style={{ animationDuration: '0.5s' }}
       >
-         <Card className={'w-full h-[20rem] text-center'}>
+         <Card className={'w-full h-full text-center bg-transparent border-0'}>
             <CardImage
                zoom={true}
-               className={'w-full bg-amber-400 min-h-[70%]'}
+               className={'w-full bg-amber-400 min-h-[70%] overflow-hidden rounded-2xl'}
                src={image}
                alt={name ?? 'La imagen no esta disponible'}
             />
             <CardContent className={'space-y-4'}>
-               <p className='text-card-foreground font-bold truncate-text-nowarp max-w-[90%] mx-auto'>
+               <p className='text-primary-foreground font-bold truncate-text-nowarp max-w-[90%] mx-auto'>
                   {name}
                </p>
                <small
-                  className="font-bold text-muted-foreground/80 truncate-text-lines max-w-[90%] mx-auto"
+                  className="font-bold text-primary-foreground/80 truncate-text-lines max-w-[90%] mx-auto"
                >
                   {description}
                </small>
-               <small>
+               <small className='font-bold text-primary-foreground/80'>
                   {chairs} personas
                </small>
             </CardContent>

@@ -9,7 +9,7 @@ export const ProductScreen = () => {
     <div className='max-w-6xl w-[90%] mx-auto space-y-10'>
       <header className='space-y-10'>
         <PromoCarousel
-          className={'w-full mx-auto'}
+          className={'w-full mx-auto select-none'}
           data={publicityData}
         />
         <Title

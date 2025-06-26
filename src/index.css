@@ -50,6 +50,7 @@
   --color-table-avaible: var(--table-avaible);
   --color-table-busy: var(--table-busy);
   --color-table-selected: var(--table-selected);
+  --color-backdrop-modal: var(--backdrop-modal);
 }
 
 :root {
@@ -58,7 +59,7 @@
   --foreground: #4e403cc4;
   --card: #ffffff;
   --card-foreground: #4e403cc4;
-  --popover: oklch(1 0 0);
+  --popover: #ffffff;
   --popover-foreground: #4e403cc4;
   --primary: #E0822D;
   --primary-foreground: oklch(0.98 0.016 73.684);
@@ -93,6 +94,7 @@
   --table-avaible: #4a977b;
   --table-busy: #d9524e;
   --table-selected: #5485CE;
+  --backdrop-modal: rgba(0, 0, 0, 0.356);
 }
 
 .dark {
@@ -253,6 +255,19 @@
 .grid-table-aside {
   grid-area: aside;
 }
+
+/* Para Chrome, Safari, Edge y Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 
 @layer base {
   * {

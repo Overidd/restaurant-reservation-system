@@ -37,7 +37,7 @@ export const DayPicker = ({ className, onChange }) => {
    };
 
    return (
-      <div className="relative w-fit flex flex-col gap-2">
+      <div className={`relative w-fit flex flex-col gap-2 ${className}`}>
          <div
             ref={scrollRef}
             className={cn(
@@ -46,7 +46,6 @@ export const DayPicker = ({ className, onChange }) => {
                'flex flex-nowrap gap-4',
                '[&::-webkit-scrollbar]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-primary [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2',
                'scroll-smooth',
-               className
             )}
          >
             {Array.from({ length: lastDay - currentDay }).map((_, i) => {

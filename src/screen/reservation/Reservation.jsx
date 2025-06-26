@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
-import { useModalReserve, useReserve } from '@/hook';
 import { locationData } from '@/data';
+import { useModalReserve, useReserve } from '@/hook';
 
 import {
    ReservationInfoTable,
@@ -72,13 +72,15 @@ export const ReservationScreen = () => {
    const { existSelectedTable } = useReserve()
    const isActive = existSelectedTable();
 
-   // console.log({isOpenModal})
    return (
       <Modal
          isOpen={isOpenModal}
          onClose={closeModal}
          preventBackdropClose={true}
-         className='flex flex-row justify-center gap-4 relative'
+         className={cn(
+            'flex flex-row justify-center gap-4 relative',
+            'w-fit'
+         )}
       >
          <StepFormProvider
             className={cn(
