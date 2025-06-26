@@ -42,6 +42,9 @@ export const useStepForm = ({ stepNames }) => {
       }
    }, [stepNames.length, currentStepIndex]);
 
+   // Custom functions
+   console.log(stepNames)
+
    return {
       currentStepIndex,
       stateForm,
@@ -49,5 +52,7 @@ export const useStepForm = ({ stepNames }) => {
       nextStep,
       prevStep,
       goToStep,
+      stepNames,
+      setStateValue,
    }
 }

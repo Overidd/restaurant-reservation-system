@@ -1,11 +1,11 @@
-import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
-import { useStepFormContext } from '@/hook';
-import { Button, Calendar, DayPicker, Popover } from '../UI/common';
-import { ChevronDownIcon } from 'lucide-react';
-import { ReservationTitle } from '.';
 import { useState } from 'react';
+import { cn } from '@/ultils/cn';
+import { ReservationTitle } from '.';
 import { Label } from '../UI/from';
+import { DayPicker } from '../UI/common';
+import { useStepFormContext } from '@/hook';
+import { CalendarButton } from '../UI/calendar';
 
 export const ReservationStepDate = ({ className, name }) => {
    const { nextStep } = useStepFormContext();
@@ -24,6 +24,11 @@ export const ReservationStepDate = ({ className, name }) => {
       newDate.setDate(date);
 
       nextStep({ value: newDate, name: name });
+   }
+
+   const onValueChangeDate = (date) => {
+      setDate(date)
+      onValueChange(date)
    }
 
    return (
@@ -46,32 +51,10 @@ export const ReservationStepDate = ({ className, name }) => {
             onChange={onValueChange}
          />
 
-         <Popover
-            className='w-fit'
-            placement='bottom'
-            content={
-               <Calendar
-                  mode='single'
-                  selected={date}
-                  captionLayout='dropdown'
-                  disabled={(date) => date <= new Date(new Date().setDate(new Date().getDate() - 1))}
-                  onSelect={(date) => {
-                     setDate(date)
-                     onValueChange(date)
-                  }}
-               />
-            }
-         >
-            <Button
-               className='w-48 justify-between font-normal'
-               variant='outline'
-               type='button'
-               id='date'
-            >
-               {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
-               <ChevronDownIcon />
-            </Button>
-         </Popover>
+         <CalendarButton
+            date={date}
+            onValueChange={onValueChangeDate}
+         />
       </section>
    )
 }
