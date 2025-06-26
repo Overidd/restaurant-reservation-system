@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { Calendar, ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import { Button, Popover } from '../common';
+import { Calendar } from '.';
 
 export const CalendarButton = ({
    date,

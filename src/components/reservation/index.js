@@ -5,3 +5,4 @@ export * from './ReservationStepHour';
 export * from './ReservationCard';
 export * from './ReservationSelecTable';
 export * from './ReservationInfoTable'; 
+export * from './ReservationHeader'; 

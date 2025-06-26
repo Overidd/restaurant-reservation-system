@@ -48,6 +48,12 @@ export const useReserve = () => {
       return currentSelectedTable ?? {}
    }
 
+   const existSelectedTable = () => {
+      return selectedTables.length > 0;
+      // return Object.keys(currentSelectedTable).length === 0;
+
+   }
+
 
    return {
 
@@ -65,6 +71,7 @@ export const useReserve = () => {
       reserveSelectTable,
       reserveReset,
       reserveSetError,
-      getCurrentSelectedTable
+      getCurrentSelectedTable,
+      existSelectedTable
    };
 };

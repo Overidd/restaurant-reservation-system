@@ -160,7 +160,7 @@ export const ReservationSelecTable = () => {
 const TiemLimit = () => {
    const { formattedMinutes, formattedSeconds } = useReserveTimer()
    return (
-      <div className="space-x-2 text-primary-foreground">
+      <div className="space-x-2 text-primary-foreground font-mono">
          <Clock className="inline-block align-middle" />
          <time className="inline-block align-middle font-semibold text-lg">
             {formattedMinutes}:{formattedSeconds}

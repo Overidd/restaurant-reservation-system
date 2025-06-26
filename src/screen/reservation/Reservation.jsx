@@ -1,11 +1,13 @@
 import { locationData } from '@/data';
+import { cn } from '@/ultils/cn';
 
 import {
    ReservationInfoTable,
    ReservationSelecTable,
    ReservationStepDate,
    ReservationStepHour,
-   ReservationStepInfo
+   ReservationStepInfo,
+   ReservationHeader
 } from '@/components/reservation';
 
 import {
@@ -22,10 +24,11 @@ import { ChevronLeft } from 'lucide-react';
 
 import {
    Button,
+   Modal,
    ProgressBar
 } from '@/components/UI/common';
-import { ReservationHeader } from '@/components/reservation/ReservationHeader';
-import { cn } from '@/ultils/cn';
+import { useState } from 'react';
+import { useReserve } from '@/hook';
 
 const reasonData = [
    {
@@ -66,84 +69,108 @@ const schema = {
    }
 }
 export const ReservationScreen = () => {
+   const { existSelectedTable } = useReserve()
+   const [isOpen, setIsOpen] = useState(false)
+
+   const isActive = existSelectedTable();
+
+   const handleOnClose = () => {
+      setIsOpen(false)
+   }
+
    return (
-      <div
-         className='flex flex-row justify-center'
-      >
-         <StepFormProvider
-            className={'w-[55rem] h-[37rem] mx-auto space-y-10'}
+      <>
+         <button
+            onClick={() => setIsOpen(true)}
+            className="bg-blue-600 text-white py-3 px-4 rounded-lg"
          >
-            <StepFormHeader>
-               <StepFromContextProvider>
-                  {
-                     ({ currentStepIndex, stateForm }) => (
-                        <ReservationHeader
-                           currentStepIndex={currentStepIndex}
-                           {...stateForm}
-                        />
-                     )
-                  }
-               </StepFromContextProvider>
-            </StepFormHeader>
+            Modal Normal
+         </button>
+         <Modal
+            isOpen={isOpen}
+            onClose={handleOnClose}
+            preventBackdropClose={true}
+            className='flex flex-row justify-center gap-4 relative'
+         >
+            <StepFormProvider
+               className={cn(
+                  'w-[55rem] h-[37rem] mx-auto space-y-10 transition-all',
+                  isActive && '-translate-x-[11rem]'
+               )}
+            >
+               <StepFormHeader>
+                  <StepFromContextProvider>
+                     {
+                        ({ currentStepIndex, stateForm }) => (
+                           <ReservationHeader
+                              currentStepIndex={currentStepIndex}
+                              {...stateForm}
+                           />
+                        )
+                     }
+                  </StepFromContextProvider>
+               </StepFormHeader>
 
-            <StepForm name='info'>
-               <ReservationStepInfo
-                  name={'info'}
-                  schema={schema.info}
-                  locationData={locationData}
-                  reasonData={reasonData}
-               />
-            </StepForm>
+               <StepForm name='info'>
+                  <ReservationStepInfo
+                     name={'info'}
+                     schema={schema.info}
+                     locationData={locationData}
+                     reasonData={reasonData}
+                  />
+               </StepForm>
 
-            <StepForm name='date'>
-               <ReservationStepDate
-                  name={'date'}
-               />
-            </StepForm>
+               <StepForm name='date'>
+                  <ReservationStepDate
+                     name={'date'}
+                  />
+               </StepForm>
 
-            <StepForm name='hour'>
-               <ReservationStepHour
-                  name={'hour'}
-               />
-            </StepForm>
+               <StepForm name='hour'>
+                  <ReservationStepHour
+                     name={'hour'}
+                  />
+               </StepForm>
 
-            <StepForm name='table'>
-               <ReservationSelecTable
-                  name={'table'}
-               />
-            </StepForm>
+               <StepForm name='table'>
+                  <ReservationSelecTable
+                     name={'table'}
+                  />
+               </StepForm>
 
-            <StepFormFooter>
-               <StepFromContextProvider>
-                  {
-                     ({ prevStep, currentStepIndex }) => (
-                        <div
-                           className='flex flex-col justify-between gap-4'
-                           hidden={currentStepIndex >= 2}
-                        >
-                           <ProgressBar steps={3} currentStep={currentStepIndex} />
-                           <Button
-                              onClick={prevStep}
-                              className={cn(
-                                 'mx-auto w-10 h-10',
-                                 currentStepIndex <= 0 && 'opacity-0 pointer-events-none'
-                              )}
+               <StepFormFooter>
+                  <StepFromContextProvider>
+                     {
+                        ({ prevStep, currentStepIndex }) => (
+                           <div
+                              className='flex flex-col justify-between gap-4'
+                              hidden={currentStepIndex >= 2}
                            >
-                              <ChevronLeft />
-                           </Button>
+                              <ProgressBar steps={3} currentStep={currentStepIndex} />
+                              <Button
+                                 onClick={prevStep}
+                                 className={cn(
+                                    'mx-auto w-10 h-10',
+                                    currentStepIndex <= 0 && 'opacity-0 pointer-events-none'
+                                 )}
+                              >
+                                 <ChevronLeft />
+                              </Button>
 
-                        </div>
-                     )
-                  }
-               </StepFromContextProvider>
-            </StepFormFooter>
-         </StepFormProvider>
+                           </div>
+                        )
+                     }
+                  </StepFromContextProvider>
+               </StepFormFooter>
+            </StepFormProvider>
 
-         <ReservationInfoTable
-            className={cn(
-               'w-[20rem] '
-            )}
-         />
-      </div>
+            <ReservationInfoTable
+               className={cn(
+                  'w-[20rem]'
+               )}
+            />
+         </Modal>
+      </>
+
    )
 }
