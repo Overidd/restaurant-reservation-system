@@ -28,7 +28,7 @@ export const Footer = ({ className }) => {
          <figure className='w-1/7'>
             <img
                className='w-full h-full'
-               src="./logo-while.png"
+               src="/logo-while.png"
                alt="Logo de la empresa"
             />
          </figure>

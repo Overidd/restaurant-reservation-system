@@ -8,6 +8,7 @@ export const reserveSlice = createSlice({
    initialState: {
       errorMessage: null,
       isLoading: false,
+      isOpenModal: false,
       date: {
          info: {
             location: null,
@@ -47,7 +48,7 @@ export const reserveSlice = createSlice({
 
       reserveToggleTableAction: (state, { payload }) => {
          const isExit = state.selectedTables.find(item => item.id === payload.id);
-         
+
          if (!isExit && payload.status !== typeStatusTable.BUSY) {
             state.selectedTables.push({
                ...payload,
@@ -86,6 +87,14 @@ export const reserveSlice = createSlice({
       reserveSetErrorAction: (state, { payload }) => {
          state.errorMessage = payload;
       },
+
+      openModalAction: (state) => {
+         state.isOpenModal = true;
+      },
+
+      closeModalAction: (state) => {
+         state.isOpenModal = false;
+      },
    },
 });
 
@@ -95,4 +104,6 @@ export const {
    reserveToggleTableAction,
    reserveSelectTableAction,
    reserveResetAction,
+   openModalAction,
+   closeModalAction
 } = reserveSlice.actions;

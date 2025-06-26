@@ -1,5 +1,6 @@
 import { ListLocations, MapaLoactions } from '@/components/location';
 import { locationData } from '@/data';
+import { Outlet } from 'react-router-dom';
 
 export const LocationScreen = () => {
   return (
@@ -15,7 +16,7 @@ export const LocationScreen = () => {
       {/* <section> */}
       <ListLocations data={locationData} />
       {/* </section> */}
-
+      <Outlet />
     </div>
   )
 }

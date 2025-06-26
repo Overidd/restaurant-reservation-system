@@ -1,9 +1,9 @@
-import { ShoppingCart, Table, User } from 'lucide-react';
-import { Button } from '../UI/common';
 import PropTypes from 'prop-types';
 import { cn } from '@/ultils/cn';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Button } from '../UI/common';
 import { NavbarList } from './NavbarList';
-import { Link } from 'react-router-dom';
+import { ShoppingCart, Table, User } from 'lucide-react';
 
 const listMenu = [
    {
@@ -19,6 +19,13 @@ const listMenu = [
 ]
 
 export const Navbar = ({ className }) => {
+   const navigate = useNavigate();
+   const location = useLocation();
+
+   const openModalReserve = () => {
+      navigate(`${location.pathname}/reserve`, { state: { background: location } });
+   };
+
    return (
       <nav
          className={cn(
@@ -33,7 +40,7 @@ export const Navbar = ({ className }) => {
             <figure className='w-[3rem] h-[3rem]'>
                <img
                   className='w-full h-full'
-                  src="./logo-while.png"
+                  src="/logo-while.png"
                   alt="Logo de la empresa"
                />
             </figure>
@@ -45,12 +52,13 @@ export const Navbar = ({ className }) => {
 
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
-            <Link to={'/reserve'}>
-               <Button size={"lg"}>
-                  Ordenar
-                  <Table />
-               </Button>
-            </Link>
+            <Button
+               onClick={openModalReserve}
+               size={"lg"}
+            >
+               Ordenar
+               <Table />
+            </Button>
          </ul>
       </nav >
    )

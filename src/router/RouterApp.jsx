@@ -4,38 +4,28 @@ import { ProductScreen } from '../screen/product';
 import { LocationScreen } from '../screen/location';
 import { ReservationScreen } from '@/screen/reservation';
 
-export const RouterApp = () => {
+const AppRoutes = () => {
 
    return (
-      <BrowserRouter>
-         <Routes>
-            <Route
-               element={<AppLayout />}
-            >
-               {/* <Route
-               index
-               path="*"
-               element={<Navigate to="/login" replace />}
-            /> */}
-               <Route
-                  path="/product"
-                  element={<ProductScreen />}
-               />
-               <Route
-                  path="/location"
-                  element={<LocationScreen />}
-               />
-               <Route
-                  path="/reserve"
-                  element={<ReservationScreen />}
-               />
-               <Route
-                  path="/*"
-                  element={<Navigate to="/product" />}
-               />
+      <Routes>
+         <Route path="/" element={<AppLayout />}>
+            <Route path="product" element={<ProductScreen />}>
+               <Route path="reserve" element={<ReservationScreen />} />
             </Route>
-         </Routes>
 
-      </BrowserRouter>
-   )
-}
+            <Route path="location" element={<LocationScreen />} >
+               <Route path="reserve" element={<ReservationScreen />} />
+            </Route>
+
+            <Route index element={<Navigate to="product" />} />
+            <Route path="*" element={<Navigate to="/product" />} />
+         </Route>
+      </Routes>
+   );
+};
+
+export const RouterApp = () => (
+   <BrowserRouter>
+      <AppRoutes />
+   </BrowserRouter>
+);

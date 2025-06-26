@@ -1,22 +1,20 @@
 import { cn } from '@/ultils/cn';
-import { ReservationCard } from '.';
-import { Button, Card, CardContent, CardImage } from '../UI/common';
 import { useReserve } from '@/hook';
-import { useEffect, useRef, useState } from 'react';
-
+import { ReservationCard } from '.';
+import {
+   Button,
+   Card,
+   CardContent,
+   CardImage
+} from '../UI/common';
 
 export const ReservationInfoTable = ({ className }) => {
    const { getCurrentSelectedTable, existSelectedTable } = useReserve()
-
    const { image, name, description, chairs } = getCurrentSelectedTable()
-
-   const [isAnimating, setIsAnimating] = useState(false)
-   const tableRef = useRef();
    const isActive = existSelectedTable();
 
    return (
       <ReservationCard
-         ref={tableRef}
          className={cn(
             'top-0 bottom-0',
             !isActive && 'hidden',

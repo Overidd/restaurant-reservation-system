@@ -4,7 +4,7 @@ import {
    reserveSetDataAction,
    reserveToggleTableAction,
    reserveSelectTableAction,
-   reserveResetAction
+   reserveResetAction,
 } from '@/doman/store/reserve';
 
 export const useReserve = () => {
@@ -12,12 +12,12 @@ export const useReserve = () => {
    // const status = useSelector(state => state.reserveReducer.status);
 
    const {
+      currentSelectedTable,
+      selectedTables,
       errorMessage,
       isLoading,
       timeLimit,
       date,
-      currentSelectedTable,
-      selectedTables
    } = useSelector(
       (state) => state.reserveReducer
    );
@@ -31,7 +31,6 @@ export const useReserve = () => {
    };
 
    const reserveSelectTable = (table) => {
-      // console.log('table', table);
       reserveToggleTable(table);
       dispatch(reserveSelectTableAction(table));
    };
@@ -51,9 +50,7 @@ export const useReserve = () => {
    const existSelectedTable = () => {
       return selectedTables.length > 0;
       // return Object.keys(currentSelectedTable).length === 0;
-
    }
-
 
    return {
 
@@ -72,6 +69,6 @@ export const useReserve = () => {
       reserveReset,
       reserveSetError,
       getCurrentSelectedTable,
-      existSelectedTable
+      existSelectedTable,
    };
 };

@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 import { publicityData, categoryData, productData } from '@/data';
 import { PromoCarousel } from '@/components/common';
 import { Title } from '@/components/UI/text';
@@ -30,6 +31,7 @@ export const ProductScreen = () => {
         <ProductList data={productData} />
       </main>
 
+      <Outlet />
     </div>
   )
 }

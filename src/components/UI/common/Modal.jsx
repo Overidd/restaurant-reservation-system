@@ -18,26 +18,48 @@ export const Modal = ({
    const [shouldShake, setShouldShake] = useState(false)
    const modalRef = useRef(null)
 
+   // NEW: guardamos los timeout IDs
+   const closeTimeoutRef = useRef();
+   const openTimeoutRef = useRef();
    useEffect(() => {
       if (isOpen) {
-         setIsVisible(true)
-         // Pequeño delay para activar la animación después de que el modal sea visible
-         setTimeout(() => setIsAnimating(true), 10)
-         // Prevenir scroll del body
-         document.body.style.overflow = 'hidden'
+         setIsVisible(true);
+
+         // Cancelar cualquier timeout de cierre pendiente
+         if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+         }
+
+         // Pequeño delay para activar la animación
+         openTimeoutRef.current = setTimeout(() => {
+            setIsAnimating(true);
+         }, 10);
+
+         // document.body.style.overflow = 'hidden';
       } else {
-         setIsAnimating(false)
-         // Delay para ocultar el modal después de la animación
-         setTimeout(() => {
-            setIsVisible(false)
-            document.body.style.overflow = 'unset'
-         }, 300)
+         setIsAnimating(false);
+
+         // Cancelar cualquier timeout de apertura pendiente
+         if (openTimeoutRef.current) {
+            clearTimeout(openTimeoutRef.current);
+            openTimeoutRef.current = null;
+         }
+
+         // Espera la animación antes de ocultar
+         closeTimeoutRef.current = setTimeout(() => {
+            setIsVisible(false);
+            // document.body.style.overflow = 'unset';
+         }, 300);
       }
 
       return () => {
-         document.body.style.overflow = 'unset'
-      }
-   }, [isOpen])
+         // Limpiar timeouts si el componente se desmonta
+         if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current);
+         if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+         // document.body.style.overflow = 'unset';
+      };
+   }, [isOpen]);
 
    // Manejar tecla Escape
    useEffect(() => {
