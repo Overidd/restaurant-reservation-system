@@ -1,0 +1,18 @@
+[
+   {
+      "id": 1,
+      "title": "publicity 1",
+      "description": "description",
+      "image": "/publicity/publicity1.jpg",
+      "link": "link",
+      "date": 1750968756555
+   },
+   {
+      "id": 2,
+      "title": "publicity 2",
+      "description": "description",
+      "image": "/publicity/publicity1.jpg",
+      "link": "link",
+      "date": 1750968779708
+   }
+]
