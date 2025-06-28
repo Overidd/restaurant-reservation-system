@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
    reserveSetErrorAction,
    reserveSetDataAction,
@@ -9,18 +10,13 @@ import {
 
 export const useReserve = () => {
    const dispatch = useDispatch();
-   // const status = useSelector(state => state.reserveReducer.status);
 
    const {
       currentSelectedTable,
       selectedTables,
       errorMessage,
-      isLoading,
-      timeLimit,
       date,
-   } = useSelector(
-      (state) => state.reserveReducer
-   );
+   } = useSelector((state) => state.reserveReducer);
 
    const reserveSetData = (data) => {
       dispatch(reserveSetDataAction(data));
@@ -49,17 +45,13 @@ export const useReserve = () => {
 
    const existSelectedTable = () => {
       return selectedTables.length > 0;
-      // return Object.keys(currentSelectedTable).length === 0;
    }
 
    return {
-
       // Estado
       errorMessage,
       selectedTables,
       currentSelectedTable,
-      isLoading,
-      timeLimit,
       date,
 
       // Acciones

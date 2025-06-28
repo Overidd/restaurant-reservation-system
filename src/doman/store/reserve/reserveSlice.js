@@ -7,9 +7,8 @@ export const reserveSlice = createSlice({
 
    initialState: {
       errorMessage: null,
-      isLoading: false,
       isOpenModal: false,
-      date: {
+      data: {
          info: {
             location: null,
             reason: null,
@@ -19,33 +18,52 @@ export const reserveSlice = createSlice({
          hour: null,
       },
 
+      isLoading: {
+         hour: false,
+         tables: false,
+         selectedTables: false
+      },
+
       selectedTables: [
-         // {
-         //    id: 1,
-         //    name: null,
-         //    description: null,
-         //    image: null,
-         //    status: null,
-         //    type: null,
-         //    chairs: null,
-         // }
+
       ],
+
       currentSelectedTable: {
-         // id: 1,
-         // name: null,
-         // description: null,
-         // image: null,
-         // status: null,
-         // type: null,
-         // chairs: null,
-      }
+
+      },
+
+      tables: [
+
+      ],
+
+      availableHours: [
+
+      ],
    },
 
    reducers: {
-      reserveSetDataAction: (state, { payload }) => {
-         state.date = payload
+      //* Metdodo para guardar acciones del usuario DAAAA
+      reserveSetInfoAction: (state, { payload }) => {
+         state.data.info = payload
       },
 
+      reserveSetDateAction: (state, { payload }) => {
+         state.data.date = payload
+      },
+
+      reserveSetHourAction: (state, { payload }) => {
+         state.data.hour = payload
+      },
+
+      reserveSetTablesAction: (state, { payload }) => {
+         state.tables = payload
+      },
+
+      reserveSetHoursAction: (state, { payload }) => {
+         state.availableHours = payload
+      },
+
+      //* Metodo para guardar las tablas Seleccionadas siuuu
       reserveToggleTableAction: (state, { payload }) => {
          const isExit = state.selectedTables.find(item => item.id === payload.id);
 
@@ -64,9 +82,10 @@ export const reserveSlice = createSlice({
          state.currentSelectedTable = payload;
       },
 
+      //* Metodo para resetear
       reserveResetAction: (state) => {
-         state.errorMessage = null;
-         state.isLoading = false;
+         // state.errorMessage = null;
+         // state.isLoading = false;
          state.minutes = 5;
 
          state.selectedTables = [];
@@ -84,10 +103,8 @@ export const reserveSlice = createSlice({
 
       },
 
-      reserveSetErrorAction: (state, { payload }) => {
-         state.errorMessage = payload;
-      },
 
+      //TODO: trasladar a otro Slice gaaa. Metodos de UI
       openModalAction: (state) => {
          state.isOpenModal = true;
       },
@@ -99,11 +116,18 @@ export const reserveSlice = createSlice({
 });
 
 export const {
-   reserveSetErrorAction,
-   reserveSetDataAction,
+   //* Metdodo para guardar acciones del usuario DAAAA
+   reserveSetInfoAction,
+   reserveSetDateAction,
+   reserveSetHourAction,
+   reserveSetTablesAction,
+   reserveSetHoursAction,
+
    reserveToggleTableAction,
    reserveSelectTableAction,
    reserveResetAction,
-   openModalAction,
-   closeModalAction
+
+
+   // openModalAction,
+   // closeModalAction
 } = reserveSlice.actions;

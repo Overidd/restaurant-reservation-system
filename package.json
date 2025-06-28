@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed-firestore": "node ./src/doman/services/firebase/seed.js"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.5",
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.522.0",
     "react": "^19.1.0",
