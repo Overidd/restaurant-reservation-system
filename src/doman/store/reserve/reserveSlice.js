@@ -2,15 +2,21 @@
 import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
 
+export const typeLoading = {
+   HOUR: 'hour',
+   TABLES: 'tables',
+   SELECTEDTABLES: 'selectedTables'
+}
+
 export const reserveSlice = createSlice({
    name: 'reverse',
 
    initialState: {
       errorMessage: null,
       isOpenModal: false,
-      data: {
+      from: {
          info: {
-            location: null,
+            locationId: null,
             reason: null,
             diners: null,
          },
@@ -36,6 +42,10 @@ export const reserveSlice = createSlice({
 
       ],
 
+      restaurant: {
+
+      },
+
       availableHours: [
 
       ],
@@ -43,27 +53,44 @@ export const reserveSlice = createSlice({
 
    reducers: {
       //* Metdodo para guardar acciones del usuario DAAAA
+      reserveSetAvailableHoursAction: (state, { payload }) => {
+         state.availableHours = payload;
+         state.isLoading.hour = false;
+         state.errorMessage = null;
+      },
+      reserveSetTablesAction: (state, { payload }) => {
+         state.tables = payload;
+         state.isLoading.tables = false;
+         state.errorMessage = null;
+      },
+
+      reserveSetRestaurantAction: (state, { payload }) => {
+         state.restaurant = payload;
+      },
+
+      //* Metodos de loding
+      reserveLoadingAction: (state, { payload }) => {
+         state.isLoading[payload] = true;
+      },
+
+      reserveMessageErrorAction: (state, { payload }) => {
+         state.errorMessage = payload;
+      },
+
+
+      //* Metodo para guardar las tablas Seleccionadas siuuu
       reserveSetInfoAction: (state, { payload }) => {
-         state.data.info = payload
+         state.from.info = payload
       },
 
       reserveSetDateAction: (state, { payload }) => {
-         state.data.date = payload
+         state.from.date = payload
       },
 
       reserveSetHourAction: (state, { payload }) => {
-         state.data.hour = payload
+         state.from.hour = payload
       },
 
-      reserveSetTablesAction: (state, { payload }) => {
-         state.tables = payload
-      },
-
-      reserveSetHoursAction: (state, { payload }) => {
-         state.availableHours = payload
-      },
-
-      //* Metodo para guardar las tablas Seleccionadas siuuu
       reserveToggleTableAction: (state, { payload }) => {
          const isExit = state.selectedTables.find(item => item.id === payload.id);
 
@@ -81,7 +108,6 @@ export const reserveSlice = createSlice({
       reserveSelectTableAction: (state, { payload }) => {
          state.currentSelectedTable = payload;
       },
-
       //* Metodo para resetear
       reserveResetAction: (state) => {
          // state.errorMessage = null;
@@ -93,7 +119,7 @@ export const reserveSlice = createSlice({
 
          state.date = {
             info: {
-               location: null,
+               locationId: null,
                reason: null,
                diners: null,
             },
@@ -102,32 +128,22 @@ export const reserveSlice = createSlice({
          };
 
       },
-
-
-      //TODO: trasladar a otro Slice gaaa. Metodos de UI
-      openModalAction: (state) => {
-         state.isOpenModal = true;
-      },
-
-      closeModalAction: (state) => {
-         state.isOpenModal = false;
-      },
    },
 });
 
 export const {
    //* Metdodo para guardar acciones del usuario DAAAA
+   reserveSetHourAction,
+   reserveSetAvailableHoursAction,
+   reserveSetTablesAction,
+   reserveSetRestaurantAction,
+   reserveLoadingAction,
+   reserveMessageErrorAction,
+
    reserveSetInfoAction,
    reserveSetDateAction,
-   reserveSetHourAction,
-   reserveSetTablesAction,
-   reserveSetHoursAction,
-
    reserveToggleTableAction,
    reserveSelectTableAction,
+
    reserveResetAction,
-
-
-   // openModalAction,
-   // closeModalAction
 } = reserveSlice.actions;

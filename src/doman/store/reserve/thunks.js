@@ -1,63 +1,67 @@
+import { serviceProvider } from '@/doman/services';
+import { reserveLoadingAction, reserveMessageErrorAction, reserveSetHoursAction, reserveSetRestaurantAction, reserveSetTablesAction, typeLoading } from './reserveSlice';
 
 
-class ReserveThunks {
-   
-}
-
-
-export const startGetAvailableHours = ({ date }) => {
-   return async (dispatch, states) => {
-
+export const startGetAvailableHours = (date) => {
+   return async (dispatch, getState) => {
       try {
-         console.log(dispatch, states)
+         const { info: { locationId } } = getState().reserveReducer.from;
 
-         // const { data } = await calendarApi.get('/tables');
-         // dispatch(setTables(data));
+         if (!locationId) throw new Error('No se ha seleccionado una localidad');
+
+         dispatch(reserveLoadingAction(typeLoading.HOUR));
+
+         const availableHours = await serviceProvider.getAvailableHours({ date, restaurantId: locationId });
+
+         dispatch(reserveSetHoursAction(availableHours));
       } catch (error) {
-         console.log(error);
+         dispatch(reserveMessageErrorAction(error.message));
       }
    }
 }
 
-export const startGetTables = ({ restaurantId }) => {
-   return async (dispatch, states) => {
+export const startGetTables = () => {
+   return async (dispatch, getState) => {
+      const { info: { locationId }, date } = getState().reserveReducer.from;
 
       try {
-         console.log(dispatch, states)
+         dispatch(reserveLoadingAction(typeLoading.TABLES));
+         const tables = await serviceProvider.getTables({ date, restaurantId: locationId });
+         const restaurant = await serviceProvider.getRestaurant({ restaurantId: locationId });
+         dispatch(reserveSetTablesAction(tables));
+         dispatch(reserveSetRestaurantAction(restaurant));
 
-         // const { data } = await calendarApi.get('/tables');
-         // dispatch(setTables(data));
       } catch (error) {
-         console.log(error);
+         dispatch(reserveMessageErrorAction(error.message));
       }
    }
 }
 
 
-export const startTempLockTable = ({
-   tableId,
-   restaurantId,
-   date,
-   hour
-}) => {
+// export const startTempLockTable = ({
+//    tableId,
+//    restaurantId,
+//    date,
+//    hour
+// }) => {
 
-   return async (dispatch, states) => {
-      try {
-         console.log(dispatch, states)
-      } catch (error) {
-         console.log(error);
-      }
-   }
-}
+//    return async (dispatch, states) => {
+//       try {
+//          console.log(dispatch, states)
+//       } catch (error) {
+//          console.log(error);
+//       }
+//    }
+// }
 
-export const startTempUnlockTable = ({
-   tableId
-}) => {
-   return async (dispatch, states) => {
-      try {
-         console.log(dispatch, states)
-      } catch (error) {
-         console.log(error);
-      }
-   }
-}
+// export const startTempUnlockTable = ({
+//    tableId
+// }) => {
+//    return async (dispatch, states) => {
+//       try {
+//          console.log(dispatch, states)
+//       } catch (error) {
+//          console.log(error);
+//       }
+//    }
+// }

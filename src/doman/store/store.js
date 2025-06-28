@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { reserveSlice } from './reserve';
+import { reserveSlice, reserveUISlice } from './reserve';
 import { reserveTimeSlice } from './reserve/reserveTimeSlice';
 
 export const store = configureStore({
    reducer: {
       reserveReducer: reserveSlice.reducer,
-      reserveTimeReducer: reserveTimeSlice.reducer
+      reserveTimeReducer: reserveTimeSlice.reducer,
+      reserveUIReducer: reserveUISlice.reducer
    },
 })

@@ -8,7 +8,7 @@ export const useModalReserve = () => {
    const navigate = useNavigate();
    const location = useLocation();
 
-   const isOpenModal = useSelector((state) => state.reserveReducer.isOpenModal);
+   const isOpenModal = useSelector((state) => state.reserveUIReducer.isOpenModal);
 
 
    useEffect(() => {

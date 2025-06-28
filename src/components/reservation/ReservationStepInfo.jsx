@@ -1,4 +1,4 @@
-import { useForm, useStepFormContext } from '@/hook';
+import { useForm, useReserve, useStepFormContext } from '@/hook';
 import { Button } from '../UI/common';
 import {
    Form,
@@ -15,11 +15,11 @@ import { cn } from '@/ultils/cn';
 export const ReservationStepInfo = ({
    className,
    schema,
-   name,
    locationData = [],
    reasonData = []
 }) => {
-   const { nextStep, stateForm } = useStepFormContext();
+   const { reserveSetInfo, from } = useReserve();
+   const { nextStep } = useStepFormContext();
 
    const {
       formState: { location, reason, diners },
@@ -28,13 +28,14 @@ export const ReservationStepInfo = ({
       onValueChange,
       isFormValid,
    } = useForm({
-      initialState: stateForm[name] || schema.initial,
+      initialState: from.info || schema.initial,
       validations: schema.valid,
       activeValidation: true
    });
 
    const onSubmit = onSubmitForm((value) => {
-      nextStep({ value: value, name: name });
+      reserveSetInfo(value);
+      nextStep();
    })
 
    return (

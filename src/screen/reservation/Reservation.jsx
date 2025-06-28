@@ -103,7 +103,6 @@ export const ReservationScreen = () => {
 
             <StepForm name='info'>
                <ReservationStepInfo
-                  name={'info'}
                   schema={schema.info}
                   locationData={locationData}
                   reasonData={reasonData}
@@ -111,21 +110,15 @@ export const ReservationScreen = () => {
             </StepForm>
 
             <StepForm name='date'>
-               <ReservationStepDate
-                  name={'date'}
-               />
+               <ReservationStepDate />
             </StepForm>
 
             <StepForm name='hour'>
-               <ReservationStepHour
-                  name={'hour'}
-               />
+               <ReservationStepHour />
             </StepForm>
 
             <StepForm name='table'>
-               <ReservationSelecTable
-                  name={'table'}
-               />
+               <ReservationSelecTable />
             </StepForm>
 
             <StepFormFooter>

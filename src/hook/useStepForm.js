@@ -5,27 +5,27 @@ import { useCallback, useState } from 'react';
  * @returns 
  */
 export const useStepForm = ({ stepNames }) => {
-   const [stateForm, setFormState] = useState({});
+   // const [stateForm, setFormState] = useState({});
    const [currentStepIndex, setCurrentStepIndex] = useState(0);
    const [direction, setDirection] = useState();  //'forward' | 'backward'
 
-   const setStateValue = useCallback(({ value, name }) => {
-      setFormState((prev) => ({
-         ...prev,
-         [name]: value
-      }));
-   }, []);
+   // const setStateValue = useCallback(({ value, name }) => {
+   //    setFormState((prev) => ({
+   //       ...prev,
+   //       [name]: value
+   //    }));
+   // }, []);
 
-   const nextStep = useCallback((data) => {
-      if (data) {
-         setStateValue(data);
-      }
+   const nextStep = useCallback(() => {
+      // if (data) {
+      //    setStateValue(data);
+      // }
 
       if (currentStepIndex < stepNames.length - 1) {
          setDirection('forward');
          setCurrentStepIndex((prev) => prev + 1);
       }
-   }, [currentStepIndex, stepNames.length, setStateValue]);
+   }, [currentStepIndex, stepNames.length]);
 
    const prevStep = useCallback(() => {
 
@@ -44,12 +44,10 @@ export const useStepForm = ({ stepNames }) => {
 
    return {
       currentStepIndex,
-      stateForm,
       direction,
       nextStep,
       prevStep,
       goToStep,
       stepNames,
-      setStateValue,
    }
 }

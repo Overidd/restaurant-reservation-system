@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-   reserveSetErrorAction,
-   reserveSetDataAction,
    reserveToggleTableAction,
    reserveSelectTableAction,
    reserveResetAction,
+   reserveSetInfoAction,
+   reserveSetDateAction,
+   reserveSetHourAction,
+   startGetAvailableHours,
+   startGetTables,
 } from '@/doman/store/reserve';
 
 export const useReserve = () => {
@@ -15,12 +18,41 @@ export const useReserve = () => {
       currentSelectedTable,
       selectedTables,
       errorMessage,
-      date,
+      isLoading,
+      from,
    } = useSelector((state) => state.reserveReducer);
 
-   const reserveSetData = (data) => {
-      dispatch(reserveSetDataAction(data));
+   // Metodos de consulta api
+   /**
+    * 
+    * @param {{ date: string, restaurantId: string }} data 
+    * @returns 
+    */
+   const serviceGetAvailableHours = (data) => {
+      dispatch(startGetAvailableHours(data));
    };
+
+   /**
+    * 
+    * @param {{ date: string, restaurantId: string }} data 
+    * @returns 
+    */
+   const serviceGetTables = (data) => {
+      dispatch(startGetTables(data));
+   };
+
+   // Metodos de acciones del usuario
+   const reserveSetInfo = (data) => {
+      dispatch(reserveSetInfoAction(data));
+   }
+
+   const reserveSetDate = (data) => {
+      dispatch(reserveSetDateAction(data));
+   }
+
+   const reserveSetHour = (data) => {
+      dispatch(reserveSetHourAction(data));
+   }
 
    const reserveToggleTable = (table) => {
       dispatch(reserveToggleTableAction(table));
@@ -35,10 +67,6 @@ export const useReserve = () => {
       dispatch(reserveResetAction());
    };
 
-   const reserveSetError = (message) => {
-      dispatch(reserveSetErrorAction(message));
-   };
-
    const getCurrentSelectedTable = () => {
       return currentSelectedTable ?? {}
    }
@@ -47,19 +75,26 @@ export const useReserve = () => {
       return selectedTables.length > 0;
    }
 
+
    return {
       // Estado
-      errorMessage,
       selectedTables,
       currentSelectedTable,
-      date,
+      errorMessage,
+      isLoading,
+      from,
+
+      // Metodos de consulta api
+      serviceGetAvailableHours,
+      serviceGetTables,
 
       // Acciones
-      reserveSetData,
+      reserveSetInfo,
+      reserveSetDate,
+      reserveSetHour,
       reserveToggleTable,
       reserveSelectTable,
       reserveReset,
-      reserveSetError,
       getCurrentSelectedTable,
       existSelectedTable,
    };
