@@ -1,8 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AppLayout } from '../layout/App';
 import { ProductScreen } from '../screen/product';
 import { LocationScreen } from '../screen/location';
 import { ReservationScreen } from '@/screen/reservation';
+import { AuthLayout, AppLayout } from '@/layout';
+import { LoginScreen, RegisterScreen } from '@/screen/auth';
 
 const AppRoutes = () => {
 
@@ -11,10 +12,19 @@ const AppRoutes = () => {
          <Route path="/" element={<AppLayout />}>
             <Route path="product" element={<ProductScreen />}>
                <Route path="reserve" element={<ReservationScreen />} />
+
+               <Route element={<AuthLayout />} >
+                  <Route path="login" element={<LoginScreen />} />
+                  <Route path="register" element={<RegisterScreen />} />
+               </Route>
             </Route>
 
             <Route path="location" element={<LocationScreen />} >
                <Route path="reserve" element={<ReservationScreen />} />
+               <Route element={<AuthLayout />} >
+                  <Route path="login" element={<LoginScreen />} />
+                  <Route path="register" element={<RegisterScreen />} />
+               </Route>
             </Route>
 
             <Route index element={<Navigate to="product" />} />

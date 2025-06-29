@@ -2,7 +2,6 @@ export * from './ReservationStepInfo';
 export * from './ReservationStepDate';
 export * from './ReservationTitle';
 export * from './ReservationStepHour';
-export * from './ReservationCard';
 export * from './ReservationSelecTable';
 export * from './ReservationInfoTable'; 
 export * from './ReservationHeader'; 

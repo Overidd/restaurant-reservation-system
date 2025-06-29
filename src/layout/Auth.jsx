@@ -1,6 +1,35 @@
+import { cn } from '@/ultils';
+import { Outlet } from 'react-router-dom';
+import { Card2 } from '@/components/UI/card';
+import { Modal } from '@/components/UI/common';
+import { useModalAuth } from '@/hook/useModalAuth';
 
-export const AuthRouter = () => {
+export const AuthLayout = () => {
+  const { isOpenModal, closeModal } = useModalAuth()
+
   return (
-    <div>Auth</div>
+    <Modal
+      isOpen={isOpenModal}
+      onClose={closeModal}
+    >
+      <Card2
+        className={cn(
+          'p-10 px-12'
+        )}
+      >
+        <figure className='w-[5rem] h-[5rem] mx-auto'>
+          <img
+            className='w-full h-full'
+            src='/logo-while.png'
+            alt='Logo de la empresa'
+          />
+        </figure>
+
+        <div className={'text-primary-foreground/50 space-y-2'}>
+          <Outlet />
+        </div>
+
+      </Card2>
+    </Modal>
   )
 }

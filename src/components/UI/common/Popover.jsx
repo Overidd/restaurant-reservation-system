@@ -197,16 +197,16 @@ export const Popover = ({
 
    const popoverContent = isOpen && (
       <div
+         role='dialog'
+         aria-modal='true'
          ref={contentRef}
+         onMouseEnter={handleContentMouseEnter}
+         onMouseLeave={handleContentMouseLeave}
          className={`fixed rounded-lg shadow-lg overflow-hidden ${contentClassName}`}
          style={{
             top: position.top,
             left: position.left,
          }}
-         onMouseEnter={handleContentMouseEnter}
-         onMouseLeave={handleContentMouseLeave}
-         role='dialog'
-         aria-modal='true'
       >
          {content}
       </div>
@@ -215,13 +215,13 @@ export const Popover = ({
    return (
       <>
          <div
+            tabIndex={0}
+            role='button'
             ref={triggerRef}
-            className={`inline-block ${className}`}
             onClick={handleTriggerClick}
             onMouseEnter={handleTriggerMouseEnter}
             onMouseLeave={handleTriggerMouseLeave}
-            role='button'
-            tabIndex={0}
+            className={`inline-block ${className}`}
             onKeyDown={(e) => {
                if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()

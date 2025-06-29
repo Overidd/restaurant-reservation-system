@@ -10,6 +10,8 @@ export const ColorStatus = ({
             data.map(({ name, color }, index) => (
                <div key={index} className={'space-x-2'}>
                   <Popover
+                     trigger='hover'
+                     contentClassName='z-50'
                      content={
                         <p className="bg-primary-foreground text-sm p-2">
                            {name}

@@ -1,5 +1,6 @@
 import { cn } from '@/ultils/cn';
 import { Modal } from '@/components/UI/common';
+import { Card2 } from '@/components/UI/card'
 import { useModalReserve } from '@/hook';
 
 import {
@@ -10,7 +11,6 @@ import {
    ReservationStepInfo,
    ReservationHeader,
    ReservationFooter,
-   ReservationCard
 } from '@/components/reservation';
 
 import {
@@ -79,7 +79,7 @@ export const ReservationScreen = () => {
             '-ml-3',
          )}
       >
-         <ReservationCard
+         <Card2
             className={cn(
                'transition-all',
                'w-[50rem] 2xl:w-[60rem] h-full mx-auto',
@@ -125,6 +125,7 @@ export const ReservationScreen = () => {
                         (state) => (
                            <ReservationFooter
                               maxStep={3}
+                              numStep={4}
                               {...state}
                            />
                         )
@@ -133,7 +134,7 @@ export const ReservationScreen = () => {
                </StepFormFooter>
             </StepFormProvider>
 
-         </ReservationCard>
+         </Card2>
          <ReservationInfoTable
             className={cn(
                'w-[20rem] h-[40rem]',

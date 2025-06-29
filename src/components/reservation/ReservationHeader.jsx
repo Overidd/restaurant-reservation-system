@@ -25,12 +25,12 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
       dataArray.push(infoItems);
    }
 
-   if (date instanceof Date && !isNaN(date)) {
+   if (typeof date === 'string') {
       dataArray.push([
          {
-            value: date.toDateString(),
+            value: date,
             name: [translation['date'] ?? 'date'],
-            icon: <Calendar />,
+            icon: <Calendar  />,
          },
       ]);
    }
@@ -49,13 +49,13 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
 
 
 export const ReservationHeader = ({ className, date, hour, info, currentStepIndex }) => {
-   if (!currentStepIndex) return null
+   if (!currentStepIndex) return null;
    const stepsHeader = buildStepArray({ info, date, hour, translation, currentStepIndex });
 
    return (
       <header
          className={cn(
-            'text-white flex flex-wrap gap-4',
+            'text-white/80 flex flex-wrap gap-4 justify-center',
             className
          )}
       >

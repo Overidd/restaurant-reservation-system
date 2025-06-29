@@ -50,6 +50,8 @@ export const TableList = ({
       });
    };
 
+   const colorBorder = 'bg-[#545454]'
+
    return (
       <div className={cn(
          'relative rounded-md overflow-hidden',
@@ -59,7 +61,7 @@ export const TableList = ({
       )}>
          <div
             className={cn(
-               'max-w-[50rem] max-h-[50rem]',
+               'w-full h-full',
                'grid items-center justify-center gap-2 overflow-auto [&::-webkit-scrollbar]:hidden'
             )}
             style={{
@@ -72,24 +74,24 @@ export const TableList = ({
 
          {/* Top */}
          <div className='absolute left-0 top-0 h-2 w-full grid grid-cols-[40%_50%] justify-between'>
-            <div className='w-full h-full bg-gray-200/50 rounded-br-lg'></div>
-            <div className='w-full h-full bg-gray-200/50 rounded-bl-lg'></div>
+            <div className={`w-full h-full rounded-br-lg ${colorBorder}`}></div>
+            <div className={`w-full h-full rounded-bl-lg ${colorBorder}`}></div>
          </div>
 
          {/* Left */}
-         <div className='absolute top-0 bottom-0 left-0 w-2 h-full bg-gray-200/50'>
+         <div className={`absolute top-0 bottom-0 left-0 w-2 h-full ${colorBorder}`}>
          </div>
 
          {/* Right */}
          <div className='absolute right-0 top-0 bottom-0 w-2 h-full grid grid-rows-2'>
-            <div className='w-full h-[50%] bg-gray-200/50 rounded-bl-md'></div>
-            <div className='w-full h-full bg-gray-200/50 rounded-tl-md'></div>
+            <div className={`w-full h-[50%] rounded-bl-md ${colorBorder}`}></div>
+            <div className={`w-full h-full rounded-tl-md ${colorBorder}`}></div>
          </div>
 
          {/* Bottom */}
          <div className='absolute left-0 bottom-0 h-2 w-full grid grid-cols-[50%_40%] justify-between'>
-            <div className='w-full h-full bg-gray-200/50 rounded-tr-lg'></div>
-            <div className='w-full h-full bg-gray-200/50 rounded-tl-lg'></div>
+            <div className={`w-full h-full rounded-tr-lg ${colorBorder}`}></div>
+            <div className={`w-full h-full rounded-tl-lg ${colorBorder}`}></div>
          </div>
       </div>
    );

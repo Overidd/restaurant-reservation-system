@@ -1,14 +1,14 @@
-import { closeModalAction, openModalAction } from '@/doman/store/reserve';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { closeModalReserveAction, openModalReserveAction } from '@/doman/store';
 
 export const useModalReserve = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const location = useLocation();
 
-   const isOpenModal = useSelector((state) => state.reserveUIReducer.isOpenModal);
+   const isOpenModal = useSelector((state) => state.UIReducer.isOpenModalReserve);
 
 
    useEffect(() => {
@@ -16,23 +16,23 @@ export const useModalReserve = () => {
 
       if (isReserveRoute && !isOpenModal) {
          // console.log('open modal');
-         dispatch(openModalAction());
+         dispatch(openModalReserveAction());
       }
 
       if (!isReserveRoute && isOpenModal) {
          // console.log('close modal');
-         dispatch(closeModalAction());
+         dispatch(closeModalReserveAction());
       }
    }, [location.pathname, dispatch, isOpenModal]);
 
    const openModal = () => {
       navigate(`${location.pathname}/reserve`, { state: { background: location } });
-      dispatch(openModalAction());
+      dispatch(openModalReserveAction());
    };
 
    const closeModal = () => {
       navigate(`/${location.pathname.split('/')[1]}`);
-      dispatch(closeModalAction());
+      dispatch(closeModalReserveAction());
    };
 
    return {

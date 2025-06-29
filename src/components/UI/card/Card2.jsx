@@ -1,7 +1,7 @@
 import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
 
-export const ReservationCard = ({
+export const Card2 = ({
    className,
    children,
    style
@@ -23,7 +23,7 @@ export const ReservationCard = ({
    )
 }
 
-ReservationCard.propTypes = {
+Card2.propTypes = {
    className: PropTypes.string,
    children: PropTypes.node
 }

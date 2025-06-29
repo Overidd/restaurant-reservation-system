@@ -25,6 +25,18 @@ export const FormItem = ({ className, children, ...props }) => {
    )
 }
 
+export const FromGroup = ({ className, children, ...props }) => {
+   return (
+      <section
+         data-slot="form-group"
+         className={cn('', className)}
+         {...props}
+      >
+         {children}
+      </section>
+   )
+}
+
 export const FormLabel = ({ className, formItemId, isError, children, ...props }) => {
    return (
       <Label

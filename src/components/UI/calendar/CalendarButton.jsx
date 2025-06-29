@@ -5,12 +5,14 @@ import { Calendar } from '.';
 
 export const CalendarButton = ({
    date,
-   onValueChange
+   onValueChange,
+   className,
 }) => {
    return (
       <Popover
-         className='w-fit'
          placement='bottom'
+         contentClassName='z-50'
+         className={`w-fit ${className}`}
          content={
             <Calendar
                mode='single'
@@ -22,7 +24,7 @@ export const CalendarButton = ({
          }
       >
          <Button
-            className='w-48 justify-between font-normal'
+            className='w-48 p-5 justify-between font-normal'
             variant='crystal'
             type='button'
             id='date'

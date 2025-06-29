@@ -143,9 +143,10 @@
     0 10px 20px rgba(41, 15, 0, 0.56); */
 
   box-shadow:
-    inset 0px -180px 100px 100px rgba(41, 15, 0, 0.56),
-    0 10px 20px rgba(41, 15, 0, 0.56);
-  background: #2f211dd3;
+    inset 0px -180px 100px 100px rgba(41, 15, 0, 0.342),
+    0 10px 20px rgba(34, 13, 1, 0.56);
+  /* background: #2f211dd3; */
+  background: #161413e5;
 
   /* box-shadow:
     inset 0 10px 120px rgba(41, 15, 0, 0.56),

@@ -1,24 +1,13 @@
 import { cn } from '@/ultils/cn';
-import { useState } from 'react';
-import { Clock } from 'lucide-react';
+import { ChevronLeft, Clock } from 'lucide-react';
 import { TableList } from '../UI/table';
-import { ColorStatus } from '../UI/common';
-import { CalendarButton } from '../UI/calendar';
+import { Button, ColorStatus } from '../UI/common';
+import { ReservationLoadding } from '.';
 
 import {
    useReserve,
    useReserveTimer,
-   useStepFormContext
 } from '@/hook';
-
-import {
-   Select,
-   SelectContent,
-   SelectItem,
-   SelectTrigger,
-   SelectValue
-} from '../UI/from';
-import { ReservationLoadding } from '.';
 
 const dataInfo = [
    {
@@ -35,139 +24,45 @@ const dataInfo = [
    }
 ]
 
-const hourAvailable = [
-   {
-      id: 1,
-      hour: '12:00',
-   },
-   {
-      id: 2,
-      hour: '13:00',
-   },
-   {
-      id: 3,
-      hour: '14:00',
-   },
-   {
-      id: 4,
-      hour: '15:00',
-   },
-]
-
-const reason = {
-   min: 1,
-   max: 10,
-}
 
 export const ReservationSelecTable = () => {
    const {
       reserveSelectTable,
       selectedTables,
       isLoading,
-      from,
       tables,
       restaurant,
    } = useReserve()
-
-   const [date, setDate] = useState(new Date(from.date));
-
-   const onValueChangeDate = (value) => {
-      // setStateValue({ value, name: 'date' });
-      // setDate(value);
-   }
-
-   const onValueChangeHour = (value) => {
-      // setStateValue({ value, name: 'hour' });
-   }
-
-   const onValueChangeDiners = (diners) => {
-      // setStateValue({ value: { ...from.info, diners: diners, }, name: 'info' });
-   }
-
-   console.log()
 
    return (
       <ReservationLoadding
          isLodding={isLoading.tables}
       >
          <div className={cn(
-            'grid gap-4 grid-cols-[70%_1fr] grid-table-container'
+            'flex-1 grid justify-center content-between gap-4',
          )}
          >
             <header className={cn(
-               'grid-table-header',
-               'flex justify-between',
-               // 'border-b-2 border-[#0002]'
+               'flex justify-between items-center',
             )}>
-               <section>
-                  <ColorStatus
-                     className="flex flex-row gap-5"
-                     data={dataInfo}
-                  />
-               </section>
-
-               <section
-                  className="flex flex-row gap-5 items-center"
-               >
-                  <CalendarButton
-                     date={date}
-                     onValueChange={onValueChangeDate}
-                  />
-
-                  <Select
-                     value={from.hour}
-                     onValueChange={onValueChangeHour}
-                  >
-                     <SelectTrigger
-                        className="w-full"
-                        variant="crystal"
-                     >
-                     </SelectTrigger>
-                     <SelectContent>
-                        {hourAvailable.map((item) => (
-                           <SelectItem key={item.id} value={item.hour}>
-                              {item.hour}
-                           </SelectItem>
-                        ))}
-                     </SelectContent>
-                  </Select>
-
-                  <Select
-                     value={from.info.diners}
-                     onValueChange={onValueChangeDiners}
-                  >
-                     <SelectTrigger
-                        className="w-full"
-                        variant="crystal"
-                     >
-                        <SelectValue />
-                     </SelectTrigger>
-                     <SelectContent>
-                        {
-                           Array.from(
-                              { length: reason.max },
-                              (_, index) => index + reason.min
-                           ).map((item) => (
-                              <SelectItem key={item} value={item}>
-                                 {item}
-                              </SelectItem>
-                           ))
-                        }
-                     </SelectContent>
-                  </Select>
-               </section>
-
+               <Button>
+                  <ChevronLeft />
+               </Button>
+               <ColorStatus
+                  className="flex flex-row gap-5"
+                  data={dataInfo}
+               />
                <TiemLimit />
             </header>
 
-            <main className="grid-table-main">
+            <main>
                <TableList
                   dataTables={tables}
                   rows={restaurant.rows}
                   columns={restaurant.columns}
                   selectedTables={selectedTables}
                   onChangeTable={reserveSelectTable}
-                  className={'overflow-hidden mx-auto'}
+                  className={'max-w-[50rem] max-h-[50rem] overflow-hidden mx-auto'}
                />
             </main>
          </div >
@@ -187,3 +82,57 @@ const TiemLimit = () => {
       </div>
    )
 }
+
+
+/**
+   <section
+      className="w-[50%] flex flex-row gap-5 items-center"
+   >
+      <CalendarButton
+         date={date}
+         onValueChange={onValueChangeDate}
+      />
+
+      <Select
+         value={from.hour}
+         onValueChange={onValueChangeHour}
+      >
+         <SelectTrigger
+            className="w-full"
+            variant="crystal"
+         >
+            <SelectValue />
+         </SelectTrigger>
+         <SelectContent>
+            {hourAvailable.map((item) => (
+               <SelectItem key={item.id} value={item.hour}>
+                  {item.hour}
+               </SelectItem>
+            ))}
+         </SelectContent>
+      </Select>
+
+      <Select
+         value={from.info.diners}
+         onValueChange={onValueChangeDiners}
+      >
+         <SelectTrigger
+            className="w-full"
+            variant="crystal"
+         >
+            <SelectValue />
+         </SelectTrigger>
+         <SelectContent>
+            {
+               Array.from({ length: reason.max },
+                  (_, index) => index + reason.min
+               ).map((item) => (
+                  <SelectItem key={item} value={item}>
+                     {item}
+                  </SelectItem>
+               ))
+            }
+         </SelectContent>
+      </Select>
+   </section>
+ */

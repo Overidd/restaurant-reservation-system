@@ -6,8 +6,11 @@ import { Button, ProgressBar } from '../UI/common';
 export const ReservationFooter = ({
    currentStepIndex,
    prevStep,
-   maxStep = 3
+   maxStep = 3,
+   numStep = 3
 }) => {
+
+   if (currentStepIndex >= maxStep) return null
 
    return (
       <div
@@ -15,7 +18,7 @@ export const ReservationFooter = ({
          className='flex flex-col justify-between gap-4'
       >
          <ProgressBar
-            steps={3}
+            steps={numStep}
             currentStep={currentStepIndex}
          />
          <Button
