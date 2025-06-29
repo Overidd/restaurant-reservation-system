@@ -20,7 +20,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
             name: [translation[key] ?? key],
             icon: null,
          }))
-         .filter(({ name }) => name[0] !== 'Motivo');
+         .filter(({ name }) => !['Motivo', 'locationId'].includes(name[0]));
 
       dataArray.push(infoItems);
    }

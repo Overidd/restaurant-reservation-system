@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
-import { locationData } from '@/data';
-import { useModalReserve, useReserve } from '@/hook';
+import { Modal } from '@/components/UI/common';
+import { useModalReserve } from '@/hook';
 
 import {
    ReservationInfoTable,
@@ -8,7 +8,9 @@ import {
    ReservationStepDate,
    ReservationStepHour,
    ReservationStepInfo,
-   ReservationHeader
+   ReservationHeader,
+   ReservationFooter,
+   ReservationCard
 } from '@/components/reservation';
 
 import {
@@ -21,13 +23,7 @@ import {
    StepFormFooter,
    StepFormHeader
 } from '@/components/UI/stepForm';
-import { ChevronLeft } from 'lucide-react';
 
-import {
-   Button,
-   Modal,
-   ProgressBar
-} from '@/components/UI/common';
 
 const reasonData = [
    {
@@ -48,8 +44,9 @@ const schema = {
    info: {
       valid: {
          location: [
-            (value) => locationData.some((item) => item.name === value),
+            (value, state, additionalData) => additionalData.location.some((item) => item.name === value),
             'Selecione una ubicación',
+            true
          ],
          reason: [
             (value) => reasonData.some(item => item.name === value),
@@ -69,87 +66,78 @@ const schema = {
 }
 export const ReservationScreen = () => {
    const { isOpenModal, closeModal } = useModalReserve()
-   const { existSelectedTable } = useReserve()
-   const isActive = existSelectedTable();
 
    return (
       <Modal
          isOpen={isOpenModal}
          onClose={closeModal}
+         direction='left'
          preventBackdropClose={true}
          className={cn(
-            'flex flex-row justify-center gap-4 relative',
-            'w-fit'
+            'relative h-full w-fit',
+            'flex flex-row justify-center gap-4',
+            '-ml-3',
          )}
       >
-         <StepFormProvider
+         <ReservationCard
             className={cn(
-               'w-[55rem] h-[37rem] mx-auto space-y-10 transition-all',
-               isActive && '-translate-x-[11rem]'
+               'transition-all',
+               'w-[50rem] 2xl:w-[60rem] h-full mx-auto',
+               'flex flex-col justify-between gap-4',
+               'rounded-none rounded-r-2xl',
             )}
          >
-            <StepFormHeader>
-               <StepFromContextProvider>
-                  {
-                     ({ currentStepIndex, stateForm }) => (
-                        <ReservationHeader
-                           currentStepIndex={currentStepIndex}
-                           {...stateForm}
-                        />
-                     )
-                  }
-               </StepFromContextProvider>
-            </StepFormHeader>
+            <StepFormProvider>
+               <StepFormHeader>
+                  <StepFromContextProvider>
+                     {
+                        (state) => (
+                           <ReservationHeader
+                              {...state}
+                           />
+                        )
+                     }
+                  </StepFromContextProvider>
+               </StepFormHeader>
 
-            <StepForm name='info'>
-               <ReservationStepInfo
-                  schema={schema.info}
-                  locationData={locationData}
-                  reasonData={reasonData}
-               />
-            </StepForm>
+               <StepForm name='info'>
+                  <ReservationStepInfo
+                     schema={schema.info}
+                     reasonData={reasonData}
+                  />
+               </StepForm>
 
-            <StepForm name='date'>
-               <ReservationStepDate />
-            </StepForm>
+               <StepForm name='date'>
+                  <ReservationStepDate />
+               </StepForm>
 
-            <StepForm name='hour'>
-               <ReservationStepHour />
-            </StepForm>
+               <StepForm name='hour'>
+                  <ReservationStepHour />
+               </StepForm>
 
-            <StepForm name='table'>
-               <ReservationSelecTable />
-            </StepForm>
+               <StepForm name='table'>
+                  <ReservationSelecTable />
+               </StepForm>
 
-            <StepFormFooter>
-               <StepFromContextProvider>
-                  {
-                     ({ prevStep, currentStepIndex }) => (
-                        <div
-                           className='flex flex-col justify-between gap-4'
-                           hidden={currentStepIndex >= 2}
-                        >
-                           <ProgressBar steps={3} currentStep={currentStepIndex} />
-                           <Button
-                              onClick={prevStep}
-                              className={cn(
-                                 'mx-auto w-10 h-10',
-                                 currentStepIndex <= 0 && 'opacity-0 pointer-events-none'
-                              )}
-                           >
-                              <ChevronLeft />
-                           </Button>
+               <StepFormFooter>
+                  <StepFromContextProvider>
+                     {
+                        (state) => (
+                           <ReservationFooter
+                              maxStep={3}
+                              {...state}
+                           />
+                        )
+                     }
+                  </StepFromContextProvider>
+               </StepFormFooter>
+            </StepFormProvider>
 
-                        </div>
-                     )
-                  }
-               </StepFromContextProvider>
-            </StepFormFooter>
-         </StepFormProvider>
-
+         </ReservationCard>
          <ReservationInfoTable
             className={cn(
-               'w-[20rem]'
+               'w-[20rem] h-[40rem]',
+               'absolute bottom-0 -right-[22rem]',
             )}
          />
       </Modal>

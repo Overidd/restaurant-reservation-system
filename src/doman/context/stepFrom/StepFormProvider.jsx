@@ -1,4 +1,3 @@
-import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
 import { useStepForm } from '@/hook';
 import { StepFromContext } from './StepFromContext';
@@ -16,12 +15,7 @@ import {
    StepForm,
 } from '@/components/UI/stepForm';
 
-import {
-   ReservationCard
-} from '@/components/reservation/ReservationCard';
-
 export const StepFormProvider = ({
-   className,
    children
 }) => {
    const steps = useMemo(() => {
@@ -41,30 +35,24 @@ export const StepFormProvider = ({
 
    return (
       <StepFromContext.Provider value={{ multiStepForm }}>
-         <ReservationCard
-            className={cn(
-               className
-            )}
-         >
-            {header}
-            <div className='relative transition-transform duration-200'>
-               {steps.map((step, index) => {
-                  const isActive = index === multiStepForm.currentStepIndex;
-                  return (
-                     <AnimatedStep
-                        key={step.props.name}
-                        direction={multiStepForm.direction}
-                        isActive={isActive}
-                        index={index}
-                        currentIndex={multiStepForm.currentStepIndex}
-                     >
-                        {step}
-                     </AnimatedStep>
-                  );
-               })}
-            </div>
-            {footer}
-         </ReservationCard>
+         {header}
+         <div className='relative transition-transform duration-200'>
+            {steps.map((step, index) => {
+               const isActive = index === multiStepForm.currentStepIndex;
+               return (
+                  <AnimatedStep
+                     key={step.props.name}
+                     direction={multiStepForm.direction}
+                     isActive={isActive}
+                     index={index}
+                     currentIndex={multiStepForm.currentStepIndex}
+                  >
+                     {step}
+                  </AnimatedStep>
+               );
+            })}
+         </div>
+         {footer}
       </StepFromContext.Provider>
    )
 }

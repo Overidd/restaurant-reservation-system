@@ -16,17 +16,17 @@ export const ReservationInfoTable = ({ className }) => {
    return (
       <ReservationCard
          className={cn(
-            'top-0 bottom-0',
-            !isActive && 'hidden',
-            isActive && 'translate-x-[28.5rem] absolute animate__animated animate__fadeInUp',
+            'transition-all flex flex-col justify-between gap-4',
+            !isActive && 'translate-y-full',
+            isActive && 'animate__animated animate__fadeInUp',
             className
          )}
          style={{ animationDuration: '0.5s' }}
       >
-         <Card className={'w-full h-full text-center bg-transparent border-0'}>
+         <Card className={'block flex-1 w-full text-center bg-transparent border-0 space-y-4'}>
             <CardImage
                zoom={true}
-               className={'w-full bg-amber-400 min-h-[70%] overflow-hidden rounded-2xl'}
+               className={'w-full min-h-[60%] overflow-hidden rounded-2xl'}
                src={image}
                alt={name ?? 'La imagen no esta disponible'}
             />

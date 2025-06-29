@@ -27,11 +27,14 @@ export const CardHeader = ({ className, ...props }) => {
 }
 
 export const CardImage = ({ className, src, alt, zoom, ...props }) => {
+
    return (
       <figure
          data-slot='card-image'
          className={cn(
             'basis-0 overflow-hidden',
+            'bg-[url("/default-image.jpg")]',
+            'bg-cover bg-center bg-no-repeat',
             className)}
          {...props}
       >
@@ -40,7 +43,7 @@ export const CardImage = ({ className, src, alt, zoom, ...props }) => {
                'object-cover w-full h-full',
                zoom && 'hover:scale-105 transition-[scale] duration-500',
             )}
-            src={src ?? './default-image.jpg'}
+            src={src}
             alt={`Image of ${alt}`}
          />
       </figure>

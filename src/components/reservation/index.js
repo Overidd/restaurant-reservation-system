@@ -6,3 +6,5 @@ export * from './ReservationCard';
 export * from './ReservationSelecTable';
 export * from './ReservationInfoTable'; 
 export * from './ReservationHeader'; 
+export * from './ReservationLoadding'; 
+export * from './ReservationFooter'; 

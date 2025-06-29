@@ -17,7 +17,13 @@ export class FirebaseService {
     * @returns {Promise<Array<{hour: string, tablesAvailable: number}>>}
     */
    async getAvailableHours({ date, restaurantId }) {
+      console.log('getAvailableHours', date, restaurantId);
+
       let allowedHours = await getDocs(collection(FirebaseDB, 'allowedhour'));
+      allowedHours = allowedHours.docs.map(doc => ({
+         id: doc.id,
+         ...doc.data()
+      }));
 
       // 2. Ignorar horas pasadas si la fecha es hoy
       const today = new Date().toISOString().split('T')[0];
@@ -30,7 +36,7 @@ export class FirebaseService {
       if (date === today) {
          const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-         allowedHours = allowedHours.docs.filter(({ hour }) => {
+         allowedHours = allowedHours.filter(({ hour }) => {
             const [h, m] = hour.split(':').map(Number);
             const totalMinutes = h * 60 + m;
             return totalMinutes > currentMinutes;
@@ -87,8 +93,8 @@ export class FirebaseService {
       }
 
       const tables = await getDocs(query(
-         collection(FirebaseDB, 'restaurants/tables'),
-         where('idRestaurant', '==', restaurantId),
+         collection(FirebaseDB, `restaurants/${restaurantId}/tables`),
+         // where('idRestaurant', '==', restaurantId),
          where('isReservable', '==', true)
       ))
 
@@ -106,19 +112,43 @@ export class FirebaseService {
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
-      return tables.docs.map(({ id, ...rest }) => ({
-         id,
-         ...rest,
-         isReserved: reservedTablesIds.has(id)
+      return tables.docs.map((doc) => ({
+         id: doc.id,
+         ...doc.data(),
+         isReserved: reservedTablesIds.has(doc.id),
+         idRestaurant: doc.data().idRestaurant?.id ?? null,
+         createdAt: doc.data().createdAt.toDate().toISOString(),
       }));
    }
 
    async getRestaurant({ restaurantId }) {
       if (!restaurantId) {
-         throw new Error('No se proporciono el id del restaurante');
+         throw new Error('No se proporcionó el id del restaurante');
       }
 
-      const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', restaurantId));
-      return restaurant.data();
+      const restaurantSnap = await getDoc(doc(FirebaseDB, 'restaurants', restaurantId));
+
+      if (!restaurantSnap.exists()) {
+         throw new Error('Restaurante no encontrado');
+      }
+
+      const data = restaurantSnap.data();
+
+      return {
+         id: restaurantSnap.id,
+         ...data,
+         idLocation: data.idLocation?.id ?? null,
+         createdAt: data.createdAt?.toDate().toISOString() ?? null,
+         updatedAt: data.updatedAt?.toDate().toISOString() ?? null
+      };
+   }
+
+
+   async getAllocation() {
+      const locations = await getDocs(collection(FirebaseDB, 'locations'));
+      return locations.docs.map(doc => ({
+         id: doc.id,
+         ...doc.data()
+      }));
    }
 }

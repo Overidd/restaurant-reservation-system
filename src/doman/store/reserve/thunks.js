@@ -1,5 +1,12 @@
 import { serviceProvider } from '@/doman/services';
-import { reserveLoadingAction, reserveMessageErrorAction, reserveSetHoursAction, reserveSetRestaurantAction, reserveSetTablesAction, typeLoading } from './reserveSlice';
+import {
+   reserveLoadingAction,
+   reserveMessageErrorAction,
+   reserveSetAvailableHoursAction,
+   reserveSetRestaurantAction,
+   reserveSetTablesAction,
+   typeLoading
+} from './reserveSlice';
 
 
 export const startGetAvailableHours = (date) => {
@@ -13,7 +20,7 @@ export const startGetAvailableHours = (date) => {
 
          const availableHours = await serviceProvider.getAvailableHours({ date, restaurantId: locationId });
 
-         dispatch(reserveSetHoursAction(availableHours));
+         dispatch(reserveSetAvailableHoursAction(availableHours));
       } catch (error) {
          dispatch(reserveMessageErrorAction(error.message));
       }

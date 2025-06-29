@@ -2,6 +2,27 @@
 import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
 
+// selectedTables: [
+// {
+//    id: 1,
+//    name: null,
+//    description: null,
+//    image: null,
+//    status: null,
+//    type: null,
+//    chairs: null,
+// }
+// ],
+
+// currentSelectedTable: {
+// id: 1,
+// name: null,
+// description: null,
+// image: null,
+// status: null,
+// type: null,
+// chairs: null,
+// },
 export const typeLoading = {
    HOUR: 'hour',
    TABLES: 'tables',
@@ -75,8 +96,10 @@ export const reserveSlice = createSlice({
 
       reserveMessageErrorAction: (state, { payload }) => {
          state.errorMessage = payload;
+         state.isLoading.hour = false;
+         state.isLoading.tables = false;
+         state.isLoading.selectedTables = false;
       },
-
 
       //* Metodo para guardar las tablas Seleccionadas siuuu
       reserveSetInfoAction: (state, { payload }) => {

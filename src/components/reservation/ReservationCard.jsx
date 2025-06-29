@@ -13,8 +13,8 @@ export const ReservationCard = ({
          className={cn(
             `bg-menu gradient-radial-primary`,
             'shadow-primary rounded-2xl backdrop-blur-lg',
-            'flex flex-col justify-between overflow-hidden',
-            ' p-10',
+            'overflow-hidden',
+            'p-10',
             className
          )}
       >

@@ -1,68 +1,60 @@
 import { cn } from '@/ultils/cn';
-import { useStepFormContext } from '@/hook';
-import { ReservationTitle } from '.';
 import { Button } from '../UI/common';
 import { Label } from '../UI/from';
 
-const hoursData = [
-   {
-      id: 1,
-      hour: '12:00',
-   },
-   {
-      id: 2,
-      hour: '13:00',
-   },
-   {
-      id: 3,
-      hour: '14:00',
-   },
-   {
-      id: 4,
-      hour: '15:00',
-   },
-]
+import {
+   useReserve,
+   useStepFormContext
+} from '@/hook';
+
+import {
+   ReservationLoadding,
+   ReservationTitle
+} from '.';
 
 
-
-export const ReservationStepHour = ({ className, name }) => {
-   const { nextStep, stateForm } = useStepFormContext();
+export const ReservationStepHour = ({ className }) => {
+   const { isLoading, availableHours, reserveSetHour } = useReserve();
+   const { nextStep } = useStepFormContext();
 
    const onValueChange = (hour) => {
-      nextStep({ value: hour, name: name });
+      reserveSetHour(hour);
+      nextStep();
    }
 
-   console.log(stateForm)
-
    return (
-      <section
-         className={cn(
-            'w-[50%] h-full mx-auto text-center space-y-10',
-            className
-         )}
+      <ReservationLoadding
+         isLodding={isLoading.hour}
       >
-         <Label>
-            <ReservationTitle
-               className={'mx-auto'}
-               title={'Seleccionar'}
-               subtitle={'Hora'}
-            />
-         </Label>
+         <section
+            className={cn(
+               'w-[50%] h-full mx-auto space-y-10',
+               'text-center',
+               className
+            )}
+         >
+            <Label>
+               <ReservationTitle
+                  title={'Seleccionar'}
+                  subtitle={'Hora'}
+                  className={'mx-auto'}
+               />
+            </Label>
 
-         <div className='grid grid-cols-4 gap-5'>
-            {
-               hoursData.map((hour) => (
-                  <Button
-                     onClick={() => onValueChange(hour.hour)}
-                     type='button'
-                     key={hour.id}
-                  >
-                     {hour.hour}
-                  </Button>
-               ))
-            }
-         </div>
-
-      </section>
+            <div className='grid grid-cols-4 gap-5'>
+               {
+                  availableHours.map((hour) => (
+                     <Button
+                        onClick={() => onValueChange(hour.hour)}
+                        type='button'
+                        key={hour.id}
+                     >
+                        {hour.hour}
+                     </Button>
+                  ))
+               }
+            </div>
+         </section>
+      </ReservationLoadding>
    )
 }

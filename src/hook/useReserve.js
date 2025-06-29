@@ -20,25 +20,18 @@ export const useReserve = () => {
       errorMessage,
       isLoading,
       from,
+      tables,
+      restaurant,
+      availableHours,
    } = useSelector((state) => state.reserveReducer);
 
    // Metodos de consulta api
-   /**
-    * 
-    * @param {{ date: string, restaurantId: string }} data 
-    * @returns 
-    */
-   const serviceGetAvailableHours = (data) => {
-      dispatch(startGetAvailableHours(data));
+   const serviceGetAvailableHours = (date) => {
+      dispatch(startGetAvailableHours(date));
    };
 
-   /**
-    * 
-    * @param {{ date: string, restaurantId: string }} data 
-    * @returns 
-    */
-   const serviceGetTables = (data) => {
-      dispatch(startGetTables(data));
+   const serviceGetTables = () => {
+      dispatch(startGetTables());
    };
 
    // Metodos de acciones del usuario
@@ -46,12 +39,20 @@ export const useReserve = () => {
       dispatch(reserveSetInfoAction(data));
    }
 
-   const reserveSetDate = (data) => {
-      dispatch(reserveSetDateAction(data));
+
+   /**
+    * 
+    * @param {Date} date 
+    */
+   const reserveSetDate = (date) => {
+      if (date instanceof Date) date = date.toISOString().split('T')[0];
+      dispatch(reserveSetDateAction(date));
+      serviceGetAvailableHours(date);
    }
 
    const reserveSetHour = (data) => {
       dispatch(reserveSetHourAction(data));
+      serviceGetTables();
    }
 
    const reserveToggleTable = (table) => {
@@ -83,6 +84,9 @@ export const useReserve = () => {
       errorMessage,
       isLoading,
       from,
+      tables,
+      restaurant,
+      availableHours,
 
       // Metodos de consulta api
       serviceGetAvailableHours,

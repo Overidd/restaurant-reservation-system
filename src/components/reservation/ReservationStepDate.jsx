@@ -1,13 +1,18 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { cn } from '@/ultils/cn';
-import { ReservationTitle } from '.';
 import { Label } from '../UI/from';
 import { DayPicker } from '../UI/common';
-import { useStepFormContext } from '@/hook';
 import { CalendarButton } from '../UI/calendar';
+import { ReservationTitle } from '.';
 
-export const ReservationStepDate = ({ className, name }) => {
+import {
+   useReserve,
+   useStepFormContext
+} from '@/hook';
+
+export const ReservationStepDate = ({ className }) => {
+   const { reserveSetDate } = useReserve();
    const { nextStep } = useStepFormContext();
    const [date, setDate] = useState(undefined)
 
@@ -16,14 +21,16 @@ export const ReservationStepDate = ({ className, name }) => {
       let currentData = date
 
       if (currentData instanceof Date) {
-         nextStep(currentData);
+         reserveSetDate(newDate);
+         nextStep();
          return;
       }
 
       const newDate = new Date();
       newDate.setDate(date);
 
-      nextStep({ value: newDate, name: name });
+      reserveSetDate(newDate);
+      nextStep();
    }
 
    const onValueChangeDate = (date) => {
@@ -40,16 +47,16 @@ export const ReservationStepDate = ({ className, name }) => {
       >
          <Label>
             <ReservationTitle
-               className={'mx-auto'}
-               title={'Selecionar'}
                subtitle={'Fecha'}
+               title={'Selecionar'}
+               className={'mx-auto'}
             />
          </Label>
 
          <DayPicker
-            className={'mx-auto'}
-            onChange={onValueChange}
             name='date'
+            onChange={onValueChange}
+            className={'mx-auto'}
          />
 
          <CalendarButton

@@ -28,11 +28,11 @@ const TYPEACTION = {
    SET_VALIDATIONS: 'SET_VALIDATIONS',
 }
 
-const validateField = (key, state, validations) => {
+const validateField = (key, state, validations, additionalData) => {
    const rule = validations[key];
    if (!rule) return [true, ''];
    const [fn, msg, needsWholeState] = rule;
-   const valid = needsWholeState ? fn(state) : fn(state[key]);
+   const valid = needsWholeState ? fn(state[key], state, additionalData) : fn(state[key]);
    return [valid, msg];
 };
 
@@ -48,7 +48,8 @@ const formReducer = (state, action) => {
             const [valid, msg] = validateField(
                key,
                state.values,
-               state.validations
+               state.validations,
+               state.additionalData
             );
             errors[`${key}Valid`] = valid ? null : msg;
          }
@@ -58,7 +59,8 @@ const formReducer = (state, action) => {
          const [valid, msg] = validateField(
             action.field,
             state.values,
-            state.validations
+            state.validations,
+            state.additionalData
          );
          return {
             ...state,
@@ -87,13 +89,14 @@ const formReducer = (state, action) => {
    }
 };
 
-export const useForm = ({ initialState = {}, activeValidation = true, validations = {} }) => {
+export const useForm = ({ initialState = {}, activeValidation = true, validations = {}, additionalData = {} }) => {
    const mergedValidations = { ...defaultValidations, ...validations };
 
    const [state, dispatch] = useReducer(formReducer, {
       values: initialState,
       errors: {},
       validations: mergedValidations,
+      additionalData
    });
 
    const onInitialFrom = (newInitialState) => {
@@ -115,7 +118,7 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
    const validateForm = useCallback(() => {
       const errors = {};
       for (const key of Object.keys(state.values)) {
-         const [valid, msg] = validateField(key, state.values, state.validations);
+         const [valid, msg] = validateField(key, state.values, state.validations, state.additionalData);
          errors[`${key}Valid`] = valid ? null : msg;
       }
       dispatch({ type: TYPEACTION.VALIDATE_ALL });
@@ -123,7 +126,7 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
          isValid: Object.values(errors).every((e) => e == null),
          errors,
       };
-   }, [state.values, state.validations]);
+   }, [state.values, state.validations, state.additionalData]);
 
    const onResetForm = useCallback(() => {
       dispatch({ type: TYPEACTION.RESET, initialState });

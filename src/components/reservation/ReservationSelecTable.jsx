@@ -18,6 +18,7 @@ import {
    SelectTrigger,
    SelectValue
 } from '../UI/from';
+import { ReservationLoadding } from '.';
 
 const dataInfo = [
    {
@@ -59,100 +60,118 @@ const reason = {
 }
 
 export const ReservationSelecTable = () => {
-   const { setStateValue, stateForm } = useStepFormContext();
-   const { reserveSelectTable, selectedTables } = useReserve()
-   const [date, setDate] = useState(stateForm.date || new Date());
+   const {
+      reserveSelectTable,
+      selectedTables,
+      isLoading,
+      from,
+      tables,
+      restaurant,
+   } = useReserve()
+
+   const [date, setDate] = useState(new Date(from.date));
 
    const onValueChangeDate = (value) => {
-      setStateValue({ value, name: 'date' });
-      setDate(value);
+      // setStateValue({ value, name: 'date' });
+      // setDate(value);
    }
 
    const onValueChangeHour = (value) => {
-      setStateValue({ value, name: 'hour' });
+      // setStateValue({ value, name: 'hour' });
    }
 
    const onValueChangeDiners = (diners) => {
-      setStateValue({ value: { ...stateForm.info, diners: diners, }, name: 'info' });
+      // setStateValue({ value: { ...from.info, diners: diners, }, name: 'info' });
    }
 
+   console.log()
+
    return (
-      <div className={cn(
-         'grid gap-4 grid-cols-[70%_1fr] grid-table-container'
-      )}>
-         <header className={cn(
-            'grid-table-header',
-            'flex justify-between',
-            // 'border-b-2 border-[#0002]'
-         )}>
-            <section>
-               <ColorStatus
-                  className="flex flex-row gap-5"
-                  data={dataInfo}
-               />
-            </section>
+      <ReservationLoadding
+         isLodding={isLoading.tables}
+      >
+         <div className={cn(
+            'grid gap-4 grid-cols-[70%_1fr] grid-table-container'
+         )}
+         >
+            <header className={cn(
+               'grid-table-header',
+               'flex justify-between',
+               // 'border-b-2 border-[#0002]'
+            )}>
+               <section>
+                  <ColorStatus
+                     className="flex flex-row gap-5"
+                     data={dataInfo}
+                  />
+               </section>
 
-            <section
-               className="flex flex-row gap-5 items-center"
-            >
-               <CalendarButton
-                  date={date}
-                  onValueChange={onValueChangeDate}
-               />
-
-               <Select
-                  value={stateForm.hour}
-                  onValueChange={onValueChangeHour}
+               <section
+                  className="flex flex-row gap-5 items-center"
                >
-                  <SelectTrigger
-                     className="w-full"
-                     variant="crystal"
-                  >
-                  </SelectTrigger>
-                  <SelectContent>
-                     {hourAvailable.map((item) => (
-                        <SelectItem key={item.id} value={item.hour}>
-                           {item.hour}
-                        </SelectItem>
-                     ))}
-                  </SelectContent>
-               </Select>
+                  <CalendarButton
+                     date={date}
+                     onValueChange={onValueChangeDate}
+                  />
 
-               <Select
-                  value={stateForm.info.diners}
-                  onValueChange={onValueChangeDiners}
-               >
-                  <SelectTrigger
-                     className="w-full"
-                     variant="crystal"
+                  <Select
+                     value={from.hour}
+                     onValueChange={onValueChangeHour}
                   >
-                     <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                     {
-                        Array.from(
-                           { length: reason.max },
-                           (_, index) => index + reason.min
-                        ).map((item) => (
-                           <SelectItem key={item} value={item}>
-                              {item}
+                     <SelectTrigger
+                        className="w-full"
+                        variant="crystal"
+                     >
+                     </SelectTrigger>
+                     <SelectContent>
+                        {hourAvailable.map((item) => (
+                           <SelectItem key={item.id} value={item.hour}>
+                              {item.hour}
                            </SelectItem>
-                        ))
-                     }
-                  </SelectContent>
-               </Select>
-            </section>
+                        ))}
+                     </SelectContent>
+                  </Select>
 
-            <TiemLimit />
-         </header>
+                  <Select
+                     value={from.info.diners}
+                     onValueChange={onValueChangeDiners}
+                  >
+                     <SelectTrigger
+                        className="w-full"
+                        variant="crystal"
+                     >
+                        <SelectValue />
+                     </SelectTrigger>
+                     <SelectContent>
+                        {
+                           Array.from(
+                              { length: reason.max },
+                              (_, index) => index + reason.min
+                           ).map((item) => (
+                              <SelectItem key={item} value={item}>
+                                 {item}
+                              </SelectItem>
+                           ))
+                        }
+                     </SelectContent>
+                  </Select>
+               </section>
 
-         <main className="grid-table-main">
-            <TableList
-               onChangeTable={reserveSelectTable}
-               selectedTables={selectedTables}
-            />
-         </main>
-      </div >
+               <TiemLimit />
+            </header>
+
+            <main className="grid-table-main">
+               <TableList
+                  dataTables={tables}
+                  rows={restaurant.rows}
+                  columns={restaurant.columns}
+                  selectedTables={selectedTables}
+                  onChangeTable={reserveSelectTable}
+                  className={'overflow-hidden mx-auto'}
+               />
+            </main>
+         </div >
+      </ReservationLoadding>
    )
 }
 

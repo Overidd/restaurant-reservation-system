@@ -101,7 +101,7 @@ export const Modal = ({
             animationClasses = isAnimating ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
             break
          case 'left':
-            positionClasses = 'mr-auto my-auto ml-8'
+            positionClasses = 'mr-auto my-auto'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
             break
          case 'right':
@@ -121,8 +121,8 @@ export const Modal = ({
    const getOverlayClasses = () => {
       const baseClasses =
          direction === 'center'
-            ? 'fixed inset-0 bg-backdrop-modal bg-opacity-50 transition-opacity duration-300'
-            : 'fixed inset-0 bg-backdrop-modal bg-opacity-50 flex transition-opacity duration-300'
+            ? 'fixed inset-0 bg-backdrop-modal bg-opacity-50  transition-opacity duration-300'
+            : 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg flex transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }

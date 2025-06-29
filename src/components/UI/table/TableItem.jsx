@@ -72,6 +72,7 @@ const getChairPositions = (chairCount, type) => {
 
 export const TableItem = ({
    className,
+   style,
    onClick,
    name,
    type = 'medium',
@@ -84,6 +85,7 @@ export const TableItem = ({
    return (
       <div
          onClick={onClick}
+         style={style}
          className={cn(
             tableConfig.containerSize,
             'relative transition-all duration-300 hover:scale-105 cursor-pointer',
