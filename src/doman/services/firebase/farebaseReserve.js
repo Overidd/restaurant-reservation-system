@@ -8,7 +8,7 @@ import {
 } from 'firebase/firestore/lite';
 import { FirebaseDB } from './config';
 
-export class FirebaseService {
+export class FirebaseReserveService {
    constructor() { }
 
    /**
@@ -142,7 +142,6 @@ export class FirebaseService {
          updatedAt: data.updatedAt?.toDate().toISOString() ?? null
       };
    }
-
 
    async getAllocation() {
       const locations = await getDocs(collection(FirebaseDB, 'locations'));

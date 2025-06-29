@@ -14,7 +14,7 @@ import {
   Input,
   LinkCustom
 } from '@/components/UI/from'
-import { useForm } from '@/hook'
+import { useAuthStore, useForm } from '@/hook'
 
 const initValidation = {
   name: [
@@ -40,7 +40,14 @@ const initValidation = {
   ],
 }
 
+const messageState = {
+  loading: 'Cargando...',
+  success: 'Registro exitoso',
+  error: 'Ocurrió un error',
+}
+
 export const RegisterScreen = () => {
+  const { register, loginGoogle, isLoading } = useAuthStore(messageState)
 
   const {
     onSubmitForm,
@@ -72,7 +79,7 @@ export const RegisterScreen = () => {
   });
 
   const onSubmit = onSubmitForm((value) => {
-    console.log(value);
+    register(value);
   });
 
   return (
@@ -198,6 +205,7 @@ export const RegisterScreen = () => {
         <FormItem>
           <Button
             type='submit'
+            disabled={isLoading}
             className={'py-5'}
           >
             Registrate
@@ -217,6 +225,7 @@ export const RegisterScreen = () => {
             type='button'
             size={'icon'}
             variant={'crystal'}
+            onclick={loginGoogle}
             className={'mx-auto'}
           >
             <img

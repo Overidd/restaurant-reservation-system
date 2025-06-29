@@ -15,12 +15,10 @@ export const useModalReserve = () => {
       const isReserveRoute = location.pathname.includes('/reserve');
 
       if (isReserveRoute && !isOpenModal) {
-         // console.log('open modal');
          dispatch(openModalReserveAction());
       }
 
       if (!isReserveRoute && isOpenModal) {
-         // console.log('close modal');
          dispatch(closeModalReserveAction());
       }
    }, [location.pathname, dispatch, isOpenModal]);

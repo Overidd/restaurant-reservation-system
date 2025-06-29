@@ -2,10 +2,18 @@ import { cn } from '@/ultils';
 import { Outlet } from 'react-router-dom';
 import { Card2 } from '@/components/UI/card';
 import { Modal } from '@/components/UI/common';
-import { useModalAuth } from '@/hook/useModalAuth';
+
+import {
+  useCheckAuth,
+  useModalAuth,
+  useRedirectIfAuthenticated
+} from '@/hook';
 
 export const AuthLayout = () => {
-  const { isOpenModal, closeModal } = useModalAuth()
+  const { isAuthenticated } = useCheckAuth()
+  const { isOpenModal, closeModal } = useModalAuth(isAuthenticated)
+  useRedirectIfAuthenticated(isAuthenticated, closeModal);
+  if (isAuthenticated) return null;
 
   return (
     <Modal

@@ -25,7 +25,6 @@ export const useModalAuth = () => {
       }
    }, [location.pathname, dispatch, isOpenModal]);
 
-
    /**
     * 
     * @param {string} to login | register

@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
-import { cn } from '@/ultils/cn';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '../UI/common';
-import { NavbarList } from './NavbarList';
+import { cn } from '@/ultils';
+import { Link } from 'react-router-dom';
 import { ShoppingCart, Table, User } from 'lucide-react';
+import { Button, Popover } from '../UI/common';
+import { NavbarList } from './NavbarList';
+import { LinkCustom } from '../UI/from';
+import { Card2 } from '../UI/card';
+import { useAuthStore, useCheckAuth } from '@/hook';
+import { Authenticated, NoAuthenticated } from '../user';
 
 const listMenu = [
    {
@@ -19,12 +23,8 @@ const listMenu = [
 ]
 
 export const Navbar = ({ className }) => {
-   const navigate = useNavigate();
-   const location = useLocation();
-
-   const openModalReserve = () => {
-      navigate(`${location.pathname}/reserve`, { state: { background: location } });
-   };
+   const { isAuthenticated } = useCheckAuth()
+   const { name, photoURL, logoutPermanently } = useAuthStore()
 
    return (
       <nav
@@ -47,18 +47,38 @@ export const Navbar = ({ className }) => {
          </Link>
          <NavbarList data={listMenu} />
 
-         <ul className='ml-auto flex gap-2 items-center'>
-            <User className='w-7 h-7 text-primary-foreground' />
-
+         <ul className='ml-auto flex gap-3 items-center select-none'>
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
-            <Button
-               onClick={openModalReserve}
-               size={"lg"}
+            <Popover
+               trigger='click'
+               placement='bottom'
+               contentClassName='z-50 mt-6'
+               content={
+                  <Card2 className='flex flex-col gap-2 shadow-2xl'>
+                     {
+                        isAuthenticated
+                           ? <Authenticated
+                              name={name}
+                              photoURL={photoURL}
+                              onlogout={logoutPermanently}
+                           />
+                           : <NoAuthenticated />
+                     }
+                  </Card2>
+               }
             >
-               Ordenar
-               <Table />
-            </Button>
+               <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
+            </Popover>
+
+            <LinkCustom to={'/reserve'}>
+               <Button
+                  size={"lg"}
+               >
+                  Ordenar
+                  <Table />
+               </Button>
+            </LinkCustom>
          </ul>
       </nav >
    )

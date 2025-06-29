@@ -1,5 +1,5 @@
 import { Button } from '@/components/UI/common';
-import { useForm } from '@/hook';
+import { useForm, useAuthStore } from '@/hook';
 
 import {
    Key,
@@ -25,7 +25,15 @@ const initValidation = {
    ]
 };
 
+const messageState = {
+   loading: 'Cargando...',
+   success: 'Login exitoso',
+   error: 'Ocurrió un error',
+}
+
 export const LoginScreen = () => {
+   const { login, loginGoogle, isLoading } = useAuthStore(messageState)
+
    const {
       onSubmitForm,
       onValueChange,
@@ -41,13 +49,13 @@ export const LoginScreen = () => {
       validations: initValidation,
       activeValidation: true,
       initialState: {
-         'email': '',
-         'password': ''
+         email: '',
+         password: ''
       },
    });
 
    const onSubmit = onSubmitForm((value) => {
-      console.log(value);
+      login(value)
    });
 
    return (
@@ -108,10 +116,10 @@ export const LoginScreen = () => {
                No tienes una cuenta
             </LinkCustom>
 
-
             <FormItem>
                <Button
                   type='submit'
+                  disabled={isLoading}
                   className={'py-5'}
                >
                   Iniciar sesion
@@ -132,6 +140,7 @@ export const LoginScreen = () => {
                   size={'icon'}
                   variant={'crystal'}
                   className={'mx-auto'}
+                  onClick={loginGoogle}
                >
                   <img
                      src="/icon/icon-google.svg"

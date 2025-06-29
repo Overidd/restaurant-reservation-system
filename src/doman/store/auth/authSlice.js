@@ -1,42 +1,64 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-import { authStateEmun } from './emun.auth';
+
+export const authStateEmun = {
+   checking: 'checking',
+   notAuthenticated: 'not-authenticated',
+   authenticated: 'authenticated',
+}
+
+export const ReducerType = {
+   AuthReducer: 'authReducer',
+   JournalReducer: 'journalReducer',
+   ProductReducer: 'productReducer',
+};
 
 export const authSlice = createSlice({
    name: 'auth',
    initialState: {
-      status: authStateEmun.checking, // 'not-authenticated', 'authenticated'
+      status: authStateEmun.checking, // 'checking', 'not-authenticated', 'authenticated' 
+      isLoading: false,
+      errorMessage: null,
       uid: null,
       email: null,
-      displayName: null,
+      name: null,
       photoURL: null,
-      errorMessage: null,
    },
    reducers: {
-      login: (state, { payload }) => {
+      loginAction: (state, { payload }) => {
          state.status = authStateEmun.authenticated
          state.uid = payload.uid;
          state.email = payload.email;
-         state.displayName = payload.displayName;
+         state.name = payload.name;
          state.photoURL = payload.photoURL;
          state.errorMessage = null;
+         state.isLoading = false;
       },
-      logout: (state, { payload }) => {
+
+      logoutAction: (state, { payload }) => {
          state.status = authStateEmun.notAuthenticated;
          state.uid = null;
          state.email = null;
-         state.displayName = null;
+         state.name = null;
          state.photoURL = null;
-         state.errorMessage = payload.errorMessage || null;
+         state.errorMessage = payload?.errorMessage || null;
+         state.isLoading = false;
       },
-      checkingCredentials: (state) => {
+
+      checkingCredentialAction: (state, { payload }) => {
+         console.log(payload);
          state.status = authStateEmun.checking
+      },
+
+      loaddingAction: (state) => {
+         state.isLoading = true
       }
    },
 });
 
 export const {
-   login,
-   logout,
-   checkingCredentials
+   loginAction,
+   logoutAction,
+   loaddingAction,
+   checkingCredentialAction
 } = authSlice.actions;
