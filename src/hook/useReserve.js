@@ -79,8 +79,8 @@ export const useReserve = () => {
       dispatch(reserveChangeStateAction(typeStatus.PENDING));
    }
 
-   const reserveConfirm = () => {
-      dispatch(startReserveTable());
+   const reserveConfirm = async () => {
+      return dispatch(startReserveTable());
    }
 
    const getCurrentSelectedTable = () => {

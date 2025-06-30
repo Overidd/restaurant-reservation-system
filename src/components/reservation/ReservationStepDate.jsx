@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { cn } from '@/ultils/cn';
+import PropTypes from 'prop-types';
 import { Label } from '../UI/from';
 import { DayPicker } from '../UI/common';
 import { CalendarButton } from '../UI/calendar';
@@ -14,28 +13,19 @@ import {
 export const ReservationStepDate = ({ className }) => {
    const { reserveSetDate } = useReserve();
    const { nextStep } = useStepFormContext();
-   const [date, setDate] = useState(undefined)
 
-   // number || Date
-   const onValueChange = (date) => {
-      let currentData = date
-
+   const onValueChange = (currentData) => {
       if (currentData instanceof Date) {
-         reserveSetDate(newDate);
+         reserveSetDate(currentData);
          nextStep();
          return;
       }
 
       const newDate = new Date();
-      newDate.setDate(date);
+      newDate.setDate(currentData);
 
       reserveSetDate(newDate);
       nextStep();
-   }
-
-   const onValueChangeDate = (date) => {
-      setDate(date)
-      onValueChange(date)
    }
 
    return (
@@ -60,8 +50,7 @@ export const ReservationStepDate = ({ className }) => {
          />
 
          <CalendarButton
-            date={date}
-            onValueChange={onValueChangeDate}
+            onValueChange={onValueChange}
          />
       </section>
    )

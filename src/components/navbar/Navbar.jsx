@@ -1,13 +1,25 @@
-import PropTypes from 'prop-types';
 import { cn } from '@/ultils';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Table, User } from 'lucide-react';
-import { Button, Popover } from '../UI/common';
-import { NavbarList } from './NavbarList';
-import { LinkCustom } from '../UI/from';
+import PropTypes from 'prop-types';
 import { Card2 } from '../UI/card';
-import { useAuthStore, useCheckAuth, useIfAuthenticated, useOnAuthReserve } from '@/hook';
+import { LinkCustom } from '../UI/from';
+import { NavbarList } from './NavbarList';
+import { ShoppingCart, Table, User } from 'lucide-react';
 import { Authenticated, NoAuthenticated } from '../user';
+
+import {
+   Button,
+   Popover,
+   PopoverContent,
+   PopoverTrigger
+} from '../UI/common';
+
+import {
+   useAuthStore,
+   useCheckAuth,
+   useIfAuthenticated,
+   useOnAuthReserve
+} from '@/hook';
 
 const listMenu = [
    {
@@ -27,7 +39,7 @@ export const Navbar = ({ className }) => {
    const { name, photoURL, logoutPermanently } = useAuthStore()
    const { reserveConfirm } = useOnAuthReserve()
    useIfAuthenticated(isAuthenticated, reserveConfirm);
-   
+
    return (
       <nav
          className={cn(
@@ -52,11 +64,11 @@ export const Navbar = ({ className }) => {
          <ul className='ml-auto flex gap-3 items-center select-none'>
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
-            <Popover
-               trigger='click'
-               placement='bottom'
-               contentClassName='z-50 mt-6'
-               content={
+            <Popover>
+               <PopoverTrigger>
+                  <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
+               </PopoverTrigger>
+               <PopoverContent className={'mt-8 bg-transparent'}>
                   <Card2 className='flex flex-col gap-2 shadow-2xl'>
                      {
                         isAuthenticated
@@ -68,9 +80,7 @@ export const Navbar = ({ className }) => {
                            : <NoAuthenticated />
                      }
                   </Card2>
-               }
-            >
-               <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
+               </PopoverContent>
             </Popover>
 
             <LinkCustom to={'reserve'}>

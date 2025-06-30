@@ -1,6 +1,13 @@
+import toast from 'react-hot-toast';
 import { cn } from '@/ultils/cn';
-import { useCheckAuth, useModalAuth, useModalReserve, useReserve } from '@/hook';
 import { Card2 } from '../UI/card';
+
+import {
+   useCheckAuth,
+   useModalAuth,
+   useModalReserve,
+   useReserve
+} from '@/hook';
 
 import {
    Users,
@@ -13,6 +20,7 @@ import {
    CardContent,
    CardImage
 } from '../UI/common';
+
 
 export const ReservationInfoTable = ({ className }) => {
    const {
@@ -37,18 +45,32 @@ export const ReservationInfoTable = ({ className }) => {
       openModal
    } = useModalAuth()
 
-   const { closeModal } = useModalReserve()
+   const {
+      closeModal
+   } = useModalReserve()
 
    const isActive = existSelectedTable();
 
-   const onClickReserve = () => {
+   const onClickReserve = async () => {
       if (!isAuthenticated) {
          reservePending();
          openModal('login');
          return;
       }
-      reserveConfirm();
-      closeModal();
+
+      reserveConfirm()
+         .then((data) => {
+            closeModal();
+            toast.custom((t) => (
+               <ReservaExitosa
+                  id={t.id}
+                  code={data.code}
+               />
+            ), { duration: Infinity });
+         })
+         .catch((err) => {
+            toast.error(err.message || 'Error al realizar la reserva');
+         });
    }
 
    return (
@@ -115,3 +137,13 @@ export const ReservationInfoTable = ({ className }) => {
       </Card2>
    )
 }
+
+const ReservaExitosa = ({ code, id }) => (
+   <div className="bg-white p-4 shadow rounded">
+      <p className="font-bold">¡Reserva Exitosa!</p>
+      <p>Código: <span className="font-mono">{code}</span></p>
+      <button onClick={() => toast.dismiss(id)} className="mt-2 text-blue-600 underline">
+         Cerrar
+      </button>
+   </div>
+);

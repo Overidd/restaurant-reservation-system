@@ -1,4 +1,5 @@
 import { serviceProvider } from '@/doman/services';
+
 import {
    reserveLoadingAction,
    reserveMessageErrorAction,
@@ -6,11 +7,9 @@ import {
    reserveSetAvailableHoursAction,
    reserveSetRestaurantAction,
    reserveSetTablesAction,
-   reserveStateMessageAction,
    typeLoading
 } from './reserveSlice';
-import { openModalConfirmReserveAction } from '../UISlice';
-
+import { closeModalReserveAction } from '../UISlice';
 
 export const startGetAvailableHours = (date) => {
    return async (dispatch, getState) => {
@@ -51,7 +50,8 @@ export const startGetTables = () => {
 export const startReserveTable = () => {
    return async (dispatch, getState) => {
       dispatch(reserveLoadingAction(typeLoading.RESERVE));
-      const { from, selectedTables, restaurant } = getState().reserveReducer;
+      const { from, selectedTables, restaurant, errorMessage } = getState().reserveReducer;
+
       const res = await serviceProvider.reserveTable({
          ...from.info,
          date: from.date,
@@ -60,12 +60,13 @@ export const startReserveTable = () => {
          idRestaurant: restaurant.id
       });
 
-      if (!res) {
-         dispatch(reserveMessageErrorAction('No se pudo realizar la reserva'));
-         throw new Error('No se pudo realizar la reserva');
+      if (!res.ok) {
+         dispatch(reserveMessageErrorAction(errorMessage || 'No se pudo realizar la reserva'));
+         throw new Error(errorMessage || 'No se pudo realizar la reserva');
       }
-      dispatch(openModalConfirmReserveAction())
-      dispatch(reserveStateMessageAction('Reserva realizada con exito'));
+
+      // dispatch(reserveStateMessageAction('Reserva realizada con exito'));
       dispatch(reserveResetAction());
+      return res
    }
 }

@@ -1,237 +1,35 @@
-import { createPortal } from 'react-dom';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import * as PopoverPrimitive from '@radix-ui/react-popover'
+import { cn } from '@/ultils/cn'
 
-export const Popover = ({
-   children,
-   content,
-   trigger = 'click',// 'click' | 'hover'
-   placement = 'bottom', // 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
-   offset = 8,
-   className = '',
-   contentClassName = '',
-   disabled = false,
-   onOpenChange,
+export const Popover = ({ ...props }) => {
+  return <PopoverPrimitive.Root data-slot='popover' {...props} />;
+}
+
+export const PopoverTrigger = ({ ...props }) => {
+  return <PopoverPrimitive.Trigger data-slot='popover-trigger' {...props} />;
+}
+
+export const PopoverContent = ({
+  className,
+  align = 'center',
+  sideOffset = 4,
+  ...props
 }) => {
-   const [isOpen, setIsOpen] = useState(false)
-   const [position, setPosition] = useState({ top: 0, left: 0 })
-   const triggerRef = useRef(null)
-   const contentRef = useRef(null)
-   const timeoutRef = useRef()
+  return (
+    (<PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        data-slot='popover-content'
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md shadow-md outline-hidden',
+          className
+        )}
+        {...props} />
+    </PopoverPrimitive.Portal>)
+  );
+}
 
-   const calculatePosition = useCallback(() => {
-      if (!triggerRef.current || !contentRef.current) return
-
-      const triggerRect = triggerRef.current.getBoundingClientRect()
-      const contentRect = contentRef.current.getBoundingClientRect()
-      const viewport = {
-         width: window.innerWidth,
-         height: window.innerHeight,
-      }
-
-      let top = 0
-      let left = 0
-
-      switch (placement) {
-         case 'top':
-            top = triggerRect.top - contentRect.height - offset
-            left = triggerRect.left + (triggerRect.width - contentRect.width) / 2
-            break
-         case 'top-start':
-            top = triggerRect.top - contentRect.height - offset
-            left = triggerRect.left
-            break
-         case 'top-end':
-            top = triggerRect.top - contentRect.height - offset
-            left = triggerRect.right - contentRect.width
-            break
-         case 'bottom':
-            top = triggerRect.bottom + offset
-            left = triggerRect.left + (triggerRect.width - contentRect.width) / 2
-            break
-         case 'bottom-start':
-            top = triggerRect.bottom + offset
-            left = triggerRect.left
-            break
-         case 'bottom-end':
-            top = triggerRect.bottom + offset
-            left = triggerRect.right - contentRect.width
-            break
-         case 'left':
-            top = triggerRect.top + (triggerRect.height - contentRect.height) / 2
-            left = triggerRect.left - contentRect.width - offset
-            break
-         case 'right':
-            top = triggerRect.top + (triggerRect.height - contentRect.height) / 2
-            left = triggerRect.right + offset
-            break
-      }
-
-      if (left < 0) left = 8
-      if (left + contentRect.width > viewport.width) {
-         left = viewport.width - contentRect.width - 8
-      }
-      if (top < 0) top = 8
-      if (top + contentRect.height > viewport.height) {
-         top = viewport.height - contentRect.height - 8
-      }
-
-      setPosition({ top, left })
-   }, [placement, offset])
-
-   const openPopover = useCallback(() => {
-      if (disabled) return
-      setIsOpen(true)
-      onOpenChange?.(true)
-   }, [disabled, onOpenChange])
-
-   const closePopover = useCallback(() => {
-      setIsOpen(false)
-      onOpenChange?.(false)
-   }, [onOpenChange])
-
-   const handleTriggerClick = useCallback(() => {
-      if (trigger === 'click') {
-         if (isOpen) {
-            closePopover()
-         } else {
-            openPopover()
-         }
-      }
-   }, [trigger, isOpen, openPopover, closePopover])
-
-   const handleTriggerMouseEnter = useCallback(() => {
-      if (trigger === 'hover') {
-         if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current)
-         }
-         openPopover()
-      }
-   }, [trigger, openPopover])
-
-   const handleTriggerMouseLeave = useCallback(() => {
-      if (trigger === 'hover') {
-         timeoutRef.current = setTimeout(() => {
-            closePopover()
-         }, 100)
-      }
-   }, [trigger, closePopover])
-
-   const handleContentMouseEnter = useCallback(() => {
-      if (trigger === 'hover' && timeoutRef.current) {
-         clearTimeout(timeoutRef.current)
-      }
-   }, [trigger])
-
-   const handleContentMouseLeave = useCallback(() => {
-      if (trigger === 'hover') {
-         closePopover()
-      }
-   }, [trigger, closePopover])
-
-   // Handle click outside
-   useEffect(() => {
-      if (!isOpen || trigger !== 'click') return
-
-      // MouseEvent
-      const handleClickOutside = (event) => {
-         if (
-            triggerRef.current &&
-            contentRef.current &&
-            !triggerRef.current.contains(event.target) &&
-            !contentRef.current.contains(event.target)
-         ) {
-            closePopover()
-         }
-      }
-
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-   }, [isOpen, trigger, closePopover])
-
-   // Handle escape key
-   useEffect(() => {
-      if (!isOpen) return
-
-      // KeyboardEvent
-      const handleEscape = (event) => {
-         if (event.key === 'Escape') {
-            closePopover()
-         }
-      }
-
-      document.addEventListener('keydown', handleEscape)
-      return () => document.removeEventListener('keydown', handleEscape)
-   }, [isOpen, closePopover])
-
-   useEffect(() => {
-      if (isOpen) {
-         calculatePosition()
-      }
-   }, [isOpen, calculatePosition])
-
-   useEffect(() => {
-      // Recalculate position on scroll/resize
-      if (!isOpen) return
-
-      const handleReposition = () => {
-         calculatePosition()
-      }
-
-      window.addEventListener('scroll', handleReposition, true)
-      window.addEventListener('resize', handleReposition)
-
-      return () => {
-         window.removeEventListener('scroll', handleReposition, true)
-         window.removeEventListener('resize', handleReposition)
-      }
-   }, [isOpen, calculatePosition])
-
-   useEffect(() => {
-      // Cleanup timeout on unmount
-      return () => {
-         if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current)
-         }
-      }
-   }, [])
-
-   const popoverContent = isOpen && (
-      <div
-         role='dialog'
-         aria-modal='true'
-         ref={contentRef}
-         onMouseEnter={handleContentMouseEnter}
-         onMouseLeave={handleContentMouseLeave}
-         className={`fixed rounded-lg shadow-lg overflow-hidden ${contentClassName}`}
-         style={{
-            top: position.top,
-            left: position.left,
-         }}
-      >
-         {content}
-      </div>
-   )
-
-   return (
-      <>
-         <div
-            tabIndex={0}
-            role='button'
-            ref={triggerRef}
-            onClick={handleTriggerClick}
-            onMouseEnter={handleTriggerMouseEnter}
-            onMouseLeave={handleTriggerMouseLeave}
-            className={`inline-block ${className}`}
-            onKeyDown={(e) => {
-               if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  handleTriggerClick()
-               }
-            }}
-         >
-            {children}
-         </div>
-         {typeof document !== 'undefined' && createPortal(popoverContent, document.body)}
-      </>
-   )
+export const PopoverAnchor = ({ ...props }) => {
+  return <PopoverPrimitive.Anchor data-slot='popover-anchor' {...props} />;
 }

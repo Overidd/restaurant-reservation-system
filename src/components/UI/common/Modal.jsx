@@ -127,8 +127,8 @@ export const Modal = ({
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }
 
-   if (!isVisible) return null
-
+   if (!isVisible) return null;
+   
    return createPortal(
       <div
          className={getOverlayClasses()}

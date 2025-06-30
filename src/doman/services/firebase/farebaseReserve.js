@@ -211,8 +211,10 @@ export class FirebaseReserveService {
 
          return {
             ok: true,
-            id: reservationRef.id
+            id: reservationRef.id,
+            code: 'ABD4567',
          };
+         
       } catch (error) {
          const code = error.code;
          return {

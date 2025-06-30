@@ -11,7 +11,6 @@ export const useOnAuthReserve = () => {
       // reserveToggleTable(table);
    }
 
-
    return {
       reserveConfirm,
       stateReserve

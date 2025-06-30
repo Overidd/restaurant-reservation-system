@@ -1,7 +1,13 @@
 import PropTypes from 'prop-types';
 import { ChevronDownIcon } from 'lucide-react';
-import { Button, Popover } from '../common';
 import { Calendar } from '.';
+
+import {
+   Button,
+   Popover,
+   PopoverContent,
+   PopoverTrigger
+} from '../common';
 
 export const CalendarButton = ({
    date,
@@ -9,11 +15,20 @@ export const CalendarButton = ({
    className,
 }) => {
    return (
-      <Popover
-         placement='bottom'
-         contentClassName='z-50'
-         className={`w-fit ${className}`}
-         content={
+      <Popover className={className}>
+         <PopoverTrigger asChild>
+            <Button
+               className='w-48 p-5 justify-between font-normal'
+               variant='crystal'
+               type='button'
+               id='date'
+            >
+               {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
+               <ChevronDownIcon />
+            </Button>
+         </PopoverTrigger>
+
+         <PopoverContent>
             <Calendar
                mode='single'
                selected={date}
@@ -21,17 +36,7 @@ export const CalendarButton = ({
                disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))}
                onSelect={onValueChange}
             />
-         }
-      >
-         <Button
-            className='w-48 p-5 justify-between font-normal'
-            variant='crystal'
-            type='button'
-            id='date'
-         >
-            {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
-            <ChevronDownIcon />
-         </Button>
+         </PopoverContent>
       </Popover>
    )
 }
