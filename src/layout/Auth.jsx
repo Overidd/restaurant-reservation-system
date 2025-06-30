@@ -6,13 +6,14 @@ import { Modal } from '@/components/UI/common';
 import {
   useCheckAuth,
   useModalAuth,
-  useRedirectIfAuthenticated
+  useIfAuthenticated
 } from '@/hook';
 
 export const AuthLayout = () => {
-  const { isAuthenticated } = useCheckAuth()
+  const { isAuthenticated } = useCheckAuth({ autoCheck: false })
   const { isOpenModal, closeModal } = useModalAuth(isAuthenticated)
-  useRedirectIfAuthenticated(isAuthenticated, closeModal);
+  useIfAuthenticated(isAuthenticated, closeModal);
+
   if (isAuthenticated) return null;
 
   return (

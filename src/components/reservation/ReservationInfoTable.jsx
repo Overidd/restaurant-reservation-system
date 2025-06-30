@@ -1,5 +1,5 @@
 import { cn } from '@/ultils/cn';
-import { useReserve } from '@/hook';
+import { useCheckAuth, useModalAuth, useModalReserve, useReserve } from '@/hook';
 import { Card2 } from '../UI/card';
 
 import {
@@ -15,9 +15,41 @@ import {
 } from '../UI/common';
 
 export const ReservationInfoTable = ({ className }) => {
-   const { getCurrentSelectedTable, existSelectedTable } = useReserve()
-   const { image, name, description, chairs } = getCurrentSelectedTable()
+   const {
+      isAuthenticated
+   } = useCheckAuth({ autoCheck: false })
+
+   const {
+      getCurrentSelectedTable,
+      existSelectedTable,
+      reserveConfirm,
+      reservePending,
+   } = useReserve()
+
+   const {
+      description,
+      chairs,
+      image,
+      name,
+   } = getCurrentSelectedTable()
+
+   const {
+      openModal
+   } = useModalAuth()
+
+   const { closeModal } = useModalReserve()
+
    const isActive = existSelectedTable();
+
+   const onClickReserve = () => {
+      if (!isAuthenticated) {
+         reservePending();
+         openModal('login');
+         return;
+      }
+      reserveConfirm();
+      closeModal();
+   }
 
    return (
       <Card2
@@ -65,20 +97,21 @@ export const ReservationInfoTable = ({ className }) => {
 
          <section className='space-y-4'>
             <Button
-               className={'w-full'}
                size={'lg'}
+               onClick={onClickReserve}
+               className={'w-full'}
             >
                Reservar
             </Button>
+
             <Button
-               className={'w-full'}
-               variant={'destructive'}
                size={'lg'}
+               variant={'destructive'}
+               className={'w-full'}
             >
                Cancelar
             </Button>
          </section>
-
       </Card2>
    )
 }

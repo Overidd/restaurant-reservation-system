@@ -64,6 +64,7 @@ const schema = {
       }
    }
 }
+
 export const ReservationScreen = () => {
    const { isOpenModal, closeModal } = useModalReserve()
 

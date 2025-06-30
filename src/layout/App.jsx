@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
 import { Toaster } from 'react-hot-toast';
+import { ModalConfigReserve } from '@/components/common';
 
 const Layout = () => {
   return (
@@ -14,6 +15,7 @@ const Layout = () => {
       <Outlet />
       <Footer className='mt-auto mx-auto' />
       <Toaster position="top-right" reverseOrder={false} />
+      <ModalConfigReserve />
     </div>
   )
 }

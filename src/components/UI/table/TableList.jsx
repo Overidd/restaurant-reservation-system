@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-import { TableItem } from '.';
 import { cn } from '@/ultils/cn';
-import { useEffect, useState } from 'react';
+import { TableItem } from '.';
+import PropTypes from 'prop-types';
 import { typeStatusTable } from '@/ultils';
 
 export const TableList = ({
@@ -9,19 +8,8 @@ export const TableList = ({
    columns,
    className,
    onChangeTable,
-   selectedTables = [],
-   dataTables = []
+   tables = []
 }) => {
-   const [tables, setTables] = useState(dataTables);
-
-   useEffect(() => {
-      setTables((tables) =>
-         tables.map((table) => ({
-            ...table,
-            ...(selectedTables.find((item) => item.id === table.id) || { isSelected: false }),
-         }))
-      );
-   }, [selectedTables]);
 
    if (!Array.isArray(tables)) return null;
 

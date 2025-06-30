@@ -9,6 +9,10 @@ import {
    reserveSetHourAction,
    startGetAvailableHours,
    startGetTables,
+   reserveChangeStateAction,
+   typeStatus,
+   startReserveTable,
+   reserveResetStateTablesAction,
 } from '@/doman/store/reserve';
 
 export const useReserve = () => {
@@ -39,7 +43,6 @@ export const useReserve = () => {
       dispatch(reserveSetInfoAction(data));
    }
 
-
    /**
     * 
     * @param {Date} date 
@@ -60,13 +63,25 @@ export const useReserve = () => {
    };
 
    const reserveSelectTable = (table) => {
-      reserveToggleTable(table);
       dispatch(reserveSelectTableAction(table));
+      dispatch(reserveToggleTableAction(table));
    };
 
    const reserveReset = () => {
       dispatch(reserveResetAction());
    };
+
+   const reserveResetStateTables = () => {
+      dispatch(reserveResetStateTablesAction());
+   }
+
+   const reservePending = () => {
+      dispatch(reserveChangeStateAction(typeStatus.PENDING));
+   }
+
+   const reserveConfirm = () => {
+      dispatch(startReserveTable());
+   }
 
    const getCurrentSelectedTable = () => {
       return currentSelectedTable ?? {}
@@ -101,5 +116,8 @@ export const useReserve = () => {
       reserveReset,
       getCurrentSelectedTable,
       existSelectedTable,
+      reserveConfirm,
+      reservePending,
+      reserveResetStateTables,
    };
 };

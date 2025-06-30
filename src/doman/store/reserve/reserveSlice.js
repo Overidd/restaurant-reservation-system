@@ -2,38 +2,26 @@
 import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
 
-// selectedTables: [
-// {
-//    id: 1,
-//    name: null,
-//    description: null,
-//    image: null,
-//    status: null,
-//    type: null,
-//    chairs: null,
-// }
-// ],
-
-// currentSelectedTable: {
-// id: 1,
-// name: null,
-// description: null,
-// image: null,
-// status: null,
-// type: null,
-// chairs: null,
-// },
 export const typeLoading = {
    HOUR: 'hour',
    TABLES: 'tables',
-   SELECTEDTABLES: 'selectedTables'
+   SELECTEDTABLES: 'selectedTables',
+   RESERVE: 'reserve'
+}
+
+export const typeStatus = {
+   ACTIVE: 'active',
+   PENDING: 'pending',
+   COMPLETED: 'completed',
 }
 
 export const reserveSlice = createSlice({
    name: 'reverse',
 
    initialState: {
+      stateReserve: typeStatus.ACTIVE,
       errorMessage: null,
+      stateMessage: null,
       isOpenModal: false,
       from: {
          info: {
@@ -48,28 +36,15 @@ export const reserveSlice = createSlice({
       isLoading: {
          hour: false,
          tables: false,
-         selectedTables: false
+         selectedTables: false,
+         reserve: false
       },
 
-      selectedTables: [
-
-      ],
-
-      currentSelectedTable: {
-
-      },
-
-      tables: [
-
-      ],
-
-      restaurant: {
-
-      },
-
-      availableHours: [
-
-      ],
+      tables: [],
+      restaurant: {},
+      availableHours: [],
+      selectedTables: [],
+      currentSelectedTable: {},
    },
 
    reducers: {
@@ -96,9 +71,13 @@ export const reserveSlice = createSlice({
 
       reserveMessageErrorAction: (state, { payload }) => {
          state.errorMessage = payload;
-         state.isLoading.hour = false;
-         state.isLoading.tables = false;
-         state.isLoading.selectedTables = false;
+         state.isLoading.hour = null;
+         state.isLoading.tables = null;
+         state.isLoading.selectedTables = null;
+      },
+
+      reserveStateMessageAction: (state, { payload }) => {
+         state.stateMessage = payload
       },
 
       //* Metodo para guardar las tablas Seleccionadas siuuu
@@ -115,32 +94,43 @@ export const reserveSlice = createSlice({
       },
 
       reserveToggleTableAction: (state, { payload }) => {
-         const isExit = state.selectedTables.find(item => item.id === payload.id);
+         const { id, status } = payload;
+         const isSelected = state.selectedTables.some(table => table.id === id);
 
-         if (!isExit && payload.status !== typeStatusTable.BUSY) {
-            state.selectedTables.push({
-               ...payload,
-               isSelected: true
-            })
-            return;
-         };
+         if (status === typeStatusTable.BUSY) return;
 
-         state.selectedTables = state.selectedTables.filter(item => item.id !== payload.id);
+         if (isSelected) {
+            // Deseleccionar la mesa
+            state.selectedTables = state.selectedTables.filter(table => table.id !== id);
+
+            state.tables = state.tables.map(table =>
+               table.id === id
+                  ? { ...table, isSelected: false, status: typeStatusTable.AVAILABLE }
+                  : table
+            );
+         } else {
+            // Seleccionar la mesa
+            state.selectedTables.push({ ...payload, isSelected: true });
+
+            state.tables = state.tables.map(table =>
+               table.id === id
+                  ? { ...table, isSelected: true, status: typeStatusTable.SELECTED }
+                  : table
+            );
+         }
       },
+
 
       reserveSelectTableAction: (state, { payload }) => {
          state.currentSelectedTable = payload;
       },
+
       //* Metodo para resetear
       reserveResetAction: (state) => {
-         // state.errorMessage = null;
-         // state.isLoading = false;
-         state.minutes = 5;
-
-         state.selectedTables = [];
-         state.currentSelectedTable = null;
-
-         state.date = {
+         state.errorMessage = null;
+         state.stateMessage = null;
+         state.isOpenModal = false;
+         state.from = {
             info: {
                locationId: null,
                reason: null,
@@ -148,8 +138,41 @@ export const reserveSlice = createSlice({
             },
             date: null,
             hour: null,
-         };
+         }
 
+         state.isLoading = {
+            hour: false,
+            tables: false,
+            selectedTables: false,
+            reserve: false
+         }
+         state.selectedTables = [];
+         state.currentSelectedTable = {};
+         state.tables = [];
+         state.restaurant = {};
+         state.availableHours = [];
+      },
+
+      reserveResetInfoAction: (state) => {
+         state.from = {
+            info: {
+               locationId: null,
+               reason: null,
+               diners: null,
+            },
+            date: null,
+            hour: null,
+         }
+      },
+
+      reserveResetStateTablesAction: (state) => {
+         state.selectedTables = [];
+         state.currentSelectedTable = {};
+         state.tables = [];
+      },
+
+      reserveChangeStateAction: (state, { payload }) => {
+         state.stateReserve = payload;
       },
    },
 });
@@ -167,6 +190,10 @@ export const {
    reserveSetDateAction,
    reserveToggleTableAction,
    reserveSelectTableAction,
+   reserveChangeStateAction,
+   reserveStateMessageAction,
+   reserveResetStateTablesAction,
+   reserveResetInfoAction,
 
    reserveResetAction,
 } = reserveSlice.actions;

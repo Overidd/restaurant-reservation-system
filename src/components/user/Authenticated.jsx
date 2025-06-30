@@ -7,8 +7,6 @@ export const Authenticated = ({
    photoURL,
    onlogout,
 }) => {
-
-   console.log(name, photoURL);
    return (
       <>
          <span className='text-primary-foreground'>
@@ -27,6 +25,7 @@ export const Authenticated = ({
             size={"lg"}
             className={'w-full'}
             onClick={onlogout}
+            title='Cerrar sesion'
          >
             <LogOut />
          </Button>

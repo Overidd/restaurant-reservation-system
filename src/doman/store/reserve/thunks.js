@@ -2,11 +2,14 @@ import { serviceProvider } from '@/doman/services';
 import {
    reserveLoadingAction,
    reserveMessageErrorAction,
+   reserveResetAction,
    reserveSetAvailableHoursAction,
    reserveSetRestaurantAction,
    reserveSetTablesAction,
+   reserveStateMessageAction,
    typeLoading
 } from './reserveSlice';
+import { openModalConfirmReserveAction } from '../UISlice';
 
 
 export const startGetAvailableHours = (date) => {
@@ -29,46 +32,40 @@ export const startGetAvailableHours = (date) => {
 
 export const startGetTables = () => {
    return async (dispatch, getState) => {
-      const { info: { locationId }, date } = getState().reserveReducer.from;
+      const { info: { locationId }, date, hour } = getState().reserveReducer.from;
 
       try {
          dispatch(reserveLoadingAction(typeLoading.TABLES));
-         const tables = await serviceProvider.getTables({ date, restaurantId: locationId });
+
+         const tables = await serviceProvider.getTables({ date, restaurantId: locationId, hour });
          const restaurant = await serviceProvider.getRestaurant({ restaurantId: locationId });
+
          dispatch(reserveSetTablesAction(tables));
          dispatch(reserveSetRestaurantAction(restaurant));
-
       } catch (error) {
          dispatch(reserveMessageErrorAction(error.message));
       }
    }
 }
 
+export const startReserveTable = () => {
+   return async (dispatch, getState) => {
+      dispatch(reserveLoadingAction(typeLoading.RESERVE));
+      const { from, selectedTables, restaurant } = getState().reserveReducer;
+      const res = await serviceProvider.reserveTable({
+         ...from.info,
+         date: from.date,
+         hour: from.hour,
+         idTable: selectedTables[0].id,
+         idRestaurant: restaurant.id
+      });
 
-// export const startTempLockTable = ({
-//    tableId,
-//    restaurantId,
-//    date,
-//    hour
-// }) => {
-
-//    return async (dispatch, states) => {
-//       try {
-//          console.log(dispatch, states)
-//       } catch (error) {
-//          console.log(error);
-//       }
-//    }
-// }
-
-// export const startTempUnlockTable = ({
-//    tableId
-// }) => {
-//    return async (dispatch, states) => {
-//       try {
-//          console.log(dispatch, states)
-//       } catch (error) {
-//          console.log(error);
-//       }
-//    }
-// }
+      if (!res) {
+         dispatch(reserveMessageErrorAction('No se pudo realizar la reserva'));
+         throw new Error('No se pudo realizar la reserva');
+      }
+      dispatch(openModalConfirmReserveAction())
+      dispatch(reserveStateMessageAction('Reserva realizada con exito'));
+      dispatch(reserveResetAction());
+   }
+}

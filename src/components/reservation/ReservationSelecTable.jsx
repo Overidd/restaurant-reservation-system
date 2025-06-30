@@ -1,12 +1,13 @@
 import { cn } from '@/ultils/cn';
-import { ChevronLeft, Clock } from 'lucide-react';
 import { TableList } from '../UI/table';
-import { Button, ColorStatus } from '../UI/common';
 import { ReservationLoadding } from '.';
+import { Button, ColorStatus } from '../UI/common';
+import { ChevronLeft, Clock } from 'lucide-react';
 
 import {
    useReserve,
    useReserveTimer,
+   useStepFormContext,
 } from '@/hook';
 
 const dataInfo = [
@@ -27,12 +28,20 @@ const dataInfo = [
 
 export const ReservationSelecTable = () => {
    const {
-      reserveSelectTable,
-      selectedTables,
-      isLoading,
       tables,
+      isLoading,
       restaurant,
+      selectedTables,
+      reserveSelectTable,
+      reserveResetStateTables,
    } = useReserve()
+
+   const { prevStep } = useStepFormContext();
+
+   const onChangePrevStep = () => {
+      prevStep()
+      reserveResetStateTables()
+   }
 
    return (
       <ReservationLoadding
@@ -45,7 +54,9 @@ export const ReservationSelecTable = () => {
             <header className={cn(
                'flex justify-between items-center',
             )}>
-               <Button>
+               <Button
+                  onClick={onChangePrevStep}
+               >
                   <ChevronLeft />
                </Button>
                <ColorStatus
@@ -57,7 +68,7 @@ export const ReservationSelecTable = () => {
 
             <main>
                <TableList
-                  dataTables={tables}
+                  tables={tables}
                   rows={restaurant.rows}
                   columns={restaurant.columns}
                   selectedTables={selectedTables}

@@ -4,7 +4,8 @@ export const UISlice = createSlice({
    name: 'UI',
    initialState: {
       isOpenModalReserve: false,
-      isOpenModalAuth: false
+      isOpenModalAuth: false,
+      isOpenModalConfirmReserve: false
    },
    reducers: {
       openModalReserveAction: (state) => {
@@ -22,6 +23,14 @@ export const UISlice = createSlice({
       closeModalAuthAction: (state) => {
          state.isOpenModalAuth = false;
       },
+
+      openModalConfirmReserveAction: (state) => {
+         state.isOpenModalConfirmReserve = true;
+      },
+
+      closeModalConfirmReserveAction: (state) => {
+         state.isOpenModalConfirmReserve = false;
+      },
    },
 });
 
@@ -30,5 +39,7 @@ export const {
    openModalReserveAction,
    closeModalReserveAction,
    openModalAuthAction,
-   closeModalAuthAction
+   closeModalAuthAction,
+   openModalConfirmReserveAction,
+   closeModalConfirmReserveAction
 } = UISlice.actions;

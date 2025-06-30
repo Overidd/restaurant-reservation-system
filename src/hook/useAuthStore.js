@@ -85,7 +85,7 @@ export const useAuthStore = (messageState) => {
       dispatch(checkingCredentialAction(state))
    }
 
-   const isAuthenticated = useMemo(() => stateAuth.status === authStateEmun.checking || stateAuth.status === authStateEmun.authenticated, [stateAuth.status])
+   const isAuthenticated = useMemo(() => stateAuth.status === authStateEmun.authenticated, [stateAuth.status])
 
    return {
       ...stateAuth,
@@ -96,7 +96,6 @@ export const useAuthStore = (messageState) => {
       logout,
       checkingCredentials,
       isAuthenticated,
-      dispatch,
       loginIntial,
       logoutPermanently,
       isLoading: stateAuth.isLoading,

@@ -10,7 +10,6 @@ export const useModalAuth = () => {
    const navigate = useNavigate();
    const location = useLocation();
 
-
    const isOpenModal = useSelector((state) => state.UIReducer.isOpenModalAuth);
 
    useEffect(() => {
@@ -26,11 +25,13 @@ export const useModalAuth = () => {
    }, [location.pathname, dispatch, isOpenModal]);
 
    /**
-    * 
     * @param {string} to login | register
     */
    const openModal = (to = 'login') => {
-      navigate(`${location.pathname}/${to}`, { state: { background: location } });
+      console.log(`${location.pathname.split('/')[1]}/${to}`)
+
+      navigate(`/${location.pathname.split('/')[1]}/${to}`, { state: { background: location } });
+
       dispatch(openModalAuthAction());
    };
 

@@ -8,4 +8,6 @@ export * from './useGetAllLocation';
 export * from './useAuthStore';
 export * from './useModalAuth';
 export * from './useCheckAuth';
-export * from './useRedirectIfAuthenticated';
+export * from './useIfAuthenticated';
+export * from './useOnAuthReserve';
+export * from './useModalConfirmReserve';

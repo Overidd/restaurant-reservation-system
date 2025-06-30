@@ -1,12 +1,28 @@
+import { typeStatusTable } from '@/ultils';
+import { FirebaseDB } from './config';
+import { getAuth } from 'firebase/auth';
+
 import {
    collection,
    getDocs,
    getDoc,
    query,
    where,
-   doc
+   doc,
+   serverTimestamp,
+   setDoc
 } from 'firebase/firestore/lite';
-import { FirebaseDB } from './config';
+
+const firebaseErrorMessages = {
+   'auth/invalid-email': 'El correo electrónico no es válido.',
+   'auth/user-disabled': 'Esta cuenta ha sido deshabilitada.',
+   'auth/user-not-found': 'No se encontró una cuenta con este correo.',
+   'auth/wrong-password': 'La contraseña es incorrecta.',
+   'auth/too-many-requests': 'Demasiados intentos. Inténtalo más tarde.',
+   'auth/network-request-failed': 'Error de red. Verifica tu conexión.',
+   'auth/invalid-credential': 'Credenciales inválidas.',
+   'auth/email-already-in-use': 'El correo ya esta en uso.',
+};
 
 export class FirebaseReserveService {
    constructor() { }
@@ -83,7 +99,7 @@ export class FirebaseReserveService {
     * @returns 
     */
 
-   async getTables({ date, restaurantId }) {
+   async getTables({ date, restaurantId, hour }) {
       if (!restaurantId) {
          throw new Error('No se proporciono el id del restaurante');
       }
@@ -102,23 +118,26 @@ export class FirebaseReserveService {
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', restaurantId),
          where('date', '==', date),
-         where('status', '==', 'confirmed')
+         where('status', '==', 'confirmed'),
+         where('hour', '==', hour),
+
          // where('hour', '==', hour),
       ));
 
-      const reservedTablesIds = new Set(reservations.docs.map(doc => doc.data().idTable));
-
+      const reservedTablesIds = new Set(reservations.docs.map(doc => Number(doc.data().idTable)));
 
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
-      return tables.docs.map((doc) => ({
-         id: doc.id,
-         ...doc.data(),
-         isReserved: reservedTablesIds.has(doc.id),
-         idRestaurant: doc.data().idRestaurant?.id ?? null,
-         createdAt: doc.data().createdAt.toDate().toISOString(),
-      }));
+      return tables.docs.map((doc) => {
+         return {
+            id: doc.id,
+            ...doc.data(),
+            status: reservedTablesIds.has(Number(doc.id)) ? typeStatusTable.BUSY : typeStatusTable.AVAILABLE,
+            idRestaurant: doc.data().idRestaurant?.id ?? null,
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+         }
+      });
    }
 
    async getRestaurant({ restaurantId }) {
@@ -149,5 +168,57 @@ export class FirebaseReserveService {
          id: doc.id,
          ...doc.data()
       }));
+   }
+
+   async reserveTable({
+      date,
+      hour,
+      reason,
+      diners,
+      idRestaurant,
+      idTable,
+   }) {
+      try {
+         const auth = getAuth();
+         const user = auth.currentUser;
+
+         if (!user) {
+            throw new Error('Usuario no autenticado');
+         }
+
+         const { uid, email, displayName } = user;
+
+         // const tableRef = doc(FirebaseDB, `restaurants/${idRestaurant}/tables/${idTable}`);
+
+         const reservationRef = doc(collection(FirebaseDB, 'reservations'));
+
+         const reservationData = {
+            idUser: uid,
+            idRestaurant,
+            idTable: idTable,
+            diners,
+            reason,
+            date,
+            hour,
+            comment: '',
+            status: 'confirmed',
+            createdAt: serverTimestamp(),
+            clientName: displayName || 'No Name',
+            clientEmail: email || 'No Email',
+         };
+
+         await setDoc(reservationRef, reservationData);
+
+         return {
+            ok: true,
+            id: reservationRef.id
+         };
+      } catch (error) {
+         const code = error.code;
+         return {
+            ok: false,
+            errorMessage: firebaseErrorMessages[code] || 'Ocurrió un error al iniciar sesión.',
+         };
+      }
    }
 }

@@ -48,8 +48,8 @@ export const DayPicker = ({ className, onChange }) => {
                'scroll-smooth',
             )}
          >
-            {Array.from({ length: lastDay - currentDay }).map((_, i) => {
-               const day = currentDay + i + 1;
+            {Array.from({ length: lastDay - (currentDay - 1) }).map((_, i) => {
+               const day = currentDay + i;
                return (
                   <Button
                      type="button"

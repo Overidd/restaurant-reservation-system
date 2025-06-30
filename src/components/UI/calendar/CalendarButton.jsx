@@ -18,7 +18,7 @@ export const CalendarButton = ({
                mode='single'
                selected={date}
                captionLayout='dropdown'
-               disabled={(date) => date <= new Date(new Date().setDate(new Date().getDate() - 1))}
+               disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))}
                onSelect={onValueChange}
             />
          }

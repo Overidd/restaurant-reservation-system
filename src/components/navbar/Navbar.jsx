@@ -6,7 +6,7 @@ import { Button, Popover } from '../UI/common';
 import { NavbarList } from './NavbarList';
 import { LinkCustom } from '../UI/from';
 import { Card2 } from '../UI/card';
-import { useAuthStore, useCheckAuth } from '@/hook';
+import { useAuthStore, useCheckAuth, useIfAuthenticated, useOnAuthReserve } from '@/hook';
 import { Authenticated, NoAuthenticated } from '../user';
 
 const listMenu = [
@@ -23,9 +23,11 @@ const listMenu = [
 ]
 
 export const Navbar = ({ className }) => {
-   const { isAuthenticated } = useCheckAuth()
+   const { isAuthenticated } = useCheckAuth({ autoCheck: true })
    const { name, photoURL, logoutPermanently } = useAuthStore()
-
+   const { reserveConfirm } = useOnAuthReserve()
+   useIfAuthenticated(isAuthenticated, reserveConfirm);
+   
    return (
       <nav
          className={cn(
@@ -71,7 +73,7 @@ export const Navbar = ({ className }) => {
                <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
             </Popover>
 
-            <LinkCustom to={'/reserve'}>
+            <LinkCustom to={'reserve'}>
                <Button
                   size={"lg"}
                >
