@@ -35,7 +35,7 @@ export const ReservationStepInfo = ({
       onValueChange,
       isFormValid,
       formState: { location, reason, diners },
-      formValidation: { locationIdValid, reasonValid, dinersValid },
+      formValidation: { locationValid, reasonValid, dinersValid },
    } = useForm({
       initialState: validateObject(from.info) ? from.info : schema.initial,
       validations: schema.valid,
@@ -59,7 +59,7 @@ export const ReservationStepInfo = ({
    })
 
    return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
          <Form
             onSubmit={onSubmit}
             className={cn(
@@ -73,7 +73,7 @@ export const ReservationStepInfo = ({
                   onValueChange={(value) => onValueChange({ name: 'location', value })}
                >
                   <SelectTrigger
-                     isError={!!locationIdValid}
+                     isError={!!locationValid}
                      variant='crystal'
                      className='w-full'
                   >
@@ -127,7 +127,7 @@ export const ReservationStepInfo = ({
                   value={diners ?? ''}
                   onChange={onValueChange}
                   isError={!!dinersValid}
-                  className={'!text-lg'}
+                  className={'!text-lg py-1'}
                />
             </FormItem>
 

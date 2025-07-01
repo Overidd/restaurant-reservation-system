@@ -3,12 +3,10 @@ import { cn } from '@/ultils/cn';
 
 export const AnimatedStep = ({
    isActive,
-   direction,
    children,
-   index,
-   currentIndex,
+   className,
 }) => {
-   
+
    const [shouldRender, setShouldRender] = useState(isActive);
    const stepRef = useRef(null);
 
@@ -35,21 +33,22 @@ export const AnimatedStep = ({
    }
 
    const baseClasses =
-      ' top-0 left-0 w-full h-full transition-all duration-200 ease-in-out animate-in fade-in zoom-in-95';
+      ' top-0 left-0 animate-in fade-in zoom-in-90 ease-in-out transition-all';
    const visibilityClasses = isActive ? 'opacity-100' : 'opacity-0 absolute';
-   const transformClasses = cn('translate-x-0', isActive ? {} : {
-      '-translate-x-50 opacity-0': direction === 'forward' || index < currentIndex,
-      'translate-x-50 opacity-0': direction === 'backward' || index > currentIndex,
+   const transformClasses = cn('animate__animated', isActive ? {} : {
+      // 'opacity-0': direction === 'forward' || index < currentIndex,
+      // ' opacity-0': direction === 'backward' || index > currentIndex,
    });
 
    return (
       <div
          ref={stepRef}
-         aria-hidden={!isActive}
+         // aria-hidden={!isActive}
          className={cn(
             baseClasses,
             visibilityClasses,
-            transformClasses
+            transformClasses,
+            className
          )}
       >
          {children}

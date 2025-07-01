@@ -3,7 +3,7 @@ import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
 
 export const typeLoading = {
-   HOUR: 'hour',
+   TIME: 'time',
    TABLES: 'tables',
    SELECTEDTABLES: 'selectedTables',
    RESERVE: 'reserve'
@@ -29,29 +29,36 @@ export const reserveSlice = createSlice({
             reason: null,
             diners: null,
          },
+
+         time: {
+            id: null,
+            hour: null,
+            tablesAvailable: null
+         },
+
          date: null,
-         hour: null,
       },
 
       isLoading: {
-         hour: false,
+         time: false,
          tables: false,
          selectedTables: false,
          reserve: false
       },
 
       tables: [],
-      restaurant: {},
-      availableHours: [],
-      selectedTables: [],
+      availableTime: [],
+
       currentSelectedTable: {},
+      selectedTables: [],
+      restaurant: {},
    },
 
    reducers: {
       //* Metdodo para guardar acciones del usuario DAAAA
-      reserveSetAvailableHoursAction: (state, { payload }) => {
-         state.availableHours = payload;
-         state.isLoading.hour = false;
+      reserveSetAvailableTimesAction: (state, { payload }) => {
+         state.availableTime = payload;
+         state.isLoading.time = false;
          state.errorMessage = null;
       },
       reserveSetTablesAction: (state, { payload }) => {
@@ -71,7 +78,7 @@ export const reserveSlice = createSlice({
 
       reserveMessageErrorAction: (state, { payload }) => {
          state.errorMessage = payload;
-         state.isLoading.hour = null;
+         state.isLoading.time = null;
          state.isLoading.tables = null;
          state.isLoading.selectedTables = null;
       },
@@ -89,8 +96,8 @@ export const reserveSlice = createSlice({
          state.from.date = payload
       },
 
-      reserveSetHourAction: (state, { payload }) => {
-         state.from.hour = payload
+      reserveSetTimeAction: (state, { payload }) => {
+         state.from.time = payload
       },
 
       reserveToggleTableAction: (state, { payload }) => {
@@ -108,16 +115,20 @@ export const reserveSlice = createSlice({
                   ? { ...table, isSelected: false, status: typeStatusTable.AVAILABLE }
                   : table
             );
-         } else {
-            // Seleccionar la mesa
-            state.selectedTables.push({ ...payload, isSelected: true });
-
-            state.tables = state.tables.map(table =>
-               table.id === id
-                  ? { ...table, isSelected: true, status: typeStatusTable.SELECTED }
-                  : table
-            );
+            return;
          }
+
+         if (state.selectedTables.length >= state.from.time.tablesAvailable) {
+            return;
+         };
+
+         state.selectedTables.push({ ...payload, isSelected: true });
+
+         state.tables = state.tables.map(table =>
+            table.id === id
+               ? { ...table, isSelected: true, status: typeStatusTable.SELECTED }
+               : table
+         );
       },
 
 
@@ -136,12 +147,16 @@ export const reserveSlice = createSlice({
                reason: null,
                diners: null,
             },
+            time: {
+               id: null,
+               hour: null,
+               tablesAvailable: null
+            },
             date: null,
-            hour: null,
          }
 
          state.isLoading = {
-            hour: false,
+            time: false,
             tables: false,
             selectedTables: false,
             reserve: false
@@ -150,7 +165,7 @@ export const reserveSlice = createSlice({
          state.currentSelectedTable = {};
          state.tables = [];
          state.restaurant = {};
-         state.availableHours = [];
+         state.availableTime = [];
       },
 
       reserveResetInfoAction: (state) => {
@@ -160,8 +175,12 @@ export const reserveSlice = createSlice({
                reason: null,
                diners: null,
             },
+            time: {
+               id: null,
+               hour: null,
+               tablesAvailable: null
+            },
             date: null,
-            hour: null,
          }
       },
 
@@ -179,8 +198,8 @@ export const reserveSlice = createSlice({
 
 export const {
    //* Metdodo para guardar acciones del usuario DAAAA
-   reserveSetHourAction,
-   reserveSetAvailableHoursAction,
+   reserveSetTimeAction,
+   reserveSetAvailableTimesAction,
    reserveSetTablesAction,
    reserveSetRestaurantAction,
    reserveLoadingAction,

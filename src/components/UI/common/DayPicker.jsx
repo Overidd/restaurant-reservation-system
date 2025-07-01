@@ -6,7 +6,9 @@ import { Button } from '.';
 
 const date = new Date();
 const currentDay = date.getDate();
-const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+const currentMonth = date.getMonth();
+const currentYear = date.getFullYear();
+const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
 
 export const DayPicker = ({ className, onChange }) => {
    const scrollRef = useRef(null);
@@ -16,22 +18,20 @@ export const DayPicker = ({ className, onChange }) => {
       const handleScroll = () => {
          const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
          btnRight.current.style.display = scrollLeft + clientWidth >= scrollWidth - 1 ? 'none' : 'block';
-      }
+      };
       handleScroll();
       const el = scrollRef.current;
       el.addEventListener('scroll', handleScroll);
-
       return () => {
          el.removeEventListener('scroll', handleScroll);
-      }
-   }, [])
-
+      };
+   }, []);
 
    const handleScrollRight = () => {
       if (scrollRef.current) {
          scrollRef.current.scrollBy({
             left: 100,
-            behavior: 'smooth'
+            behavior: 'smooth',
          });
       }
    };
@@ -45,21 +45,35 @@ export const DayPicker = ({ className, onChange }) => {
                'overflow-x-auto overflow-y-hidden',
                'flex flex-nowrap gap-4',
                '[&::-webkit-scrollbar]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-primary [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2',
-               'scroll-smooth',
+               'scroll-smooth'
             )}
          >
             {Array.from({ length: lastDay - (currentDay - 1) }).map((_, i) => {
                const day = currentDay + i;
+               const fullDate = new Date(currentYear, currentMonth, day);
+               const weekdayName = fullDate.toLocaleDateString('es-ES', { weekday: 'long' });
+               const monthName = fullDate.toLocaleDateString('es-ES', { month: 'long' });
+
                return (
-                  <Button
-                     type="button"
+                  <div
                      key={day}
-                     size="lg"
-                     className="text-lg px-3"
-                     onClick={() => onChange(day)}
+                     className="space-y-2 text-center min-w-[60px]"
                   >
-                     {day}
-                  </Button>
+                     <span className="font-bold block capitalize text-md text-muted-foreground">
+                        {weekdayName}
+                     </span>
+                     <Button
+                        type="button"
+                        size="lg"
+                        className="text-lg px-3"
+                        onClick={() => onChange(day)}
+                     >
+                        {day}
+                     </Button>
+                     <span className="font-bold block capitalize text-sm text-muted-foreground">
+                        {monthName}
+                     </span>
+                  </div>
                );
             })}
          </div>
@@ -78,4 +92,5 @@ export const DayPicker = ({ className, onChange }) => {
 
 DayPicker.propTypes = {
    className: PropTypes.string,
+   onChange: PropTypes.func,
 };

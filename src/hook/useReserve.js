@@ -6,7 +6,7 @@ import {
    reserveResetAction,
    reserveSetInfoAction,
    reserveSetDateAction,
-   reserveSetHourAction,
+   reserveSetTimeAction,
    startGetAvailableHours,
    startGetTables,
    reserveChangeStateAction,
@@ -14,6 +14,7 @@ import {
    startReserveTable,
    reserveResetStateTablesAction,
 } from '@/doman/store/reserve';
+import { useMemo } from 'react';
 
 export const useReserve = () => {
    const dispatch = useDispatch();
@@ -26,8 +27,13 @@ export const useReserve = () => {
       from,
       tables,
       restaurant,
-      availableHours,
+      availableTime,
+      stateReserve,
    } = useSelector((state) => state.reserveReducer);
+
+   const isPending = useMemo(() => stateReserve === typeStatus.PENDING, [stateReserve]);
+
+   const isTableExceeded = useMemo(() => selectedTables.length >= from.time.tablesAvailable, [selectedTables, from.time.tablesAvailable]);
 
    // Metodos de consulta api
    const serviceGetAvailableHours = (date) => {
@@ -53,8 +59,8 @@ export const useReserve = () => {
       serviceGetAvailableHours(date);
    }
 
-   const reserveSetHour = (data) => {
-      dispatch(reserveSetHourAction(data));
+   const reserveSetTime = (data) => {
+      dispatch(reserveSetTimeAction(data));
       serviceGetTables();
    }
 
@@ -63,9 +69,15 @@ export const useReserve = () => {
    };
 
    const reserveSelectTable = (table) => {
+      if (isPending) return;
+
+      const isSelected = selectedTables.some(t => t.id === table.id);
       dispatch(reserveSelectTableAction(table));
       dispatch(reserveToggleTableAction(table));
+
+      return !isSelected;
    };
+
 
    const reserveReset = () => {
       dispatch(reserveResetAction());
@@ -91,7 +103,6 @@ export const useReserve = () => {
       return selectedTables.length > 0;
    }
 
-
    return {
       // Estado
       selectedTables,
@@ -101,7 +112,9 @@ export const useReserve = () => {
       from,
       tables,
       restaurant,
-      availableHours,
+      availableTime,
+      isPending,
+      isTableExceeded,
 
       // Metodos de consulta api
       serviceGetAvailableHours,
@@ -110,7 +123,7 @@ export const useReserve = () => {
       // Acciones
       reserveSetInfo,
       reserveSetDate,
-      reserveSetHour,
+      reserveSetTime,
       reserveToggleTable,
       reserveSelectTable,
       reserveReset,

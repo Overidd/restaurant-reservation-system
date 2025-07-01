@@ -16,7 +16,7 @@ import {
 } from '@/components/UI/stepForm';
 
 export const StepFormProvider = ({
-   children
+   children,
 }) => {
    const steps = useMemo(() => {
       return Children.toArray(children).filter(child => isValidElement(child) && child.type === StepForm)
@@ -36,22 +36,20 @@ export const StepFormProvider = ({
    return (
       <StepFromContext.Provider value={{ multiStepForm }}>
          {header}
-         <div className='relative transition-transform duration-200'>
-            {steps.map((step, index) => {
-               const isActive = index === multiStepForm.currentStepIndex;
-               return (
-                  <AnimatedStep
-                     key={step.props.name}
-                     direction={multiStepForm.direction}
-                     isActive={isActive}
-                     index={index}
-                     currentIndex={multiStepForm.currentStepIndex}
-                  >
-                     {step}
-                  </AnimatedStep>
-               );
-            })}
-         </div>
+         {steps.map((step, index) => {
+            const isActive = index === multiStepForm.currentStepIndex;
+            return (
+               <AnimatedStep
+                  key={step.props.name}
+                  direction={multiStepForm.direction}
+                  isActive={isActive}
+                  index={index}
+                  currentIndex={multiStepForm.currentStepIndex}
+               >
+                  {step}
+               </AnimatedStep>
+            );
+         })}
          {footer}
       </StepFromContext.Provider>
    )

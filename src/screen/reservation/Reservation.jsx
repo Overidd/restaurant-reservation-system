@@ -7,7 +7,7 @@ import {
    ReservationInfoTable,
    ReservationSelecTable,
    ReservationStepDate,
-   ReservationStepHour,
+   ReservationStepTime,
    ReservationStepInfo,
    ReservationHeader,
    ReservationFooter,
@@ -113,7 +113,7 @@ export const ReservationScreen = () => {
                </StepForm>
 
                <StepForm name='hour'>
-                  <ReservationStepHour />
+                  <ReservationStepTime />
                </StepForm>
 
                <StepForm name='table'>

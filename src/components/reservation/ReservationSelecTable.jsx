@@ -1,4 +1,5 @@
 import { cn } from '@/ultils/cn';
+import toast from 'react-hot-toast';
 import { TableList } from '../UI/table';
 import { ReservationLoadding } from '.';
 import { Button, ColorStatus } from '../UI/common';
@@ -25,11 +26,12 @@ const dataInfo = [
    }
 ]
 
-
 export const ReservationSelecTable = () => {
    const {
+      from,
       tables,
       isLoading,
+      isTableExceeded,
       restaurant,
       selectedTables,
       reserveSelectTable,
@@ -42,6 +44,13 @@ export const ReservationSelecTable = () => {
       prevStep()
       reserveResetStateTables()
    }
+
+   const onChangeTable = (table) => {
+      const wasSelected = reserveSelectTable(table);
+      if (wasSelected && isTableExceeded) {
+         toast.error(`No puedes seleccionar más de ${from.time.tablesAvailable} mesas.`);
+      }
+   };
 
    return (
       <ReservationLoadding
@@ -63,6 +72,11 @@ export const ReservationSelecTable = () => {
                   className="flex flex-row gap-5"
                   data={dataInfo}
                />
+
+               <h4 className='text-muted-foreground font-bold'>
+                  {from.time.tablesAvailable} Mesas disponibles
+               </h4>
+
                <TiemLimit />
             </header>
 
@@ -72,8 +86,8 @@ export const ReservationSelecTable = () => {
                   rows={restaurant.rows}
                   columns={restaurant.columns}
                   selectedTables={selectedTables}
-                  onChangeTable={reserveSelectTable}
-                  className={'max-w-[50rem] max-h-[50rem] overflow-hidden mx-auto'}
+                  onChangeTable={onChangeTable}
+                  className={'max-w-[50rem] max-h-[50rem] overflow-hidden mx-auto select-none'}
                />
             </main>
          </div >
@@ -93,57 +107,3 @@ const TiemLimit = () => {
       </div>
    )
 }
-
-
-/**
-   <section
-      className="w-[50%] flex flex-row gap-5 items-center"
-   >
-      <CalendarButton
-         date={date}
-         onValueChange={onValueChangeDate}
-      />
-
-      <Select
-         value={from.hour}
-         onValueChange={onValueChangeHour}
-      >
-         <SelectTrigger
-            className="w-full"
-            variant="crystal"
-         >
-            <SelectValue />
-         </SelectTrigger>
-         <SelectContent>
-            {hourAvailable.map((item) => (
-               <SelectItem key={item.id} value={item.hour}>
-                  {item.hour}
-               </SelectItem>
-            ))}
-         </SelectContent>
-      </Select>
-
-      <Select
-         value={from.info.diners}
-         onValueChange={onValueChangeDiners}
-      >
-         <SelectTrigger
-            className="w-full"
-            variant="crystal"
-         >
-            <SelectValue />
-         </SelectTrigger>
-         <SelectContent>
-            {
-               Array.from({ length: reason.max },
-                  (_, index) => index + reason.min
-               ).map((item) => (
-                  <SelectItem key={item} value={item}>
-                     {item}
-                  </SelectItem>
-               ))
-            }
-         </SelectContent>
-      </Select>
-   </section>
- */

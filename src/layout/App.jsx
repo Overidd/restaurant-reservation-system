@@ -7,13 +7,21 @@ const Layout = () => {
   return (
     <div className='min-h-screen w-full flex flex-col gap-10'>
       <Navbar className='mt-4 mx-auto w-[90%] max-w-6xl' />
-      {/* <AppSidebar /> */}
-      {/* <AppHeader /> */}
-      {/* <div className="max-w-6xl w-[90%] mx-auto"> */}
-      {/* </div> */}
       <Outlet />
       <Footer className='mt-auto mx-auto' />
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster
+        reverseOrder={true}
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: '#FAF3E6',
+            color: '#4e403cc4',
+          },
+        }}
+        containerStyle={{
+          padding: '16px',
+        }}
+      />
     </div>
   )
 }

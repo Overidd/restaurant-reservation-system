@@ -27,14 +27,29 @@ const firebaseErrorMessages = {
 export class FirebaseReserveService {
    constructor() { }
 
+
+   isValidReservationDate(dateStr) {
+      const inputDate = new Date(dateStr);
+      const now = new Date();
+
+      const normalizeDate = (date) =>
+         new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+      const today = normalizeDate(now);
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      const target = normalizeDate(inputDate);
+
+      return target >= yesterday;
+   }
+
    /**
     * 
     * @param {{ date: string, restaurantId: string }} param0 date -> 2025-06-28 
     * @returns {Promise<Array<{hour: string, tablesAvailable: number}>>}
     */
-   async getAvailableHours({ date, restaurantId }) {
-      console.log('getAvailableHours', date, restaurantId);
-
+   async getAvailableTimes({ dateStr, restaurantId }) {
       let allowedHours = await getDocs(collection(FirebaseDB, 'allowedhour'));
       allowedHours = allowedHours.docs.map(doc => ({
          id: doc.id,
@@ -45,11 +60,11 @@ export class FirebaseReserveService {
       const today = new Date().toISOString().split('T')[0];
       const now = new Date();
 
-      if (new Date(date) < now) {
+      if (!this.isValidReservationDate(dateStr)) {
          throw new Error('No se pueden reservar fechas pasadas');
       }
 
-      if (date === today) {
+      if (dateStr === today) {
          const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
          allowedHours = allowedHours.filter(({ hour }) => {
@@ -63,18 +78,19 @@ export class FirebaseReserveService {
       const unavailableSnap = await getDocs(query(
          collection(FirebaseDB, 'unavailableSlots'),
          where('idRestaurant', '==', restaurantId),
-         where('date', '==', date)
+         where('date', '==', dateStr)
       ));
 
-      const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
 
       // 5. Obtener todas las reservas confirmadas para esa fecha
       const reservationSnap = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', restaurantId),
          where('status', '==', 'confirmed'),
-         where('date', '==', date)
+         where('date', '==', dateStr)
       ));
+
+      const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
 
       // 6. Contar cuántas reservas hay por hora
       const hourCounts = new Map();
@@ -90,7 +106,11 @@ export class FirebaseReserveService {
          return reservedCount < tablesAvailable && !isBlocked;
       });
 
-      return availableHours;
+      return availableHours.map((item) => ({
+         ...item,
+         tablesAvailable: item.tablesAvailable - (hourCounts.get(item.hour) || 0)
+      }));
+      
    }
 
    /**
@@ -120,12 +140,9 @@ export class FirebaseReserveService {
          where('date', '==', date),
          where('status', '==', 'confirmed'),
          where('hour', '==', hour),
-
-         // where('hour', '==', hour),
       ));
 
       const reservedTablesIds = new Set(reservations.docs.map(doc => Number(doc.data().idTable)));
-
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
@@ -214,7 +231,7 @@ export class FirebaseReserveService {
             id: reservationRef.id,
             code: 'ABD4567',
          };
-         
+
       } catch (error) {
          const code = error.code;
          return {

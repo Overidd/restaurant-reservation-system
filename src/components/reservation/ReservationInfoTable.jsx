@@ -11,7 +11,9 @@ import {
 
 import {
    Users,
-   Utensils
+   Utensils,
+   X,
+   XCircle
 } from 'lucide-react';
 
 import {
@@ -32,6 +34,7 @@ export const ReservationInfoTable = ({ className }) => {
       existSelectedTable,
       reserveConfirm,
       reservePending,
+      isPending
    } = useReserve()
 
    const {
@@ -52,33 +55,44 @@ export const ReservationInfoTable = ({ className }) => {
    const isActive = existSelectedTable();
 
    const onClickReserve = async () => {
+      reservePending();
+
       if (!isAuthenticated) {
-         reservePending();
          openModal('login');
          return;
       }
 
-      reserveConfirm()
+      toast.promise(
+         reserveConfirm(),
+         {
+            loading: 'Confirmando reserva...',
+            success: 'Reserva exitosa 🎉',
+            error: (err) => err.message || 'Error al realizar la reserva'
+         },
+         {
+            style: {
+               minWidth: '250px'
+            }
+         })
          .then((data) => {
-            closeModal();
-            toast.custom((t) => (
-               <ReservaExitosa
-                  id={t.id}
-                  code={data.code}
-               />
-            ), { duration: Infinity });
+            toast((t) => (
+               <ReservaSuccess t={t} code={data.code} />
+            ), { duration: Infinity })
+            closeModal()
          })
          .catch((err) => {
-            toast.error(err.message || 'Error al realizar la reserva');
-         });
+            toast((t) => (
+               <ReservaRejected t={t} message={err.message || 'Ocurrió un error inesperado'} />
+            ), { duration: 6000 })
+         })
    }
 
    return (
       <Card2
          className={cn(
             'transition-all flex flex-col justify-between gap-4',
-            !isActive && 'translate-y-full',
-            isActive && 'animate__animated animate__fadeInUp',
+            (!isActive || isPending) && 'translate-y-full',
+            (isActive && !isPending) && 'animate__animated animate__fadeInUp',
             className
          )}
          style={{ animationDuration: '0.5s' }}
@@ -104,13 +118,6 @@ export const ReservationInfoTable = ({ className }) => {
                   </span>
                </small>
 
-               {/* <small className='font-bold text-primary-foreground space-x-4'>
-                  <Locate className='inline-block align-middle' />
-                  <span>
-                     {zone}
-                  </span>
-               </small> */}
-
                <p className="font-bold text-primary-foreground/80 truncate-text-lines max-w-[90%]">
                   {description}
                </p>
@@ -122,6 +129,7 @@ export const ReservationInfoTable = ({ className }) => {
                size={'lg'}
                onClick={onClickReserve}
                className={'w-full'}
+               disabled={isPending}
             >
                Reservar
             </Button>
@@ -138,12 +146,34 @@ export const ReservationInfoTable = ({ className }) => {
    )
 }
 
-const ReservaExitosa = ({ code, id }) => (
-   <div className="bg-white p-4 shadow rounded">
-      <p className="font-bold">¡Reserva Exitosa!</p>
-      <p>Código: <span className="font-mono">{code}</span></p>
-      <button onClick={() => toast.dismiss(id)} className="mt-2 text-blue-600 underline">
-         Cerrar
-      </button>
-   </div>
-);
+export const ReservaSuccess = ({ t, code }) => {
+   return (
+      <div className='flex items-start justify-between gap-4 p-2'>
+         <div>
+            <p className='font-semibold text-lg'>¡Reserva confirmada! 🎉</p>
+            <p className='text-sm mt-1'>Tu código de reserva es:</p>
+            <p className='font-bold text-md mt-1'>{code}</p>
+         </div>
+         <Button onClick={() => toast.dismiss(t.id)} >
+            <X size={18} />
+         </Button>
+      </div>
+   )
+}
+
+export const ReservaRejected = ({ t, message }) => {
+   return (
+      <div className='flex items-start justify-between gap-4 p-2'>
+         <div>
+            <p className='font-semibold text-lg flex items-center gap-1'>
+               <XCircle size={18} className='text-red-500' />
+               Error en la reserva
+            </p>
+            <p className='text-sm mt-1'>{message}</p>
+         </div>
+         <Button onClick={() => toast.dismiss(t.id)} >
+            <XCircle size={18} />
+         </Button>
+      </div>
+   )
+}

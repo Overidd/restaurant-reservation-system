@@ -1,4 +1,4 @@
-import { FirebaseReserveService } from './firebase/farebaseReserve';
+import { FirebaseReserveService } from './firebase/firebaseReserve';
 import { FirebaseAuthService } from './firebase/FirebaseAuth';
 
 export const serviceProvider = new FirebaseReserveService()

@@ -35,13 +35,11 @@ export const ReservationStepDate = ({ className }) => {
             className,
          )}
       >
-         <Label>
-            <ReservationTitle
-               subtitle={'Fecha'}
-               title={'Selecionar'}
-               className={'mx-auto'}
-            />
-         </Label>
+         <ReservationTitle
+            subtitle={'Fecha'}
+            title={'Selecionar'}
+            className={'mx-auto'}
+         />
 
          <DayPicker
             name='date'
