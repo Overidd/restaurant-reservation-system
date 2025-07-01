@@ -22,7 +22,7 @@ export const startGetAvailableHours = (date) => {
 
          dispatch(reserveLoadingAction(typeLoading.TIME));
 
-         const availableTime = await serviceProvider.getAvailableTimes({ dateStr: date, restaurantId: locationId });
+         const availableTime = await serviceProvider.getAvailableTimes({ dateStr: date, idRestaurant: locationId });
 
          dispatch(reserveSetAvailableTimesAction(availableTime));
       } catch (error) {
@@ -38,8 +38,8 @@ export const startGetTables = () => {
       try {
          dispatch(reserveLoadingAction(typeLoading.TABLES));
 
-         const tables = await serviceProvider.getTables({ date, restaurantId: locationId, hour });
-         const restaurant = await serviceProvider.getRestaurant({ restaurantId: locationId });
+         const tables = await serviceProvider.getTables({ dateStr: date, idRestaurant: locationId, hour });
+         const restaurant = await serviceProvider.getRestaurant({ idRestaurant: locationId });
 
          dispatch(reserveSetTablesAction(tables));
          dispatch(reserveSetRestaurantAction(restaurant));
@@ -58,9 +58,9 @@ export const startReserveTable = () => {
 
       const res = await serviceProvider.reserveTable({
          ...from.info,
-         date: from.date,
+         dateStr: from.date,
          hour: from.time.hour,
-         idTable: selectedTables[0].id,
+         idTables: selectedTables.map(table => table.id),
          idRestaurant: restaurant.id
       });
 

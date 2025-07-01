@@ -112,7 +112,7 @@ export const ReservationScreen = () => {
                   <ReservationStepDate />
                </StepForm>
 
-               <StepForm name='hour'>
+               <StepForm name='time'>
                   <ReservationStepTime />
                </StepForm>
 

@@ -46,10 +46,10 @@ export class FirebaseReserveService {
 
    /**
     * 
-    * @param {{ date: string, restaurantId: string }} param0 date -> 2025-06-28 
+    * @param {{ dateStr: string, idRestaurant: string }} param0 date -> 2025-06-28 
     * @returns {Promise<Array<{hour: string, tablesAvailable: number}>>}
     */
-   async getAvailableTimes({ dateStr, restaurantId }) {
+   async getAvailableTimes({ dateStr, idRestaurant }) {
       let allowedHours = await getDocs(collection(FirebaseDB, 'allowedhour'));
       allowedHours = allowedHours.docs.map(doc => ({
          id: doc.id,
@@ -77,15 +77,14 @@ export class FirebaseReserveService {
       // 3. Obtener horas bloqueadas manualmente
       const unavailableSnap = await getDocs(query(
          collection(FirebaseDB, 'unavailableSlots'),
-         where('idRestaurant', '==', restaurantId),
+         where('idRestaurant', '==', idRestaurant),
          where('date', '==', dateStr)
       ));
-
 
       // 5. Obtener todas las reservas confirmadas para esa fecha
       const reservationSnap = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
-         where('idRestaurant', '==', restaurantId),
+         where('idRestaurant', '==', idRestaurant),
          where('status', '==', 'confirmed'),
          where('date', '==', dateStr)
       ));
@@ -110,39 +109,47 @@ export class FirebaseReserveService {
          ...item,
          tablesAvailable: item.tablesAvailable - (hourCounts.get(item.hour) || 0)
       }));
-      
    }
+
 
    /**
     * 
-    * @param {{ id: string, idRestaurant: string, name: string, description: string, chairs: number, image: string, isReservable: boolean, type: string, positionX: number, positionY: number, rotation: string, zone: string, createdAt: string, status: string }} param0 
+    * @param {{ dateStr: string, idRestaurant: string, hour: string }} param0 
     * @returns 
     */
-
-   async getTables({ date, restaurantId, hour }) {
-      if (!restaurantId) {
+   async getTables({ dateStr, idRestaurant, hour }) {
+      if (!idRestaurant) {
          throw new Error('No se proporciono el id del restaurante');
       }
 
-      if (!date) {
+      if (!dateStr) {
          throw new Error('No se proporciono la fecha');
       }
 
       const tables = await getDocs(query(
-         collection(FirebaseDB, `restaurants/${restaurantId}/tables`),
-         // where('idRestaurant', '==', restaurantId),
+         collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
          where('isReservable', '==', true)
       ))
 
       const reservations = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
-         where('idRestaurant', '==', restaurantId),
-         where('date', '==', date),
+         where('idRestaurant', '==', idRestaurant),
+         where('date', '==', dateStr),
          where('status', '==', 'confirmed'),
          where('hour', '==', hour),
       ));
 
-      const reservedTablesIds = new Set(reservations.docs.map(doc => Number(doc.data().idTable)));
+      const reservedTablesIds = new Set();
+      reservations.forEach(doc => {
+         const data = doc.data();
+
+         if (data.idTables && Array.isArray(data.idTables)) {
+            data.idTables.forEach(id => reservedTablesIds.add(Number(id)));
+            return;
+         }
+         reservedTablesIds.add(Number(doc.id));
+      });
+
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
@@ -157,12 +164,12 @@ export class FirebaseReserveService {
       });
    }
 
-   async getRestaurant({ restaurantId }) {
-      if (!restaurantId) {
+   async getRestaurant({ idRestaurant }) {
+      if (!idRestaurant) {
          throw new Error('No se proporcionó el id del restaurante');
       }
 
-      const restaurantSnap = await getDoc(doc(FirebaseDB, 'restaurants', restaurantId));
+      const restaurantSnap = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
 
       if (!restaurantSnap.exists()) {
          throw new Error('Restaurante no encontrado');
@@ -188,12 +195,12 @@ export class FirebaseReserveService {
    }
 
    async reserveTable({
-      date,
+      dateStr,
       hour,
       reason,
       diners,
       idRestaurant,
-      idTable,
+      idTables = [],
    }) {
       try {
          const auth = getAuth();
@@ -203,21 +210,58 @@ export class FirebaseReserveService {
             throw new Error('Usuario no autenticado');
          }
 
-         const { uid, email, displayName } = user;
+         // TODO faltaria validar si la mesa fue bloqueada
 
-         // const tableRef = doc(FirebaseDB, `restaurants/${idRestaurant}/tables/${idTable}`);
+         // Buscar todas las reservas confirmadas para ese restaurante, fecha y hora
+         const reservations = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idRestaurant', '==', idRestaurant),
+            where('date', '==', dateStr),
+            where('hour', '==', hour),
+            where('status', '==', 'confirmed')
+         ));
+
+         // Verificamos si alguna mesa ya está reservada
+         const reservedTables = new Set();
+         const existingCodes = new Set();
+
+         reservations.forEach(doc => {
+            const data = doc.data();
+            if (data.idTables && Array.isArray(data.idTables)) {
+               data.idTables.forEach(id => reservedTables.add(Number(id)));
+            }
+            if (data.code) {
+               existingCodes.add(data.code);
+            }
+         });
+
+         for (const idTable of idTables) {
+            if (reservedTables.has(Number(idTable))) {
+               throw new Error(`La mesa ${idTable} ya fue reservada en esta hora.`);
+            }
+         }
+
+         let newCode = 'RESERVE-';
+
+         do {
+            newCode += Math.random().toString(36).substring(2, 8).toUpperCase();
+
+         } while (existingCodes.has(newCode));
+
+         const { uid, email, displayName } = user;
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
 
          const reservationData = {
             idUser: uid,
             idRestaurant,
-            idTable: idTable,
             diners,
             reason,
-            date,
             hour,
             comment: '',
+            idTables,
+            date: dateStr,
+            code: newCode,
             status: 'confirmed',
             createdAt: serverTimestamp(),
             clientName: displayName || 'No Name',
@@ -228,15 +272,14 @@ export class FirebaseReserveService {
 
          return {
             ok: true,
-            id: reservationRef.id,
-            code: 'ABD4567',
+            code: newCode,
          };
 
       } catch (error) {
-         const code = error.code;
+         const code = error.code || 'default';
          return {
             ok: false,
-            errorMessage: firebaseErrorMessages[code] || 'Ocurrió un error al iniciar sesión.',
+            errorMessage: firebaseErrorMessages[code] || error.message || 'Error desconocido',
          };
       }
    }
