@@ -12,6 +12,7 @@ export const typeLoading = {
 export const typeStatus = {
    ACTIVE: 'active',
    PENDING: 'pending',
+   PENDING_AUTH: 'pendingAuth',
    COMPLETED: 'completed',
 }
 
@@ -190,6 +191,18 @@ export const reserveSlice = createSlice({
          state.tables = [];
       },
 
+      reserveResetSelectedTablesAction: (state) => {
+         state.selectedTables = [];
+         state.currentSelectedTable = {};
+         state.tables = state.tables.map(table => {
+            if (table.isSelected) {
+               table.isSelected = false;
+               table.status = typeStatusTable.AVAILABLE;
+            }
+            return table
+         });
+      },
+
       reserveChangeStateAction: (state, { payload }) => {
          state.stateReserve = payload;
       },
@@ -213,6 +226,7 @@ export const {
    reserveStateMessageAction,
    reserveResetStateTablesAction,
    reserveResetInfoAction,
+   reserveResetSelectedTablesAction,
 
    reserveResetAction,
 } = reserveSlice.actions;

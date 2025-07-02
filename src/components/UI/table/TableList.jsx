@@ -10,7 +10,6 @@ export const TableList = ({
    onChangeTable,
    tables = []
 }) => {
-
    if (!Array.isArray(tables)) return null;
 
    const paintedTables = () => {

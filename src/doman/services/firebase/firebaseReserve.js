@@ -25,7 +25,8 @@ const firebaseErrorMessages = {
 };
 
 export class FirebaseReserveService {
-   constructor() { }
+   constructor() {
+   }
 
 
    isValidReservationDate(dateStr) {
@@ -270,6 +271,14 @@ export class FirebaseReserveService {
 
          await setDoc(reservationRef, reservationData);
 
+         const userRef = doc(FirebaseDB, 'users', uid);
+
+         const historyReservationsRef = doc(collection(userRef, 'historyReservations'), reservationRef.id);
+
+         await setDoc(historyReservationsRef, reservationData);
+
+         await this.sendEmail(email, newCode);
+
          return {
             ok: true,
             code: newCode,
@@ -283,4 +292,22 @@ export class FirebaseReserveService {
          };
       }
    }
+
+   async sendEmail(to, code) {
+      if (import.meta.env.VITE_ACTIVAR_ENVIO_CORREO !== 'true') return;
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL_SEND_EMAIL}`, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            to,
+            subject: 'Filicidades su reserva fue confirmada',
+            message: `Tu codigo de reserva es: ${code}`
+         }),
+      });
+
+      console.log(await res.json());
+   };
 }

@@ -11,3 +11,4 @@ export * from './useCheckAuth';
 export * from './useIfAuthenticated';
 export * from './useOnAuthReserve';
 export * from './useModalConfirmReserve';
+export * from './useRole';

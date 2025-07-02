@@ -3,6 +3,11 @@ import { cn } from '@/ultils/cn';
 import { Card2 } from '../UI/card';
 
 import {
+   ReservaRejected,
+   ReservaSuccess
+} from '.';
+
+import {
    useCheckAuth,
    useModalAuth,
    useModalReserve,
@@ -12,8 +17,6 @@ import {
 import {
    Users,
    Utensils,
-   X,
-   XCircle
 } from 'lucide-react';
 
 import {
@@ -33,6 +36,7 @@ export const ReservationInfoTable = ({ className }) => {
       getCurrentSelectedTable,
       existSelectedTable,
       reserveConfirm,
+      reservePendingAuth,
       reservePending,
       isPending
    } = useReserve()
@@ -55,12 +59,13 @@ export const ReservationInfoTable = ({ className }) => {
    const isActive = existSelectedTable();
 
    const onClickReserve = async () => {
-      reservePending();
-
       if (!isAuthenticated) {
+         reservePendingAuth();
          openModal('login');
          return;
       }
+
+      reservePending()
 
       toast.promise(
          reserveConfirm(),
@@ -78,12 +83,15 @@ export const ReservationInfoTable = ({ className }) => {
             toast((t) => (
                <ReservaSuccess t={t} code={data.code} />
             ), { duration: Infinity })
+
             closeModal()
          })
          .catch((err) => {
             toast((t) => (
                <ReservaRejected t={t} message={err.message || 'Ocurrió un error inesperado'} />
             ), { duration: 6000 })
+
+            // reserveResetSelectTables();
          })
    }
 
@@ -143,37 +151,5 @@ export const ReservationInfoTable = ({ className }) => {
             </Button>
          </section>
       </Card2>
-   )
-}
-
-export const ReservaSuccess = ({ t, code }) => {
-   return (
-      <div className='flex items-start justify-between gap-4 p-2'>
-         <div>
-            <p className='font-semibold text-lg'>¡Reserva confirmada! 🎉</p>
-            <p className='text-sm mt-1'>Tu código de reserva es:</p>
-            <p className='font-bold text-md mt-1'>{code}</p>
-         </div>
-         <Button onClick={() => toast.dismiss(t.id)} >
-            <X size={18} />
-         </Button>
-      </div>
-   )
-}
-
-export const ReservaRejected = ({ t, message }) => {
-   return (
-      <div className='flex items-start justify-between gap-4 p-2'>
-         <div>
-            <p className='font-semibold text-lg flex items-center gap-1'>
-               <XCircle size={18} className='text-red-500' />
-               Error en la reserva
-            </p>
-            <p className='text-sm mt-1'>{message}</p>
-         </div>
-         <Button onClick={() => toast.dismiss(t.id)} >
-            <XCircle size={18} />
-         </Button>
-      </div>
    )
 }

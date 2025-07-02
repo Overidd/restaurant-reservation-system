@@ -13,6 +13,7 @@ import {
    typeStatus,
    startReserveTable,
    reserveResetStateTablesAction,
+   reserveResetSelectedTablesAction,
 } from '@/doman/store/reserve';
 import { useMemo } from 'react';
 
@@ -87,7 +88,15 @@ export const useReserve = () => {
       dispatch(reserveResetStateTablesAction());
    }
 
-   const reservePending = () => {
+   const reserveResetSelectTables = () => {
+      dispatch(reserveResetSelectedTablesAction());
+   }
+
+   const reservePendingAuth = () => {
+      dispatch(reserveChangeStateAction(typeStatus.PENDING_AUTH));
+   }
+
+   const reservePending =()=>{
       dispatch(reserveChangeStateAction(typeStatus.PENDING));
    }
 
@@ -130,7 +139,9 @@ export const useReserve = () => {
       getCurrentSelectedTable,
       existSelectedTable,
       reserveConfirm,
+      reservePendingAuth,
       reservePending,
       reserveResetStateTables,
+      reserveResetSelectTables,
    };
 };

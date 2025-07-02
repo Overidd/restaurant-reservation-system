@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { ChevronRight } from 'lucide-react';
-import PropTypes from 'prop-types';
 import { cn } from '@/ultils/cn';
+import PropTypes from 'prop-types';
+import { ChevronRight } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { Button } from '.';
 
 const date = new Date();
@@ -37,7 +37,7 @@ export const DayPicker = ({ className, onChange }) => {
    };
 
    return (
-      <div className={`relative w-fit flex flex-col gap-2 ${className}`}>
+      <div className={`relative w-full flex flex-col gap-2 ${className}`}>
          <div
             ref={scrollRef}
             className={cn(

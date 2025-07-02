@@ -6,6 +6,8 @@ import { LinkCustom } from '../UI/from';
 import { NavbarList } from './NavbarList';
 import { ShoppingCart, Table, User } from 'lucide-react';
 import { Authenticated, NoAuthenticated } from '../user';
+import { ReservaRejected, ReservaSuccess } from '../reservation';
+import toast from 'react-hot-toast';
 
 import {
    Button,
@@ -36,9 +38,43 @@ const listMenu = [
 
 export const Navbar = ({ className }) => {
    const { isAuthenticated } = useCheckAuth({ autoCheck: true })
-   const { name, photoURL, logoutPermanently } = useAuthStore()
-   const { reserveConfirm } = useOnAuthReserve()
-   useIfAuthenticated(isAuthenticated, reserveConfirm);
+   const { name, photoURL, logoutPermanently, isRoleAdmin } = useAuthStore()
+
+   const { reserveConfirm, isPendingAuth } = useOnAuthReserve()
+
+   const handleReserve = () => {
+      if (!isPendingAuth) return;
+      toast.promise(
+         reserveConfirm(),
+         {
+            loading: 'Confirmando reserva...',
+            success: 'Reserva exitosa 🎉',
+            error: (err) => err.message || 'Error al realizar la reserva',
+         },
+         {
+            style: {
+               minWidth: '250px',
+            },
+         }
+      )
+         .then((data) => {
+            toast((t) => <ReservaSuccess t={t} code={data.code} />, {
+               duration: Infinity,
+            });
+         })
+         .catch((err) => {
+            toast((t) => (
+               <ReservaRejected
+                  t={t}
+                  message={err.message || 'Ocurrió un error inesperado'}
+               />
+            ), {
+               duration: 6000,
+            });
+         });
+   };
+
+   useIfAuthenticated(isAuthenticated, handleReserve);
 
    return (
       <nav
@@ -83,14 +119,24 @@ export const Navbar = ({ className }) => {
                </PopoverContent>
             </Popover>
 
-            <LinkCustom to={'reserve'}>
-               <Button
-                  size={"lg"}
-               >
-                  Ordenar
-                  <Table />
-               </Button>
-            </LinkCustom>
+            {
+               isRoleAdmin
+                  ? <Link to={'/dashboard'}>
+                     <Button
+                        size={'lg'}
+                     >
+                        Ir al panel
+                     </Button>
+                  </Link>
+                  : <LinkCustom to={'reserve'}>
+                     <Button
+                        size={'lg'}
+                     >
+                        Ordenar
+                        <Table />
+                     </Button>
+                  </LinkCustom>
+            }
          </ul>
       </nav >
    )

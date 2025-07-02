@@ -7,3 +7,5 @@ export * from './ReservationInfoTable';
 export * from './ReservationHeader'; 
 export * from './ReservationLoadding'; 
 export * from './ReservationFooter'; 
+export * from './ReservaRejected'; 
+export * from './ReservaSuccess'; 

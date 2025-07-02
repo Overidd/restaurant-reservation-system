@@ -22,16 +22,14 @@ export const useModalAuth = () => {
       if (!isAuthRoute && isOpenModal) {
          dispatch(closeModalAuthAction());
       }
+      
    }, [location.pathname, dispatch, isOpenModal]);
 
    /**
     * @param {string} to login | register
     */
    const openModal = (to = 'login') => {
-      console.log(`${location.pathname.split('/')[1]}/${to}`)
-
       navigate(`/${location.pathname.split('/')[1]}/${to}`, { state: { background: location } });
-
       dispatch(openModalAuthAction());
    };
 

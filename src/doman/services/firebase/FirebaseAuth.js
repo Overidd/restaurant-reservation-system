@@ -1,4 +1,5 @@
-import { FirebaseAuth } from './config';
+import { doc, getDoc, setDoc } from 'firebase/firestore/lite';
+import { FirebaseAuth, FirebaseDB } from './config';
 
 import {
    createUserWithEmailAndPassword,
@@ -30,8 +31,19 @@ export class FirebaseAuthService {
          const res = await signInWithPopup(FirebaseAuth, this.providerAuthGoogle);
          const credentials = GoogleAuthProvider.credentialFromResult(res);
          const token = credentials?.accessToken;
-
          const { uid, email, displayName, photoURL } = res.user;
+
+         const userDoc = await getDoc(doc(FirebaseDB, 'users', uid));
+
+         if (!userDoc.exists()) {
+            await setDoc(doc(FirebaseDB, 'users', uid), {
+               email,
+               name: displayName,
+               photoURL,
+               role: 'user'
+            });
+         }
+
          return {
             ok: true,
             token,
@@ -39,6 +51,7 @@ export class FirebaseAuthService {
             email,
             name: displayName,
             photoURL,
+            role: userDoc.data().role
          };
       } catch (error) {
          return {
@@ -52,13 +65,24 @@ export class FirebaseAuthService {
       try {
          const res = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
          await updateProfile(FirebaseAuth.currentUser, { displayName: name });
+         const { uid, email: emailUser, displayName, photoURL } = res.user;
+
+         await setDoc(doc(FirebaseDB, 'users', uid), {
+            email: emailUser,
+            name: displayName,
+            photoURL,
+            role: 'user'
+         });
+
          return {
             ok: true,
-            uid: res.user.uid,
-            email: res.user.email,
-            name: res.user.displayName,
-            photoURL: res.user.photoURL
+            uid,
+            email,
+            name: displayName,
+            photoURL,
+            role: 'user'
          }
+         
       } catch (error) {
          const code = error.code;
          return {
@@ -71,12 +95,16 @@ export class FirebaseAuthService {
    async login({ email, password }) {
       try {
          const res = await signInWithEmailAndPassword(FirebaseAuth, email, password);
+
+         const userDoc = await getDoc(doc(FirebaseDB, 'users', res.user.uid));
+
          return {
             ok: true,
             uid: res.user.uid,
             email: res.user.email,
             name: res.user.displayName,
             photoURL: res.user.photoURL,
+            role: userDoc.data().role
          };
       } catch (error) {
          const code = error.code;
@@ -90,8 +118,6 @@ export class FirebaseAuthService {
    async logout() {
       await FirebaseAuth.signOut();
    }
-   "Promise constructor cannot be invoked without 'new'"
-
 
    async checking() {
       try {
@@ -102,13 +128,16 @@ export class FirebaseAuthService {
             });
          });
 
+         const userDoc = await getDoc(doc(FirebaseDB, 'users', user.uid));
+
          return {
             ok: true,
             uid: user.uid,
             email: user.email,
             name: user.displayName,
             photoURL: user.photoURL,
-            isUserLogged: !!user
+            isUserLogged: !!user,
+            role: userDoc.data().role
          }
       } catch (error) {
          const code = error.code;

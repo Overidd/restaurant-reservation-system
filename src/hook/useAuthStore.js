@@ -15,13 +15,8 @@ import {
    startLogin,
    startLogout
 } from '@/doman/store/auth';
+import { ROLEAUHT } from '@/enum';
 
-
-/**
- * 
- * @param {{loading: string, success: string, error: string}} messageState 
- * @returns 
- */
 export const useAuthStore = (messageState) => {
    const stateAuth = useSelector((state) => state.authReducer)
    const dispatch = useDispatch()
@@ -87,6 +82,8 @@ export const useAuthStore = (messageState) => {
 
    const isAuthenticated = useMemo(() => stateAuth.status === authStateEmun.authenticated, [stateAuth.status])
 
+   const isRoleAdmin = useMemo(() => stateAuth.role === ROLEAUHT.ADMIN, [stateAuth.role])
+
    return {
       ...stateAuth,
       stateAuth,
@@ -99,5 +96,6 @@ export const useAuthStore = (messageState) => {
       loginIntial,
       logoutPermanently,
       isLoading: stateAuth.isLoading,
+      isRoleAdmin,
    }
 }

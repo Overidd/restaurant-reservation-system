@@ -4,17 +4,11 @@ import { Card2 } from '@/components/UI/card';
 import { Modal } from '@/components/UI/common';
 
 import {
-  useCheckAuth,
   useModalAuth,
-  useIfAuthenticated
 } from '@/hook';
 
 export const AuthLayout = () => {
-  const { isAuthenticated } = useCheckAuth({ autoCheck: false })
-  const { isOpenModal, closeModal } = useModalAuth(isAuthenticated)
-  useIfAuthenticated(isAuthenticated, closeModal);
-
-  if (isAuthenticated) return null;
+  const { isOpenModal, closeModal } = useModalAuth()
 
   return (
     <Modal

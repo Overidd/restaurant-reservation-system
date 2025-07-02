@@ -23,7 +23,9 @@ export const authSlice = createSlice({
       email: null,
       name: null,
       photoURL: null,
+      role: null
    },
+   
    reducers: {
       loginAction: (state, { payload }) => {
          state.status = authStateEmun.authenticated
@@ -31,6 +33,7 @@ export const authSlice = createSlice({
          state.email = payload.email;
          state.name = payload.name;
          state.photoURL = payload.photoURL;
+         state.role = payload.role;
          state.errorMessage = null;
          state.isLoading = false;
       },
@@ -41,12 +44,12 @@ export const authSlice = createSlice({
          state.email = null;
          state.name = null;
          state.photoURL = null;
+         state.role = null;
          state.errorMessage = payload?.errorMessage || null;
          state.isLoading = false;
       },
 
-      checkingCredentialAction: (state, { payload }) => {
-         console.log(payload);
+      checkingCredentialAction: (state) => {
          state.status = authStateEmun.checking
       },
 

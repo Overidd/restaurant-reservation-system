@@ -5,6 +5,7 @@ import {
    reserveLoadingAction,
    reserveMessageErrorAction,
    reserveResetAction,
+   reserveResetSelectedTablesAction,
    reserveSetAvailableTimesAction,
    reserveSetRestaurantAction,
    reserveSetTablesAction,
@@ -52,7 +53,6 @@ export const startGetTables = () => {
 export const startReserveTable = () => {
    return async (dispatch, getState) => {
       dispatch(reserveLoadingAction(typeLoading.RESERVE));
-      dispatch(reserveLoadingAction(typeLoading.RESERVE));
 
       const { from, selectedTables, restaurant, errorMessage } = getState().reserveReducer;
 
@@ -67,11 +67,13 @@ export const startReserveTable = () => {
       if (!res.ok) {
          dispatch(reserveChangeStateAction(typeStatus.ACTIVE));
          dispatch(reserveMessageErrorAction(errorMessage || 'No se pudo realizar la reserva'));
-         throw new Error(errorMessage || 'No se pudo realizar la reserva');
+         dispatch(reserveResetSelectedTablesAction());
+         throw errorMessage || 'No se pudo realizar la reserva';
       }
 
-      dispatch(reserveResetAction());
       dispatch(reserveChangeStateAction(typeStatus.COMPLETED));
+      
+      dispatch(reserveResetAction());
       return res
    }
 }

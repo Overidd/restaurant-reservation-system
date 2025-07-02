@@ -1,6 +1,5 @@
 import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
-import { Label } from '../UI/from';
 import { DayPicker } from '../UI/common';
 import { CalendarButton } from '../UI/calendar';
 import { ReservationTitle } from '.';
@@ -31,7 +30,7 @@ export const ReservationStepDate = ({ className }) => {
    return (
       <section
          className={cn(
-            'w-[50%] h-full mx-auto text-center space-y-10',
+            'w-[70%] h-full mx-auto text-center space-y-10',
             className,
          )}
       >
