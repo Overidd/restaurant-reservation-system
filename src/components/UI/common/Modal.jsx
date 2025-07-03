@@ -108,6 +108,23 @@ export const Modal = ({
             positionClasses = 'ml-auto my-auto mr-8'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
             break
+         case 'topleft':
+            positionClasses = 'fixed top-0 left-0 transform'
+            animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+            break
+         case 'topright':
+            positionClasses = 'fixed top-4 right-4 transform'
+            animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            break
+         case 'bottomleft':
+            positionClasses = 'fixed bottom-0 left-0 transform'
+            animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+            break
+         case 'bottomright':
+            positionClasses = 'fixed bottom-0 right-0 transform'
+            animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            break
+
          case 'center':
          default:
             positionClasses = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
@@ -128,7 +145,7 @@ export const Modal = ({
    }
 
    if (!isVisible) return null;
-   
+
    return createPortal(
       <div
          className={getOverlayClasses()}

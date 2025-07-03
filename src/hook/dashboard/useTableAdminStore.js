@@ -1,4 +1,4 @@
-import { loadHoursThunks, loadRestaurantsThunks, loadTablesThunks, setCurrentValuesAction } from '@/doman/store/dashboard';
+import { deleteTableThunks, loadHoursThunks, loadRestaurantsThunks, loadTablesThunks, setCurrentValuesAction } from '@/doman/store/dashboard';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -45,18 +45,31 @@ export const useTableAdminStore = () => {
    };
 
    const setCurrentValue = (data) => {
-      dispatch(setCurrentValuesAction({...data}));
+      dispatch(setCurrentValuesAction({ ...data }));
    }
+
+   const deleteTable = (idTable) => {
+      console.log(idTable);
+      // dispatch(deleteTableThunks(idTable));
+   };
+
+   // const setCurrentSelectedTable = (idTable) => {
+
+   // };
 
    return {
       loadTables,
       setCurrentValue,
       state,
+      loading: state.loading,
       tables: state.tables,
       hours: state.hours,
       restaurants: state.restaurants,
       currentRestaurant: state.currentValue.restaurant,
       currentHour: state.currentValue.hour,
       currentDate: state.currentValue.date,
+      
+      // Funcion actions
+      deleteTable,
    }
 }

@@ -5,3 +5,4 @@ export * from './ProgresBar';
 export * from './ColorStatus';
 export * from './Modal';
 export * from './Popover';
+export * from './Skeleton';

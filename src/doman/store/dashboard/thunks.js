@@ -1,5 +1,5 @@
 import { dasboardServiceProvider } from '@/doman/services';
-import { loaddingAction, messageErrorAction, setHoursAction, setRestaurantsAction, setTablesAction } from '.';
+import { deleteTableAction, loaddingAction, messageErrorAction, setHoursAction, setRestaurantsAction, setTablesAction, typeLoading } from '.';
 
 
 export const loadRestaurantsThunks = () => {
@@ -34,14 +34,13 @@ export const loadHoursThunks = () => {
  */
 export const loadTablesThunks = (data) => {
    return async (dispatch) => {
-
-      console.log(data)
-      dispatch(loaddingAction());
+      dispatch(loaddingAction(typeLoading.TABLES));
 
       const res = await dasboardServiceProvider.getTables(data);
 
       if (!res.ok) {
          dispatch(messageErrorAction(res.errorMessage));
+
          return;
       };
 
@@ -49,3 +48,15 @@ export const loadTablesThunks = (data) => {
    }
 }
 
+
+export const deleteTableThunks = (idTable) => {
+   return async (dispatch) => {
+      const res = await dasboardServiceProvider.deleteTable(idTable);
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         return;
+      }
+
+      dispatch(deleteTableAction(idTable));
+   }
+}

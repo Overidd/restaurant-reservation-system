@@ -1,10 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export const typeLoading = {
+   TIME: 'time',
+   TABLES: 'tables',
+   SELECTEDTABLES: 'selectedTables',
+   RESERVE: 'reserve'
+}
+
 export const tableAdminSlice = createSlice({
    name: 'tableAdmin',
    initialState: {
       messageError: null,
-      isLoading: false,
       restaurants: [],
       hours: [],
       tables: [],
@@ -13,7 +19,14 @@ export const tableAdminSlice = createSlice({
          hour: '',
          date: new Date().toISOString().split('T')[0],
          restaurant: {}
-      }
+      },
+
+      loading: {
+         time: false,
+         tables: false
+      },
+
+      currentSelectedTable: {},
    },
 
    reducers: {
@@ -29,7 +42,7 @@ export const tableAdminSlice = createSlice({
 
       setTablesAction: (state, { payload }) => {
          state.messageError = null
-         state.isLoading = false
+         state.loading.tables = false
          state.tables = payload;
       },
 
@@ -39,18 +52,35 @@ export const tableAdminSlice = createSlice({
             state.currentValue.restaurant = data || {};
             return;
          }
-         
-         console.log(payload)
-         state.currentValue[payload.name] = payload.value;
+
+         if (payload.name === 'hour') {
+            const data = state.hours.find((h) => h.hour === payload.value);
+            state.currentValue.hour = data || {};
+            return;
+         }
+
+         if (payload.name === 'date') {
+            state.currentValue.date = payload.value;
+            return;
+         }
       },
 
-      loaddingAction: (state) => {
-         state.isLoading = true
+      setCurrentSelectedTableAction: (state, { payload }) => {
+         state.currentSelectedTable = payload;
+      },
+
+      deleteTableAction: (state, { payload }) => {
+         state.tables = state.tables.filter((t) => t.id !== payload);
+      },
+
+      loaddingAction: (state, { payload }) => {
+         state.loading[payload] = true
       },
 
       messageErrorAction: (state, { payload }) => {
          state.messageError = payload
-         state.isLoading = false
+         state.loading.tables = false
+         state.loading.time = false
       }
    },
 });
@@ -59,9 +89,11 @@ export const tableAdminSlice = createSlice({
 export const {
    loaddingAction,
    messageErrorAction,
+   setCurrentSelectedTableAction,
    setCurrentRestaurantAction,
-   setRestaurantsAction,
    setCurrentValuesAction,
+   setRestaurantsAction,
    setHoursAction,
    setTablesAction,
+   deleteTableAction,
 } = tableAdminSlice.actions

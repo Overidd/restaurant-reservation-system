@@ -11,6 +11,12 @@ import {
    SelectValue
 } from '../UI/from';
 
+const parseLocalDate = (dateStr) => {
+   const [year, month, day] = dateStr.split('-').map(Number);
+   return new Date(year, month - 1, day);
+}
+
+
 export const TableAutoFilter = ({
    className,
    onChange,
@@ -29,9 +35,6 @@ export const TableAutoFilter = ({
 
       onChange({ name, value });
    };
-
-   console.log({ date, hour, restaurant });
-
 
    return (
       <Form className={cn(
@@ -68,7 +71,7 @@ export const TableAutoFilter = ({
             variant={'outline'}
             btnClassName={'shadow-xl hover:bg-sidebar hover:text-muted-foreground'}
             onValueChange={(value) => onValueChange({ name: 'date', value })}
-            date={new Date(date)}
+            date={parseLocalDate(date)}
             configDate={null}
          />
 

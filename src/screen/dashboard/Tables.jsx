@@ -1,7 +1,12 @@
-import { TableAutoFilter } from '@/components/dashboard';
-import { TableList } from '@/components/UI/table';
+import { ModalProviderAsync } from '@/doman/context/dialogAsync';
 import { useTableAdminStore } from '@/hook/dashboard';
-import React from 'react'
+
+import {
+   TableAutoFilter,
+   TableEditModal,
+   TableEditPropertyModal,
+   TableList
+} from '@/components/dashboard';
 
 export const TablesScreen = () => {
    const {
@@ -13,6 +18,8 @@ export const TablesScreen = () => {
       currentDate,
       currentHour,
       currentRestaurant,
+      loading,
+      deleteTable,
    } = useTableAdminStore();
 
    const onChangeFilter = (data) => {
@@ -30,20 +37,29 @@ export const TablesScreen = () => {
             hour={currentHour.hour}
             date={currentDate}
          />
-
-         <section>
+         <ModalProviderAsync>
             <TableList
                columns={currentRestaurant.columns}
                rows={currentRestaurant.rows}
                tables={tables}
+               isLoading={loading.tables}
+               onDeleteTable={deleteTable}
+               onOpenEdit={}
                className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
             />
-         </section>
+         </ModalProviderAsync>
+
+         <TableEditModal
+            initial={ }
+            isOpen={ }
+            onClose={ }
+            onOpenEditProperty={ }
+         />
+
+         {/* <TableEditPropertyModal /> */}
 
          <aside>
-
          </aside>
       </main>
    )
 }
-
