@@ -1,13 +1,26 @@
+import { SidebarProvider } from '@/doman/context/sidebar';
 import { Outlet } from 'react-router-dom';
+import { Sidebar } from '@/components/sidebar';
 
+const Layout = () => {
+   return (
+      <>
+         <Sidebar
+            widthDesktop='w-[230px]'
+            widthHover='w-[230px]'
+            widthMobile='w-[80px]'
+         />
+         <div className='ml-[100px]'>
+            <Outlet />
+         </div>
+      </>
+   )
+}
 
 export const DashboardLayout = () => {
    return (
-      <div className='text-red-300 w-full min-h-screen bg-amber-500'>
-
-         Dashboard
-         Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis commodi deleniti, velit delectus porro non quod, ab aliquam laboriosam, ut voluptatum nulla! Tenetur quis saepe, officia nihil provident alias laudantium?
-         <Outlet />
-      </div>
+      <SidebarProvider>
+         <Layout />
+      </SidebarProvider>
    )
 }

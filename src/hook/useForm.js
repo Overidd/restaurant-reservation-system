@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from 'react';
+import { useCallback, useReducer, useRef } from 'react';
 
 const defaultValidations = {
    email: [
@@ -89,8 +89,12 @@ const formReducer = (state, action) => {
    }
 };
 
-export const useForm = ({ initialState = {}, activeValidation = true, validations = {}, additionalData = {} }) => {
+// , isEstablishInitial = false
+export const useForm = ({ initialState = {}, activeValidation = true, validations = {}, additionalData = {}, changeValueCallback = null }) => {
+
    const mergedValidations = { ...defaultValidations, ...validations };
+
+   const changeValueCallbackRef = useRef(changeValueCallback);
 
    const [state, dispatch] = useReducer(formReducer, {
       values: initialState,
@@ -109,11 +113,18 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
       const name = e.name || e.target.name;
       const value = e.value || e.target.value;
 
+
       dispatch({ type: TYPEACTION.CHANGE, field: name, value });
       if (activeValidation) {
          dispatch({ type: TYPEACTION.VALIDATE_ONE, field: name });
       }
+
+      changeValueCallbackRef.current && changeValueCallbackRef.current(e);
    }, [activeValidation]);
+
+   const setChangeValueCallback = (callback) => {
+      changeValueCallbackRef.current = callback
+   };
 
    const validateForm = useCallback(() => {
       const errors = {};
@@ -161,5 +172,6 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
       onSubmitForm,
       onInitialFrom,
       isFormValid,
+      setChangeValueCallback,
    };
 };

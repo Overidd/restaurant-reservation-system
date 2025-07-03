@@ -21,6 +21,7 @@ import {
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
+import { TablesScreen } from '@/screen/dashboard';
 
 const AppRoutes = () => {
    return (
@@ -58,7 +59,11 @@ const AppRoutes = () => {
          </Route>
 
          <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
-            <Route path='/dashboard' element={<DashboardLayout />} />
+            <Route path='/dashboard' element={<DashboardLayout />} >
+               <Route path='tables' element={<TablesScreen />} />
+
+               <Route index element={<Navigate to='tables' />} />
+            </Route>
          </Route>
       </Routes>
    );

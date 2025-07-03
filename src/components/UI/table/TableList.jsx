@@ -10,6 +10,7 @@ export const TableList = ({
    onChangeTable,
    tables = []
 }) => {
+
    if (!Array.isArray(tables)) return null;
 
    const paintedTables = () => {
@@ -20,6 +21,7 @@ export const TableList = ({
          const table = tables.find(
             (table) => table.positionX == x && table.positionY == y
          );
+
          if (!table) return (
             <div key={'empty-node' + index}>
             </div>

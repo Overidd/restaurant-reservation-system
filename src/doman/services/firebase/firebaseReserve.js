@@ -194,7 +194,7 @@ export class FirebaseReserveService {
          ...doc.data()
       }));
    }
-
+   
    async reserveTable({
       dateStr,
       hour,

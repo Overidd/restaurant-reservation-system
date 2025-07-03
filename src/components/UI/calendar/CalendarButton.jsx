@@ -13,13 +13,17 @@ export const CalendarButton = ({
    date,
    onValueChange,
    className,
+   btnClassName,
+   variant,
+   defaultValue,
+   configDate = (date) => date < new Date(new Date().setDate(new Date().getDate() - 1))
 }) => {
    return (
       <Popover className={className}>
          <PopoverTrigger asChild>
             <Button
-               className='w-48 p-5 justify-between font-normal'
-               variant='crystal'
+               className={`w-48 p-5 justify-between font-normal ${btnClassName}`}
+               variant={variant || 'crystal'}
                type='button'
                id='date'
             >
@@ -31,9 +35,9 @@ export const CalendarButton = ({
          <PopoverContent>
             <Calendar
                mode='single'
-               selected={date}
+               selected={defaultValue || date}
                captionLayout='dropdown'
-               disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))}
+               disabled={configDate}
                onSelect={onValueChange}
             />
          </PopoverContent>
