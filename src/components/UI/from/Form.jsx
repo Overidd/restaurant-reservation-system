@@ -40,7 +40,7 @@ export const FromGroup = ({ className, children, ...props }) => {
 export const FormLabel = ({ className, formItemId, isError, children, ...props }) => {
    return (
       <Label
-         className={cn("data-[error=true]:text-destructive", className)}
+         className={cn("data-[error=true]:text-destructive text-[#fff5]", className)}
          data-slot="form-label"
          data-error={!!isError}
          htmlFor={formItemId}

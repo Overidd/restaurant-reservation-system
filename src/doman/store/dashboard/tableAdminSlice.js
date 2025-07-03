@@ -27,6 +27,7 @@ export const tableAdminSlice = createSlice({
       },
 
       currentSelectedTable: {},
+      isTempTableChange: false
    },
 
    reducers: {
@@ -66,7 +67,11 @@ export const tableAdminSlice = createSlice({
       },
 
       setCurrentSelectedTableAction: (state, { payload }) => {
-         state.currentSelectedTable = payload;
+         state.currentSelectedTable = payload ?? {};
+      },
+
+      toggleIsTempTableChangeAction: (state, { payload }) => {
+         state.isTempTableChange = payload ?? !state.isTempTableChange;
       },
 
       deleteTableAction: (state, { payload }) => {
@@ -90,6 +95,7 @@ export const {
    loaddingAction,
    messageErrorAction,
    setCurrentSelectedTableAction,
+   toggleIsTempTableChangeAction,
    setCurrentRestaurantAction,
    setCurrentValuesAction,
    setRestaurantsAction,

@@ -13,7 +13,7 @@ const chairColors = {
    selected: 'bg-table-selected',
 }
 
-const tableTypes = {
+const tableSizes = {
    small: {
       containerSize: 'w-25 h-20',
       tableSize: 'w-16 h-12',
@@ -31,7 +31,7 @@ const tableTypes = {
    },
 }
 
-const getChairPositions = (chairCount, type) => {
+const getChairPositions = (chairCount, size) => {
    const positions = []
 
    const basePositions = {
@@ -61,7 +61,7 @@ const getChairPositions = (chairCount, type) => {
       ],
    }
 
-   const availablePositions = basePositions[type] || basePositions.medium
+   const availablePositions = basePositions[size] || basePositions.medium
 
    for (let i = 0; i < Math.min(chairCount, availablePositions.length); i++) {
       positions.push(availablePositions[i])
@@ -75,12 +75,12 @@ export const TableItem = ({
    style,
    onClick,
    name,
-   type = 'medium',
+   size = 'medium',
    color = 'available',
    chairs = 2
 }) => {
-   const tableConfig = tableTypes[type]
-   const chairPositions = getChairPositions(chairs, type)
+   const tableConfig = tableSizes[size]
+   const chairPositions = getChairPositions(chairs, size)
 
    return (
       <div
@@ -112,10 +112,10 @@ export const TableItem = ({
                'rounded-xl shadow-md transition-all duration-300',
                'hover:shadow-lg z-10 pointer-events-none',
                colors[color],
-               // Different shapes based on type
-               type === 'small' && 'rounded-lg',
-               type === 'medium' && 'rounded-xl',
-               type === 'big' && 'rounded-2xl',
+               // Different shapes based on size
+               size === 'small' && 'rounded-lg',
+               size === 'medium' && 'rounded-xl',
+               size === 'big' && 'rounded-2xl',
             )}
          >
             {/* Table surface pattern */}
@@ -138,9 +138,9 @@ export const TableItem = ({
                   'shadow-sm hover:shadow-md pointer-events-none',
                   chairColors[color],
                   // Chair size variations
-                  type === 'small' && 'w-5 h-3',
-                  type === 'medium' && 'w-6 h-4',
-                  type === 'big' && 'w-7 h-5',
+                  size === 'small' && 'w-5 h-3',
+                  size === 'medium' && 'w-6 h-4',
+                  size === 'big' && 'w-7 h-5',
                )}
                style={position}
             >
@@ -171,7 +171,7 @@ TableItem.propTypes = {
    className: PropTypes.string,
    onClick: PropTypes.func,
    name: PropTypes.string,
-   type: PropTypes.oneOf(['small', 'medium', 'big']),
+   size: PropTypes.oneOf(['small', 'medium', 'big']),
    color: PropTypes.oneOf(['available', 'busy', 'selected']),
    chairs: PropTypes.number,
 }

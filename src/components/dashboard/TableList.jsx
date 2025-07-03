@@ -13,7 +13,7 @@ export const TableList = ({
    className,
    onChangeTable,
    onDeleteTable,
-   onOpenEdit,
+   onOpenEditTable,
    isLoading = false,
    tables = []
 }) => {
@@ -51,7 +51,7 @@ export const TableList = ({
             <TablePopoverItem
                key={'table-' + table.id}
                table={table}
-               onOpenEdit={onOpenEdit}
+               onOpenEditTable={onOpenEditTable}
                onChangeTable={onChangeTable}
                handleDeleteTable={handleDeleteTable}
             />
@@ -151,7 +151,7 @@ export const DialigDeleteTable = ({
    )
 }
 
-const TablePopoverItem = ({ table, handleDeleteTable, onOpenEdit }) => {
+const TablePopoverItem = ({ table, handleDeleteTable, onOpenEditTable }) => {
    const [popoverType, setPopoverType] = useState(null);
    const [open, setOpen] = useState(false);
 
@@ -193,7 +193,7 @@ const TablePopoverItem = ({ table, handleDeleteTable, onOpenEdit }) => {
                onInteractOutside={handleClose}
             >
                <Button
-                  onClick={onOpenEdit}
+                  onClick={() => onOpenEditTable(table)}
                >
                   Editar
                </Button>

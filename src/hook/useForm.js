@@ -119,7 +119,7 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
          dispatch({ type: TYPEACTION.VALIDATE_ONE, field: name });
       }
 
-      changeValueCallbackRef.current && changeValueCallbackRef.current(e);
+      changeValueCallbackRef.current && changeValueCallbackRef.current({ name, value });
    }, [activeValidation]);
 
    const setChangeValueCallback = (callback) => {

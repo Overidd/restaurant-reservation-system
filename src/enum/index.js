@@ -1,1 +1,2 @@
-export * from './RoleAuht';
+export * from './sizeTable';
+export * from './roleAuht';

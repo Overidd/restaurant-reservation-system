@@ -8,6 +8,11 @@ import {
    TableList
 } from '@/components/dashboard';
 
+import {
+   useModalTableEdit,
+   useModalTableEditProperty
+} from '@/hook';
+
 export const TablesScreen = () => {
    const {
       loadTables,
@@ -17,15 +22,49 @@ export const TablesScreen = () => {
       restaurants,
       currentDate,
       currentHour,
+      currentSelectedTable,
+      setCurrentSelectedTable,
       currentRestaurant,
+      changeCurrentTable,
+      toggleIsTempTable,
       loading,
       deleteTable,
    } = useTableAdminStore();
+
+   const {
+      isOpen: isOpenModalEdit,
+      openModal: openModalEdit,
+      closeModal: closeModalEdit
+   } = useModalTableEdit();
+
+   const {
+      isOpen: isOpenModalEditProperty,
+      closeModal: closeModalEditProperty,
+      openModal: openModalEditProperty,
+   } = useModalTableEditProperty();
 
    const onChangeFilter = (data) => {
       setCurrentValue(data);
       loadTables(data);
    }
+
+   const onOpenEditTable = (table) => {
+      setCurrentSelectedTable(table);
+      openModalEdit();
+   }
+
+   const onOpenEditTableProperty = () => {
+      openModalEditProperty();
+      toggleIsTempTable(true);
+      closeModalEdit();
+   }
+
+   const onCloseEditProperty = () => {
+      toggleIsTempTable(false);
+      closeModalEditProperty();
+   };
+
+   // console.log(currentSelectedTable)
 
    return (
       <main className='mt-5 flex flex-col items-center gap-5'>
@@ -44,20 +83,32 @@ export const TablesScreen = () => {
                tables={tables}
                isLoading={loading.tables}
                onDeleteTable={deleteTable}
-               onOpenEdit={}
+               onOpenEditTable={onOpenEditTable}
                className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
             />
          </ModalProviderAsync>
 
          <TableEditModal
-            initial={ }
-            isOpen={ }
-            onClose={ }
-            onOpenEditProperty={ }
+            initial={currentSelectedTable}
+            isOpen={isOpenModalEdit}
+            onClose={closeModalEdit}
+            onOpenEditProperty={onOpenEditTableProperty}
          />
 
-         {/* <TableEditPropertyModal /> */}
-
+         {
+            isOpenModalEditProperty && (
+               <TableEditPropertyModal
+                  isOpen={isOpenModalEditProperty}
+                  onClose={onCloseEditProperty}
+                  initial={currentSelectedTable}
+                  onChangeValue={changeCurrentTable}
+                  axieRestaurant={{
+                     x: currentRestaurant.rows,
+                     y: currentRestaurant.columns
+                  }}
+               />
+            )
+         }
          <aside>
          </aside>
       </main>

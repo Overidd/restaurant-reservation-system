@@ -2,7 +2,9 @@ import { useForm } from '@/hook';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
 import { cn, validateObject } from '@/ultils';
-import { Checkbox, Form, FormItem, FormLabel } from '../UI/from';
+import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
+import { useEffect } from 'react';
+import { Pen, Trash } from 'lucide-react';
 
 const schema = {
    initial: {
@@ -32,12 +34,14 @@ export const TableEditModal = ({
    initial,
    isOpen,
    onClose,
-   onOpenEditProperty
+   onOpenEditProperty,
 }) => {
+
    const {
       onSubmitForm,
       onValueChange,
       isFormValid,
+      onInitialFrom,
       formState: { name, description, linkImage, isReservable },
       formValidation: { nameValid, descriptionValid, linkImageValid },
    } = useForm({
@@ -45,6 +49,11 @@ export const TableEditModal = ({
       validations: schema.valid,
       activeValidation: true,
    });
+
+   useEffect(() => {
+      onInitialFrom(initial)
+   }, [initial])
+
 
    const onSubmit = onSubmitForm((value) => {
       console.log(value)
@@ -63,6 +72,22 @@ export const TableEditModal = ({
             )}
          >
             <Form onSubmit={onSubmit}>
+
+               <FormItem className={'flex items-center'}>
+                  <Checkbox
+                     id='isReservable'
+                     name={'isReservable'}
+                     checked={isReservable}
+                     onChange={onValueChange}
+                  />
+
+                  <FormLabel
+                     formItemId={'isReservable'}
+                  >
+                     Es reservable
+                  </FormLabel>
+               </FormItem>
+
                <FormItem>
                   <FormLabel
                      formItemId={'name'}
@@ -70,15 +95,14 @@ export const TableEditModal = ({
                      Nombre
                   </FormLabel>
                   <Input
-                     max={12}
-                     min={1}
                      type='text'
                      name='name'
+                     id={'name'}
                      variant='crystal'
                      value={name ?? ''}
                      onChange={onValueChange}
                      isError={!!nameValid}
-                     className={'!text-lg py-1'}
+                     className={'!text-base py-1'}
                   />
                </FormItem>
 
@@ -89,15 +113,14 @@ export const TableEditModal = ({
                      Descripcion
                   </FormLabel>
                   <Input
-                     max={12}
-                     min={1}
                      type='text'
-                     name='name'
+                     name='description'
+                     id={'description'}
                      variant='crystal'
                      value={description ?? ''}
                      onChange={onValueChange}
                      isError={!!descriptionValid}
-                     className={'!text-lg py-1'}
+                     className={'!text-base py-1'}
                   />
                </FormItem>
 
@@ -108,48 +131,53 @@ export const TableEditModal = ({
                      Link Image
                   </FormLabel>
                   <Input
-                     type='text'
+                     type='link'
                      name='linkImage'
                      variant='crystal'
+                     id={'linkImage'}
                      value={linkImage ?? ''}
                      onChange={onValueChange}
                      isError={!!linkImageValid}
-                     className={'!text-lg py-1'}
+                     className={'!text-base py-1'}
                   />
                </FormItem>
 
+               <FromGroup
+                  className={'flex gap-5'}
+               >
+                  <FormItem >
+                     <FormLabel>
+                        Editar Propiedad
+                     </FormLabel>
+                     <Button
+                        type='button'
+                        onClick={onOpenEditProperty}
+                        variant={'crystal'}
+                        size={'icon'}
+                     >
+                        <Pen />
+                     </Button>
+                  </FormItem>
 
-               <FormItem>
-                  <Checkbox
-                     id='isReservable'
-                     name={'isReservable'}
-                     checked={isReservable}
-                     onChange={onValueChange}
-                  />
-                  <FormLabel
-                     formItemId={'isReservable'}
-                  >
-                     Es reservable
-                  </FormLabel>
-               </FormItem>
-
-               <FormItem>
-                  <Button
-                     onClick={onOpenEditProperty}
-                  >
-                     Editar Propiedades
-                  </Button>
-               </FormItem>
+                  <FormItem>
+                     <FormLabel>
+                        Eliminar
+                     </FormLabel>
+                     <Button
+                        type='button'
+                        variant={'crystal'}
+                        size={'icon'}
+                     >
+                        <Trash />
+                     </Button>
+                  </FormItem>
+               </FromGroup>
 
                <FormItem>
                   <Button
                      disabled={!isFormValid}
                   >
                      Actualizar
-                  </Button>
-
-                  <Button>
-                     Eliminar
                   </Button>
                </FormItem>
             </Form>

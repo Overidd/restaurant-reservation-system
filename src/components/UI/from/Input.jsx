@@ -74,7 +74,7 @@ export const Input = ({
    return (
       <div className="relative w-full flex items-center">
          {icon && iconPosition === 'left' && (
-            <div className="absolute z-10 left-3   pointer-events-none text-muted-foreground">
+            <div className="absolute z-10 left-3 pointer-events-none text-muted-foreground">
                {icon}
             </div>
          )}

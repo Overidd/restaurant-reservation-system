@@ -5,8 +5,11 @@ export const UISlice = createSlice({
    initialState: {
       isOpenModalReserve: false,
       isOpenModalAuth: false,
-      isOpenModalConfirmReserve: false
+      isOpenModalConfirmReserve: false,
+      isOpenModalTableEdit: false,
+      isOpenModalTableEditProperty: false
    },
+
    reducers: {
       openModalReserveAction: (state) => {
          state.isOpenModalReserve = true;
@@ -31,6 +34,22 @@ export const UISlice = createSlice({
       closeModalConfirmReserveAction: (state) => {
          state.isOpenModalConfirmReserve = false;
       },
+
+      openModalTableEditAction: (state) => {
+         state.isOpenModalTableEdit = true;
+      },
+
+      closeModalTableEditAction: (state) => {
+         state.isOpenModalTableEdit = false;
+      },
+
+      openModalTableEditPropertyAction: (state) => {
+         state.isOpenModalTableEditProperty = true;
+      },
+
+      closeModalTableEditPropertyAction: (state) => {
+         state.isOpenModalTableEditProperty = false;
+      },
    },
 });
 
@@ -41,5 +60,9 @@ export const {
    openModalAuthAction,
    closeModalAuthAction,
    openModalConfirmReserveAction,
-   closeModalConfirmReserveAction
+   closeModalConfirmReserveAction,
+   openModalTableEditAction,
+   closeModalTableEditAction,
+   openModalTableEditPropertyAction,
+   closeModalTableEditPropertyAction
 } = UISlice.actions;

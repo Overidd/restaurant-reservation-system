@@ -155,12 +155,14 @@ export class FirebaseReserveService {
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
       return tables.docs.map((doc) => {
+         const data = doc.data();
          return {
             id: doc.id,
-            ...doc.data(),
+            ...data,
             status: reservedTablesIds.has(Number(doc.id)) ? typeStatusTable.BUSY : typeStatusTable.AVAILABLE,
-            idRestaurant: doc.data().idRestaurant?.id ?? null,
-            createdAt: doc.data().createdAt.toDate().toISOString(),
+            size: data.type,
+            idRestaurant: data.idRestaurant?.id ?? null,
+            createdAt: data.createdAt.toDate().toISOString(),
          }
       });
    }
@@ -194,7 +196,7 @@ export class FirebaseReserveService {
          ...doc.data()
       }));
    }
-   
+
    async reserveTable({
       dateStr,
       hour,

@@ -87,13 +87,18 @@ export class FirebaseDashboardService {
             reservedTablesIds.add(Number(doc.id));
          });
 
-         const resul = tables.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-            status: reservedTablesIds.has(Number(doc.id)) ? typeStatusTable.BUSY : typeStatusTable.AVAILABLE,
-            idRestaurant: doc.data().idRestaurant?.id ?? null,
-            createdAt: doc.data().createdAt.toDate().toISOString(),
-         }));
+         const resul = tables.docs.map((doc) => {
+            const data = doc.data();
+
+            return {
+               id: doc.id,
+               ...data,
+               status: reservedTablesIds.has(Number(doc.id)) ? typeStatusTable.BUSY : typeStatusTable.AVAILABLE,
+               size: data.type,
+               idRestaurant: data.idRestaurant?.id ?? null,
+               createdAt: data.createdAt.toDate().toISOString(),
+            }
+         });
 
          return {
             ok: true,

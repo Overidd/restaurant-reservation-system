@@ -7,70 +7,88 @@ export const Modal = ({
    isOpen,
    onClose,
    children,
-   direction = 'center', //  'top' | 'bottom' | 'left' | 'right' | 'center'
+   direction = "center", //  'top' | 'bottom' | 'left' | 'right' | 'center'
    preventBackdropClose = false,
-   className = '',
-   overlayClassName = '',
+   className = "",
+   overlayClassName = "",
 }) => {
-
    const [isVisible, setIsVisible] = useState(false)
    const [isAnimating, setIsAnimating] = useState(false)
    const [shouldShake, setShouldShake] = useState(false)
    const modalRef = useRef(null)
 
    // NEW: guardamos los timeout IDs
-   const closeTimeoutRef = useRef();
-   const openTimeoutRef = useRef();
+   const closeTimeoutRef = useRef()
+   const openTimeoutRef = useRef()
+
+   // NEW: Función interna para manejar el cierre con animación
+   const handleClose = () => {
+      if (!isAnimating) return // Si ya se está cerrando, no hacer nada
+
+      setIsAnimating(false)
+
+      // Cancelar cualquier timeout de apertura pendiente
+      if (openTimeoutRef.current) {
+         clearTimeout(openTimeoutRef.current)
+         openTimeoutRef.current = null
+      }
+
+      // Espera la animación antes de ejecutar onClose
+      closeTimeoutRef.current = setTimeout(() => {
+         setIsVisible(false)
+         document.body.style.overflow = "unset"
+         // AQUÍ ejecutamos onClose después de que termine la animación
+         onClose()
+      }, 300)
+   }
+
    useEffect(() => {
       if (isOpen) {
-         setIsVisible(true);
-
+         setIsVisible(true)
          // Cancelar cualquier timeout de cierre pendiente
          if (closeTimeoutRef.current) {
-            clearTimeout(closeTimeoutRef.current);
-            closeTimeoutRef.current = null;
+            clearTimeout(closeTimeoutRef.current)
+            closeTimeoutRef.current = null
          }
-
          // Pequeño delay para activar la animación
          openTimeoutRef.current = setTimeout(() => {
-            setIsAnimating(true);
-         }, 10);
-
-         document.body.style.overflow = 'hidden';
-      } else {
-         setIsAnimating(false);
-
+            setIsAnimating(true)
+         }, 10)
+         document.body.style.overflow = "hidden"
+      } else if (isVisible) {
+         // Solo ejecutar la animación de cierre si el modal está visible
+         // pero NO ejecutar onClose aquí, se ejecutará en handleClose
+         setIsAnimating(false)
          // Cancelar cualquier timeout de apertura pendiente
          if (openTimeoutRef.current) {
-            clearTimeout(openTimeoutRef.current);
-            openTimeoutRef.current = null;
+            clearTimeout(openTimeoutRef.current)
+            openTimeoutRef.current = null
          }
-
          // Espera la animación antes de ocultar
          closeTimeoutRef.current = setTimeout(() => {
-            setIsVisible(false);
-            document.body.style.overflow = 'unset';
-         }, 300);
+            setIsVisible(false)
+            document.body.style.overflow = "unset"
+         }, 300)
       }
 
       return () => {
          // Limpiar timeouts si el componente se desmonta
-         if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current);
-         if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
-         document.body.style.overflow = 'unset';
-      };
-   }, [isOpen]);
+         if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
+         if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+         document.body.style.overflow = "unset"
+      }
+   }, [isOpen, isVisible])
 
    // Manejar tecla Escape
    useEffect(() => {
       const handleEscape = (e) => {
-         if (e.key === 'Escape' && isOpen && !preventBackdropClose) {
-            onClose()
+         if (e.key === "Escape" && isOpen && !preventBackdropClose) {
+            handleClose() // Usar handleClose en lugar de onClose
          }
       }
-      document.addEventListener('keydown', handleEscape)
-      return () => document.removeEventListener('keydown', handleEscape)
-   }, [isOpen, onClose, preventBackdropClose])
+      document.addEventListener("keydown", handleEscape)
+      return () => document.removeEventListener("keydown", handleEscape)
+   }, [isOpen, preventBackdropClose, isAnimating])
 
    const handleBackdropClick = (e) => {
       if (e.target === e.currentTarget) {
@@ -79,7 +97,7 @@ export const Modal = ({
             setShouldShake(true)
             setTimeout(() => setShouldShake(false), 500)
          } else {
-            onClose()
+            handleClose() // Usar handleClose en lugar de onClose
          }
       }
    }

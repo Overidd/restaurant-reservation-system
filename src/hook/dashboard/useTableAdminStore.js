@@ -1,6 +1,14 @@
-import { deleteTableThunks, loadHoursThunks, loadRestaurantsThunks, loadTablesThunks, setCurrentValuesAction } from '@/doman/store/dashboard';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+   deleteTableThunks,
+   loadHoursThunks,
+   loadRestaurantsThunks,
+   loadTablesThunks,
+   setCurrentValuesAction,
+   setCurrentSelectedTableAction,
+   toggleIsTempTableChangeAction,
+} from '@/doman/store/dashboard';
 
 export const useTableAdminStore = () => {
    const state = useSelector((state) => state.tableAdminReducer)
@@ -48,28 +56,57 @@ export const useTableAdminStore = () => {
       dispatch(setCurrentValuesAction({ ...data }));
    }
 
-   const deleteTable = (idTable) => {
-      console.log(idTable);
-      // dispatch(deleteTableThunks(idTable));
+   const setCurrentSelectedTable = (tableId) => {
+      dispatch(setCurrentSelectedTableAction(tableId));
+   }
+
+   const toggleIsTempTable = (is) => {
+      dispatch(toggleIsTempTableChangeAction(is));
    };
 
-   // const setCurrentSelectedTable = (idTable) => {
+   const deleteTable = (idTable) => {
+      dispatch(deleteTableThunks(idTable));
+   };
 
-   // };
+   const changeCurrentTable = ({ name, value }) => {
+      if (!value || !name) return;
+      console.log({ name, value });
+
+      dispatch(setCurrentSelectedTableAction({
+         ...state.currentSelectedTable,
+         [name]: value
+      }));
+   }
+
+   const tables = useMemo(() => {
+      if (state.isTempTableChange) {
+         const tablesTemp = state.tables.filter((table) => table.id !== state.currentSelectedTable.id);
+
+         tablesTemp.push(state.currentSelectedTable);
+         return tablesTemp;
+      };
+
+      return state.tables
+   }, [state.tables, state.currentSelectedTable, state.isTempTableChange]);
+
 
    return {
-      loadTables,
-      setCurrentValue,
       state,
+      tables: tables,
       loading: state.loading,
-      tables: state.tables,
       hours: state.hours,
       restaurants: state.restaurants,
       currentRestaurant: state.currentValue.restaurant,
       currentHour: state.currentValue.hour,
       currentDate: state.currentValue.date,
-      
+      currentSelectedTable: state.currentSelectedTable,
+      changeCurrentTable,
+
       // Funcion actions
+      loadTables,
+      setCurrentValue,
       deleteTable,
+      setCurrentSelectedTable,
+      toggleIsTempTable
    }
 }
