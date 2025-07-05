@@ -1,10 +1,18 @@
+import { Pen, Trash } from 'lucide-react';
+import { useEffect } from 'react';
 import { useForm } from '@/hook';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
 import { cn, validateObject } from '@/ultils';
-import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
-import { useEffect } from 'react';
-import { Pen, Trash } from 'lucide-react';
+
+import {
+   Checkbox,
+   Form,
+   FormItem,
+   FormLabel,
+   FromGroup,
+   Input
+} from '../UI/from';
 
 const schema = {
    initial: {
@@ -42,8 +50,17 @@ export const TableEditModal = ({
       onValueChange,
       isFormValid,
       onInitialFrom,
-      formState: { name, description, linkImage, isReservable },
-      formValidation: { nameValid, descriptionValid, linkImageValid },
+      formState: {
+         name,
+         description,
+         linkImage,
+         isReservable
+      },
+      formValidation: {
+         nameValid,
+         descriptionValid,
+         linkImageValid
+      },
    } = useForm({
       initialState: validateObject(initial) ? initial : schema.initial,
       validations: schema.valid,
@@ -51,8 +68,9 @@ export const TableEditModal = ({
    });
 
    useEffect(() => {
+      if (!initial.id || !isOpen) return
       onInitialFrom(initial)
-   }, [initial])
+   }, [initial.id, isOpen])
 
 
    const onSubmit = onSubmitForm((value) => {

@@ -1,5 +1,15 @@
 import { dasboardServiceProvider } from '@/doman/services';
-import { deleteTableAction, loaddingAction, messageErrorAction, setHoursAction, setRestaurantsAction, setTablesAction, typeLoading } from '.';
+
+import {
+   deleteTableAction,
+   loaddingAction,
+   messageErrorAction,
+   setHoursAction,
+   setRestaurantsAction,
+   setTablesAction,
+   typeLoading,
+   ModifyReservationTableAction
+} from '.';
 
 
 export const loadRestaurantsThunks = () => {
@@ -34,8 +44,10 @@ export const loadHoursThunks = () => {
  */
 export const loadTablesThunks = (data) => {
    return async (dispatch) => {
-      dispatch(loaddingAction(typeLoading.TABLES));
+      console.log('loadTablesThunks', data)
+      if (!data) return;
 
+      dispatch(loaddingAction(typeLoading.TABLES));
       const res = await dasboardServiceProvider.getTables(data);
 
       if (!res.ok) {
@@ -60,3 +72,26 @@ export const deleteTableThunks = (idTable) => {
       dispatch(deleteTableAction(idTable));
    }
 }
+
+let unsubscribeTablesListener = null;
+
+export const listenModifyTablesThunks = (data) => {
+   return async (dispatch) => {
+      if (unsubscribeTablesListener) {
+         unsubscribeTablesListener();
+      }
+
+      unsubscribeTablesListener = dasboardServiceProvider.listenReservationsAddedAndModified({
+         ...data,
+         onAdd: (reservation) => {
+            console.log('se agrego', reservation);
+            dispatch(ModifyReservationTableAction(reservation));
+         },
+
+         onModify: (reservation) => {
+            console.log('se modifico', reservation);
+            // dispatch(loadTablesThunks(reservation));
+         },
+      });
+   };
+};

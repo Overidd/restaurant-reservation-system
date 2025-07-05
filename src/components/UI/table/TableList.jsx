@@ -1,7 +1,6 @@
 import { cn } from '@/ultils/cn';
 import { TableItem } from '.';
 import PropTypes from 'prop-types';
-import { typeStatusTable } from '@/ultils';
 import { CardLoadding } from '../card';
 
 export const TableList = ({
@@ -33,9 +32,11 @@ export const TableList = ({
             <TableItem
                key={'table-' + table.id}
                onClick={() => onChangeTable(table)}
-               color={table.isSelected ? typeStatusTable.SELECTED : table?.status}
-               {...table}
-               style={{ transform: `rotate(${table.rotation}deg)` }}
+               color={table.status}
+               size={table?.size}
+               chairs={table?.chairs}
+               name={table?.name}
+               rotation={table?.rotation}
             />
          );
       });

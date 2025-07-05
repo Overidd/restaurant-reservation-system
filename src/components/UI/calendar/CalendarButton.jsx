@@ -16,6 +16,7 @@ export const CalendarButton = ({
    btnClassName,
    variant,
    defaultValue,
+   name,
    configDate = (date) => date < new Date(new Date().setDate(new Date().getDate() - 1))
 }) => {
    return (
@@ -38,7 +39,7 @@ export const CalendarButton = ({
                selected={defaultValue || date}
                captionLayout='dropdown'
                disabled={configDate}
-               onSelect={onValueChange}
+               onSelect={(date) => onValueChange({ name, value: date })}
             />
          </PopoverContent>
       </Popover>

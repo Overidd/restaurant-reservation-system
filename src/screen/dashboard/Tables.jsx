@@ -2,16 +2,19 @@ import { ModalProviderAsync } from '@/doman/context/dialogAsync';
 import { useTableAdminStore } from '@/hook/dashboard';
 
 import {
+   TableList,
    TableAutoFilter,
    TableEditModal,
    TableEditPropertyModal,
-   TableList
+   TableReserveModal,
 } from '@/components/dashboard';
 
 import {
    useModalTableEdit,
-   useModalTableEditProperty
+   useModalTableReserve,
+   useModalTableEditProperty,
 } from '@/hook';
+
 
 export const TablesScreen = () => {
    const {
@@ -43,6 +46,12 @@ export const TablesScreen = () => {
       openModal: openModalEditProperty,
    } = useModalTableEditProperty();
 
+   const {
+      isOpen: isOpenModalReserve,
+      openModal: openModalReserve,
+      closeModal: closeModalReserve
+   } = useModalTableReserve()
+
    const onChangeFilter = (data) => {
       setCurrentValue(data);
       loadTables(data);
@@ -64,7 +73,9 @@ export const TablesScreen = () => {
       closeModalEditProperty();
    };
 
-   // console.log(currentSelectedTable)
+   const onOpenReserveTable = (table) => {
+      openModalReserve(table);
+   }
 
    return (
       <main className='mt-5 flex flex-col items-center gap-5'>
@@ -84,6 +95,7 @@ export const TablesScreen = () => {
                isLoading={loading.tables}
                onDeleteTable={deleteTable}
                onOpenEditTable={onOpenEditTable}
+               onOpenReserveTable={onOpenReserveTable}
                className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
             />
          </ModalProviderAsync>
@@ -93,6 +105,12 @@ export const TablesScreen = () => {
             isOpen={isOpenModalEdit}
             onClose={closeModalEdit}
             onOpenEditProperty={onOpenEditTableProperty}
+         />
+
+         <TableReserveModal
+            initial={currentSelectedTable}
+            isOpen={isOpenModalReserve}
+            onClose={closeModalReserve}
          />
 
          {

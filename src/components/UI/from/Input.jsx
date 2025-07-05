@@ -50,6 +50,7 @@ export const Input = ({
    name,
    value,
    id,
+   activeEventIcon = false,
    iconPosition = 'left',
    type = 'text',
    ...props
@@ -70,11 +71,14 @@ export const Input = ({
    });
 
    const togglePassword = () => setShowPassword(prev => !prev);
-
+   // activeEventIcon
    return (
       <div className="relative w-full flex items-center">
          {icon && iconPosition === 'left' && (
-            <div className="absolute z-10 left-3 pointer-events-none text-muted-foreground">
+            <div className={cn(
+               'absolute z-10 left-3 text-muted-foreground',
+               !activeEventIcon && 'pointer-events-none'
+            )}>
                {icon}
             </div>
          )}
@@ -100,7 +104,10 @@ export const Input = ({
 
          {/* Icono normal a la derecha si no es tipo password */}
          {icon && iconPosition === 'right' && !isPassword && (
-            <div className="absolute right-3 pointer-events-none text-muted-foreground">
+            <div className={cn(
+               'absolute right-3 text-muted-foreground',
+               !activeEventIcon && 'pointer-events-none'
+            )}>
                {icon}
             </div>
          )}

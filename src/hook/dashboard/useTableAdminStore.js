@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
    deleteTableThunks,
@@ -8,11 +8,14 @@ import {
    setCurrentValuesAction,
    setCurrentSelectedTableAction,
    toggleIsTempTableChangeAction,
+   updateCurrentSelectedTableAction,
+   listenModifyTablesThunks,
 } from '@/doman/store/dashboard';
 
 export const useTableAdminStore = () => {
    const state = useSelector((state) => state.tableAdminReducer)
    const dispatch = useDispatch();
+   const isLoadTablesFirst = useRef(false);
 
    useEffect(() => {
       dispatch(loadRestaurantsThunks());
@@ -25,14 +28,23 @@ export const useTableAdminStore = () => {
          state.hours.length > 0
       ) {
          const idRestaurant = state.currentValue.restaurant.id;
-         const dateStr = state.currentValue.date;
+         const dateStr = state.currentValue.dateStr;
          const hour = state.currentValue.hour.hour;
 
+         if (isLoadTablesFirst.current) return;
          if (idRestaurant && dateStr && hour) {
+
+            isLoadTablesFirst.current = true;
+            console.log('Solo debe llamarse una ')
             dispatch(loadTablesThunks({
                idRestaurant,
                dateStr,
                hour
+            }));
+            dispatch(listenModifyTablesThunks({
+               idRestaurant: idRestaurant,
+               dateStr: dateStr,
+               hour: hour,
             }));
          }
       }
@@ -43,12 +55,19 @@ export const useTableAdminStore = () => {
     */
    const loadTables = (data) => {
       if (!data.value) return;
-      const idRestaurant = state.restaurants.find((r) => r.name === data.value)?.id;
+      const dataObj = { [data.name]: data.value };
+
+      const idRestaurant = state.restaurants.find((r) => r.name === dataObj.value)?.id;
 
       dispatch(loadTablesThunks({
          idRestaurant: idRestaurant || state.currentValue.restaurant.id,
-         dateStr: data?.dateStr || state.currentValue.date,
-         hour: data?.hour || state.currentValue.hour.hour
+         dateStr: dataObj?.dateStr || state.currentValue.dateStr,
+         hour: dataObj?.hour || state.currentValue.hour.hour
+      }));
+      dispatch(listenModifyTablesThunks({
+         idRestaurant: idRestaurant || state.currentValue.restaurant.id,
+         dateStr: dataObj?.dateStr || state.currentValue.dateStr,
+         hour: dataObj?.hour || state.currentValue.hour.hour
       }));
    };
 
@@ -56,8 +75,8 @@ export const useTableAdminStore = () => {
       dispatch(setCurrentValuesAction({ ...data }));
    }
 
-   const setCurrentSelectedTable = (tableId) => {
-      dispatch(setCurrentSelectedTableAction(tableId));
+   const setCurrentSelectedTable = (table) => {
+      dispatch(setCurrentSelectedTableAction(table));
    }
 
    const toggleIsTempTable = (is) => {
@@ -70,20 +89,12 @@ export const useTableAdminStore = () => {
 
    const changeCurrentTable = ({ name, value }) => {
       if (!value || !name) return;
-      console.log({ name, value });
-
-      dispatch(setCurrentSelectedTableAction({
-         ...state.currentSelectedTable,
-         [name]: value
-      }));
-   }
+      dispatch(updateCurrentSelectedTableAction({ name, value }));
+   };
 
    const tables = useMemo(() => {
       if (state.isTempTableChange) {
-         const tablesTemp = state.tables.filter((table) => table.id !== state.currentSelectedTable.id);
-
-         tablesTemp.push(state.currentSelectedTable);
-         return tablesTemp;
+         return state.tables.map((table) => table.id === state.currentSelectedTable.id ? { ...state.currentSelectedTable } : table);
       };
 
       return state.tables
@@ -98,7 +109,7 @@ export const useTableAdminStore = () => {
       restaurants: state.restaurants,
       currentRestaurant: state.currentValue.restaurant,
       currentHour: state.currentValue.hour,
-      currentDate: state.currentValue.date,
+      currentDate: state.currentValue.dateStr,
       currentSelectedTable: state.currentSelectedTable,
       changeCurrentTable,
 

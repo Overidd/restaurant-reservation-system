@@ -51,6 +51,9 @@
   --color-table-avaible: var(--table-avaible);
   --color-table-busy: var(--table-busy);
   --color-table-selected: var(--table-selected);
+  --color-table-blocked: var(--table-blocked);
+  --color-table-pending: var(--table-pending);
+  --color-table-confirmed: var(--table-confirmed);
   --color-backdrop-modal: var(--backdrop-modal);
 }
 
@@ -97,6 +100,9 @@
   --table-avaible: #4a977b;
   --table-busy: #d9524e;
   --table-selected: #5485CE;
+  --table-blocked: #ccc;
+  --table-pending: #FFC107;
+  --table-confirmed: #3B82F6;
   --backdrop-modal: rgba(0, 0, 0, 0.356);
 }
 

@@ -5,12 +5,18 @@ const colors = {
    available: 'bg-table-avaible',
    busy: 'bg-table-busy',
    selected: 'bg-table-selected',
+   blocked: 'bg-table-blocked',
+   pending: 'bg-table-pending',
+   confirmed: 'bg-table-confirmed',
 }
 
 const chairColors = {
    available: 'bg-table-avaible',
    busy: 'bg-table-busy',
    selected: 'bg-table-selected',
+   blocked: 'bg-table-blocked',
+   pending: 'bg-table-pending',
+   confirmed: 'bg-table-confirmed',
 }
 
 const tableSizes = {
@@ -72,20 +78,22 @@ const getChairPositions = (chairCount, size) => {
 
 export const TableItem = ({
    className,
-   style,
    onClick,
+   onContextMenu,
    name,
    size = 'medium',
    color = 'available',
-   chairs = 2
+   chairs = 2,
+   rotation = 0,
+   ...props
 }) => {
    const tableConfig = tableSizes[size]
    const chairPositions = getChairPositions(chairs, size)
-
    return (
       <div
+         onContextMenu={onContextMenu}
          onClick={onClick}
-         style={style}
+         style={{ transform: `rotate(${rotation}deg)` }}
          className={cn(
             tableConfig.containerSize,
             'relative transition-all duration-300 hover:scale-105 cursor-pointer',
@@ -94,6 +102,7 @@ export const TableItem = ({
             // 'border-2 border-amber-200 hover:border-amber-300',
             className,
          )}
+         {...props}
       >
          {/* Table name label */}
          {/* {name && (

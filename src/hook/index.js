@@ -17,3 +17,4 @@ export * from './useModalReserve';
 export * from './useModalConfirmReserve';
 export * from './useModalTableEdit';
 export * from './useModalTableEditProperty';
+export * from './useModalTableReserve'

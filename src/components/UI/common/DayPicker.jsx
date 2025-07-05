@@ -51,6 +51,7 @@ export const DayPicker = ({ className, onChange }) => {
             {Array.from({ length: lastDay - (currentDay - 1) }).map((_, i) => {
                const day = currentDay + i;
                const fullDate = new Date(currentYear, currentMonth, day);
+
                const weekdayName = fullDate.toLocaleDateString('es-ES', { weekday: 'long' });
                const monthName = fullDate.toLocaleDateString('es-ES', { month: 'long' });
 
@@ -66,7 +67,7 @@ export const DayPicker = ({ className, onChange }) => {
                         type="button"
                         size="lg"
                         className="text-lg px-3"
-                        onClick={() => onChange(day)}
+                        onClick={() => onChange(fullDate)}
                      >
                         {day}
                      </Button>

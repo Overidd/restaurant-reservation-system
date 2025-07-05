@@ -6,3 +6,4 @@ export * from './ColorStatus';
 export * from './Modal';
 export * from './Popover';
 export * from './Skeleton';
+export * from './Tooltip';

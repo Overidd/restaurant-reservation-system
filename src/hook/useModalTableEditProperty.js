@@ -1,4 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
+import {
+   useDispatch,
+   useSelector
+} from 'react-redux';
+
 import {
    closeModalTableEditPropertyAction,
    openModalTableEditPropertyAction

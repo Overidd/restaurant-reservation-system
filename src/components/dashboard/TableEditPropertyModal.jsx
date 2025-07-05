@@ -26,28 +26,6 @@ const schema = {
       size: 0,
       chairs: 0
    },
-   // valid: {
-   //    positionX: [
-   //       (value) => value >= 0,
-   //       'La posición X debe ser mayor o igual a 0',
-   //    ],
-   //    positionY: [
-   //       (value) => value >= 0,
-   //       'La posición Y debe ser mayor o igual a 0',
-   //    ],
-   //    rotation: [
-   //       (value) => value >= 0,
-   //       'La rotación debe ser mayor o igual a 0',
-   //    ],
-   //    size: [
-   //       (value) => value >= 0,
-   //       'El tamaño debe ser mayor o igual a 0',
-   //    ],
-   //    chairs: [
-   //       (value) => value >= 0,
-   //       'Las sillas debe ser mayor o igual a 0',
-   //    ],
-   // },
 }
 
 export const TableEditPropertyModal = ({
@@ -61,7 +39,9 @@ export const TableEditPropertyModal = ({
       x: 0
    }
 }) => {
-   const [currentTableSize, setCurrentTableSize] = useState(tablesSizeData[0]);
+   const [currentTableSize, setCurrentTableSize] = useState(
+      tablesSizeData.find((item) => item.value === initial.size) || tablesSizeData[0]
+   );
 
    const {
       onSubmitForm,
@@ -70,10 +50,13 @@ export const TableEditPropertyModal = ({
       formState: { positionX, positionY, rotation, size, chairs },
    } = useForm({
       initialState: validateObject(initial) ? initial : schema.initial,
-      validations: schema.valid,
       activeValidation: false,
-      changeValueCallback: onChangeValue
+      changeValueCallback: onInitialFrom
    });
+
+   function onInitialFrom(newInitialState) {
+      onChangeValue(newInitialState);
+   };
 
    const onSubmit = onSubmitForm((value) => {
       console.log(value)
@@ -98,10 +81,13 @@ export const TableEditPropertyModal = ({
             )}
          >
             <Form onSubmit={onSubmit}>
-               <FromGroup>
-                  <FormLabel>
-                     Actualizar posición
-                  </FormLabel>
+               <FormLabel>
+                  Actualizar posición
+               </FormLabel>
+
+               <FromGroup
+                  className={'flex flex-row gap-4'}
+               >
                   <FormItem>
                      <FormLabel
                         formItemId={'positionX'}
@@ -151,9 +137,9 @@ export const TableEditPropertyModal = ({
                         type='number'
                         name='rotation'
                         variant='crystal'
-                        min={0}
+                        min={1}
                         max={360}
-                        value={Number(rotation ?? 0)}
+                        value={Number(rotation)}
                         onChange={onValueChange}
                         className={'!text-lg py-1'}
                      />
@@ -167,17 +153,20 @@ export const TableEditPropertyModal = ({
                      Tamaño de mesa
                   </FormLabel>
                   <Select
+                     name={'size'}
                      value={size || undefined}
-                     onValueChange={(value) => {
-                        handleChangeSize(value);
-                        onValueChange({ name: 'size', value })
+                     onValueChange={(data) => {
+                        handleChangeSize(data.value);
+                        onValueChange(data)
                      }}
                   >
                      <SelectTrigger
                         variant='crystal'
                         className='w-full'
                      >
-                        <SelectValue placeholder='Seleccione un tamaño' />
+                        <SelectValue
+                           placeholder='Seleccione un tamaño'
+                        />
                      </SelectTrigger>
                      <SelectContent>
                         {tablesSizeData.map((item) => (
@@ -201,22 +190,24 @@ export const TableEditPropertyModal = ({
 
                   <Select
                      value={chairs || undefined}
-                     onValueChange={(value) =>
-                        onValueChange({ name: 'chairs', value })
-                     }
+                     name={'chairs'}
+                     onValueChange={onValueChange}
                   >
                      <SelectTrigger
                         variant='crystal'
                         className='w-full'
+                        name='chairs'
                         id='chairs'
                      >
-                        <SelectValue placeholder='Numero de sillas' />
+                        <SelectValue
+                           placeholder='Numero de sillas'
+                        />
                      </SelectTrigger>
                      <SelectContent>
-                        {currentTableSize && Array(currentTableSize.chairs).fill(0).map((_, index) => (
+                        {currentTableSize && Array.from({ length: currentTableSize.chairs }).map((_, index) => (
                            <SelectItem
                               key={`chairs-${index}`}
-                              value={String(index + 1)}
+                              value={index + 1}
                            >
                               {index + 1}
                            </SelectItem>

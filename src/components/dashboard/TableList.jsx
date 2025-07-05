@@ -1,11 +1,30 @@
-import { cn } from '@/ultils/cn';
-import PropTypes from 'prop-types';
-import { typeStatusTable } from '@/ultils';
-import { TableItem } from '../UI/table';
-import { Button, Popover, PopoverContent, PopoverTrigger } from '../UI/common';
-import { Card2, CardLoadding } from '../UI/card';
-import { useModalAsync } from '@/hook';
 import { useState } from 'react';
+import { useModalAsync } from '@/hook';
+import PropTypes from 'prop-types';
+import { cn } from '@/ultils/cn';
+import { TableItem } from '../UI/table';
+import { Card2, CardLoadding } from '../UI/card';
+import { getTimeDifference, typeStatusTable } from '@/ultils';
+
+import {
+   Button,
+   Popover,
+   PopoverContent,
+   PopoverTrigger,
+   Tooltip,
+   TooltipContent,
+   TooltipTrigger
+} from '../UI/common';
+
+import {
+   CheckCircle,
+   Lock,
+   LockOpen,
+   Pencil,
+   Table,
+   Trash,
+   Unlock
+} from 'lucide-react';
 
 export const TableList = ({
    rows,
@@ -14,6 +33,7 @@ export const TableList = ({
    onChangeTable,
    onDeleteTable,
    onOpenEditTable,
+   onOpenReserveTable,
    isLoading = false,
    tables = []
 }) => {
@@ -38,7 +58,6 @@ export const TableList = ({
       return Array.from({ length: rows * columns }).map((_, index) => {
          const x = Math.floor(index / columns) + 1;
          const y = (index % columns) + 1;
-
          const table = tables.find(
             (table) => table.positionX == x && table.positionY == y
          );
@@ -48,10 +67,11 @@ export const TableList = ({
          );
 
          return (
-            <TablePopoverItem
+            <TableItemPopover
                key={'table-' + table.id}
                table={table}
                onOpenEditTable={onOpenEditTable}
+               onOpenReserveTable={onOpenReserveTable}
                onChangeTable={onChangeTable}
                handleDeleteTable={handleDeleteTable}
             />
@@ -129,20 +149,19 @@ export const DialigDeleteTable = ({
 }) => {
 
    return (
-      <Card2 className="flex flex-col gap-4 p-4 justify-center items-center text-card-foreground">
-         <h2 className="text-sm text-card-primary">¿Estás seguro de eliminar la mesa {table.name}?</h2>
-         <div className="flex gap-2 justify-end">
+      <Card2 className='flex flex-col gap-4 p-4 justify-center items-center text-card-foreground'>
+         <h2 className='text-sm text-card-primary'>¿Estás seguro de eliminar la mesa {table.name}?</h2>
+         <div className='flex gap-2 justify-end'>
             <Button
                onClick={onCancel}
                size={'sm'}
-            // variant="outline"
             >
                Cancelar
             </Button>
             <Button
                onClick={onConfirm}
                size={'sm'}
-               variant="destructive"
+               variant='destructive'
             >
                Eliminar
             </Button>
@@ -151,7 +170,12 @@ export const DialigDeleteTable = ({
    )
 }
 
-const TablePopoverItem = ({ table, handleDeleteTable, onOpenEditTable }) => {
+const TableItemPopover = ({
+   table,
+   handleDeleteTable,
+   onOpenEditTable,
+   onOpenReserveTable
+}) => {
    const [popoverType, setPopoverType] = useState(null);
    const [open, setOpen] = useState(false);
 
@@ -174,58 +198,168 @@ const TablePopoverItem = ({ table, handleDeleteTable, onOpenEditTable }) => {
 
    return (
       <Popover open={open} onOpenChange={setOpen}>
-         <PopoverTrigger asChild>
-            <div
-               onClick={handleLeftClick}
-               onContextMenu={handleRightClick}
-               style={{ display: 'inline-block' }}
-            >
-               <TableItem
-                  color={table.isSelected ? typeStatusTable.SELECTED : table?.status}
-                  {...table}
-                  style={{ transform: `rotate(${table.rotation}deg)` }}
+         <Tooltip asChild>
+            <PopoverTrigger asChild>
+               <TooltipTrigger asChild>
+                  <TableItem
+                     tabIndex={0}
+                     role='button'
+                     onClick={handleLeftClick}
+                     onContextMenu={handleRightClick}
+                     color={table?.status}
+                     size={table?.size}
+                     chairs={table?.chairs}
+                     name={table?.name}
+                     rotation={table?.rotation}
+                  />
+               </TooltipTrigger>
+            </PopoverTrigger>
+            <TooltipContent>
+               <InfoTableTooltip
+                  hasReservar={table.hasReservar}
+                  timestamp={table.timestamp}
+                  {...table.user}
                />
-            </div>
-         </PopoverTrigger>
-         {popoverType === 'right' && (
-            <PopoverContent
-               className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
-               onInteractOutside={handleClose}
-            >
-               <Button
-                  onClick={() => onOpenEditTable(table)}
+            </TooltipContent>
+         </Tooltip>
+
+         {
+            popoverType === 'right' && (
+               <PopoverContent
+                  onInteractOutside={handleClose}
+                  align='center'
+                  side='right'
+                  sideOffset={-10}
+                  onClick={handleClose}
+                  className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
                >
-                  Editar
-               </Button>
-               <Button>Reservar</Button>
-               <Button onClick={() => handleDeleteTable(table)} variant='destructive'>Elminar</Button>
-            </PopoverContent>
-         )}
-         {popoverType === 'left' && (
-            <PopoverContent
-               className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
-               onInteractOutside={handleClose}
-            >
-               {
-                  table.status === typeStatusTable.BUSY && (
-                     <>
-                        <Button>Liberar</Button>
-                        <Button>Bloquear</Button>
-                     </>
-                  )
-               }
-               {
-                  table.status === typeStatusTable.AVAILABLE && (
-                     <Button>Bloquear</Button>
-                  )
-               }
-               {
-                  table.status === typeStatusTable.BLOCKED && (
-                     <Button>Desbloquear</Button>
-                  )
-               }
-            </PopoverContent>
-         )}
-      </Popover>
+                  <Button
+                     title='Editar'
+                     onClick={() => onOpenEditTable(table)}
+                  >
+                     {/* Editar */}
+                     <Pencil />
+                  </Button>
+                  <Button
+                     title='Eliminar'
+                     onClick={() => handleDeleteTable(table)}
+                     variant='destructive'
+                  >
+                     <Trash />
+                  </Button>
+               </PopoverContent>
+            )
+         }
+         {
+            popoverType === 'left' && (
+               <PopoverContent
+                  align='center'
+                  side='right'
+                  sideOffset={-10}
+                  className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
+                  onInteractOutside={handleClose}
+                  onClick={handleClose}
+               >
+                  {
+                     table.status === typeStatusTable.BUSY && (
+                        <>
+                           <Button
+                              title='Cancelar'
+                           // onClick={() => onOpenReleaseTable(table)}
+                           >
+                              <Unlock />
+                              Cancelar
+                           </Button>
+                           <Button
+                              title='Confirmar'
+                           >
+                              <CheckCircle />
+                              Confirmar
+                           </Button>
+                        </>
+                     )
+                  }
+                  {
+                     table.status === typeStatusTable.AVAILABLE && (
+                        <>
+                           <Button
+                              title='Bloquear'
+                           >
+                              <Lock />
+                              Bloquear
+                           </Button>
+                           <Button
+                              title='Reservar'
+                              onClick={() => onOpenReserveTable(table)}
+                           >
+                              <Table />
+                              Reservar
+                           </Button>
+                        </>
+                     )
+                  }
+                  {
+                     table.status === typeStatusTable.BLOCKED && (
+                        <Button>
+                           <LockOpen />
+                        </Button>
+                     )
+                  }
+               </PopoverContent>
+            )
+         }
+      </Popover >
+   );
+};
+
+
+const InfoTableTooltip = ({
+   name,
+   email,
+   code,
+   timestamp,
+   hasReservar
+}) => {
+   if (!hasReservar || !timestamp) return (
+      <div className='text-xs text-muted-foreground text-center px-2 py-1'>
+         Mesa disponible
+      </div>
+   );
+
+   const currentTime = getTimeDifference(new Date(), new Date(timestamp));
+   const isExpired = currentTime === -1;
+
+   return (
+      <>
+         <div className='flex items-center gap-2'>
+            <span className={`text-xs font-semibold text-card-foreground`}>
+               {isExpired ? 'Reserva expirada' : `Pendiente: ${currentTime}`}
+            </span>
+            {!isExpired && (
+               <span className='bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
+                  Activa
+               </span>
+            )}
+            {isExpired && (
+               <span className='bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
+                  Expirada
+               </span>
+            )}
+         </div>
+
+         <p className='flex flex-col gap-2 mt-2'>
+            <span className='text-xs text-card-foreground' >
+               {name || <span className='text-card-foreground'>Sin nombre</span>}
+            </span>
+
+            <span className='text-xs text-card-foreground'>
+               {email || <span className='text-card-foreground'>Sin email</span>}
+            </span>
+
+            <span className='text-xs tracking-wider text-card-foreground'>
+               {code || <span className='text-card-foreground'>Sin código</span>}
+            </span>
+         </p>
+      </>
    );
 };

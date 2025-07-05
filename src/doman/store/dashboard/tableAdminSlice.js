@@ -17,7 +17,7 @@ export const tableAdminSlice = createSlice({
 
       currentValue: {
          hour: '',
-         date: new Date().toISOString().split('T')[0],
+         dateStr: new Date().toISOString().split('T')[0],
          restaurant: {}
       },
 
@@ -47,6 +47,30 @@ export const tableAdminSlice = createSlice({
          state.tables = payload;
       },
 
+      ModifyReservationTableAction: (state, { payload }) => {
+         state.tables = state.tables.map(table => {
+            if (payload.idTables.includes(table.id)) {
+               return {
+                  ...table,
+                  status: payload.status,
+                  hasReservar: true,
+                  user: {
+                     name: payload.clientName,
+                     email: payload.clientEmail,
+                     idUser: payload.idUser,
+                  },
+                  idReservation: payload.id,
+                  timestamp: payload.timestamp,
+                  relatedTables: payload.idTables.map(id => ({
+                     id,
+                     name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
+                  }))
+               }
+            }
+            return table;
+         });
+      },
+
       setCurrentValuesAction: (state, { payload }) => {
          if (payload.name === 'restaurant') {
             const data = state.restaurants.find((r) => r.name === payload.value);
@@ -60,14 +84,21 @@ export const tableAdminSlice = createSlice({
             return;
          }
 
-         if (payload.name === 'date') {
-            state.currentValue.date = payload.value;
+         if (payload.name === 'dateStr') {
+            state.currentValue.dateStr = payload.value;
             return;
          }
       },
 
       setCurrentSelectedTableAction: (state, { payload }) => {
          state.currentSelectedTable = payload ?? {};
+      },
+
+      updateCurrentSelectedTableAction: (state, { payload }) => {
+         if (!payload || !payload.name || !payload.value) return;
+
+         if (state.currentSelectedTable[payload.name] === payload.value) return;
+         state.currentSelectedTable[payload.name] = payload.value;
       },
 
       toggleIsTempTableChangeAction: (state, { payload }) => {
@@ -95,10 +126,12 @@ export const {
    loaddingAction,
    messageErrorAction,
    setCurrentSelectedTableAction,
+   updateCurrentSelectedTableAction,
    toggleIsTempTableChangeAction,
    setCurrentRestaurantAction,
    setCurrentValuesAction,
    setRestaurantsAction,
+   ModifyReservationTableAction,
    setHoursAction,
    setTablesAction,
    deleteTableAction,

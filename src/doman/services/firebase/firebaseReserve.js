@@ -1,4 +1,4 @@
-import { typeStatusTable } from '@/ultils';
+import { createDateFromString, getLocalDateStr, typeStatusTable } from '@/ultils';
 import { FirebaseDB } from './config';
 import { getAuth } from 'firebase/auth';
 
@@ -11,7 +11,7 @@ import {
    doc,
    serverTimestamp,
    setDoc
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 
 const firebaseErrorMessages = {
    'auth/invalid-email': 'El correo electrónico no es válido.',
@@ -26,6 +26,7 @@ const firebaseErrorMessages = {
 
 export class FirebaseReserveService {
    constructor() {
+      this.MINUTES_tolerance = 15 * 60 * 1000;
    }
 
 
@@ -58,14 +59,12 @@ export class FirebaseReserveService {
       }));
 
       // 2. Ignorar horas pasadas si la fecha es hoy
-      const today = new Date().toISOString().split('T')[0];
       const now = new Date();
 
       if (!this.isValidReservationDate(dateStr)) {
          throw new Error('No se pueden reservar fechas pasadas');
       }
-
-      if (dateStr === today) {
+      if (dateStr === getLocalDateStr()) {
          const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
          allowedHours = allowedHours.filter(({ hour }) => {
@@ -86,18 +85,21 @@ export class FirebaseReserveService {
       const reservationSnap = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
-         where('status', '==', 'confirmed'),
+         where('status', 'in', ['confirmed', 'pending']),
          where('date', '==', dateStr)
       ));
 
       const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
 
-      // 6. Contar cuántas reservas hay por hora
       const hourCounts = new Map();
       reservationSnap.docs.forEach((doc) => {
-         const hour = doc.data().hour;
-         hourCounts.set(hour, (hourCounts.get(hour) || 0) + 1);
+         const data = doc.data();
+         data.idTables.forEach(() => {
+            hourCounts.set(data.hour, (hourCounts.get(data.hour) || 0) + 1);
+         })
       });
+
+      console.log(hourCounts);
 
       // 7. Filtrar las horas disponibles
       const availableHours = allowedHours.filter(({ hour, tablesAvailable }) => {
@@ -136,7 +138,7 @@ export class FirebaseReserveService {
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
          where('date', '==', dateStr),
-         where('status', '==', 'confirmed'),
+         where('status', 'in', ['confirmed', 'pending']),
          where('hour', '==', hour),
       ));
 
@@ -208,6 +210,7 @@ export class FirebaseReserveService {
       try {
          const auth = getAuth();
          const user = auth.currentUser;
+         console.log(hour, dateStr, idTables);
 
          if (!user) {
             throw new Error('Usuario no autenticado');
@@ -221,7 +224,7 @@ export class FirebaseReserveService {
             where('idRestaurant', '==', idRestaurant),
             where('date', '==', dateStr),
             where('hour', '==', hour),
-            where('status', '==', 'confirmed')
+            where('status', 'in', ['confirmed', 'pending'])
          ));
 
          // Verificamos si alguna mesa ya está reservada
@@ -255,6 +258,8 @@ export class FirebaseReserveService {
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
 
+         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_tolerance;
+
          const reservationData = {
             idUser: uid,
             idRestaurant,
@@ -265,7 +270,8 @@ export class FirebaseReserveService {
             idTables,
             date: dateStr,
             code: newCode,
-            status: 'confirmed',
+            status: 'pending',
+            timestamp: timestamp,
             createdAt: serverTimestamp(),
             clientName: displayName || 'No Name',
             clientEmail: email || 'No Email',

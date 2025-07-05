@@ -4,17 +4,30 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '@/ultils/cn';
 import { cva } from 'class-variance-authority';
 
-export const Select = ({ value, defaultValue, onValueChange, ...props }) => {
+export const Select = ({
+  value,
+  defaultValue,
+  onValueChange,
+  name,
+  ...props
+}) => {
+  const handleValueChange = (val) => {
+    if (onValueChange) {
+      onValueChange({ name, value: val });
+    }
+  };
+
   return (
     <SelectPrimitive.Root
       value={value !== undefined ? value : undefined}
       defaultValue={value === undefined ? defaultValue : undefined}
-      onValueChange={onValueChange}
+      onValueChange={handleValueChange}
       data-slot="select"
       {...props}
     />
   );
 };
+
 
 
 export const SelectGroup = ({ ...props }) => {

@@ -43,8 +43,9 @@ export const TableAutoFilter = ({
       )}>
          <FormItem>
             <Select
+               name={'restaurant'}
                value={restaurant || undefined}
-               onValueChange={(value) => onValueChange({ name: 'restaurant', value })}
+               onValueChange={onValueChange}
             >
                <SelectTrigger
                   size='lg'
@@ -68,17 +69,19 @@ export const TableAutoFilter = ({
          </FormItem>
 
          <CalendarButton
+            name={'dateStr'}
             variant={'outline'}
             btnClassName={'shadow-xl hover:bg-sidebar hover:text-muted-foreground'}
-            onValueChange={(value) => onValueChange({ name: 'date', value })}
+            onValueChange={onValueChange}
             date={parseLocalDate(date)}
             configDate={null}
          />
 
          <FormItem>
             <Select
+               name={'hour'}
                value={hour || undefined}
-               onValueChange={(value) => onValueChange({ name: 'hour', value })}
+               onValueChange={onValueChange}
             >
                <SelectTrigger
                   size='lg'

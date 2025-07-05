@@ -1,4 +1,6 @@
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getLocalDateStr } from '@/ultils';
 
 import {
    reserveToggleTableAction,
@@ -15,7 +17,7 @@ import {
    reserveResetStateTablesAction,
    reserveResetSelectedTablesAction,
 } from '@/doman/store/reserve';
-import { useMemo } from 'react';
+
 
 export const useReserve = () => {
    const dispatch = useDispatch();
@@ -55,9 +57,13 @@ export const useReserve = () => {
     * @param {Date} date 
     */
    const reserveSetDate = (date) => {
-      if (date instanceof Date) date = date.toISOString().split('T')[0];
-      dispatch(reserveSetDateAction(date));
-      serviceGetAvailableHours(date);
+      let dateStr = date
+      if (date instanceof Date) {
+         dateStr = getLocalDateStr(date);
+      };
+      serviceGetAvailableHours(dateStr);
+
+      dispatch(reserveSetDateAction(dateStr));
    }
 
    const reserveSetTime = (data) => {
@@ -96,7 +102,7 @@ export const useReserve = () => {
       dispatch(reserveChangeStateAction(typeStatus.PENDING_AUTH));
    }
 
-   const reservePending =()=>{
+   const reservePending = () => {
       dispatch(reserveChangeStateAction(typeStatus.PENDING));
    }
 

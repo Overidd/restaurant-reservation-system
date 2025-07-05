@@ -110,17 +110,26 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
 
    const onValueChange = useCallback((e) => {
       if (!e) return;
-      const name = e.name || e.target.name;
-      const value = e.value || e.target.value;
 
+      const name = e?.target?.name ?? e.name;
+      let value = e?.target?.value ?? e.value;
+
+      const type = e?.target?.type ?? e.type;
+
+      if (type === 'number' && value !== '') {
+         const num = Number(value);
+         value = isNaN(num) ? '' : num;
+      }
 
       dispatch({ type: TYPEACTION.CHANGE, field: name, value });
+
       if (activeValidation) {
          dispatch({ type: TYPEACTION.VALIDATE_ONE, field: name });
       }
 
-      changeValueCallbackRef.current && changeValueCallbackRef.current({ name, value });
+      changeValueCallbackRef.current?.({ name, value });
    }, [activeValidation]);
+
 
    const setChangeValueCallback = (callback) => {
       changeValueCallbackRef.current = callback

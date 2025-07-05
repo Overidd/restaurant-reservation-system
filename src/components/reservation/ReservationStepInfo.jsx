@@ -69,8 +69,9 @@ export const ReservationStepInfo = ({
          >
             <FormItem>
                <Select
+                  name='location'
                   value={location || undefined}
-                  onValueChange={(value) => onValueChange({ name: 'location', value })}
+                  onValueChange={onValueChange}
                >
                   <SelectTrigger
                      isError={!!locationValid}
@@ -94,8 +95,9 @@ export const ReservationStepInfo = ({
 
             <FormItem>
                <Select
+                  name='reason'
                   value={reason || undefined}
-                  onValueChange={(value) => onValueChange({ name: 'reason', value })}
+                  onValueChange={onValueChange}
                >
                   <SelectTrigger
                      isError={!!reasonValid}
