@@ -32,6 +32,8 @@ export const TablesScreen = () => {
       toggleIsTempTable,
       loading,
       deleteTable,
+      cancelReserveTable,
+      cancelReservationTables,
    } = useTableAdminStore();
 
    const {
@@ -93,9 +95,11 @@ export const TablesScreen = () => {
                rows={currentRestaurant.rows}
                tables={tables}
                isLoading={loading.tables}
-               onDeleteTable={deleteTable}
                onOpenEditTable={onOpenEditTable}
                onOpenReserveTable={onOpenReserveTable}
+               onDeleteTable={deleteTable}
+               onCancelReserveTable={cancelReserveTable}
+               onCancelReservationTables={cancelReservationTables}
                className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
             />
          </ModalProviderAsync>
@@ -132,3 +136,4 @@ export const TablesScreen = () => {
       </main>
    )
 }
+// Pude mostar el nombre como un perfil

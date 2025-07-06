@@ -43,6 +43,8 @@ export const TableList = ({
    className,
    onChangeTable,
    onDeleteTable,
+   onCancelReserveTable,
+   onCancelReservationTables,
    onOpenEditTable,
    onOpenReserveTable,
    isLoading = false,
@@ -71,15 +73,15 @@ export const TableList = ({
       // No limpies aquí, deja que el modal controle el estado
       const res = await showAsyncModal(({ onConfirm, onCancel }) => (
          <DialigCancelReserve
+            table={table}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            table={table}
+            onCancelReservationTables={onCancelReservationTables}
             setHighlightedTableIds={setHighlightedTableIds}
          />
       ));
       if (res) {
-         console.log(res)
-         // onChangeTable(table);
+         onCancelReserveTable(res?.data);
       }
       // Limpiar selección al cerrar modal
       setHighlightedTableIds([]);
@@ -104,7 +106,7 @@ export const TableList = ({
                onOpenEditTable={onOpenEditTable}
                onOpenReserveTable={onOpenReserveTable}
                onChangeTable={onChangeTable}
-               onCancelReserve={handleCancelReserve}
+               onCancelReserveTable={handleCancelReserve}
                onDeleteTable={handleDeleteTable}
                // 3. Pasar prop para resaltar
                highlighted={highlightedTableIds.includes(table.id)}
@@ -205,6 +207,7 @@ export const DialigDeleteTable = ({
 }
 
 export const DialigCancelReserve = ({
+   onCancelReservationTables,
    onConfirm,
    onCancel,
    table,
@@ -230,12 +233,22 @@ export const DialigCancelReserve = ({
    const handleCheckNoShow = () => {
       isCheckedNoShowRef.current = !isCheckedNoShowRef.current;
    }
-   
+
    const hasSelectes = () => {
+      if (localHighlightedId.length === table.relatedTables.length) {
+         onCancelReservationTables({
+            idReservation: table.idReservation,
+            idTables: localHighlightedId
+         });
+         return;
+      }
+
       if (localHighlightedId.length > 0) {
          onConfirm({
+            user: table.user,
             idTables: localHighlightedId,
-            noShow: isCheckedNoShowRef.current
+            idReservation: table.idReservation,
+            isNoShow: isCheckedNoShowRef.current,
          });
          return;
       }
@@ -344,7 +357,7 @@ const TableItemPopover = ({
    onDeleteTable,
    onOpenEditTable,
    onOpenReserveTable,
-   onCancelReserve,
+   onCancelReserveTable,
    highlighted = false
 }) => {
    const [popoverType, setPopoverType] = useState(null);
@@ -438,7 +451,7 @@ const TableItemPopover = ({
                         <>
                            <Button
                               title='Cancelar'
-                              onClick={() => onCancelReserve(table)}
+                              onClick={() => onCancelReserveTable(table)}
                            >
                               <OctagonX />
                               Cancelar

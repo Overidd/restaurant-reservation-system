@@ -10,6 +10,8 @@ import {
    toggleIsTempTableChangeAction,
    updateCurrentSelectedTableAction,
    listenModifyTablesThunks,
+   cancelReserveTableThunks,
+   cancelReservationTablesThunks,
 } from '@/doman/store/dashboard';
 
 export const useTableAdminStore = () => {
@@ -87,6 +89,14 @@ export const useTableAdminStore = () => {
       dispatch(deleteTableThunks(idTable));
    };
 
+   const cancelReserveTable = (data) => {
+      dispatch(cancelReserveTableThunks(data));
+   }
+
+   const cancelReservationTables = (data) => {
+      dispatch(cancelReservationTablesThunks(data));
+   }
+
    const changeCurrentTable = ({ name, value }) => {
       if (!value || !name) return;
       dispatch(updateCurrentSelectedTableAction({ name, value }));
@@ -117,6 +127,8 @@ export const useTableAdminStore = () => {
       loadTables,
       setCurrentValue,
       deleteTable,
+      cancelReserveTable,
+      cancelReservationTables,
       setCurrentSelectedTable,
       toggleIsTempTable
    }

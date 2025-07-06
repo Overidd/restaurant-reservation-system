@@ -9,6 +9,10 @@ import {
    onSnapshot,
    orderBy,
    limit,
+   doc,
+   updateDoc,
+   serverTimestamp,
+   getDoc,
 } from 'firebase/firestore';
 
 
@@ -155,6 +159,89 @@ export class FirebaseDashboardService {
          return {
             ok: false,
             errorMessage: error.message || 'Error al obtener las mesas'
+         }
+      }
+   }
+
+   async cancelReserveTable({ idReservation }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+         await updateDoc(reservationRef, {
+            status: 'canceled',
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al cancelar la reserva'
+         }
+      }
+   }
+
+   async cancelReservationTables({ idReservation, idTables }) {
+      try {
+         if (!idReservation || Array.isArray(idTables).length <= 0) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const reservation = await getDoc(doc(FirebaseDB, 'reservations', idReservation));
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+         
+         await updateDoc(reservationRef, {
+            idTables: reservation.data().idTables.filter(id => !idTables.includes(id)),
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al cancelar la reserva'
+         }
+      }
+   }
+
+   async registerClientnoShow({ idReservation, user: { name, email, idUser } }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         if (!idUser) {
+            throw new Error('No se proporciono el id del usuario');
+         }
+
+         const reservationNoShowRef = doc(FirebaseDB, 'reservations', idReservation);
+
+         await updateDoc(reservationNoShowRef, {
+            clientName: name,
+            clientEmail: email,
+            idReservation: idReservation,
+            idUser: idUser ?? null,
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al cancelar la reserva'
          }
       }
    }

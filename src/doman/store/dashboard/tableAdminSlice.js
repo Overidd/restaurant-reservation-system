@@ -109,6 +109,10 @@ export const tableAdminSlice = createSlice({
          state.tables = state.tables.filter((t) => t.id !== payload);
       },
 
+      deleteTablesAction: (state, { payload }) => {
+         state.tables = state.tables.filter((t) => !payload.includes(t.id));
+      },
+
       loaddingAction: (state, { payload }) => {
          state.loading[payload] = true
       },
@@ -135,4 +139,5 @@ export const {
    setHoursAction,
    setTablesAction,
    deleteTableAction,
+   deleteTablesAction,
 } = tableAdminSlice.actions

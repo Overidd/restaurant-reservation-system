@@ -8,7 +8,8 @@ import {
    setRestaurantsAction,
    setTablesAction,
    typeLoading,
-   ModifyReservationTableAction
+   ModifyReservationTableAction,
+   deleteTablesAction
 } from '.';
 
 
@@ -70,6 +71,45 @@ export const deleteTableThunks = (idTable) => {
       }
 
       dispatch(deleteTableAction(idTable));
+   }
+}
+
+/**
+ * 
+ * @param {{ user: Object, idReservation: string, idTables: string[], isNoShow: boolean }} data 
+ * @returns 
+ */
+export const cancelReserveTableThunks = (data) => {
+   return async (dispatch) => {
+      const res = await dasboardServiceProvider.cancelReserveTable(data);
+
+      if (data.isNoShow) {
+         await dasboardServiceProvider.registerClientnoShow(data);
+      }
+
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         return;
+      }
+
+      dispatch(deleteTablesAction(data.idTables));
+   }
+}
+
+/**
+ * 
+ * @param {{idReservation, idTables}} data 
+ * @returns 
+ */
+export const cancelReservationTablesThunks = (data) => {
+   return async (dispatch) => {
+      const res = await dasboardServiceProvider.cancelReservationTables(data);
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         return;
+      }
+
+      dispatch(deleteTablesAction(data.idTables));
    }
 }
 

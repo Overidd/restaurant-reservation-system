@@ -35,6 +35,7 @@ export const Toggle = forwardRef(({
    className,
    variant,
    size,
+   name,
    pressed: controlledPressed,
    onPressedChange,
    onClick,
@@ -59,8 +60,9 @@ export const Toggle = forwardRef(({
 
    return (
       <button
-         className={cn(toggleVariants({ variant, size, className }))}
          ref={ref}
+         name={name}
+         className={cn(toggleVariants({ variant, size, className }))}
          data-state={isPressed ? 'on' : 'off'}
          aria-pressed={isPressed}
          onClick={handleClick}
