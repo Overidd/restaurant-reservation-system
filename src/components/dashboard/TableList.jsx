@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useModalAsync } from '@/hook';
 import PropTypes from 'prop-types';
 import { cn } from '@/ultils/cn';
@@ -8,23 +8,34 @@ import { getTimeDifference, typeStatusTable } from '@/ultils';
 
 import {
    Button,
+   CardContent,
+   CardDescription,
+   CardFooter,
+   CardHeader,
+   CardTitle,
    Popover,
    PopoverContent,
    PopoverTrigger,
+   Toggle,
    Tooltip,
    TooltipContent,
    TooltipTrigger
 } from '../UI/common';
 
 import {
+   AlertTriangle,
    CheckCircle,
+   Dice1,
    Lock,
    LockOpen,
+   OctagonX,
    Pencil,
    Table,
    Trash,
-   Unlock
+   Unlock,
+   User
 } from 'lucide-react';
+import { Checkbox, Label } from '../UI/from';
 
 export const TableList = ({
    rows,
@@ -39,6 +50,9 @@ export const TableList = ({
 }) => {
    const { showAsyncModal } = useModalAsync();
 
+   // 1. Estado levantado para las mesas seleccionadas en el modal
+   const [highlightedTableIds, setHighlightedTableIds] = useState([]);
+
    if (!Array.isArray(tables)) return null;
 
    const handleDeleteTable = async (table) => {
@@ -52,6 +66,23 @@ export const TableList = ({
       if (confirmed) {
          onDeleteTable(table.id);
       }
+   }
+   const handleCancelReserve = async (table) => {
+      // No limpies aquí, deja que el modal controle el estado
+      const res = await showAsyncModal(({ onConfirm, onCancel }) => (
+         <DialigCancelReserve
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            table={table}
+            setHighlightedTableIds={setHighlightedTableIds}
+         />
+      ));
+      if (res) {
+         console.log(res)
+         // onChangeTable(table);
+      }
+      // Limpiar selección al cerrar modal
+      setHighlightedTableIds([]);
    }
 
    const paintedTables = () => {
@@ -73,7 +104,10 @@ export const TableList = ({
                onOpenEditTable={onOpenEditTable}
                onOpenReserveTable={onOpenReserveTable}
                onChangeTable={onChangeTable}
-               handleDeleteTable={handleDeleteTable}
+               onCancelReserve={handleCancelReserve}
+               onDeleteTable={handleDeleteTable}
+               // 3. Pasar prop para resaltar
+               highlighted={highlightedTableIds.includes(table.id)}
             />
          );
       });
@@ -170,11 +204,148 @@ export const DialigDeleteTable = ({
    )
 }
 
+export const DialigCancelReserve = ({
+   onConfirm,
+   onCancel,
+   table,
+   setHighlightedTableIds = () => { },
+}) => {
+   const [localHighlightedId, setLocalHighlightedId] = useState([]);
+   const contentTogglesRef = useRef(null);
+   const isCheckedNoShowRef = useRef(false);
+
+   const toggleSelected = (item) => {
+      setLocalHighlightedId((prev) => {
+         let updated;
+         if (prev.includes(item.id)) {
+            updated = prev.filter((id) => id !== item.id);
+         } else {
+            updated = [...prev, item.id];
+         }
+         setHighlightedTableIds(updated);
+         return updated;
+      });
+   };
+
+   const handleCheckNoShow = () => {
+      isCheckedNoShowRef.current = !isCheckedNoShowRef.current;
+   }
+   
+   const hasSelectes = () => {
+      if (localHighlightedId.length > 0) {
+         onConfirm({
+            idTables: localHighlightedId,
+            noShow: isCheckedNoShowRef.current
+         });
+         return;
+      }
+      const element = contentTogglesRef.current;
+      if (!element) return;
+      element.classList.remove('animate__shakeX');
+      void element.offsetWidth;
+      element.classList.add('animate__shakeX');
+   };
+
+   const user = table.user;
+   const isActiveCheck = localHighlightedId.length === table.relatedTables.length;
+
+   return (
+      <Card2 className={cn(
+         'p-4 flex flex-col gap-4',
+         'w-72'
+      )}>
+         <CardHeader className={'gap-2'}>
+            <div className="mx-auto w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+               <AlertTriangle className="w-6 h-6 text-amber-600" />
+            </div>
+            <CardTitle className={'text-background text-center'}>
+               Cancelar la reserva
+            </CardTitle>
+            <UserCard
+               className='mx-auto'
+               user={user}
+            />
+         </CardHeader>
+
+         <CardContent
+            ref={contentTogglesRef}
+            className='flex flex-col gap-2 animate__animated'
+         >
+            {
+               table.relatedTables && (
+                  table.relatedTables.map((item) => (
+                     <Toggle
+                        key={item.id}
+                        variant={'crystal'}
+                        onClick={() => toggleSelected(item)}
+                        className={localHighlightedId.includes(item.id) ? 'ring-2 ring-amber-400' : ''}
+                     >
+                        <Dice1 />
+                        {item.name}
+                     </Toggle>
+                  ))
+               )
+            }
+         </CardContent>
+
+         <CardFooter className={'gap-4 justify-center  flex-wrap '}>
+            <Label
+               className={'space-x-2 text-background/70 basis-full'}
+            >
+               <Checkbox
+                  disabled={!isActiveCheck}
+                  onChange={handleCheckNoShow}
+                  className='inline-block align-middle'
+               />
+               <span className='inline-block align-middle'>
+                  Marcar como no-show
+               </span>
+            </Label>
+
+            <Button
+               onClick={hasSelectes}
+               size={'sm'}
+            >
+               Confirmar
+            </Button>
+            <Button
+               onClick={onCancel}
+               size={'sm'}
+               variant='destructive'
+            >
+               Eliminar
+            </Button>
+         </CardFooter>
+      </Card2>
+   )
+}
+
+export const UserCard = ({ user, className }) => {
+   return (
+      <div className={cn(
+         'flex items-center space-x-3 text-card-primary',
+         className
+      )}>
+         <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+            <User className="w-4 h-4 text-primary" />
+         </div>
+         <div>
+            <p className="text-sm font-medium">Usuario</p>
+            <p className="text-sm">
+               {user.name}
+            </p>
+         </div>
+      </div>
+   )
+}
+
 const TableItemPopover = ({
    table,
-   handleDeleteTable,
+   onDeleteTable,
    onOpenEditTable,
-   onOpenReserveTable
+   onOpenReserveTable,
+   onCancelReserve,
+   highlighted = false
 }) => {
    const [popoverType, setPopoverType] = useState(null);
    const [open, setOpen] = useState(false);
@@ -211,6 +382,8 @@ const TableItemPopover = ({
                      chairs={table?.chairs}
                      name={table?.name}
                      rotation={table?.rotation}
+                     // 4. Resalta la mesa en el grid si está seleccionada
+                     className={highlighted ? 'transition-shadow shadow-[0_0_30px_rgba(0,0,0,0.20)] rounded-2xl' : ''}
                   />
                </TooltipTrigger>
             </PopoverTrigger>
@@ -242,7 +415,7 @@ const TableItemPopover = ({
                   </Button>
                   <Button
                      title='Eliminar'
-                     onClick={() => handleDeleteTable(table)}
+                     onClick={() => onDeleteTable(table)}
                      variant='destructive'
                   >
                      <Trash />
@@ -261,13 +434,13 @@ const TableItemPopover = ({
                   onClick={handleClose}
                >
                   {
-                     table.status === typeStatusTable.BUSY && (
+                     table.status === typeStatusTable.PENDING && (
                         <>
                            <Button
                               title='Cancelar'
-                           // onClick={() => onOpenReleaseTable(table)}
+                              onClick={() => onCancelReserve(table)}
                            >
-                              <Unlock />
+                              <OctagonX />
                               Cancelar
                            </Button>
                            <Button

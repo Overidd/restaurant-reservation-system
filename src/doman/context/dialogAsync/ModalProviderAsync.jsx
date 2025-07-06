@@ -3,7 +3,11 @@ import { Modal } from '@/components/UI/common';
 import { ModalContextAsync } from '.';
 
 export const ModalProviderAsync = ({ className, children }) => {
-  const [modalState, setModalState] = useState({ isOpen: false, content: null, resolve: null });
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    content: null,
+    resolve: null
+  });
 
   const showAsyncModal = useCallback((content) => {
     return new Promise((resolve) => {
@@ -12,7 +16,6 @@ export const ModalProviderAsync = ({ className, children }) => {
   }, []);
 
   const handleClose = useCallback((result) => {
-    console.log(result)
     if (modalState.resolve) modalState.resolve(result);
     setModalState({ isOpen: false, content: null, resolve: null });
   }, [modalState]);
@@ -28,7 +31,7 @@ export const ModalProviderAsync = ({ className, children }) => {
         onClose={() => handleClose(false)}
       >
         {modalState.content && modalState.content({
-          onConfirm: () => handleClose(true),
+          onConfirm: (data) => handleClose(data ? { isConfirmed: true, data } : true),
           onCancel: () => handleClose(false),
         })}
       </Modal>

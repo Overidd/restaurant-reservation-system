@@ -114,6 +114,7 @@ export class FirebaseDashboardService {
                   name: data.clientName,
                   email: data.clientEmail,
                   idUser: data?.idUser ?? null,
+                  code: data?.code ?? null
                },
             };
 
@@ -159,6 +160,8 @@ export class FirebaseDashboardService {
    }
 
    listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
+      if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') return;
+
       const q = query(
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
@@ -197,8 +200,6 @@ export class FirebaseDashboardService {
 
          if (isInitial) isInitial = false;
       });
-
-
       return unsubscribe;
    }
 }

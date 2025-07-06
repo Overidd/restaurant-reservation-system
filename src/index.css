@@ -60,7 +60,7 @@
 :root {
   --radius: 0.65rem;
   --background: #FAF3E6;
-  --foreground: #4e403cc4;
+  --foreground: #6d5f5c;
   --card: #ffffff;
   --card-foreground: #4e403cc4;
   --card-primary: #ffffff9a;
@@ -74,7 +74,7 @@
   /** Color apagado*/
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: #8F521E;
-  --accent-foreground: #fff;
+  --accent-foreground: #FAF3E6;
   --destructive: #D0534B;
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
@@ -101,7 +101,7 @@
   --table-busy: #d9524e;
   --table-selected: #5485CE;
   --table-blocked: #ccc;
-  --table-pending: #FFC107;
+  --table-pending: #eca668  ;
   --table-confirmed: #3B82F6;
   --backdrop-modal: rgba(0, 0, 0, 0.356);
 }
@@ -203,7 +203,7 @@
 /** Style Input  */
 .input-style-class {
   /* background: rgba(255, 255, 255, 0.05); */
-  color: #ddddddde;
+  /* color: var(text-background); */
   /* background-color: #fbf3e7 !; */
   /* fondo oscuro y translúcido */
   /* borde suave y claro */

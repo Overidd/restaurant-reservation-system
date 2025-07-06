@@ -63,29 +63,27 @@ export const Checkbox = ({
    };
 
    return (
-      <div className="flex items-center gap-2">
-         <div
-            id={id}
-            role="checkbox"
-            aria-checked={checkedValue}
-            aria-disabled={disabled}
-            tabIndex={disabled ? -1 : 0}
-            className={cn(
-               sizeClasses[size],
-               'border-2 rounded flex items-center justify-center cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-               checkedValue
-                  ? 'bg-primary border-primary text-primary-foreground'
-                  : 'bg-background border-input hover:border-accent',
-               disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm',
-               className
-            )}
-            onClick={handleChange}
-            onKeyDown={handleKeyDown}
-         >
-            {checkedValue && (
-               <Check size={iconSizes[size]} className="transition-opacity duration-150" />
-            )}
-         </div>
+      <div
+         id={id}
+         role="checkbox"
+         aria-checked={checkedValue}
+         aria-disabled={disabled}
+         tabIndex={disabled ? -1 : 0}
+         className={cn(
+            sizeClasses[size],
+            'border-2 rounded flex items-center justify-center cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            checkedValue
+               ? 'bg-primary border-primary text-primary-foreground'
+               : 'bg-background border-input hover:border-accent',
+            disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm',
+            className
+         )}
+         onClick={handleChange}
+         onKeyDown={handleKeyDown}
+      >
+         {checkedValue && (
+            <Check size={iconSizes[size]} className="transition-opacity duration-150" />
+         )}
       </div>
    );
 };

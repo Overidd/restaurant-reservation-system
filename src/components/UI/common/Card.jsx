@@ -54,7 +54,7 @@ export const CardImage = ({ className, src, alt, zoom, ...props }) => {
 
 export const CardTitle = ({ className, ...props }) => {
    return (
-      <div
+      <h2
          data-slot='card-title'
          className={cn('leading-none font-semibold', className)}
          {...props}
