@@ -40,6 +40,7 @@ export const Toggle = forwardRef(({
    onPressedChange,
    onClick,
    children,
+   disabled,
    ...props
 }, ref) => {
 
@@ -65,6 +66,7 @@ export const Toggle = forwardRef(({
          className={cn(toggleVariants({ variant, size, className }))}
          data-state={isPressed ? 'on' : 'off'}
          aria-pressed={isPressed}
+         disabled={disabled}
          onClick={handleClick}
          {...props}
       >

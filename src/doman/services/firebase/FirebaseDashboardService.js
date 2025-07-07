@@ -1,5 +1,6 @@
+
 import { FirebaseDB } from './config';
-import { typeStatusTable } from '@/ultils';
+import { createDateFromString, generateCode, typeStatusTable } from '@/ultils';
 // import { collection, getDocs, query, where } from 'firebase/firestore/lite';
 import {
    collection,
@@ -13,6 +14,7 @@ import {
    updateDoc,
    serverTimestamp,
    getDoc,
+   setDoc,
 } from 'firebase/firestore';
 
 
@@ -99,26 +101,28 @@ export class FirebaseDashboardService {
 
             const info = {
                status: data?.status ?? null,
-               timestamp: data?.timestamp ?? null,
-               idReservation: doc.id,
-               relatedTables: data?.idTables ?
-                  data.idTables.map(id => {
-                     const table = tables.docs.find(doc => doc.id == id);
-                     if (!table) return {
-                        id: id,
-                        name: 'Not Name',
-                     };
-                     return {
-                        id: id,
-                        name: table.data().name
-                     }
-                  })
-                  : [],
+               reservation: {
+                  code: data?.code ?? null,
+                  idReservation: doc.id,
+                  timestamp: data?.timestamp ?? null,
+                  relatedTables: data?.idTables ?
+                     data.idTables.map(id => {
+                        const table = tables.docs.find(doc => doc.id == id);
+                        if (!table) return {
+                           id: id,
+                           name: 'Not Name',
+                        };
+                        return {
+                           id: id,
+                           name: table.data().name
+                        }
+                     })
+                     : [],
+               },
                user: {
                   name: data.clientName,
                   email: data.clientEmail,
                   idUser: data?.idUser ?? null,
-                  code: data?.code ?? null
                },
             };
 
@@ -139,17 +143,24 @@ export class FirebaseDashboardService {
             return {
                id: doc.id,
                ...data,
+               idRestaurant: data.idRestaurant?.id ?? null,
                status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
                chairs: Number(data.chairs),
-               idRestaurant: data.idRestaurant?.id ?? null,
-               createdAt: data.createdAt?.toDate?.().toISOString?.() ?? null,
                hasReservar: reservation ? true : false,
+               reservation: reservation?.reservation ?? null,
                user: reservation?.user ?? null,
-               timestamp: reservation?.timestamp ?? null,
-               idReservation: reservation?.idReservation ?? null,
-               relatedTables: reservation?.relatedTables ?? [],
+               createdAt: data.createdAt?.toDate?.().toISOString?.() ?? null,
             };
          });
+
+         // status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
+         //       chairs: Number(data.chairs),
+         //       createdAt: data.createdAt?.toDate?.().toISOString?.() ?? null,
+         //       hasReservar: reservation ? true : false,
+         //       user: reservation?.user ?? null,
+         //       timestamp: reservation?.timestamp ?? null,
+         //       idReservation: reservation?.idReservation ?? null,
+         //       relatedTables: reservation?.relatedTables ?? [],
 
          return {
             ok: true,
@@ -163,7 +174,7 @@ export class FirebaseDashboardService {
       }
    }
 
-   async cancelReserveTable({ idReservation }) {
+   async cancelFullReservation({ idReservation }) {
       try {
          if (!idReservation) {
             throw new Error('No se proporciono el id de la reserva');
@@ -171,7 +182,7 @@ export class FirebaseDashboardService {
 
          const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
          await updateDoc(reservationRef, {
-            status: 'canceled',
+            status: typeStatusTable.CANCELED,
             updatedAt: serverTimestamp()
          });
 
@@ -187,7 +198,7 @@ export class FirebaseDashboardService {
       }
    }
 
-   async cancelReservationTables({ idReservation, idTables }) {
+   async cancelATablesReservation({ idReservation, idTables }) {
       try {
          if (!idReservation || Array.isArray(idTables).length <= 0) {
             throw new Error('No se proporciono el id de la reserva');
@@ -196,7 +207,7 @@ export class FirebaseDashboardService {
          const reservation = await getDoc(doc(FirebaseDB, 'reservations', idReservation));
 
          const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
-         
+
          await updateDoc(reservationRef, {
             idTables: reservation.data().idTables.filter(id => !idTables.includes(id)),
             updatedAt: serverTimestamp()
@@ -246,6 +257,158 @@ export class FirebaseDashboardService {
       }
    }
 
+   /**
+    * 
+    * @param {{ idTables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string, diners: number}} param0 
+    * @returns 
+    */
+   async reserveTable({
+      idRestaurant,
+      idTables,
+      dateStr,
+      hour,
+      idUser,
+      email,
+      phone,
+      name,
+      diners,
+      reason,
+      comment,
+   }) {
+      try {
+         if (!idRestaurant || Array.isArray(idTables).length <= 0) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         if (typeof diners !== 'number' || diners <= 0) {
+            throw new Error('El número de comensales no es válido');
+         }
+
+         const reservations = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idRestaurant', '==', idRestaurant),
+            where('date', '==', dateStr),
+            where('hour', '==', hour),
+            where('status', 'in', ['confirmed', 'pending'])
+         ));
+
+         // Verificamos si alguna mesa ya está reservada
+         const reservedTables = new Set();
+         const existingCodes = new Set();
+
+         reservations.forEach(doc => {
+            const data = doc.data();
+            if (data.idTables && Array.isArray(data.idTables)) {
+               data.idTables.forEach(id => reservedTables.add(Number(id)));
+            }
+            if (data.code) {
+               existingCodes.add(data.code);
+            }
+         });
+
+         for (const idTable of idTables) {
+            if (reservedTables.has(Number(idTable))) {
+               throw new Error(`La mesa ${idTable} ya fue reservada en esta hora.`);
+            }
+         }
+
+         const newCode = generateCode({
+            prefix: 'RESERVE-',
+            existingCodesSet: existingCodes,
+            length: 8
+         });
+
+         const reservationRef = doc(collection(FirebaseDB, 'reservations'));
+
+         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_tolerance;
+
+         const reservationData = {
+            idUser: idUser ?? null,
+            idRestaurant,
+            diners: diners ?? 1,
+            reason: reason ?? 'Sin motivo',
+            hour,
+            comment: comment ?? 'Reserva por el panel de administrador',
+            idTables: Array.isArray(idTables) ? idTables : [idTables],
+            date: dateStr,
+            code: newCode,
+            status: 'pending',
+            timestamp: timestamp,
+            clientName: name || 'No Name',
+            clientEmail: email || 'No Email',
+            clientPhone: phone || 'No Phone',
+            createdAt: serverTimestamp(),
+         };
+
+         await setDoc(reservationRef, reservationData);
+
+         return {
+            ok: true,
+            code: newCode,
+            user: {
+               name,
+               email,
+               phone
+            }
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error?.message || String(error) || 'Error al cancelar la reserva'
+         }
+      }
+   }
+
+
+   async confirmReservation({ idReservation }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+         await updateDoc(reservationRef, {
+            status: typeStatusTable.CONFIRMED,
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al confirmar la reserva'
+         }
+      }
+   }
+
+   async releaseReservation({ idReservation }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+         await updateDoc(reservationRef, {
+            status: typeStatusTable.RELEASED,
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al confirmar la reserva'
+         }
+      }
+   }
+
    listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
       if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') return;
 
@@ -253,12 +416,11 @@ export class FirebaseDashboardService {
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
          where('date', '==', dateStr),
-         where('status', 'in', ['pending', 'confirmed']),
+         where('status', 'in', ['pending', 'confirmed']), // TODO: faltaria agregar el status canceled y released
          where('hour', '==', hour),
          orderBy('createdAt', 'desc'),
          limit(1)
       );
-
 
       let isInitial = true;
       const startedAt = Date.now();

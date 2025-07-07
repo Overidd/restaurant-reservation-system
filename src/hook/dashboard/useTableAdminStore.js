@@ -10,8 +10,11 @@ import {
    toggleIsTempTableChangeAction,
    updateCurrentSelectedTableAction,
    listenModifyTablesThunks,
-   cancelReserveTableThunks,
-   cancelReservationTablesThunks,
+   cancelFullReservationThunks,
+   cancelATablesReservationThunks,
+   confirmReservationThunks,
+   releasedReservationThunks,
+   reserveTableThunks,
 } from '@/doman/store/dashboard';
 
 export const useTableAdminStore = () => {
@@ -89,18 +92,29 @@ export const useTableAdminStore = () => {
       dispatch(deleteTableThunks(idTable));
    };
 
-   const cancelReserveTable = (data) => {
-      dispatch(cancelReserveTableThunks(data));
+   const cancelFullReservation = async (data) => {
+      return dispatch(cancelFullReservationThunks(data));
    }
 
-   const cancelReservationTables = (data) => {
-      dispatch(cancelReservationTablesThunks(data));
+   const cancelATablesReservation = async (data) => {
+      return dispatch(cancelATablesReservationThunks(data));
+   }
+
+   const confirmReservation = async (data) => {
+      return dispatch(confirmReservationThunks(data));
+   }
+   const releasedReservation = async (data) => {
+      return dispatch(releasedReservationThunks(data));
    }
 
    const changeCurrentTable = ({ name, value }) => {
       if (!value || !name) return;
       dispatch(updateCurrentSelectedTableAction({ name, value }));
    };
+
+   const reserveTable = async (data) => {
+      return dispatch(reserveTableThunks(data));
+   }
 
    const tables = useMemo(() => {
       if (state.isTempTableChange) {
@@ -109,7 +123,6 @@ export const useTableAdminStore = () => {
 
       return state.tables
    }, [state.tables, state.currentSelectedTable, state.isTempTableChange]);
-
 
    return {
       state,
@@ -127,9 +140,12 @@ export const useTableAdminStore = () => {
       loadTables,
       setCurrentValue,
       deleteTable,
-      cancelReserveTable,
-      cancelReservationTables,
+      cancelFullReservation,
+      cancelATablesReservation,
       setCurrentSelectedTable,
-      toggleIsTempTable
+      toggleIsTempTable,
+      confirmReservation,
+      releasedReservation,
+      reserveTable
    }
 }

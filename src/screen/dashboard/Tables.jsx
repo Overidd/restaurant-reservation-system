@@ -32,8 +32,11 @@ export const TablesScreen = () => {
       toggleIsTempTable,
       loading,
       deleteTable,
-      cancelReserveTable,
-      cancelReservationTables,
+      cancelFullReservation,
+      cancelATablesReservation,
+      confirmReservation,
+      releasedReservation,
+      reserveTable,
    } = useTableAdminStore();
 
    const {
@@ -73,10 +76,17 @@ export const TablesScreen = () => {
    const onCloseEditProperty = () => {
       toggleIsTempTable(false);
       closeModalEditProperty();
+      setCurrentSelectedTable({});
    };
 
    const onOpenReserveTable = (table) => {
-      openModalReserve(table);
+      openModalReserve();
+      setCurrentSelectedTable(table);
+   }
+
+   const closeModalReserveTable = () => {
+      closeModalReserve();
+      setCurrentSelectedTable({});
    }
 
    return (
@@ -96,10 +106,13 @@ export const TablesScreen = () => {
                tables={tables}
                isLoading={loading.tables}
                onOpenEditTable={onOpenEditTable}
-               onOpenReserveTable={onOpenReserveTable}
                onDeleteTable={deleteTable}
-               onCancelReserveTable={cancelReserveTable}
-               onCancelReservationTables={cancelReservationTables}
+               onCancelFullReservation={cancelFullReservation}
+               onCancelATablesReservation={cancelATablesReservation}
+               onConfirmReservation={confirmReservation}
+               onReleasedReservation={releasedReservation}
+               onOpenReserveTable={onOpenReserveTable}
+               currentSelectedTable={currentSelectedTable}
                className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
             />
          </ModalProviderAsync>
@@ -110,12 +123,19 @@ export const TablesScreen = () => {
             onClose={closeModalEdit}
             onOpenEditProperty={onOpenEditTableProperty}
          />
-
-         <TableReserveModal
-            initial={currentSelectedTable}
-            isOpen={isOpenModalReserve}
-            onClose={closeModalReserve}
-         />
+         {
+            isOpenModalReserve && (
+               <TableReserveModal
+                  currentTable={currentSelectedTable}
+                  onReserveTable={reserveTable}
+                  isOpen={isOpenModalReserve}
+                  onClose={closeModalReserveTable}
+                  currentHour={currentHour.hour}
+                  currentDate={currentDate}
+                  currentRestaurant={currentRestaurant}
+               />
+            )
+         }
 
          {
             isOpenModalEditProperty && (
@@ -136,4 +156,3 @@ export const TablesScreen = () => {
       </main>
    )
 }
-// Pude mostar el nombre como un perfil

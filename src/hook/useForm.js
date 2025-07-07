@@ -28,7 +28,8 @@ const TYPEACTION = {
    SET_VALIDATIONS: 'SET_VALIDATIONS',
 }
 
-const validateField = (key, state, validations, additionalData) => {
+const validateField = (key, state, validations, additionalData, disabledMap) => {
+   if (disabledMap && disabledMap.current.has(key)) return [true, ''];
    const rule = validations[key];
    if (!rule) return [true, ''];
    const [fn, msg, needsWholeState] = rule;
@@ -49,7 +50,8 @@ const formReducer = (state, action) => {
                key,
                state.values,
                state.validations,
-               state.additionalData
+               state.additionalData,
+               state.disabledMap
             );
             errors[`${key}Valid`] = valid ? null : msg;
          }
@@ -60,7 +62,8 @@ const formReducer = (state, action) => {
             action.field,
             state.values,
             state.validations,
-            state.additionalData
+            state.additionalData,
+            state.disabledMap
          );
          return {
             ...state,
@@ -90,18 +93,29 @@ const formReducer = (state, action) => {
 };
 
 // , isEstablishInitial = false
-export const useForm = ({ initialState = {}, activeValidation = true, validations = {}, additionalData = {}, changeValueCallback = null }) => {
+export const useForm = ({
+   initialState = {},
+   activeValidation = true,
+   validations = {},
+   additionalData = {},
+   changeValueCallback = null
+}) => {
 
    const mergedValidations = { ...defaultValidations, ...validations };
 
    const changeValueCallbackRef = useRef(changeValueCallback);
+   const disabledMap = useRef(new Map());
 
    const [state, dispatch] = useReducer(formReducer, {
       values: initialState,
       errors: {},
       validations: mergedValidations,
-      additionalData
+      additionalData,
+      disabledMap
    });
+
+   // Nuevo: Mapa de disabled por campo
+   // const [disabledMap, setDisabledMap] = useState({});
 
    const onInitialFrom = (newInitialState) => {
       // dispatch({ type: TYPEACTION.SET_VALIDATIONS, validations: newValidations });
@@ -110,7 +124,6 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
 
    const onValueChange = useCallback((e) => {
       if (!e) return;
-
       const name = e?.target?.name ?? e.name;
       let value = e?.target?.value ?? e.value;
 
@@ -138,15 +151,17 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
    const validateForm = useCallback(() => {
       const errors = {};
       for (const key of Object.keys(state.values)) {
-         const [valid, msg] = validateField(key, state.values, state.validations, state.additionalData);
+         // Pasa el mapa de disabled
+         const [valid, msg] = validateField(key, state.values, state.validations, state.additionalData, disabledMap);
          errors[`${key}Valid`] = valid ? null : msg;
       }
+
       dispatch({ type: TYPEACTION.VALIDATE_ALL });
       return {
          isValid: Object.values(errors).every((e) => e == null),
          errors,
       };
-   }, [state.values, state.validations, state.additionalData]);
+   }, [state.values, state.validations, state.additionalData, disabledMap]);
 
    const onResetForm = useCallback(() => {
       dispatch({ type: TYPEACTION.RESET, initialState });
@@ -155,10 +170,17 @@ export const useForm = ({ initialState = {}, activeValidation = true, validation
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
+         const inputDisable = event.target.querySelector('input:disabled');
+         if (inputDisable) {
+            // console.log(inputDisable);
+            const { name, disabled } = inputDisable;
+            disabledMap.current.set(name, disabled);
+         };
+
          const { isValid } = validateForm();
          if (activeValidation && !isValid) {
             // También puedes forzar un dispatch si quieres actualizar el estado de errores visualmente
-            dispatch({ type: TYPEACTION.VALIDATE_ALL });
+            // dispatch({ type: TYPEACTION.VALIDATE_ALL });
             return;
          }
          callback(state.values);

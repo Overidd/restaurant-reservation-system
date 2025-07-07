@@ -1,3 +1,4 @@
+import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
 
 export const typeLoading = {
@@ -59,12 +60,15 @@ export const tableAdminSlice = createSlice({
                      email: payload.clientEmail,
                      idUser: payload.idUser,
                   },
-                  idReservation: payload.id,
-                  timestamp: payload.timestamp,
-                  relatedTables: payload.idTables.map(id => ({
-                     id,
-                     name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
-                  }))
+                  reservation: {
+                     code: payload.code,
+                     idReservation: payload.id,
+                     timestamp: payload.timestamp,
+                     relatedTables: payload.idTables.map(id => ({
+                        id,
+                        name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
+                     }))
+                  }
                }
             }
             return table;
@@ -110,7 +114,80 @@ export const tableAdminSlice = createSlice({
       },
 
       deleteTablesAction: (state, { payload }) => {
-         state.tables = state.tables.filter((t) => !payload.includes(t.id));
+         state.tables = state.tables.map((t) => {
+            if (payload.includes(t.id)) {
+               return {
+                  ...t,
+                  status: typeStatusTable.AVAILABLE,
+                  hasReservar: false,
+                  relatedTables: []
+               };
+            }
+            return t;
+         });
+      },
+      clearTablesRelationAction: (state, { payload: { idTablesNoSelect = [], idTables = [] } }) => {
+         state.tables = state.tables.map((t) => {
+            if (idTablesNoSelect.includes(t.id)) {
+               return {
+                  ...t,
+                  relatedTables: t.relatedTables.filter((r) => !idTables.includes(r.id))
+               };
+            } else {
+               return t;
+            }
+         })
+      },
+      changeStatusTableAction: (state, { payload }) => {
+
+         if (payload.status === typeStatusTable.ACTIVE) {
+            state.tables = state.tables.map((t) => {
+               if (t.id === payload.idTable) {
+                  return {
+                     ...t,
+                     status: typeStatusTable.ACTIVE,
+                     hasReservar: false,
+                     user: null,
+                     reservation: null
+                  };
+               }
+               return t;
+            });
+
+            return;
+         }
+
+         if (payload.status === typeStatusTable.COMPLETED) {
+            state.tables = state.tables.map((t) => {
+               if (t.id === payload.idTable) {
+                  return {
+                     ...t,
+                     status: typeStatusTable.COMPLETED
+                  };
+               }
+               return t;
+            });
+            return;
+         }
+
+         if (payload.status === typeStatusTable.PENDING) {
+            const { reservation, idTables } = payload;
+            state.tables = state.tables.map((t) => {
+               if (idTables.includes(t.id)) {
+                  return {
+                     ...t,
+                     hasReservar: true,
+                     status: typeStatusTable.PENDING,
+                     user: reservation?.user ?? null,
+                     reservation: reservation?.reservation ?? null,
+                     createdAt: reservation.createdAt,
+                  };
+               }
+               return t;
+            });
+            return
+         }
+
       },
 
       loaddingAction: (state, { payload }) => {
@@ -140,4 +217,6 @@ export const {
    setTablesAction,
    deleteTableAction,
    deleteTablesAction,
+   clearTablesRelationAction,
+   changeStatusTableAction,
 } = tableAdminSlice.actions

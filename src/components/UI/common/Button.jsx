@@ -38,11 +38,13 @@ export const Button = ({
   variant,
   size,
   children,
+  onClick,
   ...props
 }) => {
   return (
     <button
       className={cn(buttonVariants({ variant, size, className }))}
+      onClick={onClick}
       {...props}
     >
       {children}

@@ -1,0 +1,35 @@
+import { toast } from 'react-hot-toast';
+
+import {
+   ReservaRejected,
+   ReservaSuccess
+} from '@/components/reservation';
+
+export const ReservationToasts = ({ promise, onSuccess, onError }) =>
+   toast.promise(promise, {
+      loading: 'Confirmando reserva...',
+      success: 'Reserva exitosa 🎉',
+      error: (err) => err.message || 'Error al realizar la reserva',
+   },
+      {
+         style: {
+            minWidth: '250px',
+         },
+      }
+   )
+      .then((data) => {
+         toast((t) => {
+            onSuccess && onSuccess(data);
+            return <ReservaSuccess t={t} code={data?.code || '---'} />
+         }, {
+            duration: Infinity,
+         });
+      })
+      .catch((err) => {
+         toast((t) => {
+            onError && onError(err);
+            return <ReservaRejected t={t} message={err.message || 'Ocurrio un error inesperado'} />
+         }, {
+            duration: 6000,
+         });
+      });

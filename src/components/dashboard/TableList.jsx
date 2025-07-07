@@ -24,6 +24,8 @@ import {
 
 import {
    AlertTriangle,
+   BrushCleaning,
+   CalendarPlus,
    CheckCircle,
    Dice1,
    Lock,
@@ -32,10 +34,12 @@ import {
    Pencil,
    Table,
    Trash,
+   Unlink2,
    Unlock,
    User
 } from 'lucide-react';
 import { Checkbox, Label } from '../UI/from';
+import { adminTableToasts } from '@/toasts';
 
 export const TableList = ({
    rows,
@@ -43,10 +47,13 @@ export const TableList = ({
    className,
    onChangeTable,
    onDeleteTable,
-   onCancelReserveTable,
-   onCancelReservationTables,
+   onCancelFullReservation,
+   onCancelATablesReservation,
    onOpenEditTable,
+   onConfirmReservation,
+   onReleasedReservation,
    onOpenReserveTable,
+   currentSelectedTable,
    isLoading = false,
    tables = []
 }) => {
@@ -54,10 +61,16 @@ export const TableList = ({
 
    // 1. Estado levantado para las mesas seleccionadas en el modal
    const [highlightedTableIds, setHighlightedTableIds] = useState([]);
+   const [selectTable, setSelectTable] = useState(null);
 
    if (!Array.isArray(tables)) return null;
 
+   const handleSelectTable = (idTable) => {
+      setSelectTable(idTable);
+   }
+
    const handleDeleteTable = async (table) => {
+      handleSelectTable(table.id);
       const confirmed = await showAsyncModal(({ onConfirm, onCancel }) => (
          <DialigDeleteTable
             onCancel={onCancel}
@@ -65,26 +78,50 @@ export const TableList = ({
             table={table}
          />
       ));
+
       if (confirmed) {
          onDeleteTable(table.id);
       }
+      handleSelectTable(null);
    }
+
    const handleCancelReserve = async (table) => {
-      // No limpies aquí, deja que el modal controle el estado
       const res = await showAsyncModal(({ onConfirm, onCancel }) => (
          <DialigCancelReserve
             table={table}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            onCancelReservationTables={onCancelReservationTables}
+            onCancelATablesReservation={onCancelATablesReservation}
             setHighlightedTableIds={setHighlightedTableIds}
          />
       ));
+
       if (res) {
-         onCancelReserveTable(res?.data);
+         adminTableToasts.cancelFullReservation(
+            onCancelFullReservation(res?.data)
+         )
       }
-      // Limpiar selección al cerrar modal
+
       setHighlightedTableIds([]);
+      handleSelectTable(null);
+   }
+
+   const handleConfirmReservation = async (table) => {
+      adminTableToasts.confirmReserve(
+         onConfirmReservation({
+            idTable: table.id,
+            idReservation: table.reservation.idReservation
+         })
+      );
+   }
+
+   const handleReleaseReservation = async (table) => {
+      adminTableToasts.releaseReserve(
+         onReleasedReservation({
+            idTable: table.id,
+            idReservation: table.reservation.idReservation
+         })
+      );
    }
 
    const paintedTables = () => {
@@ -104,12 +141,17 @@ export const TableList = ({
                key={'table-' + table.id}
                table={table}
                onOpenEditTable={onOpenEditTable}
-               onOpenReserveTable={onOpenReserveTable}
                onChangeTable={onChangeTable}
-               onCancelReserveTable={handleCancelReserve}
+               onCancelReserve={handleCancelReserve}
                onDeleteTable={handleDeleteTable}
-               // 3. Pasar prop para resaltar
-               highlighted={highlightedTableIds.includes(table.id)}
+               onConfirmReservation={handleConfirmReservation}
+               onReleasedReservation={handleReleaseReservation}
+               onOpenReserveTable={onOpenReserveTable}
+               highlighted={
+                  highlightedTableIds.includes(table.id) ||
+                  selectTable === table.id ||
+                  currentSelectedTable?.id === table?.id
+               }
             />
          );
       });
@@ -207,17 +249,20 @@ export const DialigDeleteTable = ({
 }
 
 export const DialigCancelReserve = ({
-   onCancelReservationTables,
+   onCancelATablesReservation,
    onConfirm,
    onCancel,
    table,
    setHighlightedTableIds = () => { },
 }) => {
+   const [relatedTables, setRelatedTables] = useState(table.reservation.relatedTables);
    const [localHighlightedId, setLocalHighlightedId] = useState([]);
+   const [isProcessing, setIsProcessing] = useState(false);
    const contentTogglesRef = useRef(null);
    const isCheckedNoShowRef = useRef(false);
 
    const toggleSelected = (item) => {
+      if (isProcessing) return;
       setLocalHighlightedId((prev) => {
          let updated;
          if (prev.includes(item.id)) {
@@ -231,27 +276,47 @@ export const DialigCancelReserve = ({
    };
 
    const handleCheckNoShow = () => {
+      if (isProcessing) return;
       isCheckedNoShowRef.current = !isCheckedNoShowRef.current;
+   }
+   const handleSetRelatedTables = () => {
+      setRelatedTables((prev) => prev.filter(t => !localHighlightedId.includes(t.id)));
    }
 
    const hasSelectes = () => {
-      if (localHighlightedId.length === table.relatedTables.length) {
-         onCancelReservationTables({
-            idReservation: table.idReservation,
-            idTables: localHighlightedId
+      if (localHighlightedId.length === table.reservation.relatedTables.length) {
+         onConfirm({
+            user: table.user,
+            idTables: localHighlightedId,
+            idReservation: table.reservation.idReservation,
+            isNoShow: isCheckedNoShowRef.current,
          });
          return;
       }
 
       if (localHighlightedId.length > 0) {
-         onConfirm({
-            user: table.user,
-            idTables: localHighlightedId,
-            idReservation: table.idReservation,
-            isNoShow: isCheckedNoShowRef.current,
-         });
+         setIsProcessing(true);
+         adminTableToasts.cancelATablesReservation(
+            onCancelATablesReservation({
+               idReservation: table.reservation.idReservation,
+               idTables: localHighlightedId,
+               idTablesNoSelect: table.reservation.relatedTables.map(t => t.id).filter(id => !localHighlightedId.includes(id))
+            }),
+            {
+               onSuccess: () => {
+                  handleSetRelatedTables();
+                  setIsProcessing(false);
+               },
+               onError: () => {
+                  setIsProcessing(false);
+               }
+            }
+         )
+
+         setHighlightedTableIds((prev) => prev.filter(id => !localHighlightedId.includes(id)));
          return;
       }
+
       const element = contentTogglesRef.current;
       if (!element) return;
       element.classList.remove('animate__shakeX');
@@ -260,7 +325,7 @@ export const DialigCancelReserve = ({
    };
 
    const user = table.user;
-   const isActiveCheck = localHighlightedId.length === table.relatedTables.length;
+   const isActiveCheck = localHighlightedId.length === relatedTables.length;
 
    return (
       <Card2 className={cn(
@@ -268,16 +333,15 @@ export const DialigCancelReserve = ({
          'w-72'
       )}>
          <CardHeader className={'gap-2'}>
-            <div className="mx-auto w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+            <div className='mx-auto w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center'>
                <AlertTriangle className="w-6 h-6 text-amber-600" />
             </div>
             <CardTitle className={'text-background text-center'}>
                Cancelar la reserva
             </CardTitle>
-            <UserCard
-               className='mx-auto'
-               user={user}
-            />
+            <strong className={'text-background/80 text-center'}>
+               {user.code}
+            </strong>
          </CardHeader>
 
          <CardContent
@@ -286,12 +350,13 @@ export const DialigCancelReserve = ({
          >
             {
                table.relatedTables && (
-                  table.relatedTables.map((item) => (
+                  relatedTables.map((item) => (
                      <Toggle
                         key={item.id}
                         variant={'crystal'}
                         onClick={() => toggleSelected(item)}
                         className={localHighlightedId.includes(item.id) ? 'ring-2 ring-amber-400' : ''}
+                        disabled={isProcessing}
                      >
                         <Dice1 />
                         {item.name}
@@ -306,7 +371,7 @@ export const DialigCancelReserve = ({
                className={'space-x-2 text-background/70 basis-full'}
             >
                <Checkbox
-                  disabled={!isActiveCheck}
+                  disabled={!isActiveCheck || isProcessing}
                   onChange={handleCheckNoShow}
                   className='inline-block align-middle'
                />
@@ -317,6 +382,49 @@ export const DialigCancelReserve = ({
 
             <Button
                onClick={hasSelectes}
+               disabled={isProcessing}
+               size={'sm'}
+            >
+               Confirmar
+            </Button>
+            <Button
+               onClick={onCancel}
+               size={'sm'}
+               variant='destructive'
+               disabled={isProcessing}
+            >
+               Eliminar
+            </Button>
+         </CardFooter>
+      </Card2>
+   )
+}
+
+export const DialigConfirmReserve = ({
+   onCancel,
+   onConfirm,
+   table,
+}) => {
+
+   return (
+      <Card2 className={cn(
+         'space-y-4'
+      )}>
+         <CardHeader className={'gap-3'}>
+            <div className="mx-auto w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+               <AlertTriangle className="w-6 h-6 text-amber-600" />
+            </div>
+            <CardTitle className={'text-background text-center'}>
+               Confirmar la reserva
+            </CardTitle>
+            <strong className={'text-background/80 text-center'}>
+               {table.reservation.code}
+            </strong>
+         </CardHeader>
+
+         <CardFooter className={'gap-4 justify-center  flex-wrap '}>
+            <Button
+               onClick={onConfirm}
                size={'sm'}
             >
                Confirmar
@@ -333,32 +441,15 @@ export const DialigCancelReserve = ({
    )
 }
 
-export const UserCard = ({ user, className }) => {
-   return (
-      <div className={cn(
-         'flex items-center space-x-3 text-card-primary',
-         className
-      )}>
-         <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-primary" />
-         </div>
-         <div>
-            <p className="text-sm font-medium">Usuario</p>
-            <p className="text-sm">
-               {user.name}
-            </p>
-         </div>
-      </div>
-   )
-}
-
-const TableItemPopover = ({
+export const TableItemPopover = ({
    table,
    onDeleteTable,
    onOpenEditTable,
+   onCancelReserve,
+   onConfirmReservation,
+   onReleasedReservation,
    onOpenReserveTable,
-   onCancelReserveTable,
-   highlighted = false
+   highlighted = false,
 }) => {
    const [popoverType, setPopoverType] = useState(null);
    const [open, setOpen] = useState(false);
@@ -380,6 +471,147 @@ const TableItemPopover = ({
       setPopoverType(null);
    };
 
+   const renderRightContent = () => (
+      <>
+         <Tooltip>
+            <TooltipTrigger asChild>
+               <Button onClick={() => onOpenEditTable(table)}>
+                  <Pencil />
+               </Button>
+            </TooltipTrigger>
+            <TooltipContent
+               side="right"
+               className="text-inherit rounded"
+            >
+               Editar
+            </TooltipContent>
+         </Tooltip>
+
+         <Tooltip>
+            <TooltipTrigger asChild>
+               <Button onClick={() => onDeleteTable(table)} variant="destructive">
+                  <Trash />
+               </Button>
+            </TooltipTrigger>
+            <TooltipContent
+               side="right"
+               className="text-inherit rounded"
+            >
+               Eliminar
+            </TooltipContent>
+         </Tooltip>
+      </>
+   );
+
+   const renderLeftContent = () => {
+      switch (table.status) {
+         case typeStatusTable.PENDING:
+            return (
+               <>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button onClick={() => onCancelReserve(table)}>
+                           <OctagonX />
+                        </Button>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side="right"
+                        className="text-inherit rounded"
+                     >
+                        Cancelar la reserva
+                     </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button onClick={() => onConfirmReservation(table)}>
+                           <CheckCircle />
+                        </Button>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side="right"
+                        className="text-inherit rounded"
+                     >
+                        Confirmar la reserva
+                     </TooltipContent>
+                  </Tooltip>
+               </>
+            );
+
+         case typeStatusTable.AVAILABLE:
+            return (
+               <>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button>
+                           <Lock />
+                        </Button>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side="right"
+                        className="text-inherit rounded"
+                     >
+                        Bloquear
+                     </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button
+                           onClick={() => onOpenReserveTable(table)}
+                        >
+                           <CalendarPlus />
+                        </Button>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side="right"
+                        className="text-inherit rounded"
+                     >
+                        Reservar
+                     </TooltipContent>
+                  </Tooltip>
+               </>
+            );
+
+         case typeStatusTable.CONFIRMED:
+            return (
+               <Tooltip>
+                  <TooltipTrigger asChild>
+                     <Button onClick={() => onReleasedReservation(table)}>
+                        <Unlink2 />
+                     </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                     side="right"
+                     className="text-inherit rounded"
+                  >
+                     Liberar reserva
+                  </TooltipContent>
+               </Tooltip>
+            );
+
+         case typeStatusTable.BLOCKED:
+            return (
+               <Tooltip>
+                  <TooltipTrigger asChild>
+                     <Button>
+                        <LockOpen />
+                     </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                     side="right"
+                     className="text-inherit rounded"
+                  >
+                     Desbloquear
+                  </TooltipContent>
+               </Tooltip>
+            );
+
+         default:
+            return null;
+      }
+   };
+
    return (
       <Popover open={open} onOpenChange={setOpen}>
          <Tooltip asChild>
@@ -395,157 +627,123 @@ const TableItemPopover = ({
                      chairs={table?.chairs}
                      name={table?.name}
                      rotation={table?.rotation}
-                     // 4. Resalta la mesa en el grid si está seleccionada
                      className={highlighted ? 'transition-shadow shadow-[0_0_30px_rgba(0,0,0,0.20)] rounded-2xl' : ''}
                   />
                </TooltipTrigger>
             </PopoverTrigger>
-            <TooltipContent>
-               <InfoTableTooltip
-                  hasReservar={table.hasReservar}
-                  timestamp={table.timestamp}
-                  {...table.user}
-               />
-            </TooltipContent>
+            {!open && (
+               <TooltipContent
+                  className={'z-10'}
+               >
+                  <InfoTableTooltip
+                     hasReservar={table.hasReservar}
+                     timestamp={table.reservation?.timestamp}
+                     code={table.reservation?.code}
+                     status={table.status}
+                     {...table.user}
+                  />
+               </TooltipContent>
+            )}
          </Tooltip>
 
-         {
-            popoverType === 'right' && (
-               <PopoverContent
-                  onInteractOutside={handleClose}
-                  align='center'
-                  side='right'
-                  sideOffset={-10}
-                  onClick={handleClose}
-                  className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
-               >
-                  <Button
-                     title='Editar'
-                     onClick={() => onOpenEditTable(table)}
-                  >
-                     {/* Editar */}
-                     <Pencil />
-                  </Button>
-                  <Button
-                     title='Eliminar'
-                     onClick={() => onDeleteTable(table)}
-                     variant='destructive'
-                  >
-                     <Trash />
-                  </Button>
-               </PopoverContent>
-            )
-         }
-         {
-            popoverType === 'left' && (
-               <PopoverContent
-                  align='center'
-                  side='right'
-                  sideOffset={-10}
-                  className={'flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'}
-                  onInteractOutside={handleClose}
-                  onClick={handleClose}
-               >
-                  {
-                     table.status === typeStatusTable.PENDING && (
-                        <>
-                           <Button
-                              title='Cancelar'
-                              onClick={() => onCancelReserveTable(table)}
-                           >
-                              <OctagonX />
-                              Cancelar
-                           </Button>
-                           <Button
-                              title='Confirmar'
-                           >
-                              <CheckCircle />
-                              Confirmar
-                           </Button>
-                        </>
-                     )
-                  }
-                  {
-                     table.status === typeStatusTable.AVAILABLE && (
-                        <>
-                           <Button
-                              title='Bloquear'
-                           >
-                              <Lock />
-                              Bloquear
-                           </Button>
-                           <Button
-                              title='Reservar'
-                              onClick={() => onOpenReserveTable(table)}
-                           >
-                              <Table />
-                              Reservar
-                           </Button>
-                        </>
-                     )
-                  }
-                  {
-                     table.status === typeStatusTable.BLOCKED && (
-                        <Button>
-                           <LockOpen />
-                        </Button>
-                     )
-                  }
-               </PopoverContent>
-            )
-         }
-      </Popover >
+         <PopoverContent
+            align='center'
+            side='right'
+            sideOffset={-10}
+            onInteractOutside={handleClose}
+            onClick={handleClose}
+            className='flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'
+         >
+            {
+               popoverType === 'right' ?
+                  renderRightContent() :
+                  renderLeftContent()
+            }
+         </PopoverContent>
+      </Popover>
    );
 };
 
 
 const InfoTableTooltip = ({
+   status,
    name,
    email,
    code,
    timestamp,
    hasReservar
 }) => {
-   if (!hasReservar || !timestamp) return (
+
+   if (!hasReservar) return (
       <div className='text-xs text-muted-foreground text-center px-2 py-1'>
          Mesa disponible
       </div>
    );
 
-   const currentTime = getTimeDifference(new Date(), new Date(timestamp));
-   const isExpired = currentTime === -1;
-
-   return (
-      <>
-         <div className='flex items-center gap-2'>
-            <span className={`text-xs font-semibold text-card-foreground`}>
-               {isExpired ? 'Reserva expirada' : `Pendiente: ${currentTime}`}
-            </span>
-            {!isExpired && (
-               <span className='bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
-                  Activa
+   if (status === typeStatusTable.PENDING) {
+      const currentTime = getTimeDifference(new Date(), new Date(timestamp));
+      const isExpired = currentTime === -1;
+      return (
+         <>
+            <div className='flex items-center gap-2'>
+               <span className={`text-xs font-semibold text-card-foreground`}>
+                  {isExpired ? 'Reserva expirada' : `Pendiente: ${currentTime}`}
                </span>
-            )}
-            {isExpired && (
-               <span className='bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
-                  Expirada
-               </span>
-            )}
-         </div>
+               {!isExpired && (
+                  <span className='bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
+                     Activa
+                  </span>
+               )}
+               {isExpired && (
+                  <span className='bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full ml-2'>
+                     Expirada
+                  </span>
+               )}
+            </div>
 
+            <InfoUser
+               name={name}
+               email={email}
+               code={code}
+            />
+         </>
+      )
+   };
+
+   const InfoUser = ({ name, email, code }) => {
+      return (
          <p className='flex flex-col gap-2 mt-2'>
             <span className='text-xs text-card-foreground' >
                {name || <span className='text-card-foreground'>Sin nombre</span>}
             </span>
-
             <span className='text-xs text-card-foreground'>
                {email || <span className='text-card-foreground'>Sin email</span>}
             </span>
-
             <span className='text-xs tracking-wider text-card-foreground'>
                {code || <span className='text-card-foreground'>Sin código</span>}
             </span>
          </p>
-      </>
-   );
+      )
+   }
+
+   if (status === typeStatusTable.CONFIRMED) {
+      return (
+         <>
+            <div className='flex items-center gap-2'>
+               <span className='text-xs font-semibold text-card-foreground'>
+                  Reserva confirmada
+               </span>
+               <span className='bg-table-confirmed/20 text-table-confirmed text-[10px] px-2 py-0.5 rounded-full ml-2'>
+                  Confirmado
+               </span>
+            </div>
+
+            <InfoUser
+               name={name}
+               email={email}
+               code={code}
+            />
+         </>
+      );
+   }
 };
