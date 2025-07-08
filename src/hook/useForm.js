@@ -134,6 +134,10 @@ export const useForm = ({
          value = isNaN(num) ? '' : num;
       }
 
+      if (disabledMap.current.has(name)) {
+         disabledMap.current.delete(name);
+      };
+
       dispatch({ type: TYPEACTION.CHANGE, field: name, value });
 
       if (activeValidation) {
@@ -170,12 +174,15 @@ export const useForm = ({
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
-         const inputDisable = event.target.querySelector('input:disabled');
-         if (inputDisable) {
-            // console.log(inputDisable);
-            const { name, disabled } = inputDisable;
-            disabledMap.current.set(name, disabled);
-         };
+         const inputDisables = event.target.querySelectorAll('input:disabled');
+         if (inputDisables) {
+            for (const element of inputDisables) {
+               const { name, disabled } = element;
+               disabledMap.current.set(name, disabled);
+            }
+         } else {
+            disabledMap.current.clear()
+         }
 
          const { isValid } = validateForm();
          if (activeValidation && !isValid) {

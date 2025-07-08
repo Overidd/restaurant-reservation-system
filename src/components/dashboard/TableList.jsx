@@ -255,7 +255,8 @@ export const DialigCancelReserve = ({
    table,
    setHighlightedTableIds = () => { },
 }) => {
-   const [relatedTables, setRelatedTables] = useState(table.reservation.relatedTables);
+   console.log(table.reservation?.relatedTables);
+   const [relatedTables, setRelatedTables] = useState(table.reservation?.relatedTables ?? []);
    const [localHighlightedId, setLocalHighlightedId] = useState([]);
    const [isProcessing, setIsProcessing] = useState(false);
    const contentTogglesRef = useRef(null);
@@ -349,20 +350,18 @@ export const DialigCancelReserve = ({
             className='flex flex-col gap-2 animate__animated'
          >
             {
-               table.relatedTables && (
-                  relatedTables.map((item) => (
-                     <Toggle
-                        key={item.id}
-                        variant={'crystal'}
-                        onClick={() => toggleSelected(item)}
-                        className={localHighlightedId.includes(item.id) ? 'ring-2 ring-amber-400' : ''}
-                        disabled={isProcessing}
-                     >
-                        <Dice1 />
-                        {item.name}
-                     </Toggle>
-                  ))
-               )
+               relatedTables.map((item) => (
+                  <Toggle
+                     key={item.id}
+                     variant={'crystal'}
+                     onClick={() => toggleSelected(item)}
+                     className={localHighlightedId.includes(item.id) ? 'ring-2 ring-amber-400' : ''}
+                     disabled={isProcessing}
+                  >
+                     <Dice1 />
+                     {item.name}
+                  </Toggle>
+               ))
             }
          </CardContent>
 
@@ -674,6 +673,22 @@ const InfoTableTooltip = ({
    hasReservar
 }) => {
 
+   const InfoUser = ({ name, email, code }) => {
+      return (
+         <p className='flex flex-col gap-2 mt-2'>
+            <span className='text-xs text-card-foreground' >
+               {name || <span className='text-card-foreground'>Sin nombre</span>}
+            </span>
+            <span className='text-xs text-card-foreground'>
+               {email || <span className='text-card-foreground'>Sin email</span>}
+            </span>
+            <span className='text-xs tracking-wider text-card-foreground'>
+               {code || <span className='text-card-foreground'>Sin código</span>}
+            </span>
+         </p>
+      )
+   }
+
    if (!hasReservar) return (
       <div className='text-xs text-muted-foreground text-center px-2 py-1'>
          Mesa disponible
@@ -709,22 +724,6 @@ const InfoTableTooltip = ({
          </>
       )
    };
-
-   const InfoUser = ({ name, email, code }) => {
-      return (
-         <p className='flex flex-col gap-2 mt-2'>
-            <span className='text-xs text-card-foreground' >
-               {name || <span className='text-card-foreground'>Sin nombre</span>}
-            </span>
-            <span className='text-xs text-card-foreground'>
-               {email || <span className='text-card-foreground'>Sin email</span>}
-            </span>
-            <span className='text-xs tracking-wider text-card-foreground'>
-               {code || <span className='text-card-foreground'>Sin código</span>}
-            </span>
-         </p>
-      )
-   }
 
    if (status === typeStatusTable.CONFIRMED) {
       return (

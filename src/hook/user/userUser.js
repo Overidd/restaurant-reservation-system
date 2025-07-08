@@ -51,11 +51,14 @@ export const useUser = () => {
     })
   }
 
+  const isFoundUser = !!state.user;
+
   return {
     user: state.user,
     isLoading: state.isLoading,
     errorMessage: state.errorMessage,
     getUserByEmail,
-    clearUser
+    clearUser,
+    isFoundUser
   }
 }

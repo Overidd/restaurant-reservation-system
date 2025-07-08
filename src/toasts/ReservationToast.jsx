@@ -5,7 +5,7 @@ import {
    ReservaSuccess
 } from '@/components/reservation';
 
-export const ReservationToasts = ({ promise, onSuccess, onError }) =>
+export const ReservationToast = ({ promise, onSuccess, onError }) =>
    toast.promise(promise, {
       loading: 'Confirmando reserva...',
       success: 'Reserva exitosa 🎉',

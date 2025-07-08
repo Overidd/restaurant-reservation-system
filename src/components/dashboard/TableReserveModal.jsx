@@ -1,11 +1,11 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useForm } from '@/hook';
 import { useUser } from '@/hook/user';
 
 import { cn } from '@/ultils';
 import { Card2, UserCard } from '../UI/card';
-import { ReservationToasts } from '@/toasts';
+import { ReservationToast } from '@/toasts';
 
 import {
    Button,
@@ -70,12 +70,17 @@ export const TableReserveModal = ({
    currentDate,
    currentRestaurant,
 }) => {
+   const btnSearchRef = useRef(null);
+   const [isBlockedFields, setIsBlockedFields] = useState(true);
+   const [hasSearched, setHasSearched] = useState(false);
+
    const {
       isLoading,
       user,
       getUserByEmail,
       errorMessage,
       clearUser,
+      isFoundUser,
    } = useUser();
 
    const {
@@ -88,12 +93,25 @@ export const TableReserveModal = ({
       validations: schema.valid,
       activeValidation: true,
       changeValueCallback: ({ name, value }) => {
-         if (name === 'email' || !value) clearUser();
+         if (name === 'email' || !value) {
+            clearUser()
+            setIsBlockedFields(true)
+            setHasSearched(false)
+         };
       },
    });
 
    const onSubmit = onSubmitForm((value) => {
-      ReservationToasts({
+      if (!hasSearched) {
+         const element = btnSearchRef.current;
+         if (!element) return;
+         element.classList.remove('animate__shakeX');
+         void element.offsetWidth;
+         element.classList.add('animate__shakeX');
+         return;
+      }
+
+      ReservationToast({
          promise: onReserveTable({
             idTables: [currentTable.id],
             idRestaurant: currentRestaurant.id,
@@ -105,7 +123,7 @@ export const TableReserveModal = ({
             phone: value.phone || null,
             diners: Number(value.diners),
          }),
-         onSuccess: onClose,
+         onSuccess: () => onClose(),
       })
    });
 
@@ -114,8 +132,10 @@ export const TableReserveModal = ({
          size='sm'
          type='button'
          variant='crystal'
+         ref={btnSearchRef}
          disabled={isLoading || !email}
-         onClick={() => getUserByEmail(email)}
+         onClick={() => handleGetUserByEmail(email)}
+         className={'animate__animated'}
       >
          {isLoading ? (
             <LoaderCircle className='animate-spin' />
@@ -132,6 +152,19 @@ export const TableReserveModal = ({
    ) : (
       'Buscar por email'
    );
+
+   useEffect(() => {
+      if (hasSearched && !isFoundUser) {
+         setIsBlockedFields(false);
+      } else {
+         setIsBlockedFields(true);
+      }
+   }, [isFoundUser, hasSearched]);
+
+   const handleGetUserByEmail = (email) => {
+      setHasSearched(true);
+      getUserByEmail(email);
+   };
 
    return (
       <Modal
@@ -230,6 +263,7 @@ export const TableReserveModal = ({
                   </FormDescription>
                </FormItem>
 
+               {/*  */}
                <FormItem>
                   <FormLabel formItemId='name'>
                      Nombre
@@ -238,15 +272,15 @@ export const TableReserveModal = ({
                      id='name'
                      name='name'
                      type='text'
-                     value={name}
+                     value={user?.name || name}
                      onChange={onValueChange}
                      isError={!!nameValid}
-                     disabled={!!user}
+                     disabled={isBlockedFields}
                      variant='crystal'
                      className='py-3'
                   />
                   {!user && (
-                     <FormDescription className='text-gray-400'>
+                     <FormDescription>
                         Require el nombre del usuario
                      </FormDescription>
                   )}
@@ -260,15 +294,15 @@ export const TableReserveModal = ({
                      id='phone'
                      name='phone'
                      type='text'
-                     value={phone}
+                     value={user?.phone || phone}
                      onChange={onValueChange}
                      isError={!!phoneValid}
-                     disabled={!!user}
+                     disabled={isBlockedFields}
                      variant='crystal'
                      className='py-3'
                   />
                   {!user && (
-                     <FormDescription className='text-gray-400'>
+                     <FormDescription>
                         Require el teléfono del usuario
                      </FormDescription>
                   )}

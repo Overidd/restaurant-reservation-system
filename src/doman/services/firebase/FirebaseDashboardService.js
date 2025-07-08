@@ -20,6 +20,10 @@ import {
 
 
 export class FirebaseDashboardService {
+   constructor() {
+      this.MINUTES_TOLERANCE = 15 * 60 * 1000;
+   }
+
    async getAllHours() {
       try {
          const hours = await getDocs(collection(FirebaseDB, 'allowedhour'));
@@ -259,7 +263,7 @@ export class FirebaseDashboardService {
 
    /**
     * 
-    * @param {{ idTables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string, diners: number}} param0 
+    * @param {{ tables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string, diners: number}} param0 
     * @returns 
     */
    async reserveTable({
@@ -320,7 +324,7 @@ export class FirebaseDashboardService {
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
 
-         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_tolerance;
+         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_TOLERANCE;
 
          const reservationData = {
             idUser: idUser ?? null,
@@ -345,6 +349,15 @@ export class FirebaseDashboardService {
          return {
             ok: true,
             code: newCode,
+            reservation: {
+               code: newCode,
+               idReservation: reservationRef.id,
+               timestamp: timestamp,
+               relatedTables: idTables.map(id => ({
+                  id,
+                  name: idTables.find(t => t.id === id)?.name ?? 'Sin nombre'
+               }))
+            },
             user: {
                name,
                email,

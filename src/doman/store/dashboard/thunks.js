@@ -155,7 +155,7 @@ export const releasedReservationThunks = ({ idReservation, idTable }) => {
 
       dispatch(changeStatusTableAction({
          idTable: idTable,
-         status: typeStatusTable.ACTIVE
+         status: typeStatusTable.AVAILABLE
       }));
    }
 }

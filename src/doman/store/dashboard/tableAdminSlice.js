@@ -140,12 +140,12 @@ export const tableAdminSlice = createSlice({
       },
       changeStatusTableAction: (state, { payload }) => {
 
-         if (payload.status === typeStatusTable.ACTIVE) {
+         if (payload.status === typeStatusTable.AVAILABLE) {
             state.tables = state.tables.map((t) => {
                if (t.id === payload.idTable) {
                   return {
                      ...t,
-                     status: typeStatusTable.ACTIVE,
+                     status: typeStatusTable.AVAILABLE,
                      hasReservar: false,
                      user: null,
                      reservation: null
@@ -157,12 +157,12 @@ export const tableAdminSlice = createSlice({
             return;
          }
 
-         if (payload.status === typeStatusTable.COMPLETED) {
+         if (payload.status === typeStatusTable.CONFIRMED) {
             state.tables = state.tables.map((t) => {
                if (t.id === payload.idTable) {
                   return {
                      ...t,
-                     status: typeStatusTable.COMPLETED
+                     status: typeStatusTable.CONFIRMED
                   };
                }
                return t;
@@ -179,7 +179,13 @@ export const tableAdminSlice = createSlice({
                      hasReservar: true,
                      status: typeStatusTable.PENDING,
                      user: reservation?.user ?? null,
-                     reservation: reservation?.reservation ?? null,
+                     reservation: {
+                        ...reservation.reservation,
+                        relatedTables: idTables.map(id => ({
+                           id,
+                           name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
+                        }))
+                     },
                      createdAt: reservation.createdAt,
                   };
                }
