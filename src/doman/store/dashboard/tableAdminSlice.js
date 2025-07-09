@@ -28,7 +28,8 @@ export const tableAdminSlice = createSlice({
       },
 
       currentSelectedTable: {},
-      isTempTableChange: false
+      isTempTableChange: false,
+      isEdit: false
    },
 
    reducers: {
@@ -204,7 +205,11 @@ export const tableAdminSlice = createSlice({
          state.messageError = payload
          state.loading.tables = false
          state.loading.time = false
-      }
+      },
+
+      toggleIsEditAction: (state, { payload }) => {
+         state.isEdit = payload ?? !state.isEdit;
+      },
    },
 });
 
@@ -225,4 +230,6 @@ export const {
    deleteTablesAction,
    clearTablesRelationAction,
    changeStatusTableAction,
+   
+   toggleIsEditAction,
 } = tableAdminSlice.actions

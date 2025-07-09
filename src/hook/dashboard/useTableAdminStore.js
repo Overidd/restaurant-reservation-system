@@ -116,6 +116,7 @@ export const useTableAdminStore = () => {
       return dispatch(reserveTableThunks(data));
    }
 
+   
    const tables = useMemo(() => {
       if (state.isTempTableChange) {
          return state.tables.map((table) => table.id === state.currentSelectedTable.id ? { ...state.currentSelectedTable } : table);
@@ -146,6 +147,6 @@ export const useTableAdminStore = () => {
       toggleIsTempTable,
       confirmReservation,
       releasedReservation,
-      reserveTable
+      reserveTable,
    }
 }

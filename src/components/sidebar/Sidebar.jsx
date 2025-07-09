@@ -1,47 +1,31 @@
 import { Link, useLocation } from 'react-router';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, Users, CircleUser, Rows3Icon, Book, Ellipsis, AlignLeft, X } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, Users, CircleUser, Rows3Icon, Book, Ellipsis, AlignLeft, X, Bookmark, CalendarCheck, Dice1, ChartColumnStacked } from 'lucide-react';
 import { useSidebar } from '@/hook';
 import { cn } from '@/ultils';
 
 const navItems = [
    {
-      icon: <LayoutDashboard className='text-inherit' />,
-      name: 'Mesas',
-      path: '/dashboard/tables',
-   },
-
-   {
-      name: 'clientes',
-      icon: <Users className='text-inherit' />,
-      path: '/clients',
-   },
-   {
-      name: 'Perfil',
-      icon: <CircleUser />,
-      path: '/client-profile/*',
-   },
-   {
-      icon: <Rows3Icon />,
-      name: 'Administración',
+      icon: <Bookmark className='text-inherit' />,
+      name: 'Reservas',
       subItems: [
-
-         {
-            name: 'promociones',
-            path: '/promotion',
-            // icon: <RowsIcon />,
-         },
          {
             name: 'Calendario',
-            path: '/calendar',
-            // icon: <RowsIcon />,
+            path: '/dashboard/calendar',
+            icon: <CalendarCheck />,
+         },
+         {
+            name: 'Mesas',
+            path: '/dashboard/tables',
+            icon: <Dice1 />,
          }
       ],
    },
+
    {
-      icon: <Book />,
-      name: 'Soporte',
-      path: '/support',
+      name: 'Estadisticas',
+      icon: <ChartColumnStacked className='text-inherit' />,
+      path: '/dashboard/statistic',
    },
 ];
 
@@ -101,6 +85,7 @@ export const Sidebar = ({
          {items.map((nav, index) => {
             const isOpen = openSubmenu?.type === menuType && openSubmenu?.index === index;
             const isItemActive = nav.subItems ? isOpen : isActive(nav.path);
+            const subItem = nav.subItems?.find((item) => isActive(item.path));
 
             return (
                <li key={nav.name}>
@@ -109,16 +94,16 @@ export const Sidebar = ({
                         onClick={() => handleSubmenuToggle(index, menuType)}
                         className={cn(
                            'cursor-pointer flex flex-row gap-2 p-2 rounded-2xl items-center',
-                           'transition-all',
+                           'transition-all w-full',
                            !isExpanded && !isHovered ? 'lg:justify-center' : 'lg:justify-start',
-                           isItemActive
+                           isItemActive || subItem
                               ? 'bg-sidebar-primary text-sidebar-primary-foreground'
                               : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                         )}
                      >
                         <span
                            className={cn(
-                              isItemActive
+                              isItemActive || subItem
                                  ? 'text-sidebar-primary-foreground'
                                  : 'text-sidebar-foreground group-hover:text-sidebar-accent-foreground'
                            )}
@@ -126,7 +111,11 @@ export const Sidebar = ({
                            {nav.icon}
                         </span>
                         {(isExpanded || isHovered || isMobileOpen) && (
-                           <span className='menu-item-text text-left'>{nav.name}</span>
+                           <span className={cn(
+                              'menu-item-text text-left',
+                           )}>
+                              {nav.name}
+                           </span>
                         )}
                         {(isExpanded || isHovered || isMobileOpen) && (
                            <ChevronDown
@@ -159,7 +148,9 @@ export const Sidebar = ({
                               {nav.icon}
                            </span>
                            {(isExpanded || isHovered || isMobileOpen) && (
-                              <span className=''>{nav.name}</span>
+                              <span className=''>
+                                 {nav.name}
+                              </span>
                            )}
                         </Link>
                      )
@@ -174,18 +165,21 @@ export const Sidebar = ({
                            height: isOpen ? `${subMenuHeight[`${menuType}-${index}`]}px` : '0px',
                         }}
                      >
-                        <ul className='mt-2 space-y-1 ml-9'>
+                        <ul className='mt-2 space-y-1 ml-5'>
                            {nav.subItems.map(subItem => (
                               <li key={subItem.name}>
                                  <Link
                                     to={subItem.path}
                                     className={cn(
-                                       'menu-dropdown-item transition-all',
+                                       'menu-dropdown-item transition-all flex flex-row gap-2 p-2 px-3 rounded-2xl items-center',
                                        isActive(subItem.path)
                                           ? 'bg-sidebar-primary text-sidebar-primary-foreground'
                                           : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                                     )}
                                  >
+                                    <span>
+                                       {subItem.icon}
+                                    </span>
                                     {subItem.name}
                                  </Link>
                               </li>
@@ -206,8 +200,8 @@ export const Sidebar = ({
          onMouseLeave={() => setIsHovered(false)}
          className={cn(
             'lg:translate-x-0',
-            `bg-menu gradient-radial-primary`,
-            'shadow-primary backdrop-blur-lg',
+            `bg-sidebar-background`,
+            'backdrop-blur-lg rounded-r-lg',
             `fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 h-screen transition-all duration-300 ease-in-out z-50`,
             isExpanded || isMobileOpen ? widthDesktop : isHovered ? widthHover : widthMobile,
             isMobileOpen ? 'translate-x-0' : '-translate-x-full',
@@ -224,7 +218,7 @@ export const Sidebar = ({
             ) : <AlignLeft className="text-secondary-light-200" />}
          </button>
 
-         <div
+         {/* <div
             className={cn(
                'py-8 flex',
                !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
@@ -258,7 +252,7 @@ export const Sidebar = ({
                   />
                )}
             </Link>
-         </div>
+         </div> */}
 
          <div className='flex flex-col overflow-y-auto duration-300 ease-linear overflow-hidden'>
             {renderMenuItems(navItems, 'main')}

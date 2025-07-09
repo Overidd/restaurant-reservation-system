@@ -10,6 +10,7 @@ import {
    SelectTrigger,
    SelectValue
 } from '../UI/from';
+import { Card2 } from '../UI/card';
 
 const parseLocalDate = (dateStr) => {
    const [year, month, day] = dateStr.split('-').map(Number);
@@ -37,72 +38,79 @@ export const TableAutoFilter = ({
    };
 
    return (
-      <Form className={cn(
-         'flex flex-wrap justify-center gap-4',
-         className
-      )}>
-         <FormItem>
-            <Select
-               name={'restaurant'}
-               value={restaurant || undefined}
-               onValueChange={onValueChange}
-            >
-               <SelectTrigger
-                  size='lg'
-                  className='w-full shadow-xl'
+      <Card2
+         className={cn(
+            'p-2 bg-transparent shadow-none px-4 py-3',
+         )}
+      >
+         <Form className={cn(
+            'flex flex-wrap justify-center gap-4',
+            className
+         )}>
+            <FormItem>
+               <Select
+                  name={'restaurant'}
+                  value={restaurant || undefined}
+                  onValueChange={onValueChange}
                >
-                  <SelectValue
-                     placeholder='Seleccione una restaurante'
-                  />
-               </SelectTrigger>
-               <SelectContent>
-                  {restaurants.map((item) => (
-                     <SelectItem
-                        key={item.id}
-                        value={item.name}
-                     >
-                        {item.name}
-                     </SelectItem>
-                  ))}
-               </SelectContent>
-            </Select>
-         </FormItem>
+                  <SelectTrigger
+                     size='lg'
+                     className='w-full bg-[#fcf8f0]'
+                  >
+                     <SelectValue
+                        placeholder='Seleccione una restaurante'
+                     />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {restaurants.map((item) => (
+                        <SelectItem
+                           key={item.id}
+                           value={item.name}
+                        >
+                           {item.name}
+                        </SelectItem>
+                     ))}
+                  </SelectContent>
+               </Select>
+            </FormItem>
 
-         <CalendarButton
-            name={'dateStr'}
-            variant={'outline'}
-            btnClassName={'shadow-xl hover:bg-sidebar hover:text-muted-foreground'}
-            onValueChange={onValueChange}
-            date={parseLocalDate(date)}
-            configDate={null}
-         />
-
-         <FormItem>
-            <Select
-               name={'hour'}
-               value={hour || undefined}
+            <CalendarButton
+               name={'dateStr'}
+               variant='outline'
+               btnClassName={'hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0]'}
                onValueChange={onValueChange}
-            >
-               <SelectTrigger
-                  size='lg'
-                  className='w-full shadow-xl'
+               date={parseLocalDate(date)}
+               configDate={null}
+            />
+
+            <FormItem>
+               <Select
+                  name={'hour'}
+                  value={hour || undefined}
+                  onValueChange={onValueChange}
                >
-                  <SelectValue
-                     placeholder='Seleccione una hora'
-                  />
-               </SelectTrigger>
-               <SelectContent>
-                  {hours.map((item, index) => (
-                     <SelectItem
-                        key={item.id || 'hour' + index}
-                        value={item.hour}
-                     >
-                        {item.hour}
-                     </SelectItem>
-                  ))}
-               </SelectContent>
-            </Select>
-         </FormItem>
-      </Form>
+                  <SelectTrigger
+                     size='lg'
+                     className='w-full bg-[#fcf8f0]'
+                     // variant='crystal'
+                  >
+                     <SelectValue
+                        placeholder='Seleccione una hora'
+                     />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {hours.map((item, index) => (
+                        <SelectItem
+                           key={item.id || 'hour' + index}
+                           value={item.hour}
+                        >
+                           {item.hour}
+                        </SelectItem>
+                     ))}
+                  </SelectContent>
+               </Select>
+            </FormItem>
+         </Form>
+      </Card2>
    )
 }

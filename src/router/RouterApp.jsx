@@ -21,7 +21,12 @@ import {
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
-import { TablesScreen } from '@/screen/dashboard';
+
+import {
+   TablesScreen,
+   CalendarScreen
+} from '@/screen/dashboard';
+import { StatisticScreen } from '@/screen/dashboard/Statistic';
 
 const AppRoutes = () => {
    return (
@@ -61,6 +66,8 @@ const AppRoutes = () => {
          <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
             <Route path='/dashboard' element={<DashboardLayout />} >
                <Route path='tables' element={<TablesScreen />} />
+               <Route path='calendar' element={<CalendarScreen />} />
+               <Route path='statistic' element={<StatisticScreen />} />
 
                <Route index element={<Navigate to='tables' />} />
             </Route>

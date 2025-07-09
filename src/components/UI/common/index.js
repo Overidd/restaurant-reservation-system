@@ -8,3 +8,4 @@ export * from './Popover';
 export * from './Skeleton';
 export * from './Tooltip';
 export * from './Toggle';
+export * from './Badge';

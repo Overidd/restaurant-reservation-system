@@ -3,3 +3,4 @@ export * from './TableList';
 export * from './TableEditModal';
 export * from './TableEditPropertyModal';
 export * from './TableReserveModal';
+export * from './NotifyReservation';

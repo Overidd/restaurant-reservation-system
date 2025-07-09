@@ -11,8 +11,9 @@ export const Card2 = ({
       <div
          style={style}
          className={cn(
-            `bg-menu gradient-radial-primary`,
-            'shadow-primary rounded-2xl backdrop-blur-lg',
+            // `bg-card shadow-primary`,
+            'bg-[#fff6] shadow-xl' ,
+            'rounded-2xl backdrop-blur-lg',
             'overflow-hidden',
             'p-10',
             className
