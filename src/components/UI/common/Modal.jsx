@@ -1,16 +1,16 @@
-import { useEffect, useState, useRef } from 'react';
+import { X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '.';
-import { X } from 'lucide-react';
 
 export const Modal = ({
    isOpen,
    onClose,
    children,
-   direction = "center", //  'top' | 'bottom' | 'left' | 'right' | 'center'
+   direction = 'center', //  'top' | 'bottom' | 'left' | 'right' | 'center'
    preventBackdropClose = false,
-   className = "",
-   overlayClassName = "",
+   className = '',
+   overlayClassName = '',
 }) => {
    const [isVisible, setIsVisible] = useState(false)
    const [isAnimating, setIsAnimating] = useState(false)
@@ -36,7 +36,7 @@ export const Modal = ({
       // Espera la animación antes de ejecutar onClose
       closeTimeoutRef.current = setTimeout(() => {
          setIsVisible(false)
-         document.body.style.overflow = "unset"
+         document.body.style.overflow = 'unset'
          // AQUÍ ejecutamos onClose después de que termine la animación
          onClose()
       }, 300)
@@ -54,7 +54,7 @@ export const Modal = ({
          openTimeoutRef.current = setTimeout(() => {
             setIsAnimating(true)
          }, 10)
-         document.body.style.overflow = "hidden"
+         document.body.style.overflow = 'hidden'
       } else if (isVisible) {
          // Solo ejecutar la animación de cierre si el modal está visible
          // pero NO ejecutar onClose aquí, se ejecutará en handleClose
@@ -67,7 +67,7 @@ export const Modal = ({
          // Espera la animación antes de ocultar
          closeTimeoutRef.current = setTimeout(() => {
             setIsVisible(false)
-            document.body.style.overflow = "unset"
+            document.body.style.overflow = 'unset'
          }, 300)
       }
 
@@ -75,19 +75,19 @@ export const Modal = ({
          // Limpiar timeouts si el componente se desmonta
          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
          if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
-         document.body.style.overflow = "unset"
+         document.body.style.overflow = 'unset'
       }
    }, [isOpen, isVisible])
 
    // Manejar tecla Escape
    useEffect(() => {
       const handleEscape = (e) => {
-         if (e.key === "Escape" && isOpen && !preventBackdropClose) {
+         if (e.key === 'Escape' && isOpen && !preventBackdropClose) {
             handleClose() // Usar handleClose en lugar de onClose
          }
       }
-      document.addEventListener("keydown", handleEscape)
-      return () => document.removeEventListener("keydown", handleEscape)
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
    }, [isOpen, preventBackdropClose, isAnimating])
 
    const handleBackdropClick = (e) => {
@@ -166,10 +166,18 @@ export const Modal = ({
 
    return createPortal(
       <div
+         role='presentation'
+         tabIndex={-1}
          className={getOverlayClasses()}
          onClick={handleBackdropClick}
+         onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+               handleBackdropClick(e);
+            }
+         }}
          style={{ zIndex: 50 }}
       >
+
          <Button
             className='absolute top-4 right-4'
             // variant={'outline'}
@@ -181,7 +189,7 @@ export const Modal = ({
          <div
             ref={modalRef}
             className={getModalClasses()}
-            onClick={(e) => e.stopPropagation()}
+            // onClick={(e) => e.stopPropagation()}
          >
             {children}
          </div>

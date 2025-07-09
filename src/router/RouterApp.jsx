@@ -1,7 +1,3 @@
-import { ProductScreen } from '@/screen/product';
-import { ReservationScreen } from '@/screen/reservation';
-import { LocationScreen } from '@/screen/location';
-import { LoginScreen, RegisterScreen } from '@/screen/auth';
 
 import {
    BrowserRouter,
@@ -11,22 +7,28 @@ import {
 } from 'react-router-dom';
 
 import {
-   AuthLayout,
    AppLayout,
+   AuthLayout,
    DashboardLayout
 } from '@/layout';
+import {
+   LoginScreen,
+   RegisterScreen
+} from '@/screen/auth';
+import {
+   CalendarScreen,
+   TablesScreen
+} from '@/screen/dashboard';
+import { StatisticScreen } from '@/screen/dashboard/Statistic';
+import { LocationScreen } from '@/screen/location';
+import { ProductScreen } from '@/screen/product';
+import { ReservationScreen } from '@/screen/reservation';
 
 import {
    ProtectedRoute,
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
-
-import {
-   TablesScreen,
-   CalendarScreen
-} from '@/screen/dashboard';
-import { StatisticScreen } from '@/screen/dashboard/Statistic';
 
 const AppRoutes = () => {
    return (

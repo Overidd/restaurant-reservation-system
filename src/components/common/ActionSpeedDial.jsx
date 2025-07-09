@@ -1,6 +1,6 @@
-import { CalendarPlus, PackagePlus, Pen, Printer, Save, Trash2 } from 'lucide-react';
-import { SpeedDial } from '../UI/common/SpeedDial';
 import { useEditTables } from '@/hook/dashboard';
+import { CalendarPlus, PackagePlus, Pen } from 'lucide-react';
+import { SpeedDial } from '../UI/common/SpeedDial';
 
 export const ActionSpeedDial = () => {
    const { toggleIsEdit } = useEditTables();

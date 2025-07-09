@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
+
 import { useRole } from '@/hook';
 
 export const ProtectedRoute = ({ allowedRoles, redirectTo = '/' }) => {

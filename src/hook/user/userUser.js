@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import { userServiceProvider } from '@/doman/services';
 import { Validations } from '@/ultils';
-import { useState } from 'react';
 
 export const useUser = () => {
   const [state, setUser] = useState({

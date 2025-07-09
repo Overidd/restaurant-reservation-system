@@ -1,17 +1,19 @@
-import { createDateFromString, getLocalDateStr, typeStatusTable } from '@/ultils';
-import { FirebaseDB } from './config';
 import { getAuth } from 'firebase/auth';
-
 import {
    collection,
-   getDocs,
-   getDoc,
-   query,
-   where,
    doc,
+   getDoc,
+   getDocs,
+   query,
    serverTimestamp,
    setDoc,
+   where,
 } from 'firebase/firestore';
+
+import { DateParser, typeStatusTable } from '@/ultils';
+
+import { FirebaseDB } from './config';
+
 
 const firebaseErrorMessages = {
    'auth/invalid-email': 'El correo electrónico no es válido.',
@@ -64,7 +66,7 @@ export class FirebaseReserveService {
       if (!this.isValidReservationDate(dateStr)) {
          throw new Error('No se pueden reservar fechas pasadas');
       }
-      if (dateStr === getLocalDateStr()) {
+      if (dateStr === DateParser.toString()) {
          const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
          allowedHours = allowedHours.filter(({ hour }) => {
@@ -258,7 +260,7 @@ export class FirebaseReserveService {
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
 
-         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_tolerance;
+         const timestamp = DateParser.fromDateAndTime(dateStr, hour).getTime() + this.MINUTES_tolerance;
 
          const reservationData = {
             idUser: uid,

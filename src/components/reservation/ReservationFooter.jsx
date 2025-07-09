@@ -1,6 +1,9 @@
-import { cn } from '@/ultils';
 import PropTypes from 'prop-types';
+
 import { ChevronLeft } from 'lucide-react';
+
+import { cn } from '@/ultils';
+
 import { Button, ProgressBar } from '../UI/common';
 
 export const ReservationFooter = ({

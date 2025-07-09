@@ -1,18 +1,4 @@
 import toast from 'react-hot-toast';
-import { cn } from '@/ultils/cn';
-import { Card2 } from '../UI/card';
-
-import {
-   ReservaRejected,
-   ReservaSuccess
-} from '.';
-
-import {
-   useCheckAuth,
-   useModalAuth,
-   useModalReserve,
-   useReserve
-} from '@/hook';
 
 import {
    Users,
@@ -20,11 +6,28 @@ import {
 } from 'lucide-react';
 
 import {
+   useCheckAuth,
+   useModalAuth,
+   useModalReserve,
+   useReserve
+} from '@/hook';
+import { cn } from '@/ultils/cn';
+
+import { Card2 } from '../UI/card';
+import {
    Button,
    Card,
    CardContent,
    CardImage
 } from '../UI/common';
+
+import {
+   ReservaRejected,
+   ReservaSuccess
+} from '.';
+
+
+
 
 
 export const ReservationInfoTable = ({ className }) => {

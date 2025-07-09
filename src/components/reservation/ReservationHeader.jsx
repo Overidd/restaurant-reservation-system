@@ -1,6 +1,8 @@
-import { cn } from '@/ultils/cn';
-import { Calendar, Clock } from 'lucide-react';
 import PropTypes from 'prop-types';
+
+import { Calendar, Clock } from 'lucide-react';
+
+import { cn } from '@/ultils/cn';
 
 const translation = {
    location: 'Localidad',
@@ -30,7 +32,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
          {
             value: date,
             name: [translation['date'] ?? 'date'],
-            icon: <Calendar  />,
+            icon: <Calendar />,
          },
       ]);
    }
@@ -64,7 +66,7 @@ export const ReservationHeader = ({ className, date, hour, info, currentStepInde
                stepsHeader.map(({ value, name, icon }, index) => (
                   <p
                      className='flex flex-row gap-2 border border-accent-foreground/20 rounded-2xl px-2 py-1'
-                     key={index}
+                     key={'step-' + index}
                   >
                      {
                         value

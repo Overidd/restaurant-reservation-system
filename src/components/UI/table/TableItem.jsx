@@ -90,7 +90,7 @@ export const TableItem = ({
    const tableConfig = tableSizes[size]
    const chairPositions = getChairPositions(chairs, size)
    return (
-      <div
+      <button
          onContextMenu={onContextMenu}
          onClick={onClick}
          style={{ transform: `rotate(${rotation}deg)` }}
@@ -141,7 +141,7 @@ export const TableItem = ({
          {/* Chairs */}
          {chairPositions.map((position, index) => (
             <div
-               key={index}
+               key={'position-' + index}
                className={cn(
                   'absolute w-full h-full rounded-md transition-all duration-300',
                   'shadow-sm hover:shadow-md pointer-events-none',
@@ -171,8 +171,8 @@ export const TableItem = ({
          </div> */}
 
          {/* Hover effect overlay */}
-         <div className='absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none'></div>
-      </div>
+         <div className='absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none' />
+      </button>
    )
 }
 

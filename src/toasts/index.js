@@ -1,2 +1,2 @@
 export * from './adminTableToasts';
-export * from './reservationToast';
+export * from './ReservationToast';

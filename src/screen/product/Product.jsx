@@ -1,19 +1,23 @@
 import { Outlet } from 'react-router-dom';
+
+import {
+  categoryData,
+  productData,
+  publicityData
+} from '@/data';
+
 import {
   PromoCarousel
 } from '@/components/common';
-
-import {
-  Title
-} from '@/components/UI/text';
-
 import {
   CategoryNav,
   ProductList,
   ProductSearch
 } from '@/components/product';
+import {
+  Title
+} from '@/components/UI/text';
 
-import { publicityData, categoryData, productData } from '@/data';
 
 export const ProductScreen = () => {
   return (

@@ -1,20 +1,22 @@
 import { useEffect, useMemo, useRef } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
+   cancelATablesReservationThunks,
+   cancelFullReservationThunks,
+   confirmReservationThunks,
    deleteTableThunks,
+   listenModifyTablesThunks,
    loadHoursThunks,
    loadRestaurantsThunks,
    loadTablesThunks,
-   setCurrentValuesAction,
-   setCurrentSelectedTableAction,
-   toggleIsTempTableChangeAction,
-   updateCurrentSelectedTableAction,
-   listenModifyTablesThunks,
-   cancelFullReservationThunks,
-   cancelATablesReservationThunks,
-   confirmReservationThunks,
    releasedReservationThunks,
    reserveTableThunks,
+   setCurrentSelectedTableAction,
+   setCurrentValuesAction,
+   toggleIsTempTableChangeAction,
+   updateCurrentSelectedTableAction,
 } from '@/doman/store/dashboard';
 
 export const useTableAdminStore = () => {

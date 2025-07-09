@@ -1,6 +1,8 @@
-import { ListLocations, MapaLoactions } from '@/components/location';
-import { locationData } from '@/data';
 import { Outlet } from 'react-router-dom';
+
+import { locationData } from '@/data';
+
+import { ListLocations, MapaLoactions } from '@/components/location';
 
 export const LocationScreen = () => {
   return (

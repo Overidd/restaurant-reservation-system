@@ -1,10 +1,11 @@
-import { FirebaseDB } from './config';
 import {
    collection,
    getDocs,
    query,
    where
 } from 'firebase/firestore';
+
+import { FirebaseDB } from './config';
 
 
 export class FirebaseUserService {

@@ -1,23 +1,23 @@
 import { useMemo } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { getLocalDateStr } from '@/ultils';
 
 import {
-   reserveToggleTableAction,
-   reserveSelectTableAction,
+   reserveChangeStateAction,
    reserveResetAction,
-   reserveSetInfoAction,
+   reserveResetSelectedTablesAction,
+   reserveResetStateTablesAction,
+   reserveSelectTableAction,
    reserveSetDateAction,
+   reserveSetInfoAction,
    reserveSetTimeAction,
+   reserveToggleTableAction,
    startGetAvailableHours,
    startGetTables,
-   reserveChangeStateAction,
-   typeStatus,
    startReserveTable,
-   reserveResetStateTablesAction,
-   reserveResetSelectedTablesAction,
+   typeStatus,
 } from '@/doman/store/reserve';
-
+import { DateParser } from '@/ultils';
 
 export const useReserve = () => {
    const dispatch = useDispatch();
@@ -59,7 +59,7 @@ export const useReserve = () => {
    const reserveSetDate = (date) => {
       let dateStr = date
       if (date instanceof Date) {
-         dateStr = getLocalDateStr(date);
+         dateStr = DateParser.toString(date);
       };
       serviceGetAvailableHours(dateStr);
 

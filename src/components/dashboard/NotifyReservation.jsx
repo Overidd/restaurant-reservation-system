@@ -1,8 +1,8 @@
 import { cn } from '@/ultils';
+import { Bell, ChevronRight, Dice1, Settings, Timer } from 'lucide-react';
 import { useState } from 'react';
 import { CalendarButton } from '../UI/calendar';
 import { Card2, UserCardReservation } from '../UI/card';
-import { Bell, ChevronRight, Dice1, Settings, Timer } from 'lucide-react';
 
 import {
    Badge,
@@ -36,23 +36,24 @@ export const NofityReservation = () => {
       <div className="sticky top-0 h-dvh flex items-start">
          <Tooltip>
             <TooltipTrigger asChild>
-               <button
-                  className="my-4 rounded-full shadow-lg p-2 transition-all cursor-pointer absolute -left-12 bg-[#fcf8f0]"
+               <Button
+                  className="my-4 rounded-full shadow-lg p-2 transition-all cursor-pointer absolute -left-12 bg-[#fcf8f0] text-primary hover:bg-primary hover:text-primary-foreground"
                   onClick={() => setOpenHistory(!openHistory)}
+                  size="icon"
                   aria-label="Abrir historial"
                >
                   {!openHistory ? (
                      <div className="relative">
                         <span className="absolute -top-1 right-0 flex size-3">
-                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                           <span className="relative inline-flex size-3 rounded-full bg-primary"></span>
+                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"/>
+                           <span className="relative inline-flex size-3 rounded-full bg-primary"/>
                         </span>
                         <Bell />
                      </div>
                   ) : (
                      <ChevronRight />
                   )}
-               </button>
+               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" className="text-inherit rounded">
                {

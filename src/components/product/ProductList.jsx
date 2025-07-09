@@ -1,5 +1,7 @@
-import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
+
+import { cn } from '@/ultils/cn';
+
 import { Button } from '../UI/common';
 
 // 'min-h-[20rem]',
@@ -41,7 +43,7 @@ export const ProductCard = ({ className, name, description, image, price }) => {
         <img
           className="object-cover w-full h-full hover:scale-105 transition-[scale] duration-500"
           src={image}
-          alt={`Image of ${name}`}
+          alt={`${name}`}
         />
       </figure>
       <p className='text-card-foreground font-bold truncate-text-nowarp max-w-[90%] mx-auto'>

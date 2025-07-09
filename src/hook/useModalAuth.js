@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import { useDispatch, useSelector } from 'react-redux';
+
 import { closeModalAuthAction, openModalAuthAction } from '@/doman/store';
 
 const authRouter = ['/login', '/register']

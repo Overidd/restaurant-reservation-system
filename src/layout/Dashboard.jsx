@@ -1,8 +1,10 @@
-import { SidebarProvider } from '@/doman/context/sidebar';
 import { Outlet } from 'react-router-dom';
-import { Sidebar } from '@/components/sidebar';
-import { NofityReservation } from '@/components/dashboard';
+
+import { SidebarProvider } from '@/doman/context/sidebar';
+
 import { ActionSpeedDial } from '@/components/common';
+import { NofityReservation } from '@/components/dashboard';
+import { Sidebar } from '@/components/sidebar';
 
 const Layout = () => {
    return (

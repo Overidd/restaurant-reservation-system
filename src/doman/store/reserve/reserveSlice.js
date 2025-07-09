@@ -1,6 +1,7 @@
 
-import { typeStatusTable } from '@/ultils';
 import { createSlice } from '@reduxjs/toolkit';
+
+import { typeStatusTable } from '@/ultils';
 
 export const typeLoading = {
    TIME: 'time',

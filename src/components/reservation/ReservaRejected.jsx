@@ -1,6 +1,8 @@
 import toast from 'react-hot-toast';
-import { Button } from '../UI/common';
+
 import { X } from 'lucide-react';
+
+import { Button } from '../UI/common';
 
 export const ReservaRejected = ({ t, message }) => {
    return (

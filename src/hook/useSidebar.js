@@ -1,5 +1,6 @@
-import { SidebarContext } from '@/doman/context/sidebar';
 import { useContext } from 'react';
+
+import { SidebarContext } from '@/doman/context/sidebar';
 
 export const useSidebar = () => {
    const context = useContext(SidebarContext);

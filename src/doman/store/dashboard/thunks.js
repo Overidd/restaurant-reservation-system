@@ -1,19 +1,19 @@
 import { dasboardServiceProvider } from '@/doman/services';
+import { typeStatusTable } from '@/ultils';
 
 import {
+   ModifyReservationTableAction,
+   changeStatusTableAction,
+   clearTablesRelationAction,
    deleteTableAction,
+   deleteTablesAction,
    loaddingAction,
    messageErrorAction,
    setHoursAction,
    setRestaurantsAction,
    setTablesAction,
-   typeLoading,
-   ModifyReservationTableAction,
-   deleteTablesAction,
-   clearTablesRelationAction,
-   changeStatusTableAction
+   typeLoading
 } from '.';
-import { typeStatusTable } from '@/ultils';
 
 export const loadRestaurantsThunks = () => {
    return async (dispatch) => {

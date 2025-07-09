@@ -1,29 +1,27 @@
-import { cn } from '@/ultils/cn';
-import { Modal } from '@/components/UI/common';
-import { Card2 } from '@/components/UI/card'
+import { StepFormProvider, StepFromContextProvider } from '@/doman/context/stepFrom';
 import { useModalReserve } from '@/hook';
+import { cn } from '@/ultils/cn';
 
 import {
+   ReservationFooter,
+   ReservationHeader,
    ReservationInfoTable,
    ReservationSelecTable,
    ReservationStepDate,
-   ReservationStepTime,
    ReservationStepInfo,
-   ReservationHeader,
-   ReservationFooter,
+   ReservationStepTime,
 } from '@/components/reservation';
-
 import {
-   StepFormProvider,
-   StepFromContextProvider
-} from '@/doman/context/stepFrom';
-
+   Card2
+} from '@/components/UI/card';
+import {
+   Modal
+} from '@/components/UI/common';
 import {
    StepForm,
    StepFormFooter,
    StepFormHeader
 } from '@/components/UI/stepForm';
-
 
 const reasonData = [
    {

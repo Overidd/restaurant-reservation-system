@@ -1,20 +1,19 @@
 import { ModalProviderAsync } from '@/doman/context/dialogAsync';
+import {
+   useModalTableEdit,
+   useModalTableEditProperty,
+   useModalTableReserve,
+} from '@/hook';
 import { useEditTables, useTableAdminStore } from '@/hook/dashboard';
+import { cn } from '@/ultils';
 
 import {
-   TableList,
    TableAutoFilter,
    TableEditModal,
    TableEditPropertyModal,
+   TableList,
    TableReserveModal,
 } from '@/components/dashboard';
-
-import {
-   useModalTableEdit,
-   useModalTableReserve,
-   useModalTableEditProperty,
-} from '@/hook';
-import { cn } from '@/ultils';
 
 
 export const TablesScreen = () => {
@@ -104,9 +103,17 @@ export const TablesScreen = () => {
          <ModalProviderAsync>
             {isEdit && (
                <div
+                  role='button'
+                  tabIndex={0}
                   onClick={() => toggleIsEdit(false)}
-                  className="fixed inset-0 z-10 bg-black/10 backdrop-blur-[5px] transition-all"
+                  onKeyDown={(e) => {
+                     if (e.key === 'Enter' || e.key === ' ') {
+                        toggleIsEdit(false);
+                     }
+                  }}
+                  className='fixed inset-0 z-10 bg-black/10 backdrop-blur-[5px] transition-all'
                   style={{ pointerEvents: 'auto' }}
+                  aria-label='Cerrar fondo del modal'
                />
             )}
             <TableList

@@ -1,5 +1,6 @@
-import { LoaderCircle } from 'lucide-react';
 import PropTypes from 'prop-types';
+
+import { LoaderCircle } from 'lucide-react';
 
 export const ReservationLoadding = ({
    className,

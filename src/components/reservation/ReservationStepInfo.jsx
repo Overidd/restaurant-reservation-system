@@ -1,25 +1,26 @@
-import { cn } from '@/ultils/cn';
-import { Button } from '../UI/common';
 import { Suspense } from 'react';
 
 import {
    useForm,
-   useReserve,
    useGetAllLocation,
+   useReserve,
    useStepFormContext,
 } from '@/hook';
+import { validateObject } from '@/ultils';
+import { cn } from '@/ultils/cn';
 
+import { Button } from '../UI/common';
 import {
    Form,
+   FormItem,
    Input,
    Select,
-   FormItem,
-   SelectItem,
    SelectContent,
+   SelectItem,
    SelectTrigger,
    SelectValue
 } from '../UI/from';
-import { validateObject } from '@/ultils';
+
 
 export const ReservationStepInfo = ({
    schema,

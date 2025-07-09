@@ -1,6 +1,7 @@
+import { cn, DateParser } from '@/ultils';
 import { CalendarButton } from '../UI/calendar';
-import { cn } from '@/ultils';
 
+import { Card2 } from '../UI/card';
 import {
    Form,
    FormItem,
@@ -10,7 +11,6 @@ import {
    SelectTrigger,
    SelectValue
 } from '../UI/from';
-import { Card2 } from '../UI/card';
 
 
 export const TableAutoFilter = ({
@@ -74,7 +74,7 @@ export const TableAutoFilter = ({
                variant='outline'
                btnClassName={'hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0]'}
                onValueChange={onValueChange}
-               date={parseLocalDate(date)}
+               date={DateParser.fromString(date)}
                configDate={null}
             />
 

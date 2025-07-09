@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, collection } from 'firebase/firestore/lite';
+import { collection, doc, getFirestore, setDoc } from 'firebase/firestore/lite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

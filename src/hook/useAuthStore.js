@@ -1,6 +1,6 @@
-import toast from 'react-hot-toast';
 import { useMemo } from 'react';
 
+import toast from 'react-hot-toast';
 import {
    useDispatch,
    useSelector
@@ -8,8 +8,8 @@ import {
 
 import {
    authStateEmun,
-   logoutAction,
    checkingCredentialAction,
+   logoutAction,
    startCreateUser,
    startGoogleAuth,
    startLogin,

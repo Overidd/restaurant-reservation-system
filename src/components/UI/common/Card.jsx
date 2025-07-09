@@ -44,7 +44,7 @@ export const CardImage = ({ className, src, alt, zoom, ...props }) => {
                zoom && 'hover:scale-105 transition-[scale] duration-500',
             )}
             src={src}
-            alt={`Image of ${alt}`}
+            alt={`of ${alt}`}
          />
       </figure>
    )
@@ -54,11 +54,13 @@ export const CardImage = ({ className, src, alt, zoom, ...props }) => {
 
 export const CardTitle = ({ className, ...props }) => {
    return (
-      <h2
+      <h3
          data-slot='card-title'
          className={cn('leading-none font-semibold', className)}
          {...props}
-      />
+      >
+         {props.children}
+      </h3>
    )
 }
 

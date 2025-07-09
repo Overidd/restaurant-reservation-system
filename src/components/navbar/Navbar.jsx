@@ -1,27 +1,29 @@
-import { cn } from '@/ultils';
 import { Link } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
-import { Card2 } from '../UI/card';
-import { LinkCustom } from '../UI/from';
-import { NavbarList } from './NavbarList';
-import { ShoppingCart, Table, User } from 'lucide-react';
-import { NoAuthenticated } from '../user';
-import { ReservaRejected, ReservaSuccess } from '../reservation';
 import toast from 'react-hot-toast';
 
-import {
-   Button,
-   Popover,
-   PopoverContent,
-   PopoverTrigger
-} from '../UI/common';
+import { ShoppingCart, Table, User } from 'lucide-react';
 
 import {
    useCheckAuth,
    useIfAuthenticated,
    useOnAuthReserve
 } from '@/hook';
+import { cn } from '@/ultils';
+
 import { UserDropdown } from '../common';
+import { ReservaRejected, ReservaSuccess } from '../reservation';
+import {
+   Button,
+   Popover,
+   PopoverContent,
+   PopoverTrigger
+} from '../UI/common';
+import { LinkCustom } from '../UI/from';
+import { NoAuthenticated } from '../user';
+
+import { NavbarList } from './NavbarList';
 
 const listMenu = [
    {

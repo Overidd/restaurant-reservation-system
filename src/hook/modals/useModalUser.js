@@ -1,5 +1,6 @@
-import { closeModalUserAction, openModalUserAction } from '@/doman/store';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { closeModalUserAction, openModalUserAction } from '@/doman/store';
 
 
 let paramsRef = null

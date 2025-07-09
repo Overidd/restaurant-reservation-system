@@ -1,11 +1,12 @@
-import { cn } from '@/ultils';
 import { Outlet } from 'react-router-dom';
-import { Card2 } from '@/components/UI/card';
-import { Modal } from '@/components/UI/common';
 
 import {
   useModalAuth,
 } from '@/hook';
+import { cn } from '@/ultils';
+
+import { Card2 } from '@/components/UI/card';
+import { Modal } from '@/components/UI/common';
 
 export const AuthLayout = () => {
   const { isOpenModal, closeModal } = useModalAuth()

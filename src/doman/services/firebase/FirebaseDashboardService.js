@@ -1,23 +1,22 @@
 
-import { FirebaseDB } from './config';
-import { createDateFromString, generateCode, typeStatusTable } from '@/ultils';
-// import { collection, getDocs, query, where } from 'firebase/firestore/lite';
 import {
    collection,
+   doc,
+   getDoc,
    getDocs,
-   query,
-   where,
+   limit,
    onSnapshot,
    orderBy,
-   limit,
-   doc,
-   updateDoc,
+   query,
    serverTimestamp,
-   getDoc,
    setDoc,
+   updateDoc,
+   where,
 } from 'firebase/firestore';
 
+import { DateParser, generateCode, typeStatusTable } from '@/ultils';
 
+import { FirebaseDB } from './config';
 
 export class FirebaseDashboardService {
    constructor() {
@@ -323,8 +322,8 @@ export class FirebaseDashboardService {
          });
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
-
-         const timestamp = createDateFromString(dateStr, hour).getTime() + this.MINUTES_TOLERANCE;
+         
+         const timestamp = DateParser.fromDateAndTime(dateStr, hour).getTime() + this.MINUTES_TOLERANCE;
 
          const reservationData = {
             idUser: idUser ?? null,

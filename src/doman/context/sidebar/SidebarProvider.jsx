@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import { SidebarContext } from '.';
 
 export const SidebarProvider = ({ children }) => {

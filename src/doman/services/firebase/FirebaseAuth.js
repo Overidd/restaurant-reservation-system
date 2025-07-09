@@ -1,6 +1,3 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { FirebaseAuth, FirebaseDB } from './config';
-
 import {
    createUserWithEmailAndPassword,
    GoogleAuthProvider,
@@ -9,6 +6,10 @@ import {
    signInWithPopup,
    updateProfile
 } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+import { FirebaseAuth, FirebaseDB } from './config';
+
 
 const firebaseErrorMessages = {
    'auth/invalid-email': 'El correo electrónico no es válido.',

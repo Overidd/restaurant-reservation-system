@@ -1,9 +1,9 @@
-import * as React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '@/ultils/cn';
-import { Button } from '@/components/ui/common/Button';
+import { Button } from '../common';
 
 const CarouselContext = React.createContext(null);
 
@@ -191,4 +191,5 @@ function CarouselNext({
   );
 }
 
-export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
+export { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious };
+

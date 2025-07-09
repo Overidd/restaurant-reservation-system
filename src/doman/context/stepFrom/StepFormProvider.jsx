@@ -1,19 +1,23 @@
-import PropTypes from 'prop-types';
-import { useStepForm } from '@/hook';
-import { StepFromContext } from './StepFromContext';
-
 import {
-   isValidElement,
    Children,
+   isValidElement,
    useMemo
 } from 'react';
 
+import PropTypes from 'prop-types';
+
+import { useStepForm } from '@/hook';
+
 import {
    AnimatedStep,
-   StepFormHeader,
-   StepFormFooter,
    StepForm,
+   StepFormFooter,
+   StepFormHeader,
 } from '@/components/UI/stepForm';
+
+import { StepFromContext } from './StepFromContext';
+
+
 
 export const StepFormProvider = ({
    children,

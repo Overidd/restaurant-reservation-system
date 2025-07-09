@@ -1,11 +1,14 @@
-import React from 'react'
-import { Button } from '@/components/UI/common'
-
 import {
   Key,
   Mail
 } from 'lucide-react'
 
+import {
+  useAuthStore,
+  useForm
+} from '@/hook'
+
+import { Button } from '@/components/UI/common'
 import {
   Form,
   FormItem,
@@ -14,7 +17,6 @@ import {
   Input,
   LinkCustom
 } from '@/components/UI/from'
-import { useAuthStore, useForm } from '@/hook'
 
 const initValidation = {
   name: [
@@ -212,13 +214,11 @@ export const RegisterScreen = () => {
           </Button>
 
           <div className='flex flex-row gap-2 items-center justify-baseline'>
-            <div className='bg-gradient-to-l from-white/50 to-transparent h-px flex-1'>
-            </div>
+            <div className='bg-gradient-to-l from-white/50 to-transparent h-px flex-1' />
             <span className='w-fit text-sm'>
               O continuar con
             </span>
-            <div className='bg-gradient-to-r from-white/50 to-transparent h-px flex-1'>
-            </div>
+            <div className='bg-gradient-to-r from-white/50 to-transparent h-px flex-1' />
           </div>
 
           <Button
@@ -230,6 +230,7 @@ export const RegisterScreen = () => {
           >
             <img
               src="/icon/icon-google.svg"
+              alt="Google"
             />
           </Button>
         </FormItem>

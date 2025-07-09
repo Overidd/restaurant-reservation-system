@@ -1,8 +1,5 @@
-import { cn } from '@/ultils/cn';
 import toast from 'react-hot-toast';
-import { TableList } from '../UI/table';
-import { ReservationLoadding } from '.';
-import { Button, ColorStatus } from '../UI/common';
+
 import { ChevronLeft, Clock } from 'lucide-react';
 
 import {
@@ -10,6 +7,15 @@ import {
    useReserveTimer,
    useStepFormContext,
 } from '@/hook';
+import { cn } from '@/ultils/cn';
+
+import { Button, ColorStatus } from '../UI/common';
+import { TableList } from '../UI/table';
+
+import { ReservationLoadding } from '.';
+
+
+
 
 const dataInfo = [
    {

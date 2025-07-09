@@ -1,8 +1,12 @@
-import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Button } from '../UI/common';
+
 import PropTypes from 'prop-types';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import { cn } from '@/ultils/cn';
+
+import { Button } from '../UI/common';
 
 export const CategoryNav = ({ className, data = [] }) => {
   const container = useRef(null);

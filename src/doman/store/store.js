@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+
+import { authSlice } from './auth';
+import { tableAdminSlice } from './dashboard';
 import { reserveSlice } from './reserve';
 import { reserveTimeSlice } from './reserve/reserveTimeSlice';
 import { UISlice } from './UISlice';
-import { authSlice } from './auth';
-import { tableAdminSlice } from './dashboard';
 
 export const store = configureStore({
    reducer: {

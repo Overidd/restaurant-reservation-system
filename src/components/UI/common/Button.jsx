@@ -64,4 +64,5 @@ Button.propTypes = {
   ]),
   size: PropTypes.oneOf(['default', 'sm', 'lg', 'icon']),
   children: PropTypes.node,
+  onClick: PropTypes.func,
 }

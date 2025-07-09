@@ -1,8 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { cn } from '@/ultils/cn';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -35,7 +35,7 @@ export const MapaLoactions = ({ className, data = [] }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {locations.map((rest, i) => (
-        <Marker key={i} position={rest.position}>
+        <Marker key={'marker' + i} position={rest.position}>
           <Popup>{rest.name}</Popup>
         </Marker>
       ))}

@@ -1,7 +1,9 @@
 import toast from 'react-hot-toast'
-import { Button } from '../UI/common'
+
 import { X } from 'lucide-react'
+
 import { UserCard } from '../UI/card'
+import { Button } from '../UI/common'
 
 export const ReservaSuccess = ({ t, code, user }) => {
    return (

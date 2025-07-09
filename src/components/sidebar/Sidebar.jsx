@@ -1,6 +1,9 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Link, useLocation } from 'react-router';
-import { useEffect, useCallback, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, Users, CircleUser, Rows3Icon, Book, Ellipsis, AlignLeft, X, Bookmark, CalendarCheck, Dice1, ChartColumnStacked } from 'lucide-react';
+
+import { AlignLeft, Bookmark, CalendarCheck, ChartColumnStacked, ChevronDown, Dice1, X } from 'lucide-react';
+
 import { useSidebar } from '@/hook';
 import { cn } from '@/ultils';
 

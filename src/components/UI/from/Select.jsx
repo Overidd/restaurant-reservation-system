@@ -1,8 +1,7 @@
-import * as React from 'react';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '@/ultils/cn';
+import * as SelectPrimitive from '@radix-ui/react-select';
 import { cva } from 'class-variance-authority';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
 export const Select = ({
   value,

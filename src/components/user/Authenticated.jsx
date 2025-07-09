@@ -1,6 +1,7 @@
-import React from 'react'
-import { Button } from '../UI/common'
 import { LogOut } from 'lucide-react'
+
+import { Button } from '../UI/common'
+
 
 export const Authenticated = ({
    name,

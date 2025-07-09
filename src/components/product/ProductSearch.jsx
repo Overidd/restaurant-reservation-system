@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
-import { Input } from '../UI/from';
+
 import { cn } from '@/ultils/cn';
+
+import { Input } from '../UI/from';
 
 export const ProductSearch = () => {
   return (
@@ -35,7 +37,7 @@ export const ProductSearch = () => {
       <Search
         className="icon-search absolute pointer-events-none w-6 h-6"
       />
-      <span className="caret"></span>
+      <span className="caret"/>
     </fieldset>
 
   )

@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
-import { TableItem } from '.';
 import PropTypes from 'prop-types';
+import { TableItem } from '.';
 import { CardLoadding } from '../card';
 
 export const TableList = ({
@@ -24,8 +24,7 @@ export const TableList = ({
          );
 
          if (!table) return (
-            <div key={'empty-node' + index}>
-            </div>
+            <div key={'empty-node' + index} />
          );
 
          return (
@@ -71,24 +70,23 @@ export const TableList = ({
 
             {/* Top */}
             <div className='absolute left-0 top-0 h-2 w-full grid grid-cols-[40%_50%] justify-between'>
-               <div className={`w-full h-full rounded-br-lg ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-bl-lg ${colorBorder}`}></div>
+               <div className={`w-full h-full rounded-br-lg ${colorBorder}`}/>
+               <div className={`w-full h-full rounded-bl-lg ${colorBorder}`}/>
             </div>
 
             {/* Left */}
-            <div className={`absolute top-0 bottom-0 left-0 w-2 h-full ${colorBorder}`}>
-            </div>
+            <div className={`absolute top-0 bottom-0 left-0 w-2 h-full ${colorBorder}`}/>
 
             {/* Right */}
             <div className='absolute right-0 top-0 bottom-0 w-2 h-full grid grid-rows-2'>
-               <div className={`w-full h-[50%] rounded-bl-md ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-tl-md ${colorBorder}`}></div>
+               <div className={`w-full h-[50%] rounded-bl-md ${colorBorder}`}/>
+               <div className={`w-full h-full rounded-tl-md ${colorBorder}`}/>
             </div>
 
             {/* Bottom */}
             <div className='absolute left-0 bottom-0 h-2 w-full grid grid-cols-[50%_40%] justify-between'>
-               <div className={`w-full h-full rounded-tr-lg ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-tl-lg ${colorBorder}`}></div>
+               <div className={`w-full h-full rounded-tr-lg ${colorBorder}`}/>
+               <div className={`w-full h-full rounded-tl-lg ${colorBorder}`}/>
             </div>
          </CardLoadding >
       </div>

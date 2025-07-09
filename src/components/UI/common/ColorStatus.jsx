@@ -20,7 +20,7 @@ export const ColorStatus = ({
                   >
                      <div
                         className={`w-6 h-6 rounded-full cursor-pointer inline-block align-middle ${color}`}
-                     ></div>
+                     />
 
                   </Popover>
                </div>

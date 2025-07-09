@@ -1,5 +1,6 @@
-import { toggleIsEditAction } from '@/doman/store/dashboard';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { toggleIsEditAction } from '@/doman/store/dashboard';
 
 export const useEditTables = () => {
    const isEdit = useSelector((state) => state.tableAdminReducer.isEdit);

@@ -1,15 +1,14 @@
-import { useRef, useState } from 'react';
 import { useModalAsync } from '@/hook';
-import PropTypes from 'prop-types';
+import { DateDiff, typeStatusTable } from '@/ultils';
 import { cn } from '@/ultils/cn';
-import { TableItem } from '../UI/table';
+import PropTypes from 'prop-types';
+import { useRef, useState } from 'react';
 import { Card2, CardLoadding } from '../UI/card';
-import { getTimeDifference, typeStatusTable } from '@/ultils';
+import { TableItem } from '../UI/table';
 
 import {
    Button,
    CardContent,
-   CardDescription,
    CardFooter,
    CardHeader,
    CardTitle,
@@ -22,9 +21,10 @@ import {
    TooltipTrigger
 } from '../UI/common';
 
+import { useEditTables } from '@/hook/dashboard';
+import { adminTableToasts } from '@/toasts';
 import {
    AlertTriangle,
-   BrushCleaning,
    CalendarPlus,
    CheckCircle,
    Dice1,
@@ -33,15 +33,10 @@ import {
    OctagonX,
    Pencil,
    Plus,
-   Table,
    Trash,
-   Unlink2,
-   Unlock,
-   User
+   Unlink2
 } from 'lucide-react';
 import { Checkbox, Label } from '../UI/from';
-import { adminTableToasts } from '@/toasts';
-import { useEditTables } from '@/hook/dashboard';
 
 export const TableList = ({
    rows,
@@ -136,7 +131,7 @@ export const TableList = ({
          );
 
          if (!table) return (
-            <div key={'empty-node' + index}></div>
+            <div key={'empty-node' + index} />
          );
 
          return (
@@ -182,6 +177,7 @@ export const TableList = ({
          return (
             <TableItem
                role='button'
+               key={'table-' + table.id}
                onClick={() => console.log('table')}
                color={table?.status}
                size={table?.size}
@@ -226,24 +222,24 @@ export const TableList = ({
 
             {/* Top */}
             <div className='absolute left-0 top-0 h-2 w-full grid grid-cols-[40%_50%] justify-between'>
-               <div className={`w-full h-full rounded-br-lg ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-bl-lg ${colorBorder}`}></div>
+               <div className={`w-full h-full rounded-br-lg ${colorBorder}`} />
+               <div className={`w-full h-full rounded-bl-lg ${colorBorder}`} />
             </div>
 
             {/* Left */}
-            <div className={`absolute top-0 bottom-0 left-0 w-2 h-full ${colorBorder}`}>
-            </div>
+            <div className={`absolute top-0 bottom-0 left-0 w-2 h-full ${colorBorder}`} />
+
 
             {/* Right */}
             <div className='absolute right-0 top-0 bottom-0 w-2 h-full grid grid-rows-2'>
-               <div className={`w-full h-[50%] rounded-bl-md ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-tl-md ${colorBorder}`}></div>
+               <div className={`w-full h-[50%] rounded-bl-md ${colorBorder}`} />
+               <div className={`w-full h-full rounded-tl-md ${colorBorder}`} />
             </div>
 
             {/* Bottom */}
             <div className='absolute left-0 bottom-0 h-2 w-full grid grid-cols-[50%_40%] justify-between'>
-               <div className={`w-full h-full rounded-tr-lg ${colorBorder}`}></div>
-               <div className={`w-full h-full rounded-tl-lg ${colorBorder}`}></div>
+               <div className={`w-full h-full rounded-tr-lg ${colorBorder}`} />
+               <div className={`w-full h-full rounded-tl-lg ${colorBorder}`} />
             </div>
          </CardLoadding >
       </div>
@@ -713,22 +709,6 @@ const InfoTableTooltip = ({
    hasReservar
 }) => {
 
-   const InfoUser = ({ name, email, code }) => {
-      return (
-         <p className='flex flex-col gap-2 mt-2'>
-            <span className='text-xs text-card-foreground' >
-               {name || <span className='text-card-foreground'>Sin nombre</span>}
-            </span>
-            <span className='text-xs text-card-foreground'>
-               {email || <span className='text-card-foreground'>Sin email</span>}
-            </span>
-            <span className='text-xs tracking-wider text-card-foreground'>
-               {code || <span className='text-card-foreground'>Sin código</span>}
-            </span>
-         </p>
-      )
-   }
-
    if (!hasReservar) return (
       <div className='text-xs text-muted-foreground text-center px-2 py-1'>
          Mesa disponible
@@ -736,7 +716,7 @@ const InfoTableTooltip = ({
    );
 
    if (status === typeStatusTable.PENDING) {
-      const currentTime = getTimeDifference(new Date(), new Date(timestamp));
+      const currentTime = DateDiff.inMinutes(new Date(), new Date(timestamp));
       const isExpired = currentTime === -1;
       return (
          <>
@@ -786,3 +766,19 @@ const InfoTableTooltip = ({
       );
    }
 };
+
+const InfoUser = ({ name, email, code }) => {
+   return (
+      <p className='flex flex-col gap-2 mt-2'>
+         <span className='text-xs text-card-foreground' >
+            {name || <span className='text-card-foreground'>Sin nombre</span>}
+         </span>
+         <span className='text-xs text-card-foreground'>
+            {email || <span className='text-card-foreground'>Sin email</span>}
+         </span>
+         <span className='text-xs tracking-wider text-card-foreground'>
+            {code || <span className='text-card-foreground'>Sin código</span>}
+         </span>
+      </p>
+   )
+}
