@@ -1,5 +1,5 @@
 import { userServiceProvider } from '@/doman/services';
-import { validations } from '@/ultils';
+import { Validations } from '@/ultils';
 import { useState } from 'react';
 
 export const useUser = () => {
@@ -10,7 +10,7 @@ export const useUser = () => {
   })
 
   const getUserByEmail = async (email) => {
-    const [isValid, message] = validations.email(email);
+    const [isValid, message] = Validations.email(email);
     if (!isValid) {
       setUser({
         user: null,
@@ -59,6 +59,7 @@ export const useUser = () => {
     errorMessage: state.errorMessage,
     getUserByEmail,
     clearUser,
-    isFoundUser
+    isFoundUser,
+    
   }
 }

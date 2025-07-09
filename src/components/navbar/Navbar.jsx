@@ -5,7 +5,7 @@ import { Card2 } from '../UI/card';
 import { LinkCustom } from '../UI/from';
 import { NavbarList } from './NavbarList';
 import { ShoppingCart, Table, User } from 'lucide-react';
-import { Authenticated, NoAuthenticated } from '../user';
+import { NoAuthenticated } from '../user';
 import { ReservaRejected, ReservaSuccess } from '../reservation';
 import toast from 'react-hot-toast';
 
@@ -17,11 +17,11 @@ import {
 } from '../UI/common';
 
 import {
-   useAuthStore,
    useCheckAuth,
    useIfAuthenticated,
    useOnAuthReserve
 } from '@/hook';
+import { UserDropdown } from '../common';
 
 const listMenu = [
    {
@@ -38,7 +38,6 @@ const listMenu = [
 
 export const Navbar = ({ className }) => {
    const { isAuthenticated } = useCheckAuth({ autoCheck: true })
-   const { name, photoURL, logoutPermanently, isRoleAdmin } = useAuthStore()
 
    const { reserveConfirm, isPendingAuth } = useOnAuthReserve()
 
@@ -105,38 +104,25 @@ export const Navbar = ({ className }) => {
                   <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
                </PopoverTrigger>
                <PopoverContent className={'mt-8 bg-transparent'}>
-                  <Card2 className='flex flex-col gap-2 shadow-2xl'>
-                     {
-                        isAuthenticated
-                           ? <Authenticated
-                              name={name}
-                              photoURL={photoURL}
-                              onlogout={logoutPermanently}
-                           />
-                           : <NoAuthenticated />
-                     }
-                  </Card2>
+                  {/* <Card2 className='flex flex-col gap-2 shadow-2xl'> */}
+                  {
+                     isAuthenticated
+                        ? <UserDropdown />
+                        : <NoAuthenticated />
+                  }
+                  {/* </Card2> */}
                </PopoverContent>
             </Popover>
 
-            {
-               isRoleAdmin
-                  ? <Link to={'/dashboard'}>
-                     <Button
-                        size={'lg'}
-                     >
-                        Ir al panel
-                     </Button>
-                  </Link>
-                  : <LinkCustom to={'reserve'}>
-                     <Button
-                        size={'lg'}
-                     >
-                        Ordenar
-                        <Table />
-                     </Button>
-                  </LinkCustom>
-            }
+            <LinkCustom to={'reserve'}>
+               <Button
+                  size={'lg'}
+               >
+                  Ordenar
+                  <Table />
+               </Button>
+            </LinkCustom>
+
          </ul>
       </nav >
    )

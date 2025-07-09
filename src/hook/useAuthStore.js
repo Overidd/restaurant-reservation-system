@@ -85,7 +85,13 @@ export const useAuthStore = (messageState) => {
    const isRoleAdmin = useMemo(() => stateAuth.role === ROLEAUHT.ADMIN, [stateAuth.role])
 
    return {
-      ...stateAuth,
+      // ...stateAuth,
+      uid: stateAuth.uid,
+      email: stateAuth.email,
+      name: stateAuth.name,
+      photoURL: stateAuth.photoURL,
+      role: stateAuth.role,
+
       stateAuth,
       login,
       loginGoogle,

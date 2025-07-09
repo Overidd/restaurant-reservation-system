@@ -1,0 +1,45 @@
+import { serviceProvider } from '@/doman/services';
+import { useEffect, useState } from 'react';
+
+export const useGetReservationsByUser = () => {
+   const [state, setUser] = useState({
+      reservations: [],
+      isLoading: false,
+      errorMessage: null
+   })
+
+   useEffect(() => {
+      const fechReservations = async () => {
+         setUser({
+            reservations: [],
+            isLoading: true,
+            errorMessage: null
+         })
+
+         const { ok, errorMessage, reservations } = await serviceProvider.getAllReservations();
+
+         if (ok) {
+            setUser({
+               reservations: reservations || [],
+               isLoading: false,
+               errorMessage: null
+            })
+            return;
+         }
+
+         setUser({
+            reservations: [],
+            isLoading: false,
+            errorMessage: errorMessage
+         })
+      }
+      fechReservations();
+   }, [])
+
+
+   return {
+      reservations: state.reservations,
+      isLoading: state.isLoading,
+      errorMessage: state.errorMessage
+   }
+}

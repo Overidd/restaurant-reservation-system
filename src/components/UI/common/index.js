@@ -9,3 +9,4 @@ export * from './Skeleton';
 export * from './Tooltip';
 export * from './Toggle';
 export * from './Badge';
+export * from './Tabs';

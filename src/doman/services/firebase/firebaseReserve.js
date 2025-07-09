@@ -10,7 +10,7 @@ import {
    where,
    doc,
    serverTimestamp,
-   setDoc
+   setDoc,
 } from 'firebase/firestore';
 
 const firebaseErrorMessages = {
@@ -291,6 +291,48 @@ export class FirebaseReserveService {
             ok: true,
             code: newCode,
          };
+
+      } catch (error) {
+         const code = error.code || 'default';
+         return {
+            ok: false,
+            errorMessage: firebaseErrorMessages[code] || error.message || 'Error desconocido',
+         };
+      }
+   }
+
+   async getAllReservations() {
+      try {
+         const auth = getAuth();
+         const user = auth.currentUser;
+
+         if (!user) {
+            throw new Error('Usuario no autenticado');
+         }
+
+         const reservations = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idUser', '==', user.uid),
+            // orderBy('timestamp', 'desc')
+         ));
+
+         let restaurants = await getDocs(collection(FirebaseDB, 'restaurants'));
+         restaurants = restaurants.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+         return {
+            ok: true,
+            reservations: reservations.docs.map(doc => {
+               const data = doc.data();
+               const restaurant = restaurants.find(restaurant => restaurant.id === data.idRestaurant);
+               return {
+                  id: doc.id,
+                  ...doc.data(),
+                  createdAt: doc.data().createdAt.toDate().toISOString(),
+                  restaurantName: restaurant ? restaurant.name : 'Restaurante desconocido',
+               }
+            })
+         }
+         // restaurantName
 
       } catch (error) {
          const code = error.code || 'default';

@@ -12,7 +12,8 @@ export const Card2 = ({
          style={style}
          className={cn(
             // `bg-card shadow-primary`,
-            'bg-[#fff6] shadow-xl' ,
+            // 'bg-[#fff6] shadow-xl' ,
+            // 'bg-sidebar-background text-sidebar-foreground shadow-xl',
             'rounded-2xl backdrop-blur-lg',
             'overflow-hidden',
             'p-10',

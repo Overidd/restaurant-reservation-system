@@ -12,11 +12,6 @@ import {
 } from '../UI/from';
 import { Card2 } from '../UI/card';
 
-const parseLocalDate = (dateStr) => {
-   const [year, month, day] = dateStr.split('-').map(Number);
-   return new Date(year, month - 1, day);
-}
-
 
 export const TableAutoFilter = ({
    className,
@@ -40,7 +35,7 @@ export const TableAutoFilter = ({
    return (
       <Card2
          className={cn(
-            'p-2 bg-transparent shadow-none px-4 py-3',
+            'p-2 bg-transparent shadow-none px-4 py-3 border-2 !border-dashed',
          )}
       >
          <Form className={cn(
@@ -92,7 +87,7 @@ export const TableAutoFilter = ({
                   <SelectTrigger
                      size='lg'
                      className='w-full bg-[#fcf8f0]'
-                     // variant='crystal'
+                  // variant='crystal'
                   >
                      <SelectValue
                         placeholder='Seleccione una hora'

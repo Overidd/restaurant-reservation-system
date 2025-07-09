@@ -202,7 +202,7 @@ export const NotifyReservationList = () => {
       <table className="min-w-full table-auto border-separate border-spacing-y-5 text-sm text-left">
          <tbody>
             {[...Array(10)].map((_, index) => (
-               <NotifyReservationItem key={index} />
+               <NotifyReservationItem key={'notify-reservation-item-' + index} />
             ))}
          </tbody>
       </table>

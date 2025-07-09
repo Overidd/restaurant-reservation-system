@@ -143,6 +143,10 @@
   --sidebar-ring: oklch(0.646 0.222 41.116);
 }
 
+.backdrop-blur-\[5px\] {
+  backdrop-filter: blur(5px);
+}
+
 .gradient-radial-primary {
   /* box-shadow: inset 0 56px 64px #290F00; */
 }

@@ -1,5 +1,5 @@
 import { ModalProviderAsync } from '@/doman/context/dialogAsync';
-import { useTableAdminStore } from '@/hook/dashboard';
+import { useEditTables, useTableAdminStore } from '@/hook/dashboard';
 
 import {
    TableList,
@@ -7,7 +7,6 @@ import {
    TableEditModal,
    TableEditPropertyModal,
    TableReserveModal,
-   NofityReservation,
 } from '@/components/dashboard';
 
 import {
@@ -15,6 +14,7 @@ import {
    useModalTableReserve,
    useModalTableEditProperty,
 } from '@/hook';
+import { cn } from '@/ultils';
 
 
 export const TablesScreen = () => {
@@ -89,69 +89,80 @@ export const TablesScreen = () => {
       closeModalReserve();
       setCurrentSelectedTable({});
    }
+   const { isEdit, toggleIsEdit } = useEditTables();
 
    return (
-         <main className='mt-5 flex flex-col items-center gap-5'>
-            <TableAutoFilter
-               hours={hours}
-               onChange={onChangeFilter}
-               restaurants={restaurants}
-               restaurant={currentRestaurant.name}
-               hour={currentHour.hour}
-               date={currentDate}
-            />
-            <ModalProviderAsync>
-               <TableList
-                  columns={currentRestaurant.columns}
-                  rows={currentRestaurant.rows}
-                  tables={tables}
-                  isLoading={loading.tables}
-                  onOpenEditTable={onOpenEditTable}
-                  onDeleteTable={deleteTable}
-                  onCancelFullReservation={cancelFullReservation}
-                  onCancelATablesReservation={cancelATablesReservation}
-                  onConfirmReservation={confirmReservation}
-                  onReleasedReservation={releasedReservation}
-                  onOpenReserveTable={onOpenReserveTable}
-                  currentSelectedTable={currentSelectedTable}
-                  className={'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none'}
+      <main className='mt-5 flex flex-col items-center gap-5'>
+         <TableAutoFilter
+            hours={hours}
+            onChange={onChangeFilter}
+            restaurants={restaurants}
+            restaurant={currentRestaurant.name}
+            hour={currentHour.hour}
+            date={currentDate}
+         />
+         <ModalProviderAsync>
+            {isEdit && (
+               <div
+                  onClick={() => toggleIsEdit(false)}
+                  className="fixed inset-0 z-10 bg-black/10 backdrop-blur-[5px] transition-all"
+                  style={{ pointerEvents: 'auto' }}
                />
-            </ModalProviderAsync>
-
-            <TableEditModal
-               initial={currentSelectedTable}
-               isOpen={isOpenModalEdit}
-               onClose={closeModalEdit}
-               onOpenEditProperty={onOpenEditTableProperty}
+            )}
+            <TableList
+               columns={currentRestaurant.columns}
+               rows={currentRestaurant.rows}
+               tables={tables}
+               isLoading={loading.tables}
+               onOpenEditTable={onOpenEditTable}
+               onDeleteTable={deleteTable}
+               onCancelFullReservation={cancelFullReservation}
+               onCancelATablesReservation={cancelATablesReservation}
+               onConfirmReservation={confirmReservation}
+               onReleasedReservation={releasedReservation}
+               onOpenReserveTable={onOpenReserveTable}
+               currentSelectedTable={currentSelectedTable}
+               className={cn(
+                  'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none',
+                  isEdit && 'z-20'
+               )}
             />
-            {
-               isOpenModalReserve && (
-                  <TableReserveModal
-                     currentTable={currentSelectedTable}
-                     onReserveTable={reserveTable}
-                     isOpen={isOpenModalReserve}
-                     onClose={closeModalReserveTable}
-                     currentHour={currentHour.hour}
-                     currentDate={currentDate}
-                     currentRestaurant={currentRestaurant}
-                  />
-               )
-            }
+         </ModalProviderAsync>
 
-            {
-               isOpenModalEditProperty && (
-                  <TableEditPropertyModal
-                     isOpen={isOpenModalEditProperty}
-                     onClose={onCloseEditProperty}
-                     initial={currentSelectedTable}
-                     onChangeValue={changeCurrentTable}
-                     axieRestaurant={{
-                        x: currentRestaurant.rows,
-                        y: currentRestaurant.columns
-                     }}
-                  />
-               )
-            }
-         </main>
+         <TableEditModal
+            initial={currentSelectedTable}
+            isOpen={isOpenModalEdit}
+            onClose={closeModalEdit}
+            onOpenEditProperty={onOpenEditTableProperty}
+         />
+         {
+            isOpenModalReserve && (
+               <TableReserveModal
+                  currentTable={currentSelectedTable}
+                  onReserveTable={reserveTable}
+                  isOpen={isOpenModalReserve}
+                  onClose={closeModalReserveTable}
+                  currentHour={currentHour.hour}
+                  currentDate={currentDate}
+                  currentRestaurant={currentRestaurant}
+               />
+            )
+         }
+
+         {
+            isOpenModalEditProperty && (
+               <TableEditPropertyModal
+                  isOpen={isOpenModalEditProperty}
+                  onClose={onCloseEditProperty}
+                  initial={currentSelectedTable}
+                  onChangeValue={changeCurrentTable}
+                  axieRestaurant={{
+                     x: currentRestaurant.rows,
+                     y: currentRestaurant.columns
+                  }}
+               />
+            )
+         }
+      </main>
    )
 }

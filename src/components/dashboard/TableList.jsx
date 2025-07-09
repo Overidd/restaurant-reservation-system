@@ -32,6 +32,7 @@ import {
    LockOpen,
    OctagonX,
    Pencil,
+   Plus,
    Table,
    Trash,
    Unlink2,
@@ -40,6 +41,7 @@ import {
 } from 'lucide-react';
 import { Checkbox, Label } from '../UI/from';
 import { adminTableToasts } from '@/toasts';
+import { useEditTables } from '@/hook/dashboard';
 
 export const TableList = ({
    rows,
@@ -58,6 +60,7 @@ export const TableList = ({
    tables = []
 }) => {
    const { showAsyncModal } = useModalAsync();
+   const { isEdit } = useEditTables();
 
    // 1. Estado levantado para las mesas seleccionadas en el modal
    const [highlightedTableIds, setHighlightedTableIds] = useState([]);
@@ -157,6 +160,39 @@ export const TableList = ({
       });
    };
 
+   const paintedEditTables = () => {
+      return Array.from({ length: rows * columns }).map((_, index) => {
+         const x = Math.floor(index / columns) + 1;
+         const y = (index % columns) + 1;
+         const table = tables.find(
+            (table) => table.positionX == x && table.positionY == y
+         );
+
+         if (!table) return (
+            <div
+               className='w-fit mx-auto'
+               key={'empty-node' + index}
+            >
+               <Button>
+                  <Plus />
+               </Button>
+            </div>
+         );
+
+         return (
+            <TableItem
+               role='button'
+               onClick={() => console.log('table')}
+               color={table?.status}
+               size={table?.size}
+               chairs={table?.chairs}
+               name={table?.name}
+               rotation={table?.rotation}
+            />
+         )
+      });
+   }
+
    const colorBorder = 'bg-[#545454]'
 
    return (
@@ -180,7 +216,11 @@ export const TableList = ({
                   gridTemplateRows: `repeat(${rows}, 1fr)`,
                }}
             >
-               {paintedTables()}
+               {
+                  isEdit
+                     ? paintedEditTables()
+                     : paintedTables()
+               }
             </div>
 
 
