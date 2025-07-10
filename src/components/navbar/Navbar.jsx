@@ -36,6 +36,11 @@ const listMenu = [
       name: 'Localidades',
       path: '/location',
    },
+   {
+      id: 3,
+      name: 'Consulta tu reserva',
+      path: '/search-reservation',
+   }
 ]
 
 export const Navbar = ({ className }) => {

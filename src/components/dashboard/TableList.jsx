@@ -22,7 +22,7 @@ import {
 } from '../UI/common';
 
 import { useEditTables } from '@/hook/dashboard';
-import { adminTableToasts } from '@/toasts';
+import { AdminTableToasts } from '@/toasts';
 import {
    AlertTriangle,
    CalendarPlus,
@@ -95,7 +95,7 @@ export const TableList = ({
       ));
 
       if (res) {
-         adminTableToasts.cancelFullReservation(
+         AdminTableToasts.cancelFullReservation(
             onCancelFullReservation(res?.data)
          )
       }
@@ -105,7 +105,7 @@ export const TableList = ({
    }
 
    const handleConfirmReservation = async (table) => {
-      adminTableToasts.confirmReserve(
+      AdminTableToasts.confirmReserve(
          onConfirmReservation({
             idTable: table.id,
             idReservation: table.reservation.idReservation
@@ -114,7 +114,7 @@ export const TableList = ({
    }
 
    const handleReleaseReservation = async (table) => {
-      adminTableToasts.releaseReserve(
+      AdminTableToasts.releaseReserve(
          onReleasedReservation({
             idTable: table.id,
             idReservation: table.reservation.idReservation
@@ -333,7 +333,7 @@ export const DialigCancelReserve = ({
 
       if (localHighlightedId.length > 0) {
          setIsProcessing(true);
-         adminTableToasts.cancelATablesReservation(
+         AdminTableToasts.cancelATablesReservation(
             onCancelATablesReservation({
                idReservation: table.reservation.idReservation,
                idTables: localHighlightedId,

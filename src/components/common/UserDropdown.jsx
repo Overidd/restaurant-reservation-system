@@ -1,9 +1,9 @@
-import { Link } from 'react-router';
-import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
-import { DropdownItem } from '../UI/dropdown';
 import { useAuthStore } from '@/hook';
-import { Card2 } from '../UI/card';
 import { useModalUser } from '@/hook/modals';
+import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
+import { Link } from 'react-router';
+import { Card2 } from '../UI/card';
+import { DropdownItem } from '../UI/dropdown';
 
 export const UserDropdown = () => {
    // const [isOpen, setIsOpen] = useState(false);
@@ -45,8 +45,9 @@ export const UserDropdown = () => {
             <li>
                <DropdownItem
                   // onItemClick={closeDropdown}
-                  tag="a"
-                  href="/profile"
+                  // tag="a"
+                  // href="/profile"
+                  onClick={() => openModal('profile')}
                   className="flex items-center gap-3 px-3 py-2 font-medium"
                >
                   <CircleUser />
@@ -56,7 +57,7 @@ export const UserDropdown = () => {
 
             <li>
                <DropdownItem
-                  tag="a"
+                  // tag="a"
                   onClick={() => openModal('reservations')}
                   className="flex items-center gap-3 px-3 py-2 font-medium"
                >
@@ -68,8 +69,9 @@ export const UserDropdown = () => {
             <li>
                <DropdownItem
                   // onItemClick={closeDropdown}
-                  tag="a"
-                  href="/profile"
+                  // tag="a"
+                  // href="/profile"
+                  // onClick={() => openModal('support')}
                   className="flex items-center gap-3 px-3 py-2 font-medium"
                >
                   <CircleAlert />

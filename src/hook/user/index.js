@@ -1,1 +1,2 @@
-export * from './userUser';
+export * from './useUserSettings';
+

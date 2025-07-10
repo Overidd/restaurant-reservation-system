@@ -34,6 +34,7 @@ export const TableAutoFilter = ({
 
    return (
       <Card2
+         vairant='secondary'
          className={cn(
             'p-2 bg-transparent shadow-none px-4 py-3 border-2 !border-dashed',
          )}

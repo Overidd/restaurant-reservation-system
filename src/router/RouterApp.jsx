@@ -24,6 +24,7 @@ import { LocationScreen } from '@/screen/location';
 import { ProductScreen } from '@/screen/product';
 import { ReservationScreen } from '@/screen/reservation';
 
+import { SearchReservationScreen } from '@/screen/search';
 import {
    ProtectedRoute,
    PublicOnlyRoute,
@@ -60,6 +61,7 @@ const AppRoutes = () => {
                   </Route>
                </Route>
 
+
                <Route index element={<Navigate to='product' />} />
                <Route path='*' element={<Navigate to='/product' />} />
             </Route>
@@ -74,6 +76,9 @@ const AppRoutes = () => {
                <Route index element={<Navigate to='tables' />} />
             </Route>
          </Route>
+         
+         <Route path='search-reservation' element={<SearchReservationScreen />} />
+         {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
    );
 };

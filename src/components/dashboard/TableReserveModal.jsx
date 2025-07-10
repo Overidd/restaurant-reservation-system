@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useForm } from '@/hook';
-import { useUser } from '@/hook/user';
+import { useGetUserFetchin } from '@/hook/fetchings';
 
+import { ReservationToast } from '@/toasts';
 import { cn } from '@/ultils';
 import { Card2, UserCard } from '../UI/card';
-import { ReservationToast } from '@/toasts';
 
 import {
    Button,
@@ -81,7 +81,7 @@ export const TableReserveModal = ({
       errorMessage,
       clearUser,
       isFoundUser,
-   } = useUser();
+   } = useGetUserFetchin();
 
    const {
       formState: { email, phone, diners, name },

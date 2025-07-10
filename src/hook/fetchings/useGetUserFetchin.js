@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { userServiceProvider } from '@/doman/services';
 import { Validations } from '@/ultils';
 
-export const useUser = () => {
+export const useGetUserFetchin = () => {
   const [state, setUser] = useState({
     user: null,
     isLoading: false,

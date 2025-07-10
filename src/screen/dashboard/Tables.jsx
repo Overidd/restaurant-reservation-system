@@ -88,6 +88,13 @@ export const TablesScreen = () => {
       closeModalReserve();
       setCurrentSelectedTable({});
    }
+
+   const closeModalEditTable = () => {
+      closeModalEdit();
+      setCurrentSelectedTable({});
+   }
+
+
    const { isEdit, toggleIsEdit } = useEditTables();
 
    return (
@@ -139,7 +146,7 @@ export const TablesScreen = () => {
          <TableEditModal
             initial={currentSelectedTable}
             isOpen={isOpenModalEdit}
-            onClose={closeModalEdit}
+            onClose={closeModalEditTable}
             onOpenEditProperty={onOpenEditTableProperty}
          />
          {

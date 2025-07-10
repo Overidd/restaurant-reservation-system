@@ -67,6 +67,8 @@ export default defineConfig([
       'react/no-array-index-key': 'warn', // Evita usar el índice como key (mala práctica)
       'react/self-closing-comp': 'warn', // Autocierre para componentes sin hijos
 
+      'react-hooks/rules-of-hooks': 'error', // Valida reglas de hooks (useEffect, useState, etc.)
+
       //TODOD temporalmente desactivado 
       'import/no-named-as-default': 'warn',
       // 'import/order': ['warn', {

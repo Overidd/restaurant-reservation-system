@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { cn, validateObject } from '@/ultils';
-import { Button, Modal } from '../UI/common';
 import { tablesSizeData } from '@/data';
-import { Card2 } from '../UI/card';
 import { useForm } from '@/hook';
+import { cn, validateObject } from '@/ultils';
+import { useState } from 'react';
+import { Card2 } from '../UI/card';
+import { Button, Modal } from '../UI/common';
 
 import {
    Form,

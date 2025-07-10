@@ -37,10 +37,21 @@ export const useGetReservationsByUser = () => {
       fechReservations();
    }, [])
 
+   const changeReservation = (reservation) => {
+      setUser({
+         reservations: state.reservations.map(res => res.id === reservation.id ? reservation : res),
+         isLoading: false,
+         errorMessage: null
+      })
+   }
 
    return {
+      // Valores
       reservations: state.reservations,
       isLoading: state.isLoading,
-      errorMessage: state.errorMessage
+      errorMessage: state.errorMessage,
+
+      // Funciones
+      changeReservation
    }
 }

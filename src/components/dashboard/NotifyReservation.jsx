@@ -45,8 +45,8 @@ export const NofityReservation = () => {
                   {!openHistory ? (
                      <div className="relative">
                         <span className="absolute -top-1 right-0 flex size-3">
-                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"/>
-                           <span className="relative inline-flex size-3 rounded-full bg-primary"/>
+                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                           <span className="relative inline-flex size-3 rounded-full bg-primary" />
                         </span>
                         <Bell />
                      </div>
@@ -63,6 +63,7 @@ export const NofityReservation = () => {
          </Tooltip>
 
          <Card2
+            vairant='secondary'
             className={cn(
                'h-full shadow-xl transition-all duration-200 overflow-x-hidden overflow-y-auto rounded-none rounded-l-lg',
                'p-0 py-4',
@@ -103,7 +104,7 @@ export const NofityReservationFilter = () => {
    return (
       <div className="flex flex-wrap items-center justify-between gap-2 w-full">
          <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                <Button
                   size='icon'
                   variant='outline'

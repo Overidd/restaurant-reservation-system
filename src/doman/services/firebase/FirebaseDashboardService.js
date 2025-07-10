@@ -322,7 +322,7 @@ export class FirebaseDashboardService {
          });
 
          const reservationRef = doc(collection(FirebaseDB, 'reservations'));
-         
+
          const timestamp = DateParser.fromDateAndTime(dateStr, hour).getTime() + this.MINUTES_TOLERANCE;
 
          const reservationData = {
@@ -422,7 +422,12 @@ export class FirebaseDashboardService {
    }
 
    listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
-      if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') return;
+      if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') {
+         console.log('NO debería estar escuchando');
+         return;
+      }
+
+      console.trace('ACTIVANDO LISTENER'); 
 
       const q = query(
          collection(FirebaseDB, 'reservations'),

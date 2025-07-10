@@ -62,7 +62,7 @@
   --radius: 0.65rem;
   --background: #FAF3E6;
   --foreground: #6d5f5c;
-  --card: #fff;
+  --card: #FAF3E6;
   --card-foreground: #4e403cc4;
   --card-primary: #ffffff9a;
   --popover: #FAF3E6;
@@ -73,7 +73,7 @@
   --secondary-foreground: #fff;
   --muted: #8F521E;
   /** Color apagado*/
-  --muted-foreground: oklch(0.552 0.016 285.938);
+  --muted-foreground: #4e403cc4;
   --accent: #8F521E;
   --accent-foreground: #FAF3E6;
   --destructive: #D0534B;
