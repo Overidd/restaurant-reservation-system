@@ -26,6 +26,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.522.0",
     "react": "^19.1.0",
+    "react-big-calendar": "^1.19.4",
     "react-day-picker": "^9.7.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",

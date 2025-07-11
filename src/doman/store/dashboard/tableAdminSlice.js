@@ -130,6 +130,7 @@ export const tableAdminSlice = createSlice({
       clearTablesRelationAction: (state, { payload: { idTablesNoSelect = [], idTables = [] } }) => {
          state.tables = state.tables.map((t) => {
             if (idTablesNoSelect.includes(t.id)) {
+               console.log('En tableAdminSlice',t.relatedTables.filter((r) => !idTables.includes(r.id)));
                return {
                   ...t,
                   relatedTables: t.relatedTables.filter((r) => !idTables.includes(r.id))

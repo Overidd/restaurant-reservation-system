@@ -19,6 +19,8 @@ export const CalendarButton = ({
    variant,
    defaultValue,
    name,
+   disabled,
+   required,
    configDate = (date) => date < new Date(new Date().setDate(new Date().getDate() - 1))
 }) => {
    return (
@@ -29,6 +31,7 @@ export const CalendarButton = ({
                variant={variant || 'crystal'}
                type='button'
                id='date'
+               disabled={disabled}
             >
                {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
                <ChevronDownIcon />
@@ -41,6 +44,7 @@ export const CalendarButton = ({
                selected={defaultValue || date}
                captionLayout='dropdown'
                disabled={configDate}
+               required={required}
                onSelect={(date) => onValueChange({ name, value: date })}
             />
          </PopoverContent>

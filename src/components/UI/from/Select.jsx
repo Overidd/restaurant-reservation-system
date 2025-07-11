@@ -1,7 +1,7 @@
 import { cn } from '@/ultils/cn';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { cva } from 'class-variance-authority';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, LoaderCircle } from 'lucide-react';
 
 export const Select = ({
   value,
@@ -40,6 +40,7 @@ export const SelectValue = ({ ...props }) => {
 export const SelectTrigger = ({
   className,
   isError = false,
+  isLoading = false,
   variant = 'default',
   size = 'default',
   children,
@@ -71,7 +72,11 @@ export const SelectTrigger = ({
       {...props}>
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className='size-4 opacity-50' />
+        {
+          isLoading
+            ? <LoaderCircle className='animate-spin' />
+            : <ChevronDownIcon />
+        }
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>)
   );

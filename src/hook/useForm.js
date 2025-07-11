@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 
 const defaultValidations = {
    email: [
@@ -113,6 +113,10 @@ export const useForm = ({
       additionalData,
       disabledMap
    });
+
+   useEffect(() => {
+      changeValueCallbackRef.current = changeValueCallback;
+   }, [changeValueCallback]);
 
    // Nuevo: Mapa de disabled por campo
    // const [disabledMap, setDisabledMap] = useState({});

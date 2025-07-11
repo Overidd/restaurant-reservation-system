@@ -5,6 +5,7 @@ import { SidebarProvider } from '@/doman/context/sidebar';
 import { ActionSpeedDial } from '@/components/common';
 import { NofityReservation } from '@/components/dashboard';
 import { Sidebar } from '@/components/sidebar';
+import { ModalReservationsCreate } from '@/screen/dashboard';
 
 const Layout = () => {
    return (
@@ -21,6 +22,7 @@ const Layout = () => {
 
          <NofityReservation />
          <ActionSpeedDial />
+         <ModalReservationsCreate />
       </div>
    )
 }

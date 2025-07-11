@@ -101,8 +101,6 @@ export class FirebaseReserveService {
          })
       });
 
-      console.log(hourCounts);
-
       // 7. Filtrar las horas disponibles
       const availableHours = allowedHours.filter(({ hour, tablesAvailable }) => {
          const reservedCount = hourCounts.get(hour) || 0;

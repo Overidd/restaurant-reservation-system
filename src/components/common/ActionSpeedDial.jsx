@@ -1,8 +1,10 @@
 import { useEditTables } from '@/hook/dashboard';
+import { useModalReservationsCreate } from '@/hook/modals';
 import { CalendarPlus, PackagePlus, Pen } from 'lucide-react';
 import { SpeedDial } from '../UI/common/SpeedDial';
 
 export const ActionSpeedDial = () => {
+   const { openModal: openReservations } = useModalReservationsCreate();
    const { toggleIsEdit } = useEditTables();
 
    const formActions = [
@@ -19,7 +21,7 @@ export const ActionSpeedDial = () => {
       {
          icon: CalendarPlus,
          label: 'Reservar mesas',
-         onClick: () => alert('Print Form')
+         onClick: () => openReservations()
       },
    ]
 

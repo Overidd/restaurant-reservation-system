@@ -9,7 +9,7 @@ export class AdminTableToasts {
       });
    }
 
-   static cancelATablesReservation(promise, { onSuccess, onError }) {
+   static cancelATablesReservation(promise, { onSuccess, onError, onFinally }) {
       return toast
          .promise(promise, {
             loading: 'Cancelando mesas...',
@@ -17,7 +17,9 @@ export class AdminTableToasts {
             error: (err) => err?.message || 'Error al cancelar mesas.',
          })
          .then(() => onSuccess?.())
-         .catch((err) => onError?.(err));
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.())
+         ;
    }
 
    static deleteTable(promise) {

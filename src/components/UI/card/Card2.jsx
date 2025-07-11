@@ -14,7 +14,7 @@ export const Card2 = ({
             vairant === 'secondary' && 'bg-[#fff6] shadow-xl',
             vairant === 'primary' && 'bg-sidebar-background backdrop-blur-lg text-sidebar-foreground shadow-xl',
             'rounded-2xl',
-            'overflow-hidden',
+            // 'overflow-hidden',
             'p-10',
             className
          )}

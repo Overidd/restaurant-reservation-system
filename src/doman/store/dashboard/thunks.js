@@ -6,7 +6,6 @@ import {
    changeStatusTableAction,
    clearTablesRelationAction,
    deleteTableAction,
-   deleteTablesAction,
    loaddingAction,
    messageErrorAction,
    setHoursAction,
@@ -94,7 +93,10 @@ export const cancelFullReservationThunks = (data) => {
          throw res.errorMessage
       }
 
-      dispatch(deleteTablesAction(data.idTables));
+      dispatch(changeStatusTableAction({
+         idTables: data.idTables,
+         status: typeStatusTable.AVAILABLE
+      }));
    }
 }
 
@@ -118,7 +120,10 @@ export const cancelATablesReservationThunks = (data) => {
          idTables: data.idTables
       }));
 
-      dispatch(deleteTablesAction(data.idTables));
+      dispatch(changeStatusTableAction({
+         idTables: data.idTables,
+         status: typeStatusTable.AVAILABLE
+      }));
    }
 }
 

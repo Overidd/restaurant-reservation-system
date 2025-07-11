@@ -291,7 +291,6 @@ export const DialigCancelReserve = ({
    table,
    setHighlightedTableIds = () => { },
 }) => {
-   console.log(table.reservation?.relatedTables);
    const [relatedTables, setRelatedTables] = useState(table.reservation?.relatedTables ?? []);
    const [localHighlightedId, setLocalHighlightedId] = useState([]);
    const [isProcessing, setIsProcessing] = useState(false);
@@ -346,11 +345,12 @@ export const DialigCancelReserve = ({
                },
                onError: () => {
                   setIsProcessing(false);
+               },
+               onFinally: () => {
+                  setHighlightedTableIds((prev) => prev.filter(id => !localHighlightedId.includes(id)));
                }
             }
          )
-
-         setHighlightedTableIds((prev) => prev.filter(id => !localHighlightedId.includes(id)));
          return;
       }
 

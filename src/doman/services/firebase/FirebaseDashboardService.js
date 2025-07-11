@@ -221,6 +221,7 @@ export class FirebaseDashboardService {
          }
 
       } catch (error) {
+         console.log(error);
          return {
             ok: false,
             errorMessage: error.message || 'Error al cancelar la reserva'

@@ -1,6 +1,8 @@
-export * from './Input'; 
-export * from './Select'; 
-export * from './Form'; 
-export * from './Label'; 
-export * from './LinkCustom'; 
-export * from './Checkbox'; 
+export * from './Checkbox';
+export * from './Form';
+export * from './Input';
+export * from './Label';
+export * from './LinkCustom';
+export * from './MultiSelect';
+export * from './Select';
+

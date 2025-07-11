@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 
 import { useForm } from '@/hook';
 import { useGetUserFetchin } from '@/hook/fetchings';
@@ -26,6 +25,7 @@ import {
    SelectValue,
 } from '../UI/from';
 
+import { useUserSearch } from '@/hook/user';
 import {
    Calendar,
    CalendarClock,
@@ -70,44 +70,54 @@ export const TableReserveModal = ({
    currentDate,
    currentRestaurant,
 }) => {
-   const btnSearchRef = useRef(null);
-   const [isBlockedFields, setIsBlockedFields] = useState(true);
-   const [hasSearched, setHasSearched] = useState(false);
 
    const {
-      isLoading,
-      user,
-      getUserByEmail,
-      errorMessage,
       clearUser,
+      errorMessage,
+      getUserByEmail,
       isFoundUser,
-   } = useGetUserFetchin();
+      isLoading,
+      user
+   } = useGetUserFetchin()
 
    const {
-      formState: { email, phone, diners, name },
-      formValidation: { emailValid, phoneValid, dinersValid, nameValid },
+      btnSearchRef,
+      hasSearched,
+      isBlockedFields,
+      animateSearchButton,
+      handleGetUserByEmail,
+      onChangeEmailOrClear,
+   } = useUserSearch({
+      clearUser,
+      getUserByEmail,
+      isFoundUser
+   })
+
+   const {
+      formState: {
+         email,
+         phone,
+         diners,
+         name
+      },
+      formValidation: {
+         emailValid,
+         phoneValid,
+         dinersValid,
+         nameValid
+      },
       onValueChange,
       onSubmitForm,
    } = useForm({
       initialState: schema.initial,
       validations: schema.valid,
       activeValidation: true,
-      changeValueCallback: ({ name, value }) => {
-         if (name === 'email' || !value) {
-            clearUser()
-            setIsBlockedFields(true)
-            setHasSearched(false)
-         };
-      },
+      changeValueCallback: onChangeEmailOrClear,
    });
 
    const onSubmit = onSubmitForm((value) => {
       if (!hasSearched) {
-         const element = btnSearchRef.current;
-         if (!element) return;
-         element.classList.remove('animate__shakeX');
-         void element.offsetWidth;
-         element.classList.add('animate__shakeX');
+         animateSearchButton();
          return;
       }
 
@@ -124,7 +134,7 @@ export const TableReserveModal = ({
             diners: Number(value.diners),
          }),
          onSuccess: () => onClose(),
-      })
+      });
    });
 
    const renderEmailIcon = (
@@ -137,11 +147,10 @@ export const TableReserveModal = ({
          onClick={() => handleGetUserByEmail(email)}
          className={'animate__animated'}
       >
-         {isLoading ? (
-            <LoaderCircle className='animate-spin' />
-         ) : (
-            <UserSearch />
-         )}
+         {isLoading
+            ? <LoaderCircle className='animate-spin' />
+            : <UserSearch />
+         }
       </Button>
    );
 
@@ -152,19 +161,6 @@ export const TableReserveModal = ({
    ) : (
       'Buscar por email'
    );
-
-   useEffect(() => {
-      if (hasSearched && !isFoundUser) {
-         setIsBlockedFields(false);
-      } else {
-         setIsBlockedFields(true);
-      }
-   }, [isFoundUser, hasSearched]);
-
-   const handleGetUserByEmail = (email) => {
-      setHasSearched(true);
-      getUserByEmail(email);
-   };
 
    return (
       <Modal

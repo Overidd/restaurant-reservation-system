@@ -26,7 +26,6 @@ import { ReservationScreen } from '@/screen/reservation';
 
 import { SearchReservationScreen } from '@/screen/search';
 import {
-   ProtectedRoute,
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
@@ -67,7 +66,7 @@ const AppRoutes = () => {
             </Route>
          </Route>
 
-         <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
+         {/* <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
             <Route path='/dashboard' element={<DashboardLayout />} >
                <Route path='tables' element={<TablesScreen />} />
                <Route path='calendar' element={<CalendarScreen />} />
@@ -75,8 +74,16 @@ const AppRoutes = () => {
 
                <Route index element={<Navigate to='tables' />} />
             </Route>
+         </Route> */}
+
+         <Route path='/dashboard' element={<DashboardLayout />} >
+            <Route path='tables' element={<TablesScreen />} />
+            <Route path='calendar' element={<CalendarScreen />} />
+            <Route path='statistic' element={<StatisticScreen />} />
+
+            <Route index element={<Navigate to='tables' />} />
          </Route>
-         
+
          <Route path='search-reservation' element={<SearchReservationScreen />} />
          {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>

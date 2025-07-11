@@ -5,7 +5,7 @@ import {
    ReservaSuccess
 } from '@/components/reservation';
 
-export const ReservationToast = ({ promise, onSuccess, onError }) =>
+export const ReservationToast = ({ promise, onSuccess, onError, onFinally }) =>
    toast.promise(promise, {
       loading: 'Confirmando reserva...',
       success: 'Reserva exitosa 🎉',
@@ -32,4 +32,5 @@ export const ReservationToast = ({ promise, onSuccess, onError }) =>
          }, {
             duration: 6000,
          });
-      });
+      })
+      .finally(() => onFinally && onFinally());
