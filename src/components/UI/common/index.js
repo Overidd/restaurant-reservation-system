@@ -8,6 +8,7 @@ export * from './Modal';
 export * from './Popover';
 export * from './ProgresBar';
 export * from './Skeleton';
+export * from './SlideOver';
 export * from './Tabs';
 export * from './Toggle';
 export * from './Tooltip';

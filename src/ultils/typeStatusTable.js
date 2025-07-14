@@ -1,6 +1,7 @@
 export const typeStatusTable = {
    BUSY: 'busy',
    AVAILABLE: 'available',
+   NOTAVAILABLE: 'notAvailable',
    CONFIRMED: 'confirmed',
    PENDING: 'pending',
    SELECTED: 'selected',

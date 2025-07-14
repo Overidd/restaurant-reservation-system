@@ -55,7 +55,12 @@
   --color-table-blocked: var(--table-blocked);
   --color-table-pending: var(--table-pending);
   --color-table-confirmed: var(--table-confirmed);
+  --color-table-notAvailable: var(--table-notAvailable);
+  
   --color-backdrop-modal: var(--backdrop-modal);
+  
+  /* Custom shadow */
+  --shadow-card: var(--shadow-card);
 }
 
 :root {
@@ -96,7 +101,7 @@
   --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --sidebar-background: #060606;
+  --sidebar-background: #060606ce;
 
   --width-search: 12rem;
   --table-avaible: #4a977b;
@@ -105,7 +110,11 @@
   --table-blocked: #ccc;
   --table-pending: #eca668;
   --table-confirmed: #3B82F6;
-  --backdrop-modal: rgba(0, 0, 0, 0.356);
+  --table-notAvailable: #ccc;
+  --backdrop-modal: rgba(0, 0, 0, 0.25);
+
+  /* Custom shadow */
+  --shadow-card: rgba(0, 0, 0, 0.1) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.15) 0px -3px 0px inset;
 }
 
 .dark {

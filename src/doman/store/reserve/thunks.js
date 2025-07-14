@@ -34,13 +34,21 @@ export const startGetAvailableHours = (date) => {
 
 export const startGetTables = () => {
    return async (dispatch, getState) => {
-      const { info: { locationId }, date, time: { hour } } = getState().reserveReducer.from;
+      const { info: { locationId, diners }, date, time: { hour } } = getState().reserveReducer.from;
 
       try {
          dispatch(reserveLoadingAction(typeLoading.TABLES));
 
-         const tables = await serviceProvider.getTables({ dateStr: date, idRestaurant: locationId, hour });
-         const restaurant = await serviceProvider.getRestaurant({ idRestaurant: locationId });
+         const tables = await serviceProvider.getTables({
+            dateStr: date,
+            idRestaurant: locationId,
+            diners: diners,
+            hour: hour,
+         });
+
+         const restaurant = await serviceProvider.getRestaurant({
+            idRestaurant: locationId
+         });
 
          dispatch(reserveSetTablesAction(tables));
          dispatch(reserveSetRestaurantAction(restaurant));
@@ -72,7 +80,7 @@ export const startReserveTable = () => {
       }
 
       dispatch(reserveChangeStateAction(typeStatus.COMPLETED));
-      
+
       dispatch(reserveResetAction());
       return res
    }

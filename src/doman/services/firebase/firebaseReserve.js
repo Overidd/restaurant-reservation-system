@@ -120,7 +120,7 @@ export class FirebaseReserveService {
     * @param {{ dateStr: string, idRestaurant: string, hour: string }} param0 
     * @returns 
     */
-   async getTables({ dateStr, idRestaurant, hour }) {
+   async getTables({ dateStr, idRestaurant, hour, diners }) {
       if (!idRestaurant) {
          throw new Error('No se proporciono el id del restaurante');
       }
@@ -153,6 +153,17 @@ export class FirebaseReserveService {
          reservedTablesIds.add(Number(doc.id));
       });
 
+      const assignStatus = ({ id, dinersTable }) => {
+         switch (true) {
+            case reservedTablesIds.has(id):
+               return typeStatusTable.BUSY;
+            case dinersTable > diners:
+               return typeStatusTable.NOTAVAILABLE;
+            default:
+               return typeStatusTable.AVAILABLE;
+         }
+      }
+
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
@@ -161,8 +172,8 @@ export class FirebaseReserveService {
          return {
             id: doc.id,
             ...data,
-            status: reservedTablesIds.has(Number(doc.id)) ? typeStatusTable.BUSY : typeStatusTable.AVAILABLE,
             size: data.type,
+            status: assignStatus({ id: doc.id, dinersTable: data.chairs }),
             idRestaurant: data.idRestaurant?.id ?? null,
             createdAt: data.createdAt.toDate().toISOString(),
          }
@@ -273,8 +284,8 @@ export class FirebaseReserveService {
             status: 'pending',
             timestamp: timestamp,
             createdAt: serverTimestamp(),
-            clientName: displayName || 'No Name',
-            clientEmail: email || 'No Email',
+            name: displayName || 'No Name',
+            email: email || 'No Email',
          };
 
          await setDoc(reservationRef, reservationData);

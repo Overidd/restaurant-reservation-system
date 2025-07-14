@@ -106,7 +106,7 @@ export const reserveSlice = createSlice({
          const { id, status } = payload;
          const isSelected = state.selectedTables.some(table => table.id === id);
 
-         if (status === typeStatusTable.BUSY) return;
+         if (status === typeStatusTable.BUSY || status === typeStatusTable.NOTAVAILABLE) return;
 
          if (isSelected) {
             // Deseleccionar la mesa
@@ -120,9 +120,13 @@ export const reserveSlice = createSlice({
             return;
          }
 
-         if (state.selectedTables.length >= state.from.time.tablesAvailable) {
-            return;
-         };
+         // if (state.selectedTables.length >= state.from.time.tablesAvailable) {
+         //    return;
+         // };
+
+         if (state.selectedTables.length >= state.from.time.tablesAvailable) return;
+         if (state.selectedTables.reduce((acc, table) => acc + table.chairs, 0) >= state.from.info.diners) return;
+
 
          state.selectedTables.push({ ...payload, isSelected: true });
 

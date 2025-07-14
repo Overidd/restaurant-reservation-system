@@ -11,8 +11,7 @@ import {
 } from '@/components/common';
 import {
   CategoryNav,
-  ProductList,
-  ProductSearch
+  ProductList
 } from '@/components/product';
 import {
   Title
@@ -40,7 +39,7 @@ export const ProductScreen = () => {
             className='w-[90%] max-w-2xl'
             data={categoryData}
           />
-          <ProductSearch />
+          {/* <ProductSearch /> */}
         </section>
 
         <ProductList data={productData} />

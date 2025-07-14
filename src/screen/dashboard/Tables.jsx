@@ -8,6 +8,7 @@ import { useEditTables, useTableAdminStore } from '@/hook/dashboard';
 import { cn } from '@/ultils';
 
 import {
+   EditDimensionRestaurantModal,
    TableAutoFilter,
    TableEditModal,
    TableEditPropertyModal,
@@ -108,6 +109,7 @@ export const TablesScreen = () => {
             date={currentDate}
          />
          <ModalProviderAsync>
+
             {isEdit && (
                <div
                   role='button'
@@ -123,6 +125,7 @@ export const TablesScreen = () => {
                   aria-label='Cerrar fondo del modal'
                />
             )}
+
             <TableList
                columns={currentRestaurant.columns}
                rows={currentRestaurant.rows}
@@ -143,12 +146,6 @@ export const TablesScreen = () => {
             />
          </ModalProviderAsync>
 
-         <TableEditModal
-            initial={currentSelectedTable}
-            isOpen={isOpenModalEdit}
-            onClose={closeModalEditTable}
-            onOpenEditProperty={onOpenEditTableProperty}
-         />
          {
             isOpenModalReserve && (
                <TableReserveModal
@@ -161,6 +158,24 @@ export const TablesScreen = () => {
                   currentRestaurant={currentRestaurant}
                />
             )
+         }
+
+
+         <TableEditModal
+            initial={currentSelectedTable}
+            isOpen={isOpenModalEdit}
+            onClose={closeModalEditTable}
+            onOpenEditProperty={onOpenEditTableProperty}
+         />
+
+         {isEdit && (
+            <EditDimensionRestaurantModal
+               name={currentRestaurant.name}
+               rows={currentRestaurant.rows}
+               columns={currentRestaurant.columns}
+               isOpen={isEdit}
+            />
+         )
          }
 
          {

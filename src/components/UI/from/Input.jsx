@@ -53,6 +53,7 @@ export const Input = ({
    activeEventIcon = false,
    iconPosition = 'left',
    type = 'text',
+   size = '',
    ...props
 }) => {
    const [showPassword, setShowPassword] = useState(false);
@@ -63,6 +64,12 @@ export const Input = ({
       variants: {
          variant: {
             crystal: 'input-style-class py-5 px-4',
+         },
+         size: {
+            xm: 'h-5 rounded-md gap-1.5 has-[>svg]:px-1 py-4',
+            sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 py-5',
+            lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+            icon: 'size-10',
          },
       },
       defaultVariants: {
@@ -93,7 +100,7 @@ export const Input = ({
                'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
                'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
                'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-               inputVariants({ variant }),
+               inputVariants({ variant, size }),
                icon && iconPosition === 'left' && 'pl-12',
                (icon && iconPosition === 'right') || isPassword ? 'pr-10' : '',
                isError && '!border-destructive/50',

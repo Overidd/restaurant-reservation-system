@@ -171,7 +171,7 @@ export const releasedReservationThunks = ({ idReservation, idTable }) => {
  */
 export const reserveTableThunks = (data) => {
    return async (dispatch) => {
-
+      console.log('reserveTableThunks', data);
       const res = await dasboardServiceProvider.reserveTable(data);
 
       if (!res.ok) {

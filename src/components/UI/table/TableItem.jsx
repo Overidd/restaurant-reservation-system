@@ -1,5 +1,6 @@
 import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
+import { UserCard } from '../card';
 
 const colors = {
    available: 'bg-table-avaible',
@@ -8,6 +9,7 @@ const colors = {
    blocked: 'bg-table-blocked',
    pending: 'bg-table-pending',
    confirmed: 'bg-table-confirmed',
+   notAvailable: 'bg-table-notAvailable',
 }
 
 const chairColors = {
@@ -17,12 +19,13 @@ const chairColors = {
    blocked: 'bg-table-blocked',
    pending: 'bg-table-pending',
    confirmed: 'bg-table-confirmed',
+   notAvailable: 'bg-table-notAvailable',
 }
 
 const tableSizes = {
    small: {
-      containerSize: 'w-25 h-20',
-      tableSize: 'w-16 h-12',
+      containerSize: 'w-26 h-23',
+      tableSize: 'w-17 h-14',
       maxChairs: 4,
    },
    medium: {
@@ -79,41 +82,38 @@ const getChairPositions = (chairCount, size) => {
 export const TableItem = ({
    className,
    onClick,
-   onContextMenu,
    name,
    size = 'medium',
    color = 'available',
+   user,
    chairs = 2,
    rotation = 0,
+   positionX = 1,
+   positionY = 1,
+   width = 1,
+   height = 1,
+   isHighlighted = false,
    ...props
 }) => {
    const tableConfig = tableSizes[size]
    const chairPositions = getChairPositions(chairs, size)
    return (
       <button
-         onContextMenu={onContextMenu}
          onClick={onClick}
-         style={{ transform: `rotate(${rotation}deg)` }}
          className={cn(
             tableConfig.containerSize,
             'relative transition-all duration-300 hover:scale-105 cursor-pointer',
             'mx-auto',
-            // 'rounded-xl shadow-lg',
-            // 'border-2 border-amber-200 hover:border-amber-300',
+            isHighlighted && 'transition-shadow rounded-2xl shadow-card',
             className,
          )}
+         style={{
+            // gridColumn: `${positionX} / span ${width}`,
+            // gridRow: `${positionY} / span ${height}`,
+            transform: `rotate(${rotation}deg)`
+         }}
          {...props}
       >
-         {/* Table name label */}
-         {/* {name && (
-            <div className='absolute -top-2 left-1/2 transform -translate-x-1/2 z-10'>
-               <span className='bg-white px-2 py-1 rounded-full text-xs font-semibold text-gray-700 shadow-sm border'>
-                  {name}
-               </span>
-            </div>
-         )} */}
-
-         {/* Table surface */}
          <div
             className={cn(
                tableConfig.tableSize,
@@ -121,20 +121,31 @@ export const TableItem = ({
                'rounded-xl shadow-md transition-all duration-300',
                'hover:shadow-lg z-10 pointer-events-none',
                colors[color],
-               // Different shapes based on size
                size === 'small' && 'rounded-lg',
                size === 'medium' && 'rounded-xl',
                size === 'big' && 'rounded-2xl',
             )}
          >
-            {/* Table surface pattern */}
-            {/* <div className='absolute inset-1 rounded-lg bg-white bg-opacity-20'></div> */}
-
-            {/* Capacity indicator */}
-            <div className='absolute inset-0 flex items-center justify-center'>
-               <span className='text-white font-semibold text-sm pointer-events-none'>
+            <div
+               className='relative h-full w-full'
+            >
+               <span className={cn(
+                  'absolute top-2 left-0 right-0',
+                  'text-white font-semibold text-sm pointer-events-none',
+               )}>
                   {name}
                </span>
+
+               {user && (
+                  <UserCard
+                     size={size === 'small' ? 'xs' : 'sm'}
+                     user={{ ...user }}
+                     mustShow={['name']}
+                     className={cn(
+                        'absolute left-2 bottom-2 z-11 pointer-events-none w-full',
+                     )}
+                  />
+               )}
             </div>
          </div>
 
@@ -152,25 +163,20 @@ export const TableItem = ({
                   size === 'big' && 'w-7 h-5',
                )}
                style={position}
-            >
-               {/* Chair back */}
-               {/* <div className='absolute -top-1 left-0 right-0 h-2 bg-current rounded-t-md opacity-60'></div> */}
-            </div>
+            />
          ))}
 
          {/* Status indicator */}
          {/* <div className='absolute top-2 right-2'>
             <div
                className={cn(
-                  'w-3 h-3 rounded-full border-2 border-white shadow-sm',
-                  color === 'available' && 'bg-emerald-500',
+                  'w-3 h-3 rounded-full shadow-sm',
+                  color === 'available' && 'bg-emerald-500 animate-bounce',
                   color === 'busy' && 'bg-red-500 animate-pulse',
                   color === 'selected' && 'bg-blue-500 animate-bounce',
                )}
-            ></div>
+            />
          </div> */}
-
-         {/* Hover effect overlay */}
          <div className='absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none' />
       </button>
    )

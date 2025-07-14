@@ -2,7 +2,6 @@
 import { useForm } from '@/hook';
 import { useGetUserFetchin } from '@/hook/fetchings';
 
-import { ReservationToast } from '@/toasts';
 import { cn } from '@/ultils';
 import { Card2, UserCard } from '../UI/card';
 
@@ -26,6 +25,7 @@ import {
 } from '../UI/from';
 
 import { useUserSearch } from '@/hook/user';
+import { ReservationToast } from '@/toasts';
 import {
    Calendar,
    CalendarClock,
@@ -128,9 +128,9 @@ export const TableReserveModal = ({
             dateStr: currentDate,
             hour: currentHour,
             idUser: user?.id ?? null,
-            name: value.name,
-            email: value.email,
-            phone: value.phone || null,
+            name: user.name || value.name,
+            email: user.email || value.email,
+            phone: user.phone || value.phone || null,
             diners: Number(value.diners),
          }),
          onSuccess: () => onClose(),
@@ -159,7 +159,9 @@ export const TableReserveModal = ({
    ) : errorMessage ? (
       <span className='text-red-300'>{errorMessage}</span>
    ) : (
-      'Buscar por email'
+      <span className='text-card-foreground text-sm'>
+         Buscar por email
+      </span>
    );
 
    return (
@@ -254,9 +256,7 @@ export const TableReserveModal = ({
                      activeEventIcon
                      className='py-3'
                   />
-                  <FormDescription>
-                     {renderEmailDescription}
-                  </FormDescription>
+                  {renderEmailDescription}
                </FormItem>
 
                {/*  */}

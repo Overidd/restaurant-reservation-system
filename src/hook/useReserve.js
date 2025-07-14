@@ -17,7 +17,7 @@ import {
    startReserveTable,
    typeStatus,
 } from '@/doman/store/reserve';
-import { DateParser } from '@/ultils';
+import { DateParser, typeStatusTable } from '@/ultils';
 
 export const useReserve = () => {
    const dispatch = useDispatch();
@@ -36,7 +36,13 @@ export const useReserve = () => {
 
    const isPending = useMemo(() => stateReserve === typeStatus.PENDING, [stateReserve]);
 
-   const isTableExceeded = useMemo(() => selectedTables.length >= from.time.tablesAvailable, [selectedTables, from.time.tablesAvailable]);
+   const isTableExceeded = useMemo(() => {
+      return (selectedTables.length >= from.time.tablesAvailable)
+   }, [selectedTables, from.time.tablesAvailable]);
+
+   const isTableExceededDiners = useMemo(() => {
+      return (selectedTables.reduce((acc, table) => acc + table.chairs, 0) >= from.info.diners)
+   }, [selectedTables, from.info.diners]);
 
    // Metodos de consulta api
    const serviceGetAvailableHours = (date) => {
@@ -82,7 +88,7 @@ export const useReserve = () => {
       dispatch(reserveSelectTableAction(table));
       dispatch(reserveToggleTableAction(table));
 
-      return !isSelected;
+      return !isSelected && ![typeStatusTable.BUSY, typeStatusTable.NOTAVAILABLE].includes(table.status);
    };
 
 
@@ -130,6 +136,7 @@ export const useReserve = () => {
       availableTime,
       isPending,
       isTableExceeded,
+      isTableExceededDiners,
 
       // Metodos de consulta api
       serviceGetAvailableHours,

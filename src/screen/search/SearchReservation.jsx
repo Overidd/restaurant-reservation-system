@@ -102,12 +102,12 @@ export const SearchReservationScreen = () => {
                            <div className='flex items-center gap-2'>
                               <Users className='w-4 h-4 text-gray-500' />
                               <span className='font-medium'>Nombre:</span>
-                              <span className='capitalize'>{reservation.clientName}</span>
+                              <span className='capitalize'>{reservation.name}</span>
                            </div>
                            <div className='flex items-center gap-2'>
                               <span className='w-4 h-4 text-gray-500'>@</span>
                               <span className='font-medium'>Email:</span>
-                              <span>{reservation.clientEmail}</span>
+                              <span>{reservation.email}</span>
                            </div>
                            <div className='flex items-center gap-2'>
                               <span className='w-4 h-4 text-gray-500'>#</span>

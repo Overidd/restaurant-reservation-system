@@ -57,8 +57,8 @@ export const tableAdminSlice = createSlice({
                   status: payload.status,
                   hasReservar: true,
                   user: {
-                     name: payload.clientName,
-                     email: payload.clientEmail,
+                     name: payload.name,
+                     email: payload.email,
                      idUser: payload.idUser,
                   },
                   reservation: {

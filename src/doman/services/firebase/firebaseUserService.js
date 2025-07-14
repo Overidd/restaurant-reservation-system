@@ -25,6 +25,7 @@ export class FirebaseUserService {
          return {
             ok: true,
             uid: res.docs[0].id,
+            id: res.docs[0].id,
             email: user.email,
             name: user.name,
             photoURL: user.photoURL,

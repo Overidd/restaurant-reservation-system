@@ -123,8 +123,8 @@ export class FirebaseDashboardService {
                      : [],
                },
                user: {
-                  name: data.clientName,
-                  email: data.clientEmail,
+                  name: data.name ?? null,
+                  email: data.email ?? null,
                   idUser: data?.idUser ?? null,
                },
             };
@@ -148,6 +148,7 @@ export class FirebaseDashboardService {
                ...data,
                idRestaurant: data.idRestaurant?.id ?? null,
                status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
+               size: data.type,
                chairs: Number(data.chairs),
                hasReservar: reservation ? true : false,
                reservation: reservation?.reservation ?? null,
@@ -242,8 +243,8 @@ export class FirebaseDashboardService {
          const reservationNoShowRef = doc(FirebaseDB, 'reservations', idReservation);
 
          await updateDoc(reservationNoShowRef, {
-            clientName: name,
-            clientEmail: email,
+            name: name,
+            email: email,
             idReservation: idReservation,
             idUser: idUser ?? null,
             updatedAt: serverTimestamp()
@@ -338,9 +339,9 @@ export class FirebaseDashboardService {
             code: newCode,
             status: 'pending',
             timestamp: timestamp,
-            clientName: name || 'No Name',
-            clientEmail: email || 'No Email',
-            clientPhone: phone || 'No Phone',
+            name: name || null,
+            email: email || null,
+            phone: phone || null,
             createdAt: serverTimestamp(),
          };
 
@@ -428,7 +429,7 @@ export class FirebaseDashboardService {
          return;
       }
 
-      console.trace('ACTIVANDO LISTENER'); 
+      console.trace('ACTIVANDO LISTENER');
 
       const q = query(
          collection(FirebaseDB, 'reservations'),

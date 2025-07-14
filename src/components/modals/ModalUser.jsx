@@ -24,7 +24,7 @@ export const ModalUser = () => {
             defaultValue={paramsRef}
             className={cn(
                'w-full bg-white p-4 px-4 rounded-lg overflow-hidden',
-               'w-[40rem] h-[40rem] bg-background rounded-2xl'
+               'w-[40rem] h-[40rem] bg-sidebar-background rounded-2xl'
             )}
          >
 

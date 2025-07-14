@@ -85,7 +85,8 @@ export const Navbar = ({ className }) => {
    return (
       <nav
          className={cn(
-            `bg-menu gradient-radial-primary`,
+            // `bg-menu gradient-radial-primary`,
+            `bg-sidebar-background gradient-radial-primary`,
             'shadow-primary rounded-2xl backdrop-blur-lg p-4',
             'flex items-center gap-4',
             'sticky top-4 z-50',

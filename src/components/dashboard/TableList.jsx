@@ -42,7 +42,6 @@ export const TableList = ({
    rows,
    columns,
    className,
-   onChangeTable,
    onDeleteTable,
    onCancelFullReservation,
    onCancelATablesReservation,
@@ -138,10 +137,7 @@ export const TableList = ({
             <TableItemPopover
                key={'table-' + table.id}
                table={table}
-               onOpenEditTable={onOpenEditTable}
-               onChangeTable={onChangeTable}
                onCancelReserve={handleCancelReserve}
-               onDeleteTable={handleDeleteTable}
                onConfirmReservation={handleConfirmReservation}
                onReleasedReservation={handleReleaseReservation}
                onOpenReserveTable={onOpenReserveTable}
@@ -173,17 +169,17 @@ export const TableList = ({
                </Button>
             </div>
          );
-
          return (
-            <TableItem
-               role='button'
+            <TableItemPopoverEdit
                key={'table-' + table.id}
-               onClick={() => console.log('table')}
-               color={table?.status}
-               size={table?.size}
-               chairs={table?.chairs}
-               name={table?.name}
-               rotation={table?.rotation}
+               table={table}
+               onOpenEditTable={onOpenEditTable}
+               onDeleteTable={handleDeleteTable}
+               highlighted={
+                  highlightedTableIds.includes(table.id) ||
+                  selectTable === table.id ||
+                  currentSelectedTable?.id === table?.id
+               }
             />
          )
       });
@@ -478,67 +474,23 @@ export const DialigConfirmReserve = ({
 
 export const TableItemPopover = ({
    table,
-   onDeleteTable,
-   onOpenEditTable,
    onCancelReserve,
    onConfirmReservation,
    onReleasedReservation,
    onOpenReserveTable,
    highlighted = false,
 }) => {
-   const [popoverType, setPopoverType] = useState(null);
    const [open, setOpen] = useState(false);
 
-   const handleLeftClick = (e) => {
-      e.preventDefault();
-      setPopoverType('left');
-      setOpen(true);
-   };
-
-   const handleRightClick = (e) => {
-      e.preventDefault();
-      setPopoverType('right');
+   const handleClick = () => {
       setOpen(true);
    };
 
    const handleClose = () => {
       setOpen(false);
-      setPopoverType(null);
    };
 
-   const renderRightContent = () => (
-      <>
-         <Tooltip>
-            <TooltipTrigger asChild>
-               <Button onClick={() => onOpenEditTable(table)}>
-                  <Pencil />
-               </Button>
-            </TooltipTrigger>
-            <TooltipContent
-               side="right"
-               className="text-inherit rounded"
-            >
-               Editar
-            </TooltipContent>
-         </Tooltip>
-
-         <Tooltip>
-            <TooltipTrigger asChild>
-               <Button onClick={() => onDeleteTable(table)} variant="destructive">
-                  <Trash />
-               </Button>
-            </TooltipTrigger>
-            <TooltipContent
-               side="right"
-               className="text-inherit rounded"
-            >
-               Eliminar
-            </TooltipContent>
-         </Tooltip>
-      </>
-   );
-
-   const renderLeftContent = () => {
+   const renderContent = () => {
       switch (table.status) {
          case typeStatusTable.PENDING:
             return (
@@ -655,14 +607,18 @@ export const TableItemPopover = ({
                   <TableItem
                      tabIndex={0}
                      role='button'
-                     onClick={handleLeftClick}
-                     onContextMenu={handleRightClick}
+                     onClick={handleClick}
                      color={table?.status}
                      size={table?.size}
                      chairs={table?.chairs}
+                     width={table?.width} // 2, 3
+                     height={table?.height}
+                     positionY={table?.positionY}
+                     positionX={table?.positionX}
                      name={table?.name}
+                     user={table?.user}
                      rotation={table?.rotation}
-                     className={highlighted ? 'transition-shadow shadow-[0_0_30px_rgba(0,0,0,0.20)] rounded-2xl' : ''}
+                     isHighlighted={highlighted}
                   />
                </TooltipTrigger>
             </PopoverTrigger>
@@ -689,16 +645,94 @@ export const TableItemPopover = ({
             onClick={handleClose}
             className='flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'
          >
-            {
-               popoverType === 'right' ?
-                  renderRightContent() :
-                  renderLeftContent()
-            }
+            {renderContent()}
          </PopoverContent>
       </Popover>
    );
 };
 
+export const TableItemPopoverEdit = ({
+   table,
+   onDeleteTable,
+   onOpenEditTable,
+   highlighted = false
+}) => {
+   const [open, setOpen] = useState(false);
+
+   const handleClick = () => {
+      setOpen(true);
+   };
+
+   const handleClose = () => {
+      setOpen(false);
+   };
+
+   const renderContent = () => (
+      <>
+         <Tooltip>
+            <TooltipTrigger asChild>
+               <Button onClick={() => onOpenEditTable(table)}>
+                  <Pencil />
+               </Button>
+            </TooltipTrigger>
+            <TooltipContent
+               side="right"
+               className="text-inherit rounded"
+            >
+               Editar
+            </TooltipContent>
+         </Tooltip>
+
+         <Tooltip>
+            <TooltipTrigger asChild>
+               <Button onClick={() => onDeleteTable(table)} variant="destructive">
+                  <Trash />
+               </Button>
+            </TooltipTrigger>
+            <TooltipContent
+               side="right"
+               className="text-inherit rounded"
+            >
+               Eliminar
+            </TooltipContent>
+         </Tooltip>
+      </>
+   );
+
+   return (
+      <Popover open={open} onOpenChange={setOpen}>
+         <PopoverTrigger asChild>
+            <TableItem
+               tabIndex={0}
+               role='button'
+               onClick={handleClick}
+               color={table?.status}
+               name={table?.name}
+               user={table?.user}
+               size={table?.size}
+               chairs={table?.chairs}
+               width={table?.width} // 2, 3
+               height={table?.height}
+               positionY={table?.positionY}
+               positionX={table?.positionX}
+               rotation={table?.rotation}
+               isHighlighted={highlighted}
+            />
+         </PopoverTrigger>
+
+         <PopoverContent
+            align='center'
+            side='right'
+            sideOffset={-10}
+            onInteractOutside={handleClose}
+            onClick={handleClose}
+            className='flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'
+         >
+            {renderContent()}
+         </PopoverContent>
+      </Popover >
+   );
+}
 
 const InfoTableTooltip = ({
    status,
@@ -771,13 +805,13 @@ const InfoUser = ({ name, email, code }) => {
    return (
       <p className='flex flex-col gap-2 mt-2'>
          <span className='text-xs text-card-foreground' >
-            {name || <span className='text-card-foreground'>Sin nombre</span>}
+            <strong>Nombre:</strong> {name || <span className='text-card-foreground'>Sin nombre</span>}
          </span>
          <span className='text-xs text-card-foreground'>
-            {email || <span className='text-card-foreground'>Sin email</span>}
+            <strong>Correo:</strong> {email || <span className='text-card-foreground'>Sin email</span>}
          </span>
          <span className='text-xs tracking-wider text-card-foreground'>
-            {code || <span className='text-card-foreground'>Sin código</span>}
+            <strong>Codigo:</strong> {code || <span className='text-card-foreground'>Sin código</span>}
          </span>
       </p>
    )

@@ -15,8 +15,6 @@ import { TableList } from '../UI/table';
 import { ReservationLoadding } from '.';
 
 
-
-
 const dataInfo = [
    {
       name: 'Disponible',
@@ -29,6 +27,10 @@ const dataInfo = [
    {
       name: 'Seleccionado',
       color: 'bg-table-selected'
+   },
+   {
+      name: 'No disponibles',
+      color: 'bg-table-notAvailable'
    }
 ]
 
@@ -38,6 +40,7 @@ export const ReservationSelecTable = () => {
       tables,
       isLoading,
       isTableExceeded,
+      isTableExceededDiners,
       restaurant,
       selectedTables,
       reserveSelectTable,
@@ -53,6 +56,11 @@ export const ReservationSelecTable = () => {
 
    const onChangeTable = (table) => {
       const wasSelected = reserveSelectTable(table);
+
+      if (wasSelected && isTableExceededDiners) {
+         toast.error(`No puedes seleccionar mas mesas para ${from.info.diners} personas.`);
+      }
+
       if (wasSelected && isTableExceeded) {
          toast.error(`No puedes seleccionar más de ${from.time.tablesAvailable} mesas.`);
       }
