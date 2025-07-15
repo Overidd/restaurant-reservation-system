@@ -15,6 +15,7 @@ import {
    reserveTableThunks,
    setCurrentSelectedTableAction,
    setCurrentValuesAction,
+   setSelectedCreateObjAction,
    toggleIsTempTableChangeAction,
    updateCurrentSelectedTableAction,
 } from '@/doman/store/dashboard';
@@ -86,6 +87,10 @@ export const useTableAdminStore = () => {
       dispatch(setCurrentSelectedTableAction(table));
    }
 
+   const setCurrentSelectCreateObj = (data) => {
+      dispatch(setSelectedCreateObjAction(data));
+   }
+
    const toggleIsTempTable = (is) => {
       dispatch(toggleIsTempTableChangeAction(is));
    };
@@ -118,7 +123,7 @@ export const useTableAdminStore = () => {
       return dispatch(reserveTableThunks(data));
    }
 
-   
+
    const tables = useMemo(() => {
       if (state.isTempTableChange) {
          return state.tables.map((table) => table.id === state.currentSelectedTable.id ? { ...state.currentSelectedTable } : table);
@@ -137,6 +142,7 @@ export const useTableAdminStore = () => {
       currentHour: state.currentValue.hour,
       currentDate: state.currentValue.dateStr,
       currentSelectedTable: state.currentSelectedTable,
+      currentSelectedCreateObj: state.currentSelectedCreateObj,
       changeCurrentTable,
 
       // Funcion actions
@@ -146,6 +152,7 @@ export const useTableAdminStore = () => {
       cancelFullReservation,
       cancelATablesReservation,
       setCurrentSelectedTable,
+      setCurrentSelectCreateObj,
       toggleIsTempTable,
       confirmReservation,
       releasedReservation,

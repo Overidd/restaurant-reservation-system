@@ -9,6 +9,7 @@ export const useEditTables = () => {
    const toggleIsEdit = (is) => { //false or true
       dispatch(toggleIsEditAction(is));
    }
+
    return {
       isEdit,
       toggleIsEdit

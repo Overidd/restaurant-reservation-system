@@ -26,8 +26,12 @@ export const tableAdminSlice = createSlice({
          time: false,
          tables: false
       },
-
       currentSelectedTable: {},
+      currentSelectedCreateObj: {
+         id: null,
+         positionX: null,
+         positionY: null
+      },
       isTempTableChange: false,
       isEdit: false
    },
@@ -130,7 +134,7 @@ export const tableAdminSlice = createSlice({
       clearTablesRelationAction: (state, { payload: { idTablesNoSelect = [], idTables = [] } }) => {
          state.tables = state.tables.map((t) => {
             if (idTablesNoSelect.includes(t.id)) {
-               console.log('En tableAdminSlice',t.relatedTables.filter((r) => !idTables.includes(r.id)));
+               console.log('En tableAdminSlice', t.relatedTables.filter((r) => !idTables.includes(r.id)));
                return {
                   ...t,
                   relatedTables: t.relatedTables.filter((r) => !idTables.includes(r.id))
@@ -211,6 +215,11 @@ export const tableAdminSlice = createSlice({
       toggleIsEditAction: (state, { payload }) => {
          state.isEdit = payload ?? !state.isEdit;
       },
+
+      setSelectedCreateObjAction: (state, { payload }) => {
+         state.currentSelectedCreateObj = payload;
+      },
+
    },
 });
 
@@ -231,6 +240,7 @@ export const {
    deleteTablesAction,
    clearTablesRelationAction,
    changeStatusTableAction,
-   
+   setSelectedCreateObjAction,
+
    toggleIsEditAction,
 } = tableAdminSlice.actions

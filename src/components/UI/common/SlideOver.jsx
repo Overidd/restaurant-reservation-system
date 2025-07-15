@@ -45,7 +45,6 @@ export const SlideOver = ({
       const base = 'transition-transform duration-300 ease-in-out fixed z-50 shadow-xl h-fit w-fit';
       let positionClasses = ''
       let animationClasses = ''
-
       switch (direction) {
          case 'top':
             positionClasses = 'mx-auto mt-8'
@@ -64,15 +63,15 @@ export const SlideOver = ({
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
             break
          case 'topleft':
-            positionClasses = 'fixed top-4 left-4 transform'
+            positionClasses = 'fixed top-0 left-0 transform'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
             break
          case 'topright':
-            positionClasses = 'fixed top-4 right-4 transform'
+            positionClasses = 'fixed top-0 ml-auto transform'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
             break
          case 'bottomleft':
-            positionClasses = 'fixed bottom-4 left-4 transform'
+            positionClasses = 'fixed bottom-0 left-0 transform'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
             break
          case 'bottomright':

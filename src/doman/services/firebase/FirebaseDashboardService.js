@@ -1,6 +1,7 @@
 
 import {
    collection,
+   deleteDoc,
    doc,
    getDoc,
    getDocs,
@@ -419,6 +420,205 @@ export class FirebaseDashboardService {
          return {
             ok: false,
             errorMessage: error.message || 'Error al confirmar la reserva'
+         }
+      }
+   }
+
+   async getAllObjectCategories() {
+      try {
+         const categories = await getDocs(collection(FirebaseDB, 'categories'));
+         const categorys = categories.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+            updatedAt: doc.data()?.updatedAt?.toDate()?.toISOString(),
+         }));
+         return {
+            ok: true,
+            categorys
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async createObjectCategory(name) {
+      try {
+         const categoryRef = doc(collection(FirebaseDB, 'categories'));
+         await setDoc(categoryRef, {
+            name,
+            createdAt: serverTimestamp()
+         });
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async updateObjectCategory({ idCategory, name }) {
+      try {
+         if (!idCategory) {
+            throw new Error('No se proporciono el id de la categoria');
+         }
+
+         const categoryRef = doc(FirebaseDB, 'categories', idCategory);
+         const category = await getDoc(categoryRef);
+
+         if (!category.exists()) {
+            throw new Error('No se encontro la categoria');
+         }
+
+         await updateDoc(categoryRef, {
+            name: name ?? category.data().name,
+            updatedAt: serverTimestamp()
+         });
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async deleteObjectCategory({ idCategory }) {
+      try {
+         if (!idCategory) {
+            throw new Error('No se proporciono el id de la categoria');
+         }
+
+         const categoryRef = doc(FirebaseDB, 'categories', idCategory);
+         const category = await getDoc(categoryRef);
+
+         if (!category.exists()) {
+            throw new Error('No se encontro la categoria');
+         }
+
+         await deleteDoc(categoryRef);
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async getObjectsByCategoryId(idCategory) {
+      try {
+
+         const objectsDocs = await getDocs(collection(FirebaseDB, `categories/${idCategory}/objects`),);
+
+         const objects = objectsDocs.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+            updatedAt: doc.data()?.updatedAt?.toDate()?.toISOString(),
+         }));
+
+         return {
+            ok: true,
+            objects
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+
+   }
+
+   async createObjectInCategory({ idCategory, name, width, height, linkImage }) {
+      try {
+         const objectRef = doc(collection(FirebaseDB, `categories/${idCategory}/objects`));
+         await setDoc(objectRef, {
+            name,
+            width,
+            height,
+            linkImage,
+            idCategory,
+            createdAt: serverTimestamp()
+         });
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async updateObjectInCategory({ idCategory, idObject, name, width, height, linkImage }) {
+      try {
+         if (!idCategory || !idObject) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const objectRef = doc(FirebaseDB, `categories/${idCategory}/objects/${idObject}`);
+         const object = await getDoc(objectRef);
+         const objectData = object.data();
+         await updateDoc(objectRef, {
+            name: name ?? objectData?.name,
+            width: width ?? objectData?.width,
+            height: height ?? objectData?.height,
+            linkImage: linkImage ?? objectData?.linkImage,
+            updatedAt: serverTimestamp()
+         });
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
+         }
+      }
+   }
+
+   async deleteObjectInCategory({ idCategory, idObject }) {
+      try {
+         if (!idCategory || !idObject) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const objects = await getDocs(collection(FirebaseDB, `categories/${idCategory}/objects`));
+
+         if (objects.size >= 1) {
+            throw new Error('No se puede eliminar una categoria con objetos asociados');
+         }
+
+         const objectRef = doc(FirebaseDB, `categories/${idCategory}/objects/${idObject}`);
+         await deleteDoc(objectRef);
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las categorias'
          }
       }
    }

@@ -50,6 +50,8 @@ export const TableList = ({
    onReleasedReservation,
    onOpenReserveTable,
    currentSelectedTable,
+   onOpenCreateObj,
+   currentSelectedCreateObj,
    isLoading = false,
    tables = []
 }) => {
@@ -160,15 +162,18 @@ export const TableList = ({
          );
 
          if (!table) return (
-            <div
-               className='w-fit mx-auto'
+            <ObjectEmpty
                key={'empty-node' + index}
-            >
-               <Button>
-                  <Plus />
-               </Button>
-            </div>
-         );
+               onOpenCreateObj={onOpenCreateObj}
+               idTemp={'empty-node' + index}
+               positionX={x}
+               positionY={y}
+               isHighlighted={
+                  currentSelectedCreateObj?.id === 'empty-node' + index
+               }
+            />
+         )
+
          return (
             <TableItemPopoverEdit
                key={'table-' + table.id}
@@ -732,6 +737,42 @@ export const TableItemPopoverEdit = ({
          </PopoverContent>
       </Popover >
    );
+}
+
+export const ObjectEmpty = ({
+   onOpenCreateObj,
+   className,
+   positionX,
+   positionY,
+   idTemp = '',
+   isHighlighted = false
+}) => {
+
+   const handleOpenCreateObj = () => {
+      if (!positionX || !positionY) return
+
+      onOpenCreateObj({
+         positionX,
+         positionY,
+         id: idTemp
+      })
+   }
+
+   return (
+      <div
+         className={cn(
+            'w-fit mx-auto p-4',
+            isHighlighted && 'transition-shadow rounded-2xl shadow-card',
+            className,
+         )}
+      >
+         <Button
+            onClick={handleOpenCreateObj} //
+         >
+            <Plus />
+         </Button>
+      </div>
+   )
 }
 
 const InfoTableTooltip = ({

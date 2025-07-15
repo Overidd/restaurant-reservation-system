@@ -9,7 +9,7 @@ export class AdminTableToasts {
       });
    }
 
-   static cancelATablesReservation(promise, { onSuccess, onError, onFinally }) {
+   static async cancelATablesReservation(promise, { onSuccess, onError, onFinally }) {
       return toast
          .promise(promise, {
             loading: 'Cancelando mesas...',
@@ -18,8 +18,7 @@ export class AdminTableToasts {
          })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
-         .finally(() => onFinally?.())
-         ;
+         .finally(() => onFinally?.());
    }
 
    static deleteTable(promise) {
@@ -45,4 +44,71 @@ export class AdminTableToasts {
          error: (err) => err?.message || 'Error al liberar reserva.',
       });
    }
+
+   static async createCategory(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Creando categoria...',
+         success: 'Categoria creada correctamente.',
+         error: (err) => err?.message || 'Error al crear categoria.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async updateCategory(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Actualizando categoria...',
+         success: 'Categoria actualizada correctamente.',
+         error: (err) => err?.message || 'Error al actualizar categoria.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async deleteCategory(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Eliminando categoria...',
+         success: 'Categoria eliminada correctamente.',
+         error: (err) => err?.message || 'Error al eliminar categoria.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async createObject(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Creando objeto...',
+         success: 'Objeto creado correctamente.',
+         error: (err) => err?.message || 'Error al crear objeto.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async updateObject(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Actualizando objeto...',
+         success: 'Objeto actualizado correctamente.',
+         error: (err) => err?.message || 'Error al actualizar objeto.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async deleteObject(promise, { onSuccess, onError, onFinally }) {
+      return toast.promise(promise, {
+         loading: 'Eliminando objeto...',
+         success: 'Objeto eliminado correctamente.',
+         error: (err) => err?.message || 'Error al eliminar objeto.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
 }

@@ -51,7 +51,7 @@ export const EditDimensionRestaurantModal = ({
                <FormItem
                   className={'flex flex-row gap-2 items-center'}
                >
-                  <Checkbox size='sm'/>
+                  <Checkbox size='sm' />
                   <FormLabel>
                      Mostrar lineas
                   </FormLabel>

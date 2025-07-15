@@ -10,7 +10,7 @@ export const useGetReservationsByUser = () => {
    })
 
    useEffect(() => {
-      const fechReservations = async () => {
+      const reservationsAsync = async () => {
          setUser({
             reservations: [],
             isLoading: true,
@@ -34,7 +34,7 @@ export const useGetReservationsByUser = () => {
             errorMessage: errorMessage
          })
       }
-      fechReservations();
+      reservationsAsync();
    }, [])
 
    const changeReservation = (reservation) => {

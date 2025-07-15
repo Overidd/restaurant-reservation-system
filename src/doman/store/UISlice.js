@@ -10,7 +10,12 @@ export const UISlice = createSlice({
       isOpenModalTableEditProperty: false,
       isOpenModalTableReserve: false,
       isOpenModalUser: false,
-      isOpenModalCreateReservations: false
+      isOpenModalCreateReservations: false,
+      isOpenSlideOverObjectCreate: false,
+      isOpenModalCreateItemObject: false,
+      isOpenModalEditItemObject: false,
+      isOpenModalCreateCategoryObject: false,
+      isOpenModalEditCategoryObject: false
    },
 
    reducers: {
@@ -77,6 +82,50 @@ export const UISlice = createSlice({
       closeModalCreateReservationsAction: (state) => {
          state.isOpenModalCreateReservations = false;
       },
+
+      openSlideOverObjectCreateAction: (state) => {
+         state.isOpenSlideOverObjectCreate = true;
+      },
+
+      closeSlideOverObjectCreateAction: (state) => {
+         state.isOpenSlideOverObjectCreate = false;
+      },
+
+      //* isOpenModalCreateItemObject
+      openModalCreateItemObjectAction: (state) => {
+         state.isOpenModalCreateItemObject = true;
+      },
+
+      closeModalCreateItemObjectAction: (state) => {
+         state.isOpenModalCreateItemObject = false;
+      },
+
+      //* isOpenModalEditItemObject 
+      openModalEditItemObjectAction: (state) => {
+         state.isOpenModalEditItemObject = true;
+      },
+
+      closeModalEditItemObjectAction: (state) => {
+         state.isOpenModalEditItemObject = false;
+      },
+
+      //* isOpenModalCreateCategoryObject
+      openModalCreateCategoryObjectAction: (state) => {
+         state.isOpenModalCreateCategoryObject = true;
+      },
+
+      closeModalCreateCategoryObjectAction: (state) => {
+         state.isOpenModalCreateCategoryObject = false;
+      },
+
+      //* isOpenModalEditCategoryObject
+      openModalEditCategoryObjectAction: (state) => {
+         state.isOpenModalEditCategoryObject = true;
+      },
+
+      closeModalEditCategoryObjectAction: (state) => {
+         state.isOpenModalEditCategoryObject = false;
+      },
    },
 });
 
@@ -84,18 +133,40 @@ export const UISlice = createSlice({
 export const {
    openModalReserveAction,
    closeModalReserveAction,
+
    openModalAuthAction,
    closeModalAuthAction,
+
    openModalConfirmReserveAction,
    closeModalConfirmReserveAction,
+
    openModalTableEditAction,
    closeModalTableEditAction,
+
    openModalTableEditPropertyAction,
    closeModalTableEditPropertyAction,
+
    openModalReserveTableAction,
    closeModalReserveTableAction,
+
    openModalUserAction,
    closeModalUserAction,
+
    openModalCreateReservationsAction,
-   closeModalCreateReservationsAction
+   closeModalCreateReservationsAction,
+
+   openSlideOverObjectCreateAction,
+   closeSlideOverObjectCreateAction,
+
+   openModalCreateItemObjectAction,
+   closeModalCreateItemObjectAction,
+
+   openModalEditItemObjectAction,
+   closeModalEditItemObjectAction,
+
+   openModalCreateCategoryObjectAction,
+   closeModalCreateCategoryObjectAction,
+
+   openModalEditCategoryObjectAction,
+   closeModalEditCategoryObjectAction
 } = UISlice.actions;

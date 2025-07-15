@@ -8,6 +8,7 @@ import { useEditTables, useTableAdminStore } from '@/hook/dashboard';
 import { cn } from '@/ultils';
 
 import {
+   CreateObjectSlideOver,
    EditDimensionRestaurantModal,
    TableAutoFilter,
    TableEditModal,
@@ -15,6 +16,7 @@ import {
    TableList,
    TableReserveModal,
 } from '@/components/dashboard';
+import { useSlideOverObjectCreate } from '@/hook/slideover';
 
 
 export const TablesScreen = () => {
@@ -38,6 +40,8 @@ export const TablesScreen = () => {
       confirmReservation,
       releasedReservation,
       reserveTable,
+      setCurrentSelectCreateObj,
+      currentSelectedCreateObj
    } = useTableAdminStore();
 
    const {
@@ -57,6 +61,12 @@ export const TablesScreen = () => {
       openModal: openModalReserve,
       closeModal: closeModalReserve
    } = useModalTableReserve()
+
+   const {
+      isOpen: isOpenObjectCreate,
+      closeModal: closeModalObjectCreate,
+      openModal: openModalCreateObj,
+   } = useSlideOverObjectCreate();
 
    const onChangeFilter = (data) => {
       setCurrentValue(data);
@@ -95,8 +105,17 @@ export const TablesScreen = () => {
       setCurrentSelectedTable({});
    }
 
+   const onOpenCreateObj = (data) => {
+      setCurrentSelectCreateObj(data);
+      openModalCreateObj();
+   }
 
    const { isEdit, toggleIsEdit } = useEditTables();
+
+   const handleToggleIsEdit = () => {
+      toggleIsEdit(false);
+      closeModalObjectCreate();
+   }
 
    return (
       <main className='mt-5 flex flex-col items-center gap-5'>
@@ -114,10 +133,10 @@ export const TablesScreen = () => {
                <div
                   role='button'
                   tabIndex={0}
-                  onClick={() => toggleIsEdit(false)}
+                  onClick={handleToggleIsEdit}
                   onKeyDown={(e) => {
                      if (e.key === 'Enter' || e.key === ' ') {
-                        toggleIsEdit(false);
+                        handleToggleIsEdit();
                      }
                   }}
                   className='fixed inset-0 z-10 bg-black/10 backdrop-blur-[5px] transition-all'
@@ -138,7 +157,9 @@ export const TablesScreen = () => {
                onConfirmReservation={confirmReservation}
                onReleasedReservation={releasedReservation}
                onOpenReserveTable={onOpenReserveTable}
+               onOpenCreateObj={onOpenCreateObj}
                currentSelectedTable={currentSelectedTable}
+               currentSelectedCreateObj={currentSelectedCreateObj}
                className={cn(
                   'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none',
                   isEdit && 'z-20'
@@ -146,27 +167,17 @@ export const TablesScreen = () => {
             />
          </ModalProviderAsync>
 
-         {
-            isOpenModalReserve && (
-               <TableReserveModal
-                  currentTable={currentSelectedTable}
-                  onReserveTable={reserveTable}
-                  isOpen={isOpenModalReserve}
-                  onClose={closeModalReserveTable}
-                  currentHour={currentHour.hour}
-                  currentDate={currentDate}
-                  currentRestaurant={currentRestaurant}
-               />
-            )
-         }
-
-
-         <TableEditModal
-            initial={currentSelectedTable}
-            isOpen={isOpenModalEdit}
-            onClose={closeModalEditTable}
-            onOpenEditProperty={onOpenEditTableProperty}
-         />
+         {isOpenModalReserve && (
+            <TableReserveModal
+               currentTable={currentSelectedTable}
+               onReserveTable={reserveTable}
+               isOpen={isOpenModalReserve}
+               onClose={closeModalReserveTable}
+               currentHour={currentHour.hour}
+               currentDate={currentDate}
+               currentRestaurant={currentRestaurant}
+            />
+         )}
 
          {isEdit && (
             <EditDimensionRestaurantModal
@@ -175,23 +186,33 @@ export const TablesScreen = () => {
                columns={currentRestaurant.columns}
                isOpen={isEdit}
             />
-         )
+         )}
+
+         {isOpenObjectCreate &&
+            <CreateObjectSlideOver
+               isOpen={isOpenObjectCreate}
+            />
          }
 
-         {
-            isOpenModalEditProperty && (
-               <TableEditPropertyModal
-                  isOpen={isOpenModalEditProperty}
-                  onClose={onCloseEditProperty}
-                  initial={currentSelectedTable}
-                  onChangeValue={changeCurrentTable}
-                  axieRestaurant={{
-                     x: currentRestaurant.rows,
-                     y: currentRestaurant.columns
-                  }}
-               />
-            )
-         }
+         <TableEditModal
+            initial={currentSelectedTable}
+            isOpen={isOpenModalEdit}
+            onClose={closeModalEditTable}
+            onOpenEditProperty={onOpenEditTableProperty}
+         />
+
+         {isOpenModalEditProperty && (
+            <TableEditPropertyModal
+               isOpen={isOpenModalEditProperty}
+               onClose={onCloseEditProperty}
+               initial={currentSelectedTable}
+               onChangeValue={changeCurrentTable}
+               axieRestaurant={{
+                  x: currentRestaurant.rows,
+                  y: currentRestaurant.columns
+               }}
+            />
+         )}
       </main>
    )
 }
