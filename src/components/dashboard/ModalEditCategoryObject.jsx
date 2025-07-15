@@ -1,29 +1,22 @@
 import { useForm } from '@/hook';
-import { useSelectCategoryContext } from '@/hook/context';
-import { useObjectCategories } from '@/hook/fetchings';
-import { useModalEditCategoryObject } from '@/hook/modals';
+import { useCreateCategoryContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
-import { validateObject } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
 import { Form, FormItem, FormLabel, Input, Label } from '../UI/from';
 
-export const ModalEditCategoryObject = () => {
-   const {
-      categorySelected
-   } = useSelectCategoryContext()
+export const ModalEditCategoryObject = ({
+   isOpen = false,
+   onClose,
+}) => {
 
    const {
-      isOpen,
-      closeModal,
-   } = useModalEditCategoryObject()
-
-   const {
+      category,
       isLoadingUpdate,
       isLoadingDelete,
       updateObjectCategory,
       deleteObjectCategory,
-   } = useObjectCategories({ isInitialLoad: false })
+   } = useCreateCategoryContext()
 
    const {
       onSubmitForm,
@@ -36,29 +29,29 @@ export const ModalEditCategoryObject = () => {
          nameValid,
       }
    } = useForm({
-      initialState: validateObject(categorySelected) ? {
-         name: categorySelected.name
-      } : {
-         name: ''
-      },
       activeValidation: true,
+      initialState: {
+         name: category.name || '',
+      },
    });
 
-   const onSubmit = onSubmitForm(() => {
+   const onSubmit = onSubmitForm(({ name }) => {
       AdminTableToasts.updateCategory(
          updateObjectCategory({
-            idCategory: categorySelected.idCategory,
-            name
+            idCategory: category.id,
+            name: name
          }), {
-         onSuccess: () => onResetForm()
+         onSuccess: () => {
+            onResetForm()
+         }
       })
    })
 
    const handleDeleteObject = () => {
       AdminTableToasts.deleteCategory(
-         deleteObjectCategory(categorySelected.idCategory), {
+         deleteObjectCategory(category.id), {
          onSuccess: () => {
-            closeModal()
+            onClose()
          }
       })
    }
@@ -66,14 +59,14 @@ export const ModalEditCategoryObject = () => {
    return (
       <Modal
          isOpen={isOpen}
-         onClose={closeModal}
+         onClose={onClose}
       >
          <Card2>
             <Form
                onSubmit={onSubmit}
             >
                <Label className={'text-center'}>
-                  Nueva Categoria
+                  Actualizar categoría
                </Label>
                <FormItem>
                   <FormLabel

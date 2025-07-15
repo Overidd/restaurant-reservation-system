@@ -1,7 +1,5 @@
 import { useForm } from '@/hook';
-import { useSelectCategoryContext } from '@/hook/context';
-import { useObjects } from '@/hook/fetchings';
-import { useModalCreateItemObject } from '@/hook/modals';
+import { useCreateObjectContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
@@ -12,26 +10,22 @@ const schema = {
    initial: {
       name: '',
       linkImage: '',
-      category: '',
       width: 0,
-      height: 0
+      height: 0,
+      rotation: 0
    },
 }
 
-export const ModalCreateItemObject = () => {
-   const {
-      categorySelected
-   } = useSelectCategoryContext()
+export const ModalCreateItemObject = ({
+   isOpen,
+   onClose
+}) => {
 
    const {
-      isOpen,
-      closeModal
-   } = useModalCreateItemObject()
-
-   const {
+      category,
       createObject,
       isLoadingCreate,
-   } = useObjects()
+   } = useCreateObjectContext()
 
    const {
       onSubmitForm,
@@ -39,7 +33,6 @@ export const ModalCreateItemObject = () => {
       isFormValid,
       onResetForm,
       formState: {
-         category,
          name,
          linkImage,
          width,
@@ -61,7 +54,7 @@ export const ModalCreateItemObject = () => {
    });
 
    const onSubmit = onSubmitForm((value) => {
-      if (!categorySelected) {
+      if (!category) {
          return
       }
 
@@ -72,7 +65,7 @@ export const ModalCreateItemObject = () => {
             width: value.width,
             height: value.height,
             rotation: value.rotation,
-            idCategory: categorySelected.id,
+            idCategory: category.id,
          }), {
          onSuccess: () => {
             onResetForm()
@@ -83,7 +76,7 @@ export const ModalCreateItemObject = () => {
    return (
       <Modal
          isOpen={isOpen}
-         onClose={closeModal}
+         onClose={onClose}
       >
          <Card2>
             <Form
@@ -91,7 +84,7 @@ export const ModalCreateItemObject = () => {
             >
                <FormItem>
                   <FormLabel>
-                     Categoria: {categorySelected?.name}
+                     Categoria: {category?.name}
                   </FormLabel>
                </FormItem>
                <FormItem>

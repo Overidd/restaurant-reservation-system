@@ -16,3 +16,14 @@ export const validateObject = (obj) => {
 
    return true;
 }
+
+export const isObject = (varObj) => {
+   return Object.prototype.toString.call(varObj) === '[object Object]';
+}
+
+export const isObjetError = (err) => {
+   if (err instanceof Error) {
+      return true;
+   }
+   return false;
+}

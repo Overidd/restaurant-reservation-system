@@ -10,12 +10,14 @@ import { cn } from '@/ultils';
 import {
    CreateObjectSlideOver,
    EditDimensionRestaurantModal,
+   ModalManagerObjects,
    TableAutoFilter,
    TableEditModal,
    TableEditPropertyModal,
    TableList,
    TableReserveModal,
 } from '@/components/dashboard';
+import { CreateCategoryProvider, CreateObjectProvider } from '@/doman/context/object';
 import { useSlideOverObjectCreate } from '@/hook/slideover';
 
 
@@ -189,9 +191,14 @@ export const TablesScreen = () => {
          )}
 
          {isOpenObjectCreate &&
-            <CreateObjectSlideOver
-               isOpen={isOpenObjectCreate}
-            />
+            <CreateCategoryProvider>
+               <CreateObjectProvider>
+                  <CreateObjectSlideOver
+                     isOpen={isOpenObjectCreate}
+                  />
+                  <ModalManagerObjects />
+               </CreateObjectProvider>
+            </CreateCategoryProvider>
          }
 
          <TableEditModal

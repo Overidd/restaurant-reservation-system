@@ -447,22 +447,38 @@ export class FirebaseDashboardService {
 
    async createObjectCategory(name) {
       try {
+         const q = query(collection(FirebaseDB, 'categories'), where('name', '==', name));
+         const querySnapshot = await getDocs(q);
+
+         if (!querySnapshot.empty) {
+            return {
+               ok: false,
+               errorMessage: 'Ya existe una categoría con ese nombre.'
+            };
+         }
+
+         // Crear nueva categoría
          const categoryRef = doc(collection(FirebaseDB, 'categories'));
          await setDoc(categoryRef, {
             name,
             createdAt: serverTimestamp()
          });
+
          return {
-            ok: true
-         }
+            ok: true,
+            newCategory: {
+               id: categoryRef.id,
+               name
+            }
+         };
 
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error.message || 'Error al obtener las categorias'
-         }
+            errorMessage: error.message || 'Error al crear la categoría.'
+         };
       }
-   }
+   };
 
    async updateObjectCategory({ idCategory, name }) {
       try {
@@ -483,13 +499,17 @@ export class FirebaseDashboardService {
          });
 
          return {
-            ok: true
+            ok: true,
+            updatedCategory: {
+               id: categoryRef.id,
+               name: name ?? category.data().name
+            }
          }
 
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error.message || 'Error al obtener las categorias'
+            errorMessage: error.message || 'Error al actualizar la categoria'
          }
       }
    }
@@ -556,8 +576,19 @@ export class FirebaseDashboardService {
       }
 
       try {
+         const q = query(collection(FirebaseDB, `categories/${idCategory}/objects`), where('name', '==', name));
+         const querySnapshot = await getDocs(q);
+
+         if (!querySnapshot.empty) {
+            return {
+               ok: false,
+               errorMessage: 'Ya existe un objeto con ese nombre.'
+            };
+         }
+
          const objectRef = doc(collection(FirebaseDB, `categories/${idCategory}/objects`));
-         await setDoc(objectRef, {
+
+         const data = {
             name,
             width,
             height,
@@ -565,9 +596,16 @@ export class FirebaseDashboardService {
             idCategory,
             rotation,
             createdAt: serverTimestamp()
-         });
+         }
+
+         await setDoc(objectRef, data);
          return {
-            ok: true
+            ok: true,
+            newObject: {
+               id: objectRef.id,
+               ...data,
+               createdAt: data.createdAt.toDate().toISOString()
+            }
          }
 
       } catch (error) {
@@ -586,17 +624,30 @@ export class FirebaseDashboardService {
 
          const objectRef = doc(FirebaseDB, `categories/${idCategory}/objects/${idObject}`);
          const object = await getDoc(objectRef);
-         const objectData = object.data();
-         await updateDoc(objectRef, {
+
+         if (!object.exists()) {
+            throw new Error('No se encontro el objeto');
+         }
+
+         const data = {
             name: name ?? objectData?.name,
             width: width ?? objectData?.width,
             height: height ?? objectData?.height,
             rotation: rotation ?? objectData?.rotation,
             linkImage: linkImage ?? objectData?.linkImage,
             updatedAt: serverTimestamp()
-         });
+         }
+
+         const objectData = object.data();
+         await updateDoc(objectRef, data);
          return {
-            ok: true
+            ok: true,
+            updatedObject: {
+               id: objectRef.id,
+               ...data,
+               createdAt: objectData.createdAt.toDate().toISOString(),
+               updatedAt: data.updatedAt.toDate().toISOString()
+            }
          }
 
       } catch (error) {

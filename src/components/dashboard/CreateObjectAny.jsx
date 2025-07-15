@@ -1,6 +1,5 @@
 import { useForm } from '@/hook';
-import { useSelectCategoryContext } from '@/hook/context';
-import { useObjects } from '@/hook/fetchings';
+import { useCreateObjectContext } from '@/hook/context';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
 import { Pen, Plus } from 'lucide-react';
 import { useEffect } from 'react';
@@ -23,10 +22,6 @@ export const CreateObjectAny = ({
 }) => {
 
    const {
-      setCategorySelected,
-   } = useSelectCategoryContext()
-
-   const {
       openModal: onOpenCreateItemObj
    } = useModalCreateItemObject()
 
@@ -35,10 +30,13 @@ export const CreateObjectAny = ({
    } = useModalEditItemObject()
 
    const {
-      objects,
-      isLoadingLoad,
+      setCategory,
       loadObjects,
-   } = useObjects()
+      isLoadingLoad,
+      setSelectObject,
+      getObjectByName,
+      objects,
+   } = useCreateObjectContext()
 
    const {
       onSubmitForm,
@@ -63,34 +61,30 @@ export const CreateObjectAny = ({
    } = useForm({
       initialState: schema.initial,
       activeValidation: true,
-      changeValueCallback: ({ name, value }) => {
-         // if (name === 'typeObj') {
-         //    // const object = getObjectByName(value);
-         //    // onInitialFrom({ ...object, typeObj: value });
-         //    return;
-         // }
-      }
    });
-
-   useEffect(() => {
-      if (currentCategory) {
-         loadObjects(currentCategory.id)
-      }
-   }, [currentCategory])
 
    const onSubmit = onSubmitForm((data) => {
       console.log(data);
    })
 
    const handleModalCreateObject = () => {
-      setCategorySelected(currentCategory)
+      setCategory(currentCategory)
       onOpenCreateItemObj()
    }
 
    const handleModalEditObject = () => {
-      setCategorySelected(currentCategory)
+      if (!typeObj) return
+      setCategory(currentCategory)
+      setSelectObject(getObjectByName(typeObj))
       onOpenEditItemObj()
    }
+
+   useEffect(() => {
+      if (currentCategory) {
+         loadObjects(currentCategory.id)
+         return;
+      }
+   }, [currentCategory])
 
    return (
       <Form
@@ -134,14 +128,15 @@ export const CreateObjectAny = ({
                      Crear nueva objeto <Plus />
                   </Button>
                </SelectContent>
-               <Button
-                  variant={'crystal'}
-                  className={'h-10'}
-                  onClick={handleModalEditObject}
-               >
-                  <Pen />
-               </Button>
             </Select>
+            <Button
+               type='button'
+               variant={'crystal'}
+               className={'h-10'}
+               onClick={handleModalEditObject}
+            >
+               <Pen />
+            </Button>
          </FormItem>
 
          <FromGroup>

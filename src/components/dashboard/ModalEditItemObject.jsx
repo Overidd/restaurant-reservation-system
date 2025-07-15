@@ -1,7 +1,5 @@
 import { useForm } from '@/hook';
-import { useSelectCategoryContext } from '@/hook/context';
-import { useObjects } from '@/hook/fetchings';
-import { useModalEditItemObject } from '@/hook/modals';
+import { useCreateObjectContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
 import { validateObject } from '@/ultils';
 import { Card2 } from '../UI/card';
@@ -16,23 +14,19 @@ const schema = {
       height: 0
    },
 }
-export const ModalEditItemObject = () => {
-   const {
-      categorySelected
-   } = useSelectCategoryContext()
+export const ModalEditItemObject = ({
+   isOpen,
+   onClose,
+}) => {
 
    const {
-      isOpen,
-      closeModal,
-      currentData,
-   } = useModalEditItemObject()
-
-   const {
+      category,
+      setSelectObject,
       updateObject,
       deleteObject,
       isLoadingUpdate,
       isLoadingDelete
-   } = useObjects()
+   } = useCreateObjectContext()
 
    const {
       onSubmitForm,
@@ -55,11 +49,11 @@ export const ModalEditItemObject = () => {
       }
 
    } = useForm({
-      initialState: validateObject(currentData) ? {
-         linkImage: currentData.linkImage,
-         name: currentData.name,
-         width: currentData.width,
-         height: currentData.height
+      initialState: validateObject(setSelectObject) ? {
+         linkImage: setSelectObject.linkImage,
+         name: setSelectObject.name,
+         width: setSelectObject.width,
+         height: setSelectObject.height
       } : schema.initial,
       activeValidation: true,
    });
@@ -67,12 +61,12 @@ export const ModalEditItemObject = () => {
    const onSubmit = onSubmitForm((value) => {
       AdminTableToasts.updateObject(
          updateObject({
-            idCategory: currentData.idCategory,
-            idObject: currentData.idObject,
+            idCategory: setSelectObject.idCategory,
+            idObject: setSelectObject.idObject,
             ...value
          }), {
          onSuccess: () => {
-            closeModal()
+            onClose()
          }
       })
    })
@@ -80,11 +74,11 @@ export const ModalEditItemObject = () => {
    const handleDeleteObject = () => {
       AdminTableToasts.deleteObject(
          deleteObject({
-            idCategory: currentData.idCategory,
-            idObject: currentData.idObject
+            idCategory: setSelectObject.idCategory,
+            idObject: setSelectObject.idObject
          }), {
          onSuccess: () => {
-            closeModal()
+            onClose()
          }
       })
    }
@@ -92,7 +86,7 @@ export const ModalEditItemObject = () => {
    return (
       <Modal
          isOpen={isOpen}
-         onClose={closeModal}
+         onClose={onClose}
       >
          <Card2>
             <Form
@@ -100,7 +94,7 @@ export const ModalEditItemObject = () => {
             >
                <FormItem>
                   <FormLabel>
-                     Categoria: {categorySelected?.name}
+                     Categoria: {category?.name}
                   </FormLabel>
                </FormItem>
 

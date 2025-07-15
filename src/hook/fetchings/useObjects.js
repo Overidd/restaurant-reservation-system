@@ -11,6 +11,9 @@ const typeReducer = {
    UPDATE_END: 'UPDATE_END',
    DELETE_START: 'DELETE_START',
    DELETE_END: 'DELETE_END',
+   ADD_CATEGORY: 'ADD_CATEGORY',
+   UPDATE_CATEGORY: 'UPDATE_CATEGORY',
+   DELETE_CATEGORY: 'DELETE_CATEGORY',
 }
 
 const initialState = {
@@ -42,6 +45,18 @@ const reducer = (state, action) => {
          return { ...state, isLoadingDelete: true }
       case typeReducer.DELETE_END:
          return { ...state, isLoadingDelete: false }
+
+      case typeReducer.ADD_CATEGORY:
+         return { ...state, objects: [...state.objects, action.payload] }
+      case typeReducer.UPDATE_CATEGORY:
+         return {
+            ...state, objects: state.objects.map(object => object.id === action.payload.id ? {
+               ...object,
+               ...action.payload,
+            } : object)
+         }
+      case typeReducer.DELETE_CATEGORY:
+         return { ...state, objects: state.objects.filter(object => object.id !== action.payload) }
       default:
          return state
    }
@@ -67,11 +82,13 @@ export const useObjects = () => {
 
    const createObject = async (data) => {
       dispatch({ type: typeReducer.CREATE_START })
-      const { ok, errorMessage } = await dasboardServiceProvider.createObjectInCategory(data);
+      const { ok, errorMessage, newObject } = await dasboardServiceProvider.createObjectInCategory(data);
 
       dispatch({ type: typeReducer.CREATE_END })
 
       if (!ok) throw errorMessage
+
+      dispatch({ type: typeReducer.ADD_CATEGORY, payload: newObject })
 
       return ok
    }
@@ -82,7 +99,7 @@ export const useObjects = () => {
       data
    }) => {
       dispatch({ type: typeReducer.UPDATE_START })
-      const { ok, errorMessage } = await dasboardServiceProvider.updateObjectInCategory({
+      const { ok, errorMessage, updatedObject } = await dasboardServiceProvider.updateObjectInCategory({
          idCategory,
          idObject,
          ...data
@@ -91,6 +108,8 @@ export const useObjects = () => {
       dispatch({ type: typeReducer.UPDATE_END })
 
       if (!ok) throw errorMessage
+
+      dispatch({ type: typeReducer.UPDATE_CATEGORY, payload: updatedObject })
 
       return ok
    }
@@ -108,6 +127,8 @@ export const useObjects = () => {
       dispatch({ type: typeReducer.DELETE_END })
 
       if (!ok) throw errorMessage
+
+      dispatch({ type: typeReducer.DELETE_CATEGORY, payload: idObject })
 
       return ok
    }

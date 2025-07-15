@@ -11,6 +11,9 @@ const typeReducer = {
    UPDATE_END: 'UPDATE_END',
    DELETE_START: 'DELETE_START',
    DELETE_END: 'DELETE_END',
+   ADD_CATEGORY: 'ADD_CATEGORY',
+   UPDATE_CATEGORY: 'UPDATE_CATEGORY',
+   DELETE_CATEGORY: 'DELETE_CATEGORY',
 }
 
 const initialState = {
@@ -42,6 +45,17 @@ const reducer = (state, action) => {
          return { ...state, isLoadingDelete: true }
       case typeReducer.DELETE_END:
          return { ...state, isLoadingDelete: false }
+      case typeReducer.ADD_CATEGORY:
+         return { ...state, categorys: [...state.categorys, action.payload] }
+      case typeReducer.UPDATE_CATEGORY:
+         return {
+            ...state, categorys: state.categorys.map(category => category.id === action.payload.id ? {
+               ...category,
+               ...action.payload,
+            } : category)
+         }
+      case typeReducer.DELETE_CATEGORY:
+         return { ...state, categorys: state.categorys.filter(category => category.id !== action.payload) }
       default:
          return state
    }
@@ -66,25 +80,30 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
    const createObjectCategory = useCallback(async (newName) => {
       dispatch({ type: typeReducer.CREATE_START })
 
-      const { ok, errorMessage } = await dasboardServiceProvider.createObjectCategory(newName)
+      const { ok, errorMessage, newCategory } = await dasboardServiceProvider.createObjectCategory(newName)
 
       dispatch({ type: typeReducer.CREATE_END })
 
       if (!ok) throw errorMessage
 
+      dispatch({ type: typeReducer.ADD_CATEGORY, payload: newCategory })
+
       return ok
    }, [])
+
 
    const updateObjectCategory = useCallback(async (data) => {
       dispatch({ type: typeReducer.UPDATE_START })
 
-      const { ok, errorMessage } = await dasboardServiceProvider.updateObjectCategory(data)
+      const { ok, errorMessage, updatedCategory } = await dasboardServiceProvider.updateObjectCategory(data);
 
-      dispatch({ type: typeReducer.UPDATE_END })
+      dispatch({ type: typeReducer.UPDATE_END });
 
-      if (!ok) throw errorMessage
+      if (!ok) throw errorMessage;
 
-      return ok
+      dispatch({ type: typeReducer.UPDATE_CATEGORY, payload: updatedCategory })
+
+      return ok;
    }, [])
 
    const deleteObjectCategory = useCallback(async (id) => {
@@ -95,6 +114,8 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
       dispatch({ type: typeReducer.DELETE_END })
 
       if (!ok) throw errorMessage
+
+      dispatch({ type: typeReducer.DELETE_CATEGORY, payload: id })
 
       return ok
    }, [])
@@ -114,7 +135,7 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
    useEffect(() => {
       if (!isInitialLoad) return
       loadObjectCategory()
-   }, [isInitialLoad, loadObjectCategory])
+   }, [isInitialLoad])
 
    return {
       categorys: state.categorys,

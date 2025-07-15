@@ -1,3 +1,4 @@
+import { isObjetError } from '@/ultils';
 import { toast } from 'react-hot-toast';
 
 export class AdminTableToasts {
@@ -5,7 +6,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Cancelando reserva...',
          success: 'Reserva cancelada correctamente.',
-         error: (err) => err?.message || 'Error al cancelar reserva.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al cancelar reserva.',
       });
    }
 
@@ -14,7 +15,7 @@ export class AdminTableToasts {
          .promise(promise, {
             loading: 'Cancelando mesas...',
             success: 'Mesas canceladas correctamente.',
-            error: (err) => err?.message || 'Error al cancelar mesas.',
+            error: (err) => isObjetError(err) ? err?.message : err || 'Error al cancelar mesas.',
          })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -25,7 +26,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Eliminando mesa...',
          success: 'Mesa eliminada correctamente.',
-         error: (err) => err?.message || 'Error al eliminar mesa.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar mesa.',
       });
    }
 
@@ -33,7 +34,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Confirmando reserva...',
          success: 'Reserva confirmada correctamente.',
-         error: (err) => err?.message || 'Error al confirmar reserva.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al confirmar reserva.',
       });
    }
 
@@ -41,7 +42,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Liberar reserva...',
          success: 'Reserva liberada correctamente.',
-         error: (err) => err?.message || 'Error al liberar reserva.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al liberar reserva.',
       });
    }
 
@@ -49,7 +50,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Creando categoria...',
          success: 'Categoria creada correctamente.',
-         error: (err) => err?.message || 'Error al crear categoria.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al crear categoria.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -60,7 +61,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Actualizando categoria...',
          success: 'Categoria actualizada correctamente.',
-         error: (err) => err?.message || 'Error al actualizar categoria.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar categoria.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -71,7 +72,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Eliminando categoria...',
          success: 'Categoria eliminada correctamente.',
-         error: (err) => err?.message || 'Error al eliminar categoria.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar categoria.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -82,7 +83,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Creando objeto...',
          success: 'Objeto creado correctamente.',
-         error: (err) => err?.message || 'Error al crear objeto.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al crear objeto.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -93,7 +94,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Actualizando objeto...',
          success: 'Objeto actualizado correctamente.',
-         error: (err) => err?.message || 'Error al actualizar objeto.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar objeto.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
@@ -104,7 +105,7 @@ export class AdminTableToasts {
       return toast.promise(promise, {
          loading: 'Eliminando objeto...',
          success: 'Objeto eliminado correctamente.',
-         error: (err) => err?.message || 'Error al eliminar objeto.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar objeto.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))
