@@ -1,10 +1,10 @@
 import { useForm } from '@/hook';
 import { useCreateObjectContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
-import { validateObject } from '@/ultils';
+import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, Input, Label } from '../UI/from';
 
 const schema = {
    initial: {
@@ -17,11 +17,12 @@ const schema = {
 export const ModalEditItemObject = ({
    isOpen,
    onClose,
+   className,
 }) => {
 
    const {
       category,
-      setSelectObject,
+      selectObject,
       updateObject,
       deleteObject,
       isLoadingUpdate,
@@ -49,33 +50,28 @@ export const ModalEditItemObject = ({
       }
 
    } = useForm({
-      initialState: validateObject(setSelectObject) ? {
-         linkImage: setSelectObject.linkImage,
-         name: setSelectObject.name,
-         width: setSelectObject.width,
-         height: setSelectObject.height
-      } : schema.initial,
       activeValidation: true,
+      initialState: {
+         ...schema.initial,
+         ...selectObject,
+      },
    });
 
    const onSubmit = onSubmitForm((value) => {
       AdminTableToasts.updateObject(
          updateObject({
-            idCategory: setSelectObject.idCategory,
-            idObject: setSelectObject.idObject,
+            idCategory: selectObject.idCategory,
+            idObject: selectObject.id,
             ...value
-         }), {
-         onSuccess: () => {
-            onClose()
-         }
-      })
+         })
+      )
    })
 
    const handleDeleteObject = () => {
       AdminTableToasts.deleteObject(
          deleteObject({
-            idCategory: setSelectObject.idCategory,
-            idObject: setSelectObject.idObject
+            idCategory: selectObject.idCategory,
+            idObject: selectObject.id,
          }), {
          onSuccess: () => {
             onClose()
@@ -88,19 +84,27 @@ export const ModalEditItemObject = ({
          isOpen={isOpen}
          onClose={onClose}
       >
-         <Card2>
+         <Card2
+            className={cn(
+               className
+            )}
+         >
             <Form
                onSubmit={onSubmit}
             >
-               <FormItem>
-                  <FormLabel>
-                     Categoria: {category?.name}
-                  </FormLabel>
-               </FormItem>
+               <Label
+                  className={'text-center'}
+               >
+                  Editar el item {selectObject.name}
+               </Label>
+               <FormLabel>
+                  ID: {selectObject.id} <br />
+                  Categoria: {category?.name}
+               </FormLabel>
 
                <FormItem>
                   <FormLabel
-                     href='name'
+                     htmlFor='name'
                      required
                   >
                      Nombre
@@ -114,13 +118,13 @@ export const ModalEditItemObject = ({
                      isError={!!nameValid}
                      onChange={onValueChange}
                      variant={'crystal'}
-                     size='lg'
+                     size='base'
                   />
                </FormItem>
 
                <FormItem>
                   <FormLabel
-                     href='linkImage'
+                     htmlFor='linkImage'
                      required
                   >
                      Link Image
@@ -134,17 +138,18 @@ export const ModalEditItemObject = ({
                      isError={!!linkImageValid}
                      onChange={onValueChange}
                      variant={'crystal'}
-                     size='lg'
+                     size='base'
                   />
                </FormItem>
 
-               <FromGroup
-                  className={'flex flex-wrap gap-4'}
+               <FormLabel
+                  htmlFor='width'
                >
-                  <FormLabel className={'basis-full'}>
-                     Tamaño en la escena
-                  </FormLabel>
-
+                  Tamaño en la escena
+               </FormLabel>
+               <FromGroup
+                  className={'grid grid-cols-3 gap-4'}
+               >
                   <FormItem>
                      <FormLabel
                         formItemId={'width'}
@@ -158,13 +163,13 @@ export const ModalEditItemObject = ({
                         isError={!!widthValid}
                         onChange={onValueChange}
                         variant={'crystal'}
-                        size='lg'
+                        size='base'
                      />
                   </FormItem>
 
                   <FormItem>
                      <FormLabel
-                        formItemId={'height'}
+                        htmlFor={'height'}
                      >
                         Height
                      </FormLabel>
@@ -175,13 +180,13 @@ export const ModalEditItemObject = ({
                         isError={!!heightValid}
                         onChange={onValueChange}
                         variant={'crystal'}
-                        size='lg'
+                        size='base'
                      />
                   </FormItem>
 
                   <FormItem>
                      <FormLabel
-                        formItemId={'rotation'}
+                        htmlFor={'rotation'}
                      >
                         Rotate
                      </FormLabel>
@@ -195,7 +200,9 @@ export const ModalEditItemObject = ({
                   </FormItem>
                </FromGroup>
 
-               <FormItem>
+               <FromGroup
+                  className={'grid grid-cols-2 gap-4'}
+               >
                   <Button
                      type='submit'
                      disabled={!isFormValid || isLoadingUpdate}
@@ -212,7 +219,7 @@ export const ModalEditItemObject = ({
                   >
                      Eliminar
                   </Button>
-               </FormItem>
+               </FromGroup>
             </Form>
          </Card2>
       </Modal>

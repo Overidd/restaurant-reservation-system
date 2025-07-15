@@ -63,11 +63,11 @@ export const SlideOver = ({
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
             break
          case 'topleft':
-            positionClasses = 'fixed top-0 left-0 transform'
+            positionClasses = 'fixed top-2 left-2 transform'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
             break
          case 'topright':
-            positionClasses = 'fixed top-0 ml-auto transform'
+            positionClasses = 'fixed top-2 ml-auto right-2 transform'
             animationClasses = isAnimating ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
             break
          case 'bottomleft':

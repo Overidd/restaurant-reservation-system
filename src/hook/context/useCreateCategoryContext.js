@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 export const useCreateCategoryContext = () => {
    const ctx = useContext(CreateCategoryContext)
-   if (!ctx) throw new Error('useCreateItemObjectContext debe usarse dentro de CreateItemObjectProvider')
+   if (!ctx) throw new Error('useCreateCategoryContext debe usarse dentro de CreateCategoryProvider')
    return {
       category: ctx.category,
       setCategory: ctx.setCategory,

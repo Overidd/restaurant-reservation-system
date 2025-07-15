@@ -1,6 +1,7 @@
 import { useForm } from '@/hook';
 import { useCreateCategoryContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
+import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
 import { Form, FormItem, FormLabel, Input, Label } from '../UI/from';
@@ -8,6 +9,7 @@ import { Form, FormItem, FormLabel, Input, Label } from '../UI/from';
 export const ModalCreateCategoryObject = ({
    isOpen = false,
    onClose,
+   className,
 }) => {
 
    const {
@@ -44,7 +46,11 @@ export const ModalCreateCategoryObject = ({
          isOpen={isOpen}
          onClose={onClose}
       >
-         <Card2>
+         <Card2
+            className={cn(
+               className
+            )}
+         >
             <Form
                onSubmit={onSubmit}
             >

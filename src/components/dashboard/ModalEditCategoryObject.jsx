@@ -1,13 +1,15 @@
 import { useForm } from '@/hook';
 import { useCreateCategoryContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
+import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
-import { Form, FormItem, FormLabel, Input, Label } from '../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, Input, Label } from '../UI/from';
 
 export const ModalEditCategoryObject = ({
    isOpen = false,
    onClose,
+   className,
 }) => {
 
    const {
@@ -61,12 +63,16 @@ export const ModalEditCategoryObject = ({
          isOpen={isOpen}
          onClose={onClose}
       >
-         <Card2>
+         <Card2
+         className={cn(
+            className
+         )}
+         >
             <Form
                onSubmit={onSubmit}
             >
                <Label className={'text-center'}>
-                  Actualizar categoría
+                  Edtiar la categoria {category.name}
                </Label>
                <FormItem>
                   <FormLabel
@@ -88,28 +94,30 @@ export const ModalEditCategoryObject = ({
                   />
                </FormItem>
 
-               <FormItem>
+               <FromGroup
+                  className={'flex flex-row gap-4 justify-end'}
+               >
                   <Button
-                     type='submit'
-                     size={'lg'}
-                     className={'inline-block align-middle'}
                      disabled={isLoadingUpdate}
                      isLoading={isLoadingUpdate}
+                     size={'lg'}
+                     type='submit'
+                     className={'inline-block align-middle transition-all duration-300'}
                   >
                      Actualizar
                   </Button>
                   <Button
-                     type='button'
-                     variant={'destructive'}
-                     size={'lg'}
-                     className={'inline-block align-middle'}
                      disabled={isLoadingDelete}
                      isLoading={isLoadingDelete}
                      onClick={handleDeleteObject}
+                     size={'lg'}
+                     type='button'
+                     variant={'destructive'}
+                     className={'inline-block align-middle transition-all duration-300'}
                   >
                      Eliminar
                   </Button>
-               </FormItem>
+               </FromGroup>
             </Form>
          </Card2>
       </Modal>

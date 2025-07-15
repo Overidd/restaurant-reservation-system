@@ -1,9 +1,10 @@
 import { useForm } from '@/hook';
 import { useCreateObjectContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
+import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, Input, Label } from '../UI/from';
 
 
 const schema = {
@@ -18,7 +19,8 @@ const schema = {
 
 export const ModalCreateItemObject = ({
    isOpen,
-   onClose
+   onClose,
+   className
 }) => {
 
    const {
@@ -81,7 +83,13 @@ export const ModalCreateItemObject = ({
          <Card2>
             <Form
                onSubmit={onSubmit}
+               className={cn(
+                  className
+               )}
             >
+               <Label className={'text-center'}>
+                  Crear un nuevo item de {category?.name}
+               </Label>
                <FormItem>
                   <FormLabel>
                      Categoria: {category?.name}
@@ -103,7 +111,7 @@ export const ModalCreateItemObject = ({
                      isError={!!nameValid}
                      onChange={onValueChange}
                      variant={'crystal'}
-                     size='lg'
+                     size='base'
                   />
                </FormItem>
 
@@ -123,16 +131,17 @@ export const ModalCreateItemObject = ({
                      isError={!!linkImageValid}
                      onChange={onValueChange}
                      variant={'crystal'}
-                     size='lg'
+                     size='base'
                   />
                </FormItem>
 
+               <FormLabel className={'basis-full'}>
+                  Tamaño en la escena
+               </FormLabel>
+
                <FromGroup
-                  className={'flex flex-wrap gap-4'}
+                  className={'grid grid-cols-3 gap-4'}
                >
-                  <FormLabel className={'basis-full'}>
-                     Tamaño en la escena
-                  </FormLabel>
 
                   <FormItem>
                      <FormLabel
@@ -147,7 +156,7 @@ export const ModalCreateItemObject = ({
                         isError={!!widthValid}
                         onChange={onValueChange}
                         variant={'crystal'}
-                        size='lg'
+                        size='base'
                      />
                   </FormItem>
 
@@ -164,7 +173,7 @@ export const ModalCreateItemObject = ({
                         isError={!!heightValid}
                         onChange={onValueChange}
                         variant={'crystal'}
-                        size='lg'
+                        size='base'
                      />
                   </FormItem>
 

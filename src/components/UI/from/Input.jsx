@@ -73,10 +73,10 @@ export const Input = ({
             xl: 'h-14 rounded-md px-4 has-[>svg]:px-5 text-lg',
             icon: 'size-10 text-xl',
          }
-
       },
       defaultVariants: {
          variant: 'crystal',
+         size: 'base',
       },
    });
 

@@ -520,6 +520,12 @@ export class FirebaseDashboardService {
             throw new Error('No se proporciono el id de la categoria');
          }
 
+         const objects = await getDocs(collection(FirebaseDB, `categories/${idCategory}/objects`));
+
+         if (objects.size >= 1) {
+            throw new Error('No se puede eliminar una categoria con objetos asociados');
+         }
+
          const categoryRef = doc(FirebaseDB, 'categories', idCategory);
          const category = await getDoc(categoryRef);
 
@@ -604,7 +610,7 @@ export class FirebaseDashboardService {
             newObject: {
                id: objectRef.id,
                ...data,
-               createdAt: data.createdAt.toDate().toISOString()
+               createdAt: new Date().toISOString()
             }
          }
 
@@ -628,6 +634,7 @@ export class FirebaseDashboardService {
          if (!object.exists()) {
             throw new Error('No se encontro el objeto');
          }
+         const objectData = object.data();
 
          const data = {
             name: name ?? objectData?.name,
@@ -638,7 +645,6 @@ export class FirebaseDashboardService {
             updatedAt: serverTimestamp()
          }
 
-         const objectData = object.data();
          await updateDoc(objectRef, data);
          return {
             ok: true,
@@ -646,11 +652,11 @@ export class FirebaseDashboardService {
                id: objectRef.id,
                ...data,
                createdAt: objectData.createdAt.toDate().toISOString(),
-               updatedAt: data.updatedAt.toDate().toISOString()
             }
          }
 
       } catch (error) {
+         console.error(error);
          return {
             ok: false,
             errorMessage: error.message || 'Error al obtener las categorias'
@@ -662,12 +668,6 @@ export class FirebaseDashboardService {
       try {
          if (!idCategory || !idObject) {
             throw new Error('No se proporciono el id de la reserva');
-         }
-
-         const objects = await getDocs(collection(FirebaseDB, `categories/${idCategory}/objects`));
-
-         if (objects.size >= 1) {
-            throw new Error('No se puede eliminar una categoria con objetos asociados');
          }
 
          const objectRef = doc(FirebaseDB, `categories/${idCategory}/objects/${idObject}`);

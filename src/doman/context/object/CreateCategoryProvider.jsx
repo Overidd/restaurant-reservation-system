@@ -1,6 +1,6 @@
 import { useObjectCategories } from '@/hook/fetchings';
 import { useState } from 'react';
-import { CreateObjectContext } from '.';
+import { CreateCategoryContext } from '.';
 
 export const CreateCategoryProvider = ({ children }) => {
    const [category, setCategory] = useState(null)
@@ -20,9 +20,9 @@ export const CreateCategoryProvider = ({ children }) => {
    } = useObjectCategories({ isInitialLoad: true })
 
    return (
-      <CreateObjectContext.Provider value={{
+      <CreateCategoryContext.Provider value={{
          category,
-         setCategory,
+         setCategory,   
          categorys,
          createObjectCategory,
          updateObjectCategory,
@@ -36,6 +36,6 @@ export const CreateCategoryProvider = ({ children }) => {
          isLoadingLoad
       }}>
          {children}
-      </CreateObjectContext.Provider>
+      </CreateCategoryContext.Provider>
    )
 }

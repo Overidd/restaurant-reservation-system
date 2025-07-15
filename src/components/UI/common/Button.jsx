@@ -25,22 +25,23 @@ export const buttonVariants = cva(
             default: 'h-9 px-4 py-2 has-[>svg]:px-3',
             xm: 'h-5 rounded-md gap-1.5 has-[>svg]:px-1',
             sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
+            base: 'h-9 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
             lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
             icon: 'size-10',
          },
       },
       defaultVariants: {
          variant: 'default',
-         size: 'default',
+         size: 'base',
       },
    }
 )
 export const Button = ({
    className,
    variant,
-   size,
    children,
    onClick,
+   size = 'default',
    iconLoading = LoaderCircle,
    isLoading = false,
    ...props

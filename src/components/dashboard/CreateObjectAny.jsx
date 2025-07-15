@@ -2,24 +2,24 @@ import { useForm } from '@/hook';
 import { useCreateObjectContext } from '@/hook/context';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
 import { Pen, Plus } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../UI/common';
 import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../UI/from';
 
 const schema = {
    initial: {
-      positionX: 0,
-      positionY: 0,
-      rotation: 0,
-      width: 0,
-      height: 0,
-      typeObj: ''
+      positionX: '',
+      positionY: '',
+      rotation: '',
+      width: '',
+      height: '',
    },
 }
 
 export const CreateObjectAny = ({
    currentCategory
 }) => {
+   const [objectName, setObjectName] = useState(null) // table, y etc...
 
    const {
       openModal: onOpenCreateItemObj
@@ -43,13 +43,13 @@ export const CreateObjectAny = ({
       onValueChange,
       isFormValid,
       onInitialFrom,
+      onResetForm,
       formState: {
          positionX,
          positionY,
          rotation,
          width,
          height,
-         typeObj
       },
       formValidation: {
          positionXValid,
@@ -67,21 +67,29 @@ export const CreateObjectAny = ({
       console.log(data);
    })
 
+   const handleSetObject = ({ value }) => {
+      if (!value) return
+      setObjectName(value)
+      onInitialFrom(getObjectByName(value))
+   }
+
    const handleModalCreateObject = () => {
       setCategory(currentCategory)
       onOpenCreateItemObj()
    }
 
    const handleModalEditObject = () => {
-      if (!typeObj) return
+      if (!objectName) return
       setCategory(currentCategory)
-      setSelectObject(getObjectByName(typeObj))
+      setSelectObject(getObjectByName(objectName))
       onOpenEditItemObj()
    }
 
    useEffect(() => {
       if (currentCategory) {
          loadObjects(currentCategory.id)
+         setObjectName(null)
+         onResetForm()
          return;
       }
    }, [currentCategory])
@@ -90,68 +98,79 @@ export const CreateObjectAny = ({
       <Form
          onSubmit={onSubmit}
       >
-         <FormItem>
-            <FormLabel>
-               Tipo de objeto
-            </FormLabel>
+         <FromGroup
+            className={'flex items-center gap-2'}
+         >
+            <FormItem className='flex-1'>
+               <FormLabel htmlFor='typeObj'>
+                  Tipo de objeto
+               </FormLabel>
 
-            <Select
-               value={typeObj}
-               onValueChange={onValueChange}
-            >
-               <SelectTrigger
-                  isLoading={isLoadingLoad}
-                  disabled={isLoadingLoad}
-                  variant='crystal'
-                  className='w-full'
+               <Select
                   name='typeObj'
-                  id='typeObj'
+                  value={objectName}
+                  onValueChange={handleSetObject}
                >
-                  <SelectValue
-                     placeholder=''
-                  />
-               </SelectTrigger>
-               <SelectContent>
-                  {objects.map((item) => (
-                     <SelectItem
-                        key={item.id}
-                        value={item.name}
-                     >
-                        {item.name}
-                     </SelectItem>
-                  ))}
-
-                  <Button
-                     type='button'
-                     onClick={handleModalCreateObject}
+                  <SelectTrigger
+                     isLoading={isLoadingLoad}
+                     disabled={isLoadingLoad}
+                     id='typeObj'
+                     variant='crystal'
+                     className={'w-full'}
+                     size='base'
                   >
-                     Crear nueva objeto <Plus />
-                  </Button>
-               </SelectContent>
-            </Select>
+                     <SelectValue
+                        placeholder='Seleccione un objeto'
+                     />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {objects.map((item) => (
+                        <SelectItem
+                           key={item.id}
+                           value={item.name}
+                        >
+                           {item.name}
+                        </SelectItem>
+                     ))}
+
+                     <Button
+                        type='button'
+                        onClick={handleModalCreateObject}
+                        className={'w-full'}
+                     >
+                        Crear nueva objeto <Plus />
+                     </Button>
+                  </SelectContent>
+               </Select>
+            </FormItem>
             <Button
+               size={'icon'}
                type='button'
                variant={'crystal'}
-               className={'h-10'}
+               className={'place-self-end'}
                onClick={handleModalEditObject}
             >
                <Pen />
             </Button>
-         </FormItem>
+         </FromGroup>
 
-         <FromGroup>
-            <FormLabel>
-               Posicion
-            </FormLabel>
+         <FormLabel>
+            Posicion
+         </FormLabel>
+         <FromGroup
+            className={'grid grid-cols-3 gap-4'}
+         >
 
             <FormItem>
                <FormLabel
-                  formItemId={'positionX'}
+                  htmlFor={'positionX'}
                >
                   X
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
+                  id='positionX'
                   name='positionX'
                   value={positionX}
                   isError={!!positionXValid}
@@ -161,12 +180,14 @@ export const CreateObjectAny = ({
 
             <FormItem>
                <FormLabel
-                  formItemId={'positionY'}
+                  htmlFor={'positionY'}
                >
                   Y
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
+                  id='positionY'
                   name='positionY'
                   value={positionY}
                   isError={!!positionYValid}
@@ -176,12 +197,14 @@ export const CreateObjectAny = ({
 
             <FormItem>
                <FormLabel
-                  formItemId={'rotation'}
+                  htmlFor={'rotation'}
                >
                   Rotate
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
+                  id='rotation'
                   name='rotation'
                   value={rotation}
                   isError={!!rotationValid}
@@ -190,19 +213,23 @@ export const CreateObjectAny = ({
             </FormItem>
          </FromGroup>
 
-         <FromGroup>
-            <FormLabel>
-               Tamaño en la escena
-            </FormLabel>
+         <FormLabel>
+            Tamaño en la escena
+         </FormLabel>
 
+         <FromGroup
+            className={'grid grid-cols-3 gap-4'}
+         >
             <FormItem>
                <FormLabel
-                  formItemId={'width'}
+                  htmlFor={'width'}
                >
                   Width
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
+                  id='width'
                   name='width'
                   value={width}
                   isError={!!widthValid}
@@ -212,12 +239,14 @@ export const CreateObjectAny = ({
 
             <FormItem>
                <FormLabel
-                  formItemId={'height'}
+                  htmlFor={'height'}
                >
                   Height
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
+                  id='height'
                   name='height'
                   value={height}
                   isError={!!heightValid}
@@ -228,6 +257,7 @@ export const CreateObjectAny = ({
 
          <FormItem>
             <Button
+               size='base'
                type='submit'
                disabled={!isFormValid}
             >
