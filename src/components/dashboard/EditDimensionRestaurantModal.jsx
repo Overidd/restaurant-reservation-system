@@ -33,7 +33,7 @@ export const EditDimensionRestaurantModal = ({
                         size='sm'
                         type='number'
                         variant={'crystal'}
-                        value={rows}
+                        // value={rows}
                      />
                   </FormItem>
                   <FormItem className={'flex flex-row gap-2 items-center'}>
@@ -44,7 +44,7 @@ export const EditDimensionRestaurantModal = ({
                         size='sm'
                         type='number'
                         variant={'crystal'}
-                        value={columns}
+                        // value={columns}
                      />
                   </FormItem>
                </FromGroup>

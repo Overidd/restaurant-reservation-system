@@ -112,6 +112,8 @@ export const useObjects = () => {
       return ok
    }
 
+   const getObjectByName = (name) => state.objects.find(object => object.name === name)
+
    // useEffect(() => {
    //    if (!idCategory || !isInitialLoad) return
    //    loadObjects(idCategory)
@@ -127,6 +129,7 @@ export const useObjects = () => {
       loadObjects,
       createObject,
       updateObject,
-      deleteObject
+      deleteObject,
+      getObjectByName
    }
 }

@@ -8,22 +8,16 @@ import {
    openModalEditItemObjectAction
 } from '@/doman/store';
 
-let currentData = null
 
 export const useModalEditItemObject = () => {
    const dispatch = useDispatch();
    const isOpen = useSelector((state) => state.UIReducer.isOpenModalEditItemObject);
 
-   const openModal = (data) => {
-      if (currentData) {
-         currentData = data
-      }
-
+   const openModal = () => {
       dispatch(openModalEditItemObjectAction())
    };
 
    const closeModal = () => {
-      currentData = null
       dispatch(closeModalEditItemObjectAction())
    };
 
@@ -31,6 +25,5 @@ export const useModalEditItemObject = () => {
       isOpen,
       openModal,
       closeModal,
-      currentData
    }
 }

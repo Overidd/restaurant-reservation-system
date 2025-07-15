@@ -1,10 +1,11 @@
 import { useForm } from '@/hook';
-import { useObjectCategories, useObjects } from '@/hook/fetchings';
+import { useSelectCategoryContext } from '@/hook/context';
+import { useObjects } from '@/hook/fetchings';
 import { useModalCreateItemObject } from '@/hook/modals';
 import { AdminTableToasts } from '@/toasts';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 
 
 const schema = {
@@ -19,15 +20,13 @@ const schema = {
 
 export const ModalCreateItemObject = () => {
    const {
+      categorySelected
+   } = useSelectCategoryContext()
+
+   const {
       isOpen,
       closeModal
    } = useModalCreateItemObject()
-
-   const {
-      categorys,
-      isLoadingLoad,
-      getIdCategoryByName
-   } = useObjectCategories({ isInitialLoad: true })
 
    const {
       createObject,
@@ -45,13 +44,15 @@ export const ModalCreateItemObject = () => {
          linkImage,
          width,
          height,
+         rotation,
       },
 
       formValidation: {
          nameValid,
          linkImageValid,
          widthValid,
-         heightValid
+         heightValid,
+         rotationValid
       }
 
    } = useForm({
@@ -60,13 +61,18 @@ export const ModalCreateItemObject = () => {
    });
 
    const onSubmit = onSubmitForm((value) => {
+      if (!categorySelected) {
+         return
+      }
+
       AdminTableToasts.createObject(
          createObject({
             name: value.name,
             linkImage: value.linkImage,
             width: value.width,
             height: value.height,
-            idCategory: getIdCategoryByName(value.category),
+            rotation: value.rotation,
+            idCategory: categorySelected.id,
          }), {
          onSuccess: () => {
             onResetForm()
@@ -83,39 +89,10 @@ export const ModalCreateItemObject = () => {
             <Form
                onSubmit={onSubmit}
             >
-               <FormItem
-                  className={'flex-1'}
-               >
+               <FormItem>
                   <FormLabel>
-                     Categoria
+                     Categoria: {categorySelected?.name}
                   </FormLabel>
-                  <Select
-                     value={category || undefined}
-                     onValueChange={onValueChange}
-                  >
-                     <SelectTrigger
-                        isLoading={isLoadingLoad}
-                        disabled={isLoadingLoad}
-                        variant='crystal'
-                        className='w-full'
-                        name='category'
-                        id='category'
-                     >
-                        <SelectValue
-                           placeholder='Selecciona una categoria'
-                        />
-                     </SelectTrigger>
-                     <SelectContent>
-                        {categorys.map((item) => (
-                           <SelectItem
-                              key={item.id}
-                              value={item.name}
-                           >
-                              {item.name}
-                           </SelectItem>
-                        ))}
-                     </SelectContent>
-                  </Select>
                </FormItem>
                <FormItem>
                   <FormLabel
@@ -195,6 +172,21 @@ export const ModalCreateItemObject = () => {
                         onChange={onValueChange}
                         variant={'crystal'}
                         size='lg'
+                     />
+                  </FormItem>
+
+                  <FormItem>
+                     <FormLabel
+                        formItemId={'rotation'}
+                     >
+                        Rotate
+                     </FormLabel>
+                     <Input
+                        type='number'
+                        name='rotation'
+                        value={rotation}
+                        isError={!!rotationValid}
+                        onChange={onValueChange}
                      />
                   </FormItem>
                </FromGroup>

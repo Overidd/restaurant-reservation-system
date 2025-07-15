@@ -524,6 +524,10 @@ export class FirebaseDashboardService {
    async getObjectsByCategoryId(idCategory) {
       try {
 
+         if (!idCategory) {
+            throw new Error('No se proporciono el id de la categoria');
+         }
+
          const objectsDocs = await getDocs(collection(FirebaseDB, `categories/${idCategory}/objects`),);
 
          const objects = objectsDocs.docs.map(doc => ({
@@ -546,7 +550,11 @@ export class FirebaseDashboardService {
 
    }
 
-   async createObjectInCategory({ idCategory, name, width, height, linkImage }) {
+   async createObjectInCategory({ idCategory, rotation, name, width, height, linkImage }) {
+      if (!idCategory) {
+         throw new Error('No se proporciono el id de la categoria');
+      }
+
       try {
          const objectRef = doc(collection(FirebaseDB, `categories/${idCategory}/objects`));
          await setDoc(objectRef, {
@@ -555,6 +563,7 @@ export class FirebaseDashboardService {
             height,
             linkImage,
             idCategory,
+            rotation,
             createdAt: serverTimestamp()
          });
          return {
@@ -569,7 +578,7 @@ export class FirebaseDashboardService {
       }
    }
 
-   async updateObjectInCategory({ idCategory, idObject, name, width, height, linkImage }) {
+   async updateObjectInCategory({ idCategory, idObject, rotation, name, width, height, linkImage }) {
       try {
          if (!idCategory || !idObject) {
             throw new Error('No se proporciono el id de la reserva');
@@ -582,6 +591,7 @@ export class FirebaseDashboardService {
             name: name ?? objectData?.name,
             width: width ?? objectData?.width,
             height: height ?? objectData?.height,
+            rotation: rotation ?? objectData?.rotation,
             linkImage: linkImage ?? objectData?.linkImage,
             updatedAt: serverTimestamp()
          });

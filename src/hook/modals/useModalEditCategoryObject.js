@@ -23,6 +23,6 @@ export const useModalEditCategoryObject = () => {
   return {
     isOpen,
     openModal,
-    closeModal
+    closeModal,
   }
 }

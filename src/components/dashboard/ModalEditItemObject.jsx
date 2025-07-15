@@ -1,4 +1,5 @@
 import { useForm } from '@/hook';
+import { useSelectCategoryContext } from '@/hook/context';
 import { useObjects } from '@/hook/fetchings';
 import { useModalEditItemObject } from '@/hook/modals';
 import { AdminTableToasts } from '@/toasts';
@@ -16,6 +17,10 @@ const schema = {
    },
 }
 export const ModalEditItemObject = () => {
+   const {
+      categorySelected
+   } = useSelectCategoryContext()
+
    const {
       isOpen,
       closeModal,
@@ -38,13 +43,15 @@ export const ModalEditItemObject = () => {
          linkImage,
          width,
          height,
+         rotation
       },
 
       formValidation: {
          nameValid,
          linkImageValid,
          widthValid,
-         heightValid
+         heightValid,
+         rotationValid
       }
 
    } = useForm({
@@ -91,6 +98,12 @@ export const ModalEditItemObject = () => {
             <Form
                onSubmit={onSubmit}
             >
+               <FormItem>
+                  <FormLabel>
+                     Categoria: {categorySelected?.name}
+                  </FormLabel>
+               </FormItem>
+
                <FormItem>
                   <FormLabel
                      href='name'
@@ -169,6 +182,21 @@ export const ModalEditItemObject = () => {
                         onChange={onValueChange}
                         variant={'crystal'}
                         size='lg'
+                     />
+                  </FormItem>
+
+                  <FormItem>
+                     <FormLabel
+                        formItemId={'rotation'}
+                     >
+                        Rotate
+                     </FormLabel>
+                     <Input
+                        type='number'
+                        name='rotation'
+                        value={rotation}
+                        isError={!!rotationValid}
+                        onChange={onValueChange}
                      />
                   </FormItem>
                </FromGroup>

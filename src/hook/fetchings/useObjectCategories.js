@@ -75,10 +75,10 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
       return ok
    }, [])
 
-   const updateObjectCategory = useCallback(async (id, newName) => {
+   const updateObjectCategory = useCallback(async (data) => {
       dispatch({ type: typeReducer.UPDATE_START })
 
-      const { ok, errorMessage } = await dasboardServiceProvider.updateObjectCategory({ idCategory: id, name: newName })
+      const { ok, errorMessage } = await dasboardServiceProvider.updateObjectCategory(data)
 
       dispatch({ type: typeReducer.UPDATE_END })
 
@@ -105,6 +105,12 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
       [state.categorys]
    )
 
+   const getCategoryByName = useCallback(
+      (name) => state.categorys.find(
+         (category) => category.name === name) || null,
+      [state.categorys]
+   )
+
    useEffect(() => {
       if (!isInitialLoad) return
       loadObjectCategory()
@@ -121,6 +127,7 @@ export const useObjectCategories = ({ isInitialLoad = false }) => {
       createObjectCategory,
       updateObjectCategory,
       deleteObjectCategory,
-      getIdCategoryByName
+      getIdCategoryByName,
+      getCategoryByName
    }
 }

@@ -1,17 +1,21 @@
-import { useForm } from "@/hook";
-import { useObjectCategories } from "@/hook/fetchings";
-import { useModalEditCategoryObject } from "@/hook/modals";
-import { AdminTableToasts } from "@/toasts";
-import { validateObject } from "@/ultils";
-import { Card2 } from "../UI/card";
-import { Button, Modal } from "../UI/common";
-import { Form, FormItem, FormLabel, Input, Label } from "../UI/from";
+import { useForm } from '@/hook';
+import { useSelectCategoryContext } from '@/hook/context';
+import { useObjectCategories } from '@/hook/fetchings';
+import { useModalEditCategoryObject } from '@/hook/modals';
+import { AdminTableToasts } from '@/toasts';
+import { validateObject } from '@/ultils';
+import { Card2 } from '../UI/card';
+import { Button, Modal } from '../UI/common';
+import { Form, FormItem, FormLabel, Input, Label } from '../UI/from';
 
 export const ModalEditCategoryObject = () => {
    const {
+      categorySelected
+   } = useSelectCategoryContext()
+
+   const {
       isOpen,
       closeModal,
-      currentData
    } = useModalEditCategoryObject()
 
    const {
@@ -32,8 +36,8 @@ export const ModalEditCategoryObject = () => {
          nameValid,
       }
    } = useForm({
-      initialState: validateObject(currentData) ? {
-         name: currentData.name
+      initialState: validateObject(categorySelected) ? {
+         name: categorySelected.name
       } : {
          name: ''
       },
@@ -43,7 +47,7 @@ export const ModalEditCategoryObject = () => {
    const onSubmit = onSubmitForm(() => {
       AdminTableToasts.updateCategory(
          updateObjectCategory({
-            idCategory: currentData.idCategory,
+            idCategory: categorySelected.idCategory,
             name
          }), {
          onSuccess: () => onResetForm()
@@ -52,7 +56,7 @@ export const ModalEditCategoryObject = () => {
 
    const handleDeleteObject = () => {
       AdminTableToasts.deleteCategory(
-         deleteObjectCategory(currentData.idCategory), {
+         deleteObjectCategory(categorySelected.idCategory), {
          onSuccess: () => {
             closeModal()
          }

@@ -1,6 +1,9 @@
 import { useForm } from '@/hook';
-import { useModalCreateItemObject } from '@/hook/modals';
-import { Plus } from 'lucide-react';
+import { useSelectCategoryContext } from '@/hook/context';
+import { useObjects } from '@/hook/fetchings';
+import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
+import { Pen, Plus } from 'lucide-react';
+import { useEffect } from 'react';
 import { Button } from '../UI/common';
 import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../UI/from';
 
@@ -15,16 +18,33 @@ const schema = {
    },
 }
 
-export const CreateObjectAny = () => {
+export const CreateObjectAny = ({
+   currentCategory
+}) => {
 
    const {
-      openModal: onOpenNewItemObj
+      setCategorySelected,
+   } = useSelectCategoryContext()
+
+   const {
+      openModal: onOpenCreateItemObj
    } = useModalCreateItemObject()
+
+   const {
+      openModal: onOpenEditItemObj
+   } = useModalEditItemObject()
+
+   const {
+      objects,
+      isLoadingLoad,
+      loadObjects,
+   } = useObjects()
 
    const {
       onSubmitForm,
       onValueChange,
       isFormValid,
+      onInitialFrom,
       formState: {
          positionX,
          positionY,
@@ -43,16 +63,34 @@ export const CreateObjectAny = () => {
    } = useForm({
       initialState: schema.initial,
       activeValidation: true,
-      changeValueCallback: onInitialFrom
+      changeValueCallback: ({ name, value }) => {
+         // if (name === 'typeObj') {
+         //    // const object = getObjectByName(value);
+         //    // onInitialFrom({ ...object, typeObj: value });
+         //    return;
+         // }
+      }
    });
 
-   function onInitialFrom({ name, value }) {
+   useEffect(() => {
+      if (currentCategory) {
+         loadObjects(currentCategory.id)
+      }
+   }, [currentCategory])
 
+   const onSubmit = onSubmitForm((data) => {
+      console.log(data);
+   })
+
+   const handleModalCreateObject = () => {
+      setCategorySelected(currentCategory)
+      onOpenCreateItemObj()
    }
 
-   const onSubmit = onSubmitForm((value) => {
-      console.log(value)
-   })
+   const handleModalEditObject = () => {
+      setCategorySelected(currentCategory)
+      onOpenEditItemObj()
+   }
 
    return (
       <Form
@@ -68,6 +106,8 @@ export const CreateObjectAny = () => {
                onValueChange={onValueChange}
             >
                <SelectTrigger
+                  isLoading={isLoadingLoad}
+                  disabled={isLoadingLoad}
                   variant='crystal'
                   className='w-full'
                   name='typeObj'
@@ -78,7 +118,7 @@ export const CreateObjectAny = () => {
                   />
                </SelectTrigger>
                <SelectContent>
-                  {[].map((item) => (
+                  {objects.map((item) => (
                      <SelectItem
                         key={item.id}
                         value={item.name}
@@ -87,17 +127,20 @@ export const CreateObjectAny = () => {
                      </SelectItem>
                   ))}
 
-                  <SelectItem
-                     value={null}
+                  <Button
+                     type='button'
+                     onClick={handleModalCreateObject}
                   >
-                     <Button
-                        type='button'
-                        onClick={onOpenNewItemObj}
-                     >
-                        Crear nueva objeto <Plus />
-                     </Button>
-                  </SelectItem>
+                     Crear nueva objeto <Plus />
+                  </Button>
                </SelectContent>
+               <Button
+                  variant={'crystal'}
+                  className={'h-10'}
+                  onClick={handleModalEditObject}
+               >
+                  <Pen />
+               </Button>
             </Select>
          </FormItem>
 

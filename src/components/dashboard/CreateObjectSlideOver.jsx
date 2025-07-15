@@ -1,7 +1,9 @@
+import { SelectedCategoryProvider } from '@/doman/context/selectCategory';
+import { useSelectCategoryContext } from '@/hook/context';
 import { useObjectCategories } from '@/hook/fetchings';
-import { useModalCreateItemObject } from '@/hook/modals';
+import { useModalCreateCategory, useModalCreateItemObject, useModalEditCategoryObject, useModalEditItemObject } from '@/hook/modals';
 import { typeObj } from '@/ultils';
-import { Plus } from 'lucide-react';
+import { Pen, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { CreateObjectAny, CreateObjectTable, ModalCreateCategoryObject, ModalCreateItemObject, ModalEditCategoryObject } from '.';
 import { Card2 } from '../UI/card';
@@ -19,16 +21,23 @@ import { ModalEditItemObject } from './ModalEditItemObject';
 export const CreateObjectSlideOver = ({
    isOpen = false
 }) => {
+   const {
+      setCategorySelected,
+   } = useSelectCategoryContext()
 
    const {
-      isOpen: isOpenModalNewItemObj,
-      openModal: openModalNewItemObj
-   } = useModalCreateItemObject()
+      openModal: openModalCreateCategory
+   } = useModalCreateCategory()
+
 
    const {
-      isLoading,
+      openModal: openModalEditCategory
+   } = useModalEditCategoryObject()
+
+   const {
       categorys,
-      errorMessage,
+      isLoadingLoad,
+      getCategoryByName
    } = useObjectCategories({ isInitialLoad: true })
 
    const [typeCategory, setTypeCategory] = useState(null) // table, y etc...
@@ -38,8 +47,13 @@ export const CreateObjectSlideOver = ({
       setTypeCategory(value)
    }
 
+   const handleModalEditCategory = () => {
+      if (!typeCategory) return
+      setCategorySelected(getCategoryByName(typeCategory))
+      openModalEditCategory()
+   }
    return (
-      <>
+      <SelectedCategoryProvider>
          <SlideOver
             isOpen={isOpen}
             direction='topright'
@@ -55,6 +69,8 @@ export const CreateObjectSlideOver = ({
                      onValueChange={handleCategoryChange}
                   >
                      <SelectTrigger
+                        isLoading={isLoadingLoad}
+                        disabled={isLoadingLoad}
                         variant='crystal'
                         className='w-full'
                         name='category'
@@ -74,15 +90,10 @@ export const CreateObjectSlideOver = ({
                            </SelectItem>
                         ))}
 
-                        {/* <SelectItem
-                        onClick={openModalNewItemObj}
-                     >
-                        Crear nueva categoria <Plus />
-                     </SelectItem> */}
                         <Button
                            onClick={(e) => {
                               e.stopPropagation();
-                              openModalNewItemObj();
+                              openModalCreateCategory();
                            }}
                            className="cursor-pointer px-2 py-2 text-sm hover:bg-muted flex items-center gap-2"
                         >
@@ -90,6 +101,13 @@ export const CreateObjectSlideOver = ({
                         </Button>
                      </SelectContent>
 
+                     <Button
+                        variant={'crystal'}
+                        className={'h-10'}
+                        onClick={handleModalEditCategory}
+                     >
+                        <Pen />
+                     </Button>
                   </Select>
                </div>
                {
@@ -98,29 +116,53 @@ export const CreateObjectSlideOver = ({
                }
                {
                   (typeCategory && !typeObj.TABLE !== typeCategory) &&
-                  <CreateObjectAny />
+                  <CreateObjectAny
+                     currentCategory={getCategoryByName(typeCategory)}
+                  />
                }
             </Card2>
          </SlideOver>
-
-         <ModalCreateItemObject />
-         <ModalEditItemObject />
-         <ModalCreateCategoryObject />
-         <ModalEditCategoryObject />
-      </>
+         <Modals />
+      </SelectedCategoryProvider>
    )
 }
 
+const Modals = () => {
+   const {
+      isOpen: isOpenModalNewItemObj,
+   } = useModalCreateItemObject()
 
-{/* <FormItem>
-   <FormLabel>
-      Nuevo
-   </FormLabel>
-   <Button
-      variant={'crystal'}
-      onClick={onIsCreating}
-      className={'h-10'}
-   >
-      <Plus />
-   </Button>
-</FormItem> */}
+   const {
+      isOpen: isOpenModalEditItemObj,
+   } = useModalEditItemObject()
+
+   const {
+      isOpen: isOpenModalCreateCategory,
+   } = useModalCreateCategory()
+
+   const {
+      isOpen: isOpenModalEditCategoryObj,
+   } = useModalEditCategoryObject()
+
+   return (
+      <>
+         {
+            isOpenModalNewItemObj &&
+            <ModalCreateItemObject />
+         }
+         {
+            isOpenModalEditItemObj &&
+            <ModalEditItemObject />
+         }
+         {
+            isOpenModalCreateCategory &&
+            <ModalCreateCategoryObject />
+         }
+
+         {
+            isOpenModalEditCategoryObj &&
+            <ModalEditCategoryObject />
+         }
+      </>
+   )
+}
