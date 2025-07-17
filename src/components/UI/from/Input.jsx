@@ -2,7 +2,7 @@ import { cn } from '@/ultils/cn';
 import { cva } from 'class-variance-authority';
 import { Eye, EyeOff } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 
 // export const Input = ({ className, type, variant, isError, ...props }) => {
 
@@ -41,7 +41,7 @@ import { useState } from 'react';
 //    type: PropTypes.string
 // }
 
-export const Input = ({
+export const Input = forwardRef(({
    className,
    variant,
    isError,
@@ -50,12 +50,13 @@ export const Input = ({
    name,
    value,
    id,
+   autoFocus = false,
    activeEventIcon = false,
    iconPosition = 'left',
    type = 'text',
    size = '',
    ...props
-}) => {
+}, ref) => {
    const [showPassword, setShowPassword] = useState(false);
    const isPassword = type === 'password';
    const inputType = isPassword && showPassword ? 'text' : type;
@@ -93,9 +94,11 @@ export const Input = ({
             </div>
          )}
          <input
+            autoFocus={autoFocus}
             type={inputType}
             data-slot="input"
             placeholder={placeholder}
+            ref={ref}
             name={name}
             value={value}
             id={id}
@@ -135,7 +138,9 @@ export const Input = ({
          )}
       </div>
    );
-};
+});
+
+Input.displayName = 'Input';
 
 Input.propTypes = {
    className: PropTypes.string,

@@ -98,6 +98,9 @@ export const useObjects = () => {
       idObject,
       data
    }) => {
+      if (!idCategory || !idObject) throw new Error('No se proporciono el id de la reserva');
+      if (!data) throw new Error('No se proporciono los datos');
+
       dispatch({ type: typeReducer.UPDATE_START })
       const { ok, errorMessage, updatedObject } = await dasboardServiceProvider.updateObjectInCategory({
          idCategory,

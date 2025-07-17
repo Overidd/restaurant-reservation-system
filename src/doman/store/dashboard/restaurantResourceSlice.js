@@ -1,0 +1,161 @@
+
+import { typeStatusTable } from '@/ultils';
+import { createSlice } from '@reduxjs/toolkit';
+
+export const restaurantResourceSlice = createSlice({
+   name: 'restaurantResource',
+   initialState: {
+      messageError: null,
+
+      tables: [],
+
+      object: [],
+
+      loading: false,
+   },
+
+   reducers: {
+      setTablesAndObjectsAction: (state, { payload }) => {
+         state.messageError = null
+         state.loading = false
+         state.tables = payload.tables;
+         state.object = payload.object;
+      },
+
+      // Escuchar notificaciones
+      listenTableNofityAction: (state, { payload }) => {
+         state.tables = state.tables.map(table => {
+            if (payload.idTables.includes(table.id)) {
+               return {
+                  ...table,
+                  status: payload.status,
+                  hasReservar: true,
+                  user: {
+                     name: payload.name,
+                     email: payload.email,
+                     idUser: payload.idUser,
+                  },
+                  reservation: {
+                     code: payload.code,
+                     idReservation: payload.id,
+                     timestamp: payload.timestamp,
+                     relatedTables: payload.idTables.map(id => ({
+                        id,
+                        name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
+                     }))
+                  }
+               }
+            }
+            return table;
+         });
+      },
+
+      changeTableToAvailableAction: (state, { payload }) => {
+         state.tables = state.tables.map((t) => {
+            if (payload.includes(t.id)) {
+               return {
+                  ...t,
+                  status: typeStatusTable.AVAILABLE,
+                  hasReservar: false,
+                  relatedTables: []
+               };
+            }
+            return t;
+         });
+      },
+
+      clearTablesRelationAction: (state, { payload: { idTablesNoSelect = [], idTables = [] } }) => {
+         state.tables = state.tables.map((t) => {
+            if (idTablesNoSelect.includes(t.id)) {
+               console.log('En tableAdminSlice', t.relatedTables.filter((r) => !idTables.includes(r.id)));
+               return {
+                  ...t,
+                  relatedTables: t.relatedTables.filter((r) => !idTables.includes(r.id))
+               };
+            } else {
+               return t;
+            }
+         })
+      },
+
+      changeStatusTableAction: (state, { payload }) => {
+         if (payload.status === typeStatusTable.AVAILABLE) {
+            state.tables = state.tables.map((t) => {
+               if (t.id === payload.idTable) {
+                  return {
+                     ...t,
+                     status: typeStatusTable.AVAILABLE,
+                     hasReservar: false,
+                     user: null,
+                     reservation: null
+                  };
+               }
+               return t;
+            });
+
+            return;
+         }
+
+         if (payload.status === typeStatusTable.CONFIRMED) {
+            state.tables = state.tables.map((t) => {
+               if (t.id === payload.idTable) {
+                  return {
+                     ...t,
+                     status: typeStatusTable.CONFIRMED
+                  };
+               }
+               return t;
+            });
+            return;
+         }
+
+         if (payload.status === typeStatusTable.PENDING) {
+            const { reservation, idTables } = payload;
+            state.tables = state.tables.map((t) => {
+               if (idTables.includes(t.id)) {
+                  return {
+                     ...t,
+                     hasReservar: true,
+                     status: typeStatusTable.PENDING,
+                     user: reservation?.user ?? null,
+                     reservation: {
+                        ...reservation.reservation,
+                        relatedTables: idTables.map(id => ({
+                           id,
+                           name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
+                        }))
+                     },
+                     createdAt: reservation.createdAt,
+                  };
+               }
+               return t;
+            });
+            return
+         }
+      },
+
+      deleteTableAction: (state, { payload }) => {
+         state.tables = state.tables.filter(t => t.id !== payload);
+      },
+
+      loaddingAction: (state, { payload }) => {
+         state.loading = payload ?? true
+      },
+
+      messageErrorAction: (state, { payload }) => {
+         state.messageError = payload
+         state.loading = false
+      },
+   },
+});
+
+export const {
+   setTablesAndObjectsAction,
+   listenTableNofityAction,
+   changeTableToAvailableAction,
+   changeStatusTableAction,
+   clearTablesRelationAction,
+   loaddingAction,
+   messageErrorAction,
+   deleteTableAction,
+} = restaurantResourceSlice.actions

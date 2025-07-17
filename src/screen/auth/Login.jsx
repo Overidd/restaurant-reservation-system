@@ -69,7 +69,7 @@ export const LoginScreen = () => {
          >
             <FormItem>
                <FormLabel
-                  formItemId='email'
+                  htmlFor='email'
                >
                   Correo
                </FormLabel>
@@ -90,7 +90,7 @@ export const LoginScreen = () => {
 
             <FormItem>
                <FormLabel
-                  formItemId='password'
+                  htmlFor='password'
                >
                   Contraseña
                </FormLabel>

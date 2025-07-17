@@ -68,6 +68,7 @@ export default defineConfig([
       'react/self-closing-comp': 'warn', // Autocierre para componentes sin hijos
 
       'react-hooks/rules-of-hooks': 'error', // Valida reglas de hooks (useEffect, useState, etc.)
+      "jsx-a11y/no-autofocus": 'off',
 
       //TODOD temporalmente desactivado 
       'import/no-named-as-default': 'warn',

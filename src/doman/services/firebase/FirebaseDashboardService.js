@@ -15,7 +15,7 @@ import {
    where,
 } from 'firebase/firestore';
 
-import { DateParser, generateCode, typeStatusTable } from '@/ultils';
+import { DateParser, generateCode, typeResource, typeStatusTable } from '@/ultils';
 
 import { FirebaseDB } from './config';
 
@@ -147,6 +147,7 @@ export class FirebaseDashboardService {
             return {
                id: doc.id,
                ...data,
+               type: typeResource.TABLE,
                idRestaurant: data.idRestaurant?.id ?? null,
                status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
                size: data.type,
@@ -179,6 +180,42 @@ export class FirebaseDashboardService {
       }
    }
 
+   async getObjects({ dateStr, idRestaurant, hour }) {
+      if (!dateStr || !idRestaurant || !hour) return;
+
+      try {
+         if (!idRestaurant) {
+            throw new Error('No se proporciono el id del restaurante');
+         }
+
+         if (!dateStr) {
+            throw new Error('No se proporciono la fecha');
+         }
+
+         const objects = await getDocs(query(
+            collection(FirebaseDB, `restaurants/${idRestaurant}/objects`),
+         ));
+
+         const objectMap = objects.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data()?.createdAt?.toDate()?.toISOString(),
+            updatedAt: doc.data()?.updatedAt?.toDate()?.toISOString(),
+         }));
+
+         return {
+            ok: true,
+            objects: objectMap
+         }
+      }
+
+      catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener los objetos'
+         }
+      }
+   }
    async cancelFullReservation({ idReservation }) {
       try {
          if (!idReservation) {

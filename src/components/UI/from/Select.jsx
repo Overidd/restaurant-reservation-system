@@ -161,6 +161,31 @@ export const SelectSeparator = ({ className, ...props }) => {
   );
 }
 
+
+export const SelectItemActionGroup = ({ className, children }) => {
+  // const handleClick = () => {
+  //   if (document.activeElement instanceof HTMLElement) {
+  //     document.activeElement.blur();
+  //   }
+  // };
+
+  return (
+    <div
+      data-slot='select-item-action-group'
+      // tabIndex={0}
+      // role='button'
+      // onClick={handleClick}
+      // onKeyDown={handleClick}
+      className={cn(
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+
 export const SelectScrollUpButton = ({ className, ...props }) => {
   return (
     (<SelectPrimitive.ScrollUpButton

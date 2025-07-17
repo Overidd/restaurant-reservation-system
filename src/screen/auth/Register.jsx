@@ -98,7 +98,7 @@ export const RegisterScreen = () => {
         <FromGroup className={'flex gap-4'}>
           <FormItem>
             <FormLabel
-              formItemId='name'
+              htmlFor='name'
             >
               Nombre
             </FormLabel>
@@ -117,7 +117,7 @@ export const RegisterScreen = () => {
 
           <FormItem>
             <FormLabel
-              formItemId='lastname'
+              htmlFor='lastname'
             >
               Apellido
             </FormLabel>
@@ -137,7 +137,7 @@ export const RegisterScreen = () => {
 
         <FormItem>
           <FormLabel
-            formItemId='email'
+            htmlFor='email'
           >
             Correo
           </FormLabel>
@@ -158,7 +158,7 @@ export const RegisterScreen = () => {
 
         <FormItem>
           <FormLabel
-            formItemId='password'
+            htmlFor='password'
           >
             Contraseña
           </FormLabel>
@@ -179,7 +179,7 @@ export const RegisterScreen = () => {
 
         <FormItem>
           <FormLabel
-            formItemId='passwordConfirm'
+            htmlFor='passwordConfirm'
           >
             Confirmar contraseña
           </FormLabel>

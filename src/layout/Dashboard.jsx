@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { SidebarProvider } from '@/doman/context/sidebar';
 
 import { ActionSpeedDial } from '@/components/common';
-import { NofityReservation } from '@/components/dashboard';
+import { NofityReservation } from '@/components/mapScreen';
 import { Sidebar } from '@/components/sidebar';
 import { ModalReservationsCreate } from '@/screen/dashboard';
 

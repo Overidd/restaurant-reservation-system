@@ -178,6 +178,7 @@ export const useForm = ({
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
+         event.stopPropagation();
          const inputDisables = event.target.querySelectorAll('input:disabled');
          if (inputDisables) {
             for (const element of inputDisables) {

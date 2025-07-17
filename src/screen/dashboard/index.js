@@ -1,3 +1,4 @@
 export * from './Calendar';
+export * from './Map';
 export * from './ModalReservationsCreate';
-export * from './Tables';
+

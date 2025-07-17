@@ -1,4 +1,4 @@
-import { ModalProviderAsync } from '@/doman/context/dialogAsync'
+import { ModalAsyncProvider } from '@/doman/context/dialogAsync'
 import { useModalAsync } from '@/hook'
 import { useGetReservationsByUser } from '@/hook/fetchings'
 import { useModalUser } from '@/hook/modals'
@@ -38,14 +38,14 @@ export const ModalUser = () => {
                   Tus Reservas
                </TabsTrigger>
             </TabsList>
-            <ModalProviderAsync>
+            <ModalAsyncProvider>
                <TabsContent value='profile' className='space-y-6 mt-6'>
                   <ProfileUser />
                </TabsContent>
                <TabsContent value='reservations' className='space-y-6 mt-6'>
                   <HistoryReservationUser />
                </TabsContent>
-            </ModalProviderAsync>
+            </ModalAsyncProvider>
          </Tabs>
       </Modal>
    )

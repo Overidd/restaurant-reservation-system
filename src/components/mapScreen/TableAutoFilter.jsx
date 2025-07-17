@@ -1,0 +1,116 @@
+import { cn, DateParser } from '@/ultils';
+import { CalendarButton } from '../UI/calendar';
+
+import { useLoadFilterRestaurant, useStateFilterRestaurant } from '@/hook/dashboard';
+import { Card2 } from '../UI/card';
+import {
+   Form,
+   FormItem,
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue
+} from '../UI/from';
+
+
+export const TableAutoFilter = ({
+   className,
+}) => {
+
+   useLoadFilterRestaurant();
+
+   const {
+      hours,
+      restaurants,
+      changeValueFilter,
+      filter: { restaurant, hour, dateStr },
+   } = useStateFilterRestaurant();
+
+   const onValueChange = ({ name, value }) => {
+      if (!value || !name) return;
+      if (value instanceof Date) {
+         value = value.toISOString().split('T')[0];
+      }
+
+      changeValueFilter({ name, value });
+   };
+
+   return (
+      <Card2
+         vairant='secondary'
+         className={cn(
+            'p-2 bg-transparent shadow-none px-4 py-3 border-2 !border-dashed',
+         )}
+      >
+         <Form className={cn(
+            'flex flex-wrap justify-center gap-4',
+            className
+         )}>
+            <FormItem>
+               <Select
+                  name={'restaurant'}
+                  value={restaurant.name || undefined}
+                  onValueChange={onValueChange}
+               >
+                  <SelectTrigger
+                     size='lg'
+                     className='w-full bg-[#fcf8f0]'
+                  >
+                     <SelectValue
+                        placeholder='Seleccione una restaurante'
+                     />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {restaurants.map((item) => (
+                        <SelectItem
+                           key={item.id}
+                           value={item.name}
+                        >
+                           {item.name}
+                        </SelectItem>
+                     ))}
+                  </SelectContent>
+               </Select>
+            </FormItem>
+
+            <CalendarButton
+               name={'dateStr'}
+               variant='outline'
+               btnClassName={'hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0]'}
+               onValueChange={onValueChange}
+               date={DateParser.fromString(dateStr)}
+               configDate={null}
+            />
+
+            <FormItem>
+               <Select
+                  name={'hour'}
+                  value={hour || undefined}
+                  onValueChange={onValueChange}
+               >
+                  <SelectTrigger
+                     size='lg'
+                     className='w-full bg-[#fcf8f0]'
+                  // variant='crystal'
+                  >
+                     <SelectValue
+                        placeholder='Seleccione una hora'
+                     />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {hours.map((item, index) => (
+                        <SelectItem
+                           key={item.id || 'hour' + index}
+                           value={item.hour}
+                        >
+                           {item.hour}
+                        </SelectItem>
+                     ))}
+                  </SelectContent>
+               </Select>
+            </FormItem>
+         </Form>
+      </Card2>
+   )
+}

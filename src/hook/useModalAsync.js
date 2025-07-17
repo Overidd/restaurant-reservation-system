@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
-import { ModalContextAsync } from '@/doman/context/dialogAsync';
+import { ModalAsyncContext } from '@/doman/context/dialogAsync';
 
 
 export const useModalAsync = () => {
-   const context = useContext(ModalContextAsync);
+   const context = useContext(ModalAsyncContext);
 
    if (!context) {
       throw new Error('useModalAsync must be used within a ModalProviderAsync');

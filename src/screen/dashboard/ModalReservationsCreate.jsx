@@ -242,12 +242,12 @@ export const ModalReservationsCreate = () => {
             <Form onSubmit={onSubmit}>
                <FormLabel
                   className={'pb-2'}
-                  formItemId='diners'
+                  htmlFor='diners'
                >
                   Información del cliente
                </FormLabel>
                <FormItem>
-                  <FormLabel formItemId='email'>
+                  <FormLabel htmlFor='email'>
                      Email
                   </FormLabel>
                   <Input
@@ -274,7 +274,7 @@ export const ModalReservationsCreate = () => {
 
                <FromGroup className={'grid grid-cols-2 gap-4'}>
                   <FormItem>
-                     <FormLabel formItemId='name'>
+                     <FormLabel htmlFor='name'>
                         Nombre
                      </FormLabel>
                      <Input
@@ -292,7 +292,7 @@ export const ModalReservationsCreate = () => {
                   </FormItem>
 
                   <FormItem>
-                     <FormLabel formItemId='phone'>
+                     <FormLabel htmlFor='phone'>
                         Teléfono
                      </FormLabel>
                      <Input
@@ -312,7 +312,7 @@ export const ModalReservationsCreate = () => {
 
                <FormLabel
                   className={'py-2'}
-                  formItemId='diners'
+                  htmlFor='diners'
                >
                   Información de la reserva
                </FormLabel>
@@ -322,7 +322,7 @@ export const ModalReservationsCreate = () => {
                <FromGroup className={'grid grid-cols-2 gap-4'}>
                   <FormItem>
                      <FormLabel
-                        formItemId='diners'
+                        htmlFor='diners'
                      >
                         Numero de comensales
                      </FormLabel>
@@ -357,7 +357,7 @@ export const ModalReservationsCreate = () => {
 
                   <FormItem >
                      <FormLabel
-                        formItemId='restaurant'
+                        htmlFor='restaurant'
                      >
                         Restaurantes
                      </FormLabel>
@@ -394,7 +394,7 @@ export const ModalReservationsCreate = () => {
                <FromGroup className={'grid grid-cols-2 gap-4'}>
                   <FormItem>
                      <FormLabel
-                        formItemId='diners'
+                        htmlFor='diners'
                      >
                         Fecha
                      </FormLabel>
@@ -413,7 +413,7 @@ export const ModalReservationsCreate = () => {
 
                   <FormItem>
                      <FormLabel
-                        formItemId='diners'
+                        htmlFor='diners'
                      >
                         Hora
                      </FormLabel>
@@ -449,7 +449,7 @@ export const ModalReservationsCreate = () => {
 
                <FormItem>
                   <FormLabel
-                     formItemId='diners'
+                     htmlFor='diners'
                   >
                      Mesas
                   </FormLabel>

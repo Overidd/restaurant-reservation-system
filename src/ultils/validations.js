@@ -4,6 +4,13 @@ export class Validations {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return [emailRegex.test(value), 'Email no valido'];
    }
+
+   static urlImage(value) {
+      // eslint-disable-next-line
+      const urlRegex = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+      return urlRegex.test(value)
+   }
+
 }
 
 export const validateObject = (obj) => {

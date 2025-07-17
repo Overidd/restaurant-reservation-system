@@ -1,2 +1,3 @@
-export * from './ModalProviderAsync';
-export * from './ModalContextAsync';
+export * from './ModalAsyncContext';
+export * from './ModalAsyncProvider';
+
