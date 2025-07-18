@@ -1,6 +1,8 @@
 import { tableTypeData } from '@/data';
 import { useForm } from '@/hook';
-import { useCreateObject } from '@/hook/dashboard';
+import { useResource } from '@/hook/dashboard';
+import { AdminTableToasts } from '@/toasts';
+import { Validations } from '@/ultils';
 import { useState } from 'react';
 import { Button } from '../../UI/common';
 import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../UI/from';
@@ -9,28 +11,85 @@ const schema = {
    initial: {
       name: '',
       description: '',
-      linkImage: '',
+      image: '',
       zone: '',
       size: '',
-      chairs: 0,
+      chairs: 2,
       positionX: 0,
       positionY: 0,
       rotation: 0,
       width: 0,
       height: 0,
    },
+
+   validation: {
+      name: [
+         (value) => value?.length >= 2,
+         'El nombre debe tener al menos 3 caracteres',
+      ],
+      description: [
+         (value) => value?.length >= 2,
+         'La descripcion debe tener al menos 3 caracteres',
+      ],
+      image: [
+         (value) => Validations.urlImage(value),
+         'La url de la imagen no es valida',
+      ],
+      zone: [
+         (value) => value?.length >= 2,
+         'La zona debe tener al menos 3 caracteres',
+      ],
+      size: [
+         (value) => !!value,
+         'El tamaño de mesa es obligatorio',
+      ],
+      positionX: [
+         (value, _, data) => value >= 0 && value <= (data.maxPositionX ?? 15),
+         'La posicion X debe ser mayor a 0',
+         true,
+      ],
+      positionY: [
+         (value, _, data) => value >= 0 && value <= (data.maxPositionY ?? 15),
+         'La posicion Y debe ser mayor a 0',
+         true,
+      ],
+      chairs: [
+         (value) => !!value,
+         'El numero de sillas es obligatorio',
+      ],
+
+      rotation: [
+         (value) => value >= 0 && value <= 360,
+         'La rotacion debe ser mayor a 0',
+      ],
+
+      width: [
+         (value) => value > 0 && value <= 15,
+         'El ancho debe ser mayor a 0',
+         true
+      ],
+      height: [
+         (value) => value > 0 && value <= 15,
+         'El alto debe ser mayor a 0',
+         true
+      ],
+   },
 }
 
 const keysChange = ['chairs', 'size', 'rotation', 'width', 'height', 'positionX', 'positionY']
 
-export const CreateTable = () => {
+export const CreateTable = ({
+   selectedResource,
+   restaurant,
+}) => {
    const [selectTypeTable, setSelectTypeTable] = useState([]);
 
    const {
+      createTable,
       createTempTable,
       updateSelectedResource,
-      selectedResource,
-   } = useCreateObject()
+      isLoadingCreateTable
+   } = useResource()
 
    const {
       onSubmitForm,
@@ -39,8 +98,14 @@ export const CreateTable = () => {
       onInitialFrom,
       formState,
       formValidation,
+      onResetForm,
    } = useForm({
       activeValidation: true,
+      validations: schema.validation,
+      additionalData: {
+         maxPositionX: restaurant?.rows,
+         maxPositionY: restaurant?.columns,
+      },
       initialState: {
          ...schema.initial,
          positionX: selectedResource.positionX,
@@ -57,7 +122,7 @@ export const CreateTable = () => {
    const {
       name,
       description,
-      linkImage,
+      image,
       zone,
       size,
       positionX,
@@ -71,13 +136,14 @@ export const CreateTable = () => {
    const {
       nameValid,
       descriptionValid,
-      linkImageValid,
+      imageValid,
       zoneValid,
       positionXValid,
       positionYValid,
       rotationValid,
       widthValid,
       heightValid,
+      chairsValid
    } = formValidation
 
    const handleChangeSize = (name) => {
@@ -86,7 +152,8 @@ export const CreateTable = () => {
          ...tableType,
          id: `${tableType.id}createtable`,
       });
-      createTempTable({
+      createTempTable(
+         selectedResource, {
          ...tableType,
          id: `${tableType.id}createtable`,
       })
@@ -96,74 +163,54 @@ export const CreateTable = () => {
          width: tableType.width,
          height: tableType.height,
          rotation: tableType.rotation,
+         positionX: selectedResource.positionX,
+         positionY: selectedResource.positionY
       })
    };
 
    const onSubmit = onSubmitForm((value) => {
-      console.log(value)
+      AdminTableToasts.createTable(
+         createTable({
+            ...selectedResource,
+            ...value,
+            idRestaurant: restaurant.id,
+            size: selectTypeTable?.size
+         }), {
+         onSuccess: () => {
+            onResetForm({
+               name,
+               description,
+               image,
+               zone,
+            });
+         }
+      });
    })
 
    return (
       <Form
+         noValidate
          onSubmit={onSubmit}
          className={'max-h-[70vh] overflow-y-auto [&::-webkit-scrollbar]:hidden'}
       >
-         <FormItem>
-            <FormLabel
-               href='name'
-               required
-            >
-               Nombre
-            </FormLabel>
-            <Input
-               required
-               size='base'
-               type='text'
-               id='name'
-               name='name'
-               value={name}
-               isError={!!nameValid}
-               onChange={onValueChange}
-            />
-         </FormItem>
-
-         <FormItem>
-            <FormLabel
-               href='description'
-               required
-            >
-               Descripcion
-            </FormLabel>
-            <Input
-               required
-               size='base'
-               type='text'
-               id='description'
-               name='description'
-               value={description}
-               isError={!!descriptionValid}
-               onChange={onValueChange}
-            />
-         </FormItem>
-
          <FromGroup
             className={'grid grid-cols-2 gap-4'}
          >
             <FormItem>
                <FormLabel
-                  href='linkImage'
+                  href='name'
                   required
                >
-                  Link Image
+                  Nombre
                </FormLabel>
                <Input
                   required
                   size='base'
-                  type='url'
-                  id='linkImage'
-                  name='linkImage'
-                  value={linkImage}
-                  isError={!!linkImageValid}
+                  type='text'
+                  id='name'
+                  name='name'
+                  value={name}
+                  isError={!!nameValid}
                   onChange={onValueChange}
                />
             </FormItem>
@@ -185,6 +232,44 @@ export const CreateTable = () => {
                />
             </FormItem>
          </FromGroup>
+
+         <FormItem>
+            <FormLabel
+               href='description'
+               required
+            >
+               Descripcion
+            </FormLabel>
+            <Input
+               required
+               size='base'
+               type='text'
+               id='description'
+               name='description'
+               value={description}
+               isError={!!descriptionValid}
+               onChange={onValueChange}
+            />
+         </FormItem>
+
+         <FormItem>
+            <FormLabel
+               href='image'
+               required
+            >
+               Link Image
+            </FormLabel>
+            <Input
+               required
+               size='base'
+               type='url'
+               id='image'
+               name='image'
+               value={image}
+               isError={!!imageValid}
+               onChange={onValueChange}
+            />
+         </FormItem>
 
          <FromGroup
             className={'grid grid-cols-2 gap-4'}
@@ -235,12 +320,13 @@ export const CreateTable = () => {
                </FormLabel>
 
                <Select
-                  value={String(chairs) || '2'}
+                  value={String(chairs) || undefined}
                   onValueChange={onValueChange}
                   name={'chairs'}
-                  type='text'
+                  type='number'
                >
                   <SelectTrigger
+                     isError={!!chairsValid}
                      size='base'
                      className='w-full'
                      variant='crystal'
@@ -255,7 +341,7 @@ export const CreateTable = () => {
                      {selectTypeTable && Array.from({ length: selectTypeTable.maxChairs }).map((_, index) => (
                         <SelectItem
                            key={`chairs-${index}`}
-                           value={String(index + 1)}
+                           value={`${index + 1}`}
                         >
                            {index + 1}
                         </SelectItem>
@@ -363,7 +449,8 @@ export const CreateTable = () => {
          <FormItem>
             <Button
                type='submit'
-               disabled={!isFormValid}
+               disabled={!isFormValid || isLoadingCreateTable}
+               isLoading={isLoadingCreateTable}
             >
                Crear Mesa
             </Button>

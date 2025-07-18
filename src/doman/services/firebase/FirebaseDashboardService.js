@@ -146,8 +146,7 @@ export class FirebaseDashboardService {
                ...data,
                type: typeResource.TABLE,
                idRestaurant: data.idRestaurant?.id ?? null,
-               status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
-               size: data.type,
+               status: reservation?.status ?? typeStatusTable.AVAILABLE,
                chairs: Number(data.chairs),
                hasReservar: reservation ? true : false,
                reservation: reservation?.reservation ?? null,
@@ -610,7 +609,7 @@ export class FirebaseDashboardService {
 
    }
 
-   async createObjectInCategory({ idCategory, rotation, name, width, height, linkImage }) {
+   async createObjectInCategory({ idCategory, rotation, name, width, height, image }) {
       if (!idCategory) {
          throw new Error('No se proporciono el id de la categoria');
       }
@@ -632,7 +631,7 @@ export class FirebaseDashboardService {
             name,
             width,
             height,
-            linkImage,
+            image,
             idCategory,
             rotation,
             createdAt: serverTimestamp()
@@ -656,7 +655,7 @@ export class FirebaseDashboardService {
       }
    }
 
-   async updateObjectInCategory({ idCategory, idObject, rotation, name, width, height, linkImage }) {
+   async updateObjectInCategory({ idCategory, idObject, rotation, name, width, height, image }) {
       try {
          if (!idCategory || !idObject) {
             throw new Error('No se proporciono el id de la reserva');
@@ -675,7 +674,7 @@ export class FirebaseDashboardService {
             width: width ?? objectData?.width,
             height: height ?? objectData?.height,
             rotation: rotation ?? objectData?.rotation,
-            linkImage: linkImage ?? objectData?.linkImage,
+            image: image ?? objectData?.image,
             updatedAt: serverTimestamp()
          }
 
@@ -717,6 +716,189 @@ export class FirebaseDashboardService {
          }
       }
    }
+
+   async updateDimensionMap({ id, columns, rows }) {
+      try {
+         if (!id) {
+            throw new Error('No se proporciono el id del restaurante');
+         }
+
+         const restaurantRef = doc(FirebaseDB, 'restaurants', id);
+         const restaurant = await getDoc(restaurantRef);
+
+         if (!restaurant.exists()) {
+            throw new Error('No se encontro el restaurante');
+         }
+         const restaurantData = restaurant.data();
+
+         const data = {
+            columns: columns ?? restaurantData?.columns,
+            rows: rows ?? restaurantData?.rows,
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(restaurantRef, data);
+
+         return {
+            ok: true,
+         }
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al actualizar las dimensiones'
+         }
+      }
+   }
+
+   async deleteTable({ idTable, idRestaurant }) {
+      try {
+         const tableRef = doc(FirebaseDB, `restaurants/${idRestaurant}/tables/${idTable}`);
+
+
+         await deleteDoc(tableRef);
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al eliminar la mesa'
+         }
+      }
+   }
+
+   async createObject({
+      idRestaurant,
+      idCategory,
+      name,
+      width,
+      height,
+      positionX,
+      positionY,
+      rotation,
+      image,
+      type,
+   }) {
+      try {
+         if (!idCategory || !idRestaurant) {
+            throw new Error('No se proporcionó el id de la categoría o restaurante');
+         }
+
+         const objectsRef = collection(FirebaseDB, `restaurants/${idRestaurant}/objects`);
+         const querySnapshot = await getDocs(
+            query(objectsRef, where('positionX', '==', positionX), where('positionY', '==', positionY))
+         );
+
+         if (!querySnapshot.empty) {
+            throw new Error('Ya existe un objeto en esa posición');
+         }
+
+         const objectRef = doc(objectsRef);
+         const data = {
+            name,
+            width,
+            height,
+            positionX,
+            positionY,
+            rotation,
+            image,
+            type,
+            createdAt: serverTimestamp()
+         };
+
+         await setDoc(objectRef, data);
+         return {
+            ok: true,
+            object: {
+               id: objectRef.id,
+               ...data,
+               createdAt: new Date().toISOString()
+            }
+         };
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al crear el objeto'
+         };
+      }
+   }
+
+   async createTable({
+      type,
+      image,
+      size,
+      chairs,
+      positionX,
+      positionY,
+      width,
+      height,
+      rotation,
+      zone,
+      description,
+      name,
+      idRestaurant,
+      isReservable,
+   }) {
+      try {
+         if (!idRestaurant || positionX == null || positionY == null) {
+            throw new Error('No se proporcionaron los datos necesarios de la mesa');
+         }
+
+         const tablesRef = collection(FirebaseDB, `restaurants/${idRestaurant}/tables`);
+         const querySnapshot = await getDocs(
+            query(tablesRef, where('positionX', '==', positionX), where('positionY', '==', positionY))
+         );
+
+         if (!querySnapshot.empty) {
+            throw new Error('Ya existe una mesa en esa posición');
+         }
+
+         const tableRef = doc(tablesRef);
+         const data = {
+            type,
+            image,
+            size,
+            chairs,
+            positionX,
+            positionY,
+            width,
+            height,
+            rotation,
+            zone,
+            description,
+            name,
+            isReservable,
+            idRestaurant,
+            createdAt: serverTimestamp()
+         };
+
+         await setDoc(tableRef, data);
+         return {
+            ok: true,
+            table: {
+               id: tableRef.id,
+               ...data,
+               idRestaurant,
+               createdAt: new Date().toISOString()
+            }
+         };
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al crear la mesa'
+         };
+      }
+   }
+
 
    // listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
    //    if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') {

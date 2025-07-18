@@ -27,7 +27,7 @@ export const useLoadRestaurantResource = ({
       //    hour: hour
       // }));
 
-   }, [restaurant, hour, dateStr, restaurants, hours]);
+   }, [restaurant.id, hour, dateStr, restaurants, hours]);
 
    return {
       isLoading: state.loading,

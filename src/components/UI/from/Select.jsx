@@ -12,10 +12,17 @@ export const Select = ({
   ...props
 }) => {
   const handleValueChange = (val) => {
+    let parsedVal = val;
+
+    if (type === 'number') {
+      parsedVal = Number(val);
+    }
+
     if (onValueChange) {
-      onValueChange({ name, value: val, type });
+      onValueChange({ name, value: parsedVal, type });
     }
   };
+
 
   return (
     <SelectPrimitive.Root

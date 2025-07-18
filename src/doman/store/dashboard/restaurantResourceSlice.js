@@ -9,17 +9,45 @@ export const restaurantResourceSlice = createSlice({
 
       tables: [],
 
-      object: [],
+      objects: [],
 
       loading: false,
    },
 
    reducers: {
+      deleteTableAction: (state, { payload }) => {
+         state.tables = state.tables.filter(t => t.id !== payload);
+      },
+
+      loaddingAction: (state, { payload }) => {
+         state.loading = payload ?? true
+      },
+
+      messageErrorAction: (state, { payload }) => {
+         state.messageError = payload
+         state.loading = false
+      },
+
+      setObjectAction: (state, { payload }) => {
+         state.objects = [...state.objects, { ...payload }]
+      },
+
+      setTableAction: (state, { payload }) => {
+         state.tables = [...state.tables, {
+            ...payload,
+            hasReservar: false,
+            isReservable: true,
+            status: typeStatusTable.AVAILABLE,
+            reservation: null,
+            user: null
+         }]
+      },
+
       setTablesAndObjectsAction: (state, { payload }) => {
          state.messageError = null
          state.loading = false
          state.tables = payload.tables;
-         state.object = payload.object;
+         state.objects = payload.objects;
       },
 
       // Escuchar notificaciones
@@ -132,19 +160,6 @@ export const restaurantResourceSlice = createSlice({
             return
          }
       },
-
-      deleteTableAction: (state, { payload }) => {
-         state.tables = state.tables.filter(t => t.id !== payload);
-      },
-
-      loaddingAction: (state, { payload }) => {
-         state.loading = payload ?? true
-      },
-
-      messageErrorAction: (state, { payload }) => {
-         state.messageError = payload
-         state.loading = false
-      },
    },
 });
 
@@ -157,4 +172,6 @@ export const {
    loaddingAction,
    messageErrorAction,
    deleteTableAction,
+   setObjectAction,
+   setTableAction
 } = restaurantResourceSlice.actions

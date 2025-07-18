@@ -12,17 +12,14 @@ export class Validations {
    }
 
 }
-
 export const validateObject = (obj) => {
-   if (Object.keys(obj).length === 0) {
-      return false;
-   }
-   if (Object.values(obj).some((value) => !value)) {
-      return false;
-   }
+   if (!obj || typeof obj !== 'object') return false;
 
-   return true;
-}
+   if (Object.keys(obj).length === 0) return false;
+
+   return Object.values(obj).every(value => value !== undefined);
+};
+
 
 export const isObject = (varObj) => {
    return Object.prototype.toString.call(varObj) === '[object Object]';

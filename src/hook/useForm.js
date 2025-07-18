@@ -26,6 +26,7 @@ const TYPEACTION = {
    VALIDATE_ONE: 'VALIDATE_ONE',
    RESET: 'RESET',
    SET_VALIDATIONS: 'SET_VALIDATIONS',
+   DATA_RESET: 'DATA_RESET',
 }
 
 const validateField = (key, state, validations, additionalData, disabledMap) => {
@@ -78,6 +79,30 @@ const formReducer = (state, action) => {
             ...state,
             values: action.initialState,
             errors: {},
+         };
+      }
+
+      case TYPEACTION.DATA_RESET: {
+         const resetSate = Object.entries(state.values).map(([key, value]) => {
+            const reset = Object.keys(action.dataReset).find((keyReset) => keyReset === key);
+            if (reset) {
+               return [key, action.initialaction[key]]
+            }
+            return [key, value]
+         });
+
+         const resetError = Object.entries(state.errors).map(([key, value]) => {
+            const reset = Object.keys(action.dataReset).find((keyReset) => keyReset === key);
+            if (reset) {
+               return [key, '']
+            }
+            return [key, value]
+         })
+
+         return {
+            ...state,
+            values: Object.fromEntries(resetSate),
+            errors: Object.fromEntries(resetError),
          };
       }
 
@@ -189,14 +214,20 @@ export const useForm = ({
       };
    }, [state.values, state.validations, state.additionalData, disabledMap]);
 
-   const onResetForm = useCallback(() => {
-      dispatch({ type: TYPEACTION.RESET, initialState });
+   const onResetForm = useCallback((dataReset) => {
+      if (!dataReset) {
+         dispatch({ type: TYPEACTION.RESET, initialState });
+         return;
+      };
+
+      dispatch({ type: TYPEACTION.DATA_RESET, dataReset: dataReset, initialState });
+
    }, [initialState]);
 
    const onSubmitForm = useCallback(
       (callback) => (event) => {
          event.preventDefault();
-         event.stopPropagation();
+         // event.stopPropagation();
          const inputDisables = event.target.querySelectorAll('input:disabled');
          if (inputDisables) {
             for (const element of inputDisables) {

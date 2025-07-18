@@ -38,6 +38,14 @@ export const stateFilterRestaurantSlice = createSlice({
          state.messageError = null;
       },
 
+      updateRestaurantAction: (state, { payload }) => {
+         if (!payload) return;
+         state.filter.restaurant = {
+            ...state.filter.restaurant,
+            ...payload
+         };
+      },
+
       setChangeFilterAction: (state, { payload }) => {
          if (payload.name === 'restaurant') {
             const data = state.restaurants.find((r) => r.name === payload.value);
@@ -62,6 +70,7 @@ export const stateFilterRestaurantSlice = createSlice({
 export const {
    messageErrorAction: messageErrorActionFilter,
    setRestaurantsAction,
+   updateRestaurantAction,
    setHoursAction,
    setChangeFilterAction
 } = stateFilterRestaurantSlice.actions;

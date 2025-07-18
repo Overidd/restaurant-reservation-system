@@ -10,7 +10,7 @@ import { Form, FormItem, FormLabel, FromGroup, Input, Label } from '../../UI/fro
 const schema = {
    initial: {
       name: '',
-      linkImage: '',
+      image: '',
       width: 0,
       height: 0,
       rotation: 0
@@ -20,7 +20,7 @@ const schema = {
          (value) => value.length >= 3,
          'El nombre debe tener al menos 3 caracteres',
       ],
-      linkImage: [
+      image: [
          (value) => Validations.urlImage(value),
          'La url de la imagen no es valida',
       ],
@@ -58,7 +58,7 @@ export const ModalCreateItemObject = ({
       onResetForm,
       formState: {
          name,
-         linkImage,
+         image,
          width,
          height,
          rotation,
@@ -66,7 +66,7 @@ export const ModalCreateItemObject = ({
 
       formValidation: {
          nameValid,
-         linkImageValid,
+         imageValid,
          widthValid,
          heightValid,
          rotationValid
@@ -86,7 +86,7 @@ export const ModalCreateItemObject = ({
       AdminTableToasts.createObject(
          createObject({
             name: value.name,
-            linkImage: value.linkImage,
+            image: value.image,
             width: value.width,
             height: value.height,
             rotation: value.rotation,
@@ -141,7 +141,7 @@ export const ModalCreateItemObject = ({
 
                <FormItem>
                   <FormLabel
-                     href='linkImage'
+                     href='image'
                      required
                   >
                      Link Image
@@ -149,10 +149,10 @@ export const ModalCreateItemObject = ({
                   <Input
                      required
                      type='url'
-                     id='linkImage'
-                     name='linkImage'
-                     value={linkImage}
-                     isError={!!linkImageValid}
+                     id='image'
+                     name='image'
+                     value={image}
+                     isError={!!imageValid}
                      onChange={onValueChange}
                      variant={'crystal'}
                      size='base'

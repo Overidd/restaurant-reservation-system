@@ -23,7 +23,9 @@ export const MapScreen = () => {
          <ModalAsyncProvider>
             <MapManagerProvider
                className={cn(
-                  'w-[50rem] h-[50rem] overflow-hidden mx-auto select-none',
+                  'overflow-hidden mx-auto select-none',
+                  'md:w-[44rem] md:h-[40rem]',
+                  '2xl:w-[48rem] 2xl:h-[44rem]',
                )}
             >
                <MapStateManager />

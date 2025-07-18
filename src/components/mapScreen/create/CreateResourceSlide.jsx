@@ -20,6 +20,8 @@ import {
 
 export const CreateResourceSlide = ({
    selectedResource,
+   restaurant,
+   className,
    onClose,
    isOpen = false
 }) => {
@@ -64,7 +66,7 @@ export const CreateResourceSlide = ({
       >
          <Card2
             className={cn(
-               'w-80',
+               className
             )}
          >
             <Label className={'text-center w-full mb-4'}>
@@ -129,11 +131,16 @@ export const CreateResourceSlide = ({
             </div>
             {
                (typeCategory === typeObj.TABLE) &&
-               <CreateTable />
+               <CreateTable
+                  selectedResource={selectedResource}
+                  restaurant={restaurant}
+               />
             }
             {
                (!!typeCategory && typeCategory !== typeObj.TABLE) &&
                <CreateObject
+                  restaurant={restaurant}
+                  selectedResource={selectedResource}
                   currentCategory={getCategoryByName(typeCategory)}
                />
             }

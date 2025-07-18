@@ -25,7 +25,7 @@ const chairColors = {
 const tableSizes = {
    small: {
       tableWidth: 'clamp(40px, 50%, 80px)',
-      tableHeight: 'clamp(30px, 80%, 60px)',
+      tableHeight: 'clamp(30px, 70%, 60px)',
       chairWidth: 'clamp(12px, 40%, 24px)',
       chairHeight: 'clamp(8px, 40%, 24px)',
       rounded: 'rounded-lg',
@@ -113,33 +113,38 @@ export const TableItem = ({
    chairs = 2,
    rotation = 0,
    isHighlighted = false,
+   isCursorPreview = false,
+   ...props
 }) => {
    const tableConfig = tableSizes[size]
    const chairPositions = getChairPositions(chairs, size)
 
    return (
       <button
+         tabIndex={0}
          onClick={onClick}
          className={cn(
             'relative w-full h-full min-w-[60px] min-h-[60px]',
             'transition-all duration-300 hover:scale-105 cursor-pointer',
-            isHighlighted && 'transition-shadow rounded-2xl shadow-card',
+            isHighlighted && 'transition-shadow rounded-2xl shadow-card bg-background',
+            isCursorPreview && 'opacity-60 pointer-events-none',
             className,
          )}
          style={{
             transform: `rotate(${rotation}deg)`,
-            containerType: 'inline-size',
+            // containerType: 'inline-size',
          }}
+         {...props}
       >
          <div
             className={cn(
                'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-               'shadow-none',
-               tableConfig.rounded,
+               'shadow-none pointer-events-none',
+               tableConfig?.rounded,
             )}
             style={{
-               width: tableConfig.tableWidth,
-               height: tableConfig.tableHeight,
+               width: tableConfig?.tableWidth,
+               height: tableConfig?.tableHeight,
             }}
          >
             {chairPositions.map((position, index) => (
@@ -151,19 +156,19 @@ export const TableItem = ({
                      chairColors[color],
                   )}
                   style={{
-                     width: tableConfig.chairWidth,
-                     height: tableConfig.chairHeight,
+                     width: tableConfig?.chairWidth,
+                     height: tableConfig?.chairHeight,
                      ...position,
                   }}
                />
             ))}
 
             <div className={cn(
-               'transition-all duration-300 z-10',
+               'transition-all duration-300',
                'pointer-events-none shadow-lg',
                'relative h-full w-full',
                colors[color],
-               tableConfig.rounded
+               tableConfig?.rounded
             )}>
                <span
                   className={cn(
@@ -172,7 +177,7 @@ export const TableItem = ({
                      'leading-tight',
                   )}
                   style={{
-                     fontSize: tableConfig.fontSize,
+                     fontSize: tableConfig?.fontSize,
                   }}
                >
                   {name}

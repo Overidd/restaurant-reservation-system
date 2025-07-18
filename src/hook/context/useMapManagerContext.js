@@ -10,11 +10,6 @@ export const useMapManagerContext = () => {
    return {
       resources: ctx.resources,
       isEdit: ctx.isEdit,
-      selectedResource: ctx.selectedResource,
-      setSelectedResource: ctx.setSelectedResource,
-      toggleIsTempResourceChange: ctx.toggleIsTempResourceChange,
-      updateSelectedResource: ctx.updateSelectedResource,
-      changeValueTempRestaurant: ctx.changeValueTempRestaurant,
       restaurant: ctx.restaurant,
    }
 }

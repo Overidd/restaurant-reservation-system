@@ -26,7 +26,7 @@ export const ObjectEmpty = ({
    return (
       <div
          className={cn(
-            'w-full h-full mx-auto p-4',
+            'w-full h-full',
             isHighlighted && 'transition-shadow rounded-2xl shadow-card',
             className,
          )}

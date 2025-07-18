@@ -1,6 +1,6 @@
-import { MapEditManager, MapStateManager } from '@/components/mapScreen';
+import { MapEditManager, MapStateManager, RenderCursorSelect } from '@/components/mapScreen';
 import { CardLoadding } from '@/components/UI/card';
-import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant, useTempRestaurant } from '@/hook/dashboard';
+import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
 import { cn } from '@/ultils';
 import { Children, isValidElement, useMemo } from 'react';
 import { MapManagerContext } from './MapManagerContext';
@@ -38,9 +38,7 @@ export const MapManagerProvider = ({
       isEdit,
       isTempResourceChange,
       selectedResource,
-      setSelectedResource,
-      toggleIsTempResourceChange,
-      updateSelectedResource,
+      tempRestaurant,
    } = useRestaurantUi();
 
    const {
@@ -51,11 +49,6 @@ export const MapManagerProvider = ({
       tables,
       objects
    });
-
-   const {
-      tempRestaurant,
-      changeValueTempRestaurant
-   } = useTempRestaurant();
 
    const editRestaurant = useMemo(() => {
       if (isEdit) return { ...restaurant, ...tempRestaurant };
@@ -78,11 +71,6 @@ export const MapManagerProvider = ({
       <MapManagerContext.Provider value={{
          isEdit,
          resources,
-         selectedResource,
-         setSelectedResource,
-         toggleIsTempResourceChange,
-         updateSelectedResource,
-         changeValueTempRestaurant,
          restaurant: editRestaurant
       }}>
          <div className={cn(
@@ -93,7 +81,7 @@ export const MapManagerProvider = ({
             className
          )}>
             <CardLoadding
-               className='w-full h-full flex items-center justify-center'
+               className='w-full h-full flex items-center justify-center relative'
                isLodding={isLoading}
             >
                <div
@@ -102,16 +90,29 @@ export const MapManagerProvider = ({
                      'grid items-center justify-center gap-2 overflow-auto [&::-webkit-scrollbar]:hidden'
                   )}
                   style={{
-                     gridTemplateColumns: `repeat(${editRestaurant.columns}, 1fr)`,
-                     gridTemplateRows: `repeat(${editRestaurant.rows}, 1fr)`,
+                     gridTemplateColumns: `repeat(${restaurant.columns}, 1fr)`,
+                     gridTemplateRows: `repeat(${restaurant.rows}, 1fr)`
                   }}
                >
-                  {
-                     isEdit
-                        ? mapEditManager
-                        : mapStateManager
-                  }
+                  {isEdit ? mapEditManager : mapStateManager}
                </div>
+
+               {/* overlay sólo en modo edición */}
+               {isEdit && (
+                  <div
+                     className={cn(
+                        'absolute inset-0 select-none pointer-events-none z-50',
+                        'grid items-center justify-center gap-2'
+                     )}
+                     style={{
+                        gridTemplateColumns: `repeat(${restaurant.columns}, 1fr)`,
+                        gridTemplateRows: `repeat(${restaurant.rows}, 1fr)`
+                     }}
+                  >
+                     <RenderCursorSelect resource={selectedResource} />
+                  </div>
+               )}
+
 
                {/* Top */}
                <div className='absolute left-0 top-0 h-2 w-full grid grid-cols-[40%_50%] justify-between'>

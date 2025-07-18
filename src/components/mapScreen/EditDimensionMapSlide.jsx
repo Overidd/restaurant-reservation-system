@@ -1,13 +1,20 @@
 import { useForm } from '@/hook';
+import { useDimensionMap } from '@/hook/dashboard';
+import { AdminTableToasts } from '@/toasts';
 import { Card2 } from '../UI/card';
 import { Button, CardTitle, SlideOver } from '../UI/common';
 import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 
 export const EditDimensionMapSlide = ({
-   changeValueTempRestaurant,
+   className,
    restaurant,
    isOpen = false
 }) => {
+   const {
+      updateDimension,
+      changeValueDimension,
+      isLoddingUpdate,
+   } = useDimensionMap();
 
    const {
       onSubmitForm,
@@ -19,18 +26,24 @@ export const EditDimensionMapSlide = ({
    } = useForm({
       activeValidation: true,
       initialState: {
-         rows: restaurant.rows || 1,
-         columns: restaurant.columns || 1
+         rows: restaurant?.rows || 1,
+         columns: restaurant?.columns || 1
       },
 
       changeValueCallback: ({ name, value }) => {
          if (!name || !value) return;
-         changeValueTempRestaurant({ name, value })
+         changeValueDimension({ name, value })
       }
    });
 
    const onSubmit = onSubmitForm((value) => {
-      console.log(value)
+      AdminTableToasts.updateDimension(
+         updateDimension({
+            ...restaurant,
+            rows: value.rows,
+            columns: value.columns
+         })
+      )
    })
 
    return (
@@ -38,9 +51,9 @@ export const EditDimensionMapSlide = ({
          isOpen={isOpen}
          direction='topleft'
       >
-         <Card2 className={'w-80'}>
+         <Card2 className={className}>
             <CardTitle>
-               {name}
+               {restaurant?.name}
             </CardTitle>
             <Form
                onSubmit={onSubmit}
@@ -88,7 +101,11 @@ export const EditDimensionMapSlide = ({
                </FormItem>
 
                <FormItem>
-                  <Button>
+                  <Button
+                     type='submit'
+                     disabled={isLoddingUpdate}
+                     isLoading={isLoddingUpdate}
+                  >
                      Actualizar
                   </Button>
                </FormItem>

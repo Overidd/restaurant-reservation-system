@@ -1,7 +1,8 @@
 import { useForm } from '@/hook';
 import { useCreateObjectContext } from '@/hook/context';
-import { useCreateObject } from '@/hook/dashboard';
+import { useResource } from '@/hook/dashboard';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
+import { AdminTableToasts } from '@/toasts';
 import { Pen, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../../UI/common';
@@ -9,12 +10,40 @@ import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, Sel
 
 const schema = {
    initial: {
-      positionX: '', // TODO Esa posicion de Y, X, deberia de recibir del objecto vacio seleccionado
+      positionX: '',
       positionY: '',
       rotation: '',
       width: '',
       height: '',
+      chairs: 2,
    },
+   validation: {
+      positionX: [
+         (value, _, data) => value > 0 && value <= (data.maxPositionX ?? 15),
+         'El ancho debe ser mayor a 0',
+         true
+      ],
+      positionY: [
+         (value, _, data) => value > 0 && value <= (data.maxPositionY ?? 15),
+         'El alto debe ser mayor a 0',
+         true
+      ],
+      rotation: [
+         (value) => value >= 0 && value <= 360,
+         'La rotación debe estar entre 0 y 360',
+         true
+      ],
+      width: [
+         (value) => value > 0 && value <= 15,
+         'El ancho debe ser mayor a 0',
+         true
+      ],
+      height: [
+         (value) => value > 0 && value <= 15,
+         'El alto debe ser mayor a 0',
+         true
+      ],
+   }
 }
 
 // TODO: Hasta que no seleccione algun tipo de objecto, los campos deberia estar por defecto desabilitados
@@ -22,8 +51,11 @@ const schema = {
 // TODO: Seria ideal recibir el ancho y alto del tablero
 
 export const CreateObject = ({
-   currentCategory
+   selectedResource,
+   currentCategory,
+   restaurant,
 }) => {
+
    const [objectName, setObjectName] = useState(null) // table, y etc...
 
    const {
@@ -35,20 +67,21 @@ export const CreateObject = ({
    } = useModalEditItemObject()
 
    const {
+      objects,
       setCategory,
       loadObjects,
       isLoadingLoad,
       setSelectObject,
       getObjectByName,
-      objects,
    } = useCreateObjectContext()
 
    const {
-      updateSelectedResource,
-      selectedResource,
+      createObject,
       createTempObject,
-      toggleIsTempResourceChange
-   } = useCreateObject()
+      updateSelectedResource,
+      toggleIsTempResourceChange,
+      isLoadingCreateObject
+   } = useResource()
 
    const {
       onSubmitForm,
@@ -71,29 +104,38 @@ export const CreateObject = ({
          heightValid,
       }
    } = useForm({
-      initialState: schema.initial,
       activeValidation: true,
+      validations: schema.validation,
+      initialState: {
+         ...schema.initial,
+         positionX: selectedResource.positionX,
+         positionY: selectedResource.positionY,
+      },
+      additionalData: {
+         maxPositionX: restaurant?.rows,
+         maxPositionY: restaurant?.columns,
+      },
       changeValueCallback: ({ name, value }) => {
          if (!name || !value) return
          updateSelectedResource({ name, value })
       }
    });
 
-   const onSubmit = onSubmitForm((data) => {
-      console.log(data);
-   })
-
    const handleSelectObject = ({ value }) => {
       const object = getObjectByName(value);
       if (!value || !object) return
       setObjectName(value)
+      toggleIsTempResourceChange(true)
+
+      createTempObject(
+         selectedResource,
+         object
+      )
       onInitialFrom({
          ...object,
          positionX: selectedResource.positionX,
          positionY: selectedResource.positionY
       })
-      createTempObject(object)
-      toggleIsTempResourceChange(true)
    }
 
    const handleModalCreateObject = () => {
@@ -108,6 +150,19 @@ export const CreateObject = ({
       onOpenEditItemObj()
    }
 
+   const onSubmit = onSubmitForm((data) => {
+      AdminTableToasts.createObject(
+         createObject({
+            ...selectedResource,
+            ...data,
+            idRestaurant: restaurant?.id,
+         }), {
+         onSuccess: () => {
+            onResetForm()
+         }
+      })
+   })
+
    useEffect(() => {
       if (currentCategory) {
          loadObjects(currentCategory.id)
@@ -119,25 +174,26 @@ export const CreateObject = ({
 
    return (
       <Form
+         noValidate
          onSubmit={onSubmit}
       >
          <FromGroup
             className={'flex items-center gap-2'}
          >
             <FormItem className='flex-1'>
-               <FormLabel htmlFor='typeObj'>
+               <FormLabel htmlFor='type'>
                   Tipo de objeto
                </FormLabel>
 
                <Select
-                  name='typeObj'
+                  name='type'
                   value={objectName}
                   onValueChange={handleSelectObject}
                >
                   <SelectTrigger
                      isLoading={isLoadingLoad}
                      disabled={isLoadingLoad}
-                     id='typeObj'
+                     id='type'
                      variant='crystal'
                      className={'w-full'}
                      size='base'
@@ -185,7 +241,6 @@ export const CreateObject = ({
          <FromGroup
             className={'grid grid-cols-3 gap-4'}
          >
-
             <FormItem>
                <FormLabel
                   htmlFor={'positionX'}
@@ -284,7 +339,8 @@ export const CreateObject = ({
             <Button
                size='base'
                type='submit'
-               disabled={!isFormValid}
+               disabled={!isFormValid || isLoadingCreateObject}
+               isLoading={isLoadingCreateObject}
             >
                Crear objeto
             </Button>

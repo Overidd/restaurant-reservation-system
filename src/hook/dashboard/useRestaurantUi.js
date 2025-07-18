@@ -23,6 +23,7 @@ export const useRestaurantUi = () => {
       isEdit: state.isEdit,
       isTempResourceChange: state.isTempResourceChange,
       selectedResource: state.selectedResource,
+      tempRestaurant: state.tempRestaurant,
 
 
       // Funciones 

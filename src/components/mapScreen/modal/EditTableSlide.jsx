@@ -18,7 +18,7 @@ const schema = {
    initial: {
       name: '',
       description: '',
-      linkImage: '',
+      image: '',
       isReservable: false,
    },
    valid: {
@@ -30,7 +30,7 @@ const schema = {
          (value) => value.length >= 3,
          'La descripción debe tener al menos 3 caracteres',
       ],
-      linkImage: [
+      image: [
          (value) => value.length >= 3,
          'El link de la imagen debe tener al menos 3 caracteres',
       ],
@@ -53,13 +53,13 @@ export const EditTableSlide = ({
       formState: {
          name,
          description,
-         linkImage,
+         image,
          isReservable
       },
       formValidation: {
          nameValid,
          descriptionValid,
-         linkImageValid
+         imageValid
       },
    } = useForm({
       initialState: validateObject(initial) ? initial : schema.initial,
@@ -144,18 +144,18 @@ export const EditTableSlide = ({
 
                <FormItem>
                   <FormLabel
-                     htmlFor={'linkImage'}
+                     htmlFor={'image'}
                   >
                      Link Image
                   </FormLabel>
                   <Input
                      type='link'
-                     name='linkImage'
+                     name='image'
                      variant='crystal'
-                     id={'linkImage'}
-                     value={linkImage ?? ''}
+                     id={'image'}
+                     value={image ?? ''}
                      onChange={onValueChange}
-                     isError={!!linkImageValid}
+                     isError={!!imageValid}
                      className={'!text-base py-1'}
                   />
                </FormItem>

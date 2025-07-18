@@ -4,9 +4,9 @@ import { toggleIsEditAction } from '@/doman/store/dashboard';
 import { useSlideOverObjectCreate } from '../slideover';
 import { useModalTableEdit } from '../useModalTableEdit';
 import { useModalTableEditProperty } from '../useModalTableEditProperty';
-import { useCreateObject } from './useCreateObject';
+import { useDimensionMap } from './useDimensionMap';
+import { useResource } from './useResource';
 import { useStateFilterRestaurant } from './useStateFilterRestaurant';
-import { useTempRestaurant } from './useTempRestaurant';
 
 export const useEditTables = () => {
    const isEdit = useSelector((state) => state.restaurantUiReducer.isEdit);
@@ -20,12 +20,12 @@ export const useEditTables = () => {
 
    const {
       setTempRestaurant
-   } = useTempRestaurant();
+   } = useDimensionMap();
 
    const {
       toggleIsTempResourceChange,
       setSelectedResource
-   } = useCreateObject();
+   } = useResource();
 
    const {
       isOpen: isOpenModalObjectCreate,

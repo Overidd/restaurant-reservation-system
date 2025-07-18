@@ -1,21 +1,23 @@
 import { CreateCategoryProvider, CreateObjectProvider } from '@/doman/context/object';
 import { useModalTableEdit, useModalTableEditProperty } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
+import { useRestaurantUi } from '@/hook/dashboard';
 import { useSlideOverObjectCreate } from '@/hook/slideover';
 import { CreateResourceSlide, EditDimensionMapSlide, EditTablePropertySlide, EditTableSlide, MapEdit, ModalManagerObjects } from '..';
 
 export const MapEditManager = () => {
-
    const {
       isEdit,
       resources,
       restaurant,
+   } = useMapManagerContext()
+
+   const {
       selectedResource,
       setSelectedResource,
-      updateSelectedResource,
       toggleIsTempResourceChange,
-      changeValueTempRestaurant
-   } = useMapManagerContext()
+      updateSelectedResource,
+   } = useRestaurantUi();
 
    const {
       isOpen: isOpenModalEdit,
@@ -66,29 +68,28 @@ export const MapEditManager = () => {
       toggleIsTempResourceChange(false);
    };
 
-   console.log(restaurant.rows, restaurant.columns);
    return (
       <>
          <MapEdit
-            rows={restaurant.rows}
-            columns={restaurant.columns}
+            restaurant={restaurant}
             resources={resources}
             onOpenEditTable={handleOpenEditTable}
-            onOpenCreateObject={handleOpenCreateObject}
             selectedResource={selectedResource}
-            onDeleteTable={() => { }}
+            onOpenCreateObject={handleOpenCreateObject}
          />
 
          <EditDimensionMapSlide
+            className={'w-72'}
             isOpen={isEdit}
             restaurant={restaurant}
-            changeValueTempRestaurant={changeValueTempRestaurant}
          />
 
          {isOpenObjectCreate &&
             <CreateCategoryProvider>
                <CreateObjectProvider>
                   <CreateResourceSlide
+                     className={'w-80'}
+                     restaurant={restaurant}
                      selectedResource={selectedResource}
                      onClose={closeModalObjectCreate}
                      isOpen={isOpenObjectCreate}

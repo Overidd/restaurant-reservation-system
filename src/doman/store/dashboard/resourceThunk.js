@@ -1,7 +1,6 @@
 import { dasboardServiceProvider } from '@/doman/services';
 import { validateObject } from '@/ultils';
 import {
-   deleteTableAction,
    loaddingAction,
    messageErrorAction,
    setTablesAndObjectsAction
@@ -38,17 +37,53 @@ export const loadTablesAndObjectsThunks = (data) => {
    }
 }
 
-export const deleteTableThunks = (idTable) => {
-   return async (dispatch) => {
-      const res = await dasboardServiceProvider?.deleteTable(idTable);
-      if (!res.ok) {
-         dispatch(messageErrorAction(res.errorMessage));
-         return;
-      }
+// export const deleteTableThunks = ({ idTable, idRestaurant }) => {
+//    return async (dispatch) => {
+//       if (!idTable || !idRestaurant) {
+//          throw new Error('Error al eliminar la mesa');
+//       };
 
-      dispatch(deleteTableAction(idTable));
-   }
-}
+//       const res = await dasboardServiceProvider?.deleteTable({ idTable, idRestaurant });
+//       if (!res.ok) {
+//          dispatch(messageErrorAction(res.errorMessage));
+//          throw res.errorMessage
+//       }
+
+//       dispatch(deleteTableAction(idTable));
+//    }
+// }
+
+// export const createObjectThunks = (data) => {
+//    return async (dispatch) => {
+//       if (!data || !validateObject(data)) {
+//          throw new Error('Error al crear el objeto');
+//       };
+
+//       const res = await dasboardServiceProvider.createObject(data);
+//       if (!res.ok) {
+//          dispatch(messageErrorAction(res.errorMessage));
+//          throw res.errorMessage
+//       }
+
+//       dispatch(setObjectsAction(res.object));
+//    }
+// }
+
+// export const createTableThunks = (data) => {
+//    return async (dispatch) => {
+//       if (!data || !validateObject(data)) {
+//          throw new Error('Error al crear la mesa');
+//       };
+
+//       const res = await dasboardServiceProvider.createTable(data);
+//       if (!res.ok) {
+//          dispatch(messageErrorAction(res.errorMessage));
+//          throw res.errorMessage
+//       }
+
+//       dispatch(setTablesAction(res.table));
+//    }
+// }
 
 let unsubscribeTablesListener = null;
 export const listenModifyTablesThunks = (data) => {

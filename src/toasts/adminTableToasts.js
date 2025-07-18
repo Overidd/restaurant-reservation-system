@@ -22,14 +22,6 @@ export class AdminTableToasts {
          .finally(() => onFinally?.());
    }
 
-   static deleteTable(promise) {
-      return toast.promise(promise, {
-         loading: 'Eliminando mesa...',
-         success: 'Mesa eliminada correctamente.',
-         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar mesa.',
-      });
-   }
-
    static confirmReserve(promise) {
       return toast.promise(promise, {
          loading: 'Confirmando reserva...',
@@ -90,6 +82,17 @@ export class AdminTableToasts {
          .finally(() => onFinally?.());
    }
 
+   static async createTable(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Creando mesa...',
+         success: 'Mesa creada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al crear mesa.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
    static async updateObject(promise, { onSuccess, onError, onFinally } = {}) {
       return toast.promise(promise, {
          loading: 'Actualizando objeto...',
@@ -106,6 +109,28 @@ export class AdminTableToasts {
          loading: 'Eliminando objeto...',
          success: 'Objeto eliminado correctamente.',
          error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar objeto.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async updateDimension(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Actualizando la nueva dimensiones...',
+         success: 'Dimensiones actualizado correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar la nueva dimension.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async deleteTable(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Eliminando mesa...',
+         success: 'Mesa eliminada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar mesa.',
       })
          .then(() => onSuccess?.())
          .catch((err) => onError?.(err))

@@ -1,15 +1,17 @@
+import { TableItem } from '@/components/UI/table';
 import { Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '../../UI/common';
-import { TableItem } from '../../UI/table';
 
 
 export const TableEditItem = ({
    table,
    onDeleteTable,
    onOpenEditTable,
-   highlighted = false
+   highlighted = false,
+   isCursorPreview = false
 }) => {
+
    const [open, setOpen] = useState(false);
 
    const handleClick = () => {
@@ -56,27 +58,22 @@ export const TableEditItem = ({
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild>
             <TableItem
-               tabIndex={0}
-               role='button'
                onClick={handleClick}
                color={table?.status}
                name={table?.name}
                user={table?.user}
                size={table?.size}
                chairs={table?.chairs}
-               width={table?.width} // 2, 3
-               height={table?.height}
-               positionY={table?.positionY}
-               positionX={table?.positionX}
                rotation={table?.rotation}
                isHighlighted={highlighted}
+               isCursorPreview={isCursorPreview}
             />
          </PopoverTrigger>
 
          <PopoverContent
             align='center'
             side='right'
-            sideOffset={-10}
+            // sideOffset={-10}
             onInteractOutside={handleClose}
             onClick={handleClose}
             className='flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'

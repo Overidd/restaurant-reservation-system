@@ -1,20 +1,24 @@
 import { DialigDeleteTable } from '@/components/UI/dialog';
 import { useModalAsync } from '@/hook';
-import { typeResource } from '@/ultils';
+import { useResource } from '@/hook/dashboard';
+import { AdminTableToasts } from '@/toasts';
+import { cn, typeResource } from '@/ultils';
 import { useState } from 'react';
 import { ObjectEmpty, ObjectItem, TableEditItem } from '..';
 
 export const MapEdit = ({
-   rows,
-   columns,
+   restaurant,
    resources,
    onOpenEditTable,
    onOpenCreateObject,
    selectedResource,
-   onDeleteTable,
 }) => {
    const { showAsyncModal } = useModalAsync();
    const [selectTable, setSelectTable] = useState(null);
+
+   const {
+      deleteTable,
+   } = useResource();
 
    if (!Array.isArray(resources)) return null;
 
@@ -30,17 +34,22 @@ export const MapEdit = ({
       ));
 
       if (confirmed) {
-         onDeleteTable(table.id);
+         AdminTableToasts.deleteTable(
+            deleteTable({
+               table,
+               idTable: table.id,
+               idRestaurant: restaurant.id
+            })
+         )
       }
       setSelectTable(null);
    }
-
    const paintedBoard = () => {
       const occupiedCells = new Set();
 
-      return Array.from({ length: rows * columns }).map((_, index) => {
-         const x = Math.floor(index / columns) + 1;
-         const y = (index % columns) + 1;
+      return Array.from({ length: restaurant.rows * restaurant.columns }).map((_, index) => {
+         const x = Math.floor(index / restaurant.columns) + 1;
+         const y = (index % restaurant.columns) + 1;
 
          const cellKey = `${x}-${y}`;
          if (occupiedCells.has(cellKey)) return null;
@@ -48,8 +57,9 @@ export const MapEdit = ({
          const resource = resources.find(
             (res) => res.positionX === x && res.positionY === y
          );
-
+         // if (resource?.isCursor) return null;
          if (resource) {
+
             const { width = 1, height = 1, id, type } = resource;
 
             // Marcar todas las celdas que ocupa este recurso
@@ -66,6 +76,7 @@ export const MapEdit = ({
                gridRow: `${x} / span ${height}`,
             };
 
+
             switch (type) {
                case typeResource.OBJECT:
                   return (
@@ -74,6 +85,7 @@ export const MapEdit = ({
                            object={resource}
                            selectedObject={selectedResource}
                            highlighted={selectedResource?.id === id}
+                           isCursorPreview={resource?.isCursor}
                         />
                      </div>
                   );
@@ -82,10 +94,15 @@ export const MapEdit = ({
                   return (
                      <div key={id} style={commonStyle}>
                         <TableEditItem
+                           key={id}
                            table={resource}
                            onOpenEditTable={onOpenEditTable}
                            onDeleteTable={handleDeleteTable}
-                           highlighted={selectedResource?.id === id}
+                           isCursorPreview={resource?.isCursor}
+                           highlighted={
+                              selectedResource?.id === id ||
+                              selectTable === id
+                           }
                         />
                      </div>
                   );
@@ -100,7 +117,7 @@ export const MapEdit = ({
                positionX={x}
                positionY={y}
                isHighlighted={
-                  selectTable === resource?.id 
+                  selectTable === resource?.id
                }
             />
          );
@@ -114,3 +131,55 @@ export const MapEdit = ({
       </>
    )
 }
+
+
+export const RenderCursorSelect = ({ resource }) => {
+   if (!resource || !resource?.isCursor) return null;
+
+   const {
+      positionX,
+      positionY,
+      width = 1,
+      height = 1,
+      rotation,
+      type,
+      id
+   } = resource;
+
+   return (
+      <div
+         key={id}
+         style={{
+            // gridColumn: `${positionY} / span ${width}`,
+            // gridRow: `${positionX} / span ${height}`,
+            // transform: `rotate(${rotation}deg)`
+         }}
+         className={cn(
+            'relative w-full h-full',
+            'border-2 border-dashed border-primary rounded-2xl'
+         )}
+      >
+         {/* Componente fantasma */}
+         {type === typeResource.TABLE ? (
+            <TableEditItem
+               table={resource}
+               isCursorPreview
+               onOpenEditTable={() => { }}
+               onDeleteTable={() => { }}
+               highlighted={false}
+               className="opacity-60"
+            />
+         ) : (
+            <ObjectItem
+               object={resource}
+               isCursorPreview
+               highlighted={false}
+               className="opacity-60"
+            />
+         )}
+
+         {/* Overlay para efecto translúcido opcional */}
+         <div className="absolute inset-0 bg-background/60 rounded-2xl pointer-events-none" />
+      </div>
+   );
+};
