@@ -11,7 +11,7 @@ export const ActionSpeedDial = () => {
       {
          icon: Pen,
          label: 'Editar mesas',
-         onClick: () => toggleIsEdit()
+         onClick: () => toggleIsEdit(true)
       },
       {
          icon: PackagePlus,

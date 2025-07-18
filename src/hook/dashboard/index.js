@@ -6,4 +6,5 @@ export * from './useLoadRestaurantResource';
 export * from './useReservation';
 export * from './useRestaurantUi';
 export * from './useStateFilterRestaurant';
+export * from './useTempRestaurant';
 

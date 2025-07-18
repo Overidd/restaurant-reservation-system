@@ -5,10 +5,22 @@ import { useSlideOverObjectCreate } from '../slideover';
 import { useModalTableEdit } from '../useModalTableEdit';
 import { useModalTableEditProperty } from '../useModalTableEditProperty';
 import { useCreateObject } from './useCreateObject';
+import { useStateFilterRestaurant } from './useStateFilterRestaurant';
+import { useTempRestaurant } from './useTempRestaurant';
 
 export const useEditTables = () => {
    const isEdit = useSelector((state) => state.restaurantUiReducer.isEdit);
    const dispatch = useDispatch();
+
+   const {
+      filter: {
+         restaurant,
+      },
+   } = useStateFilterRestaurant({});
+
+   const {
+      setTempRestaurant
+   } = useTempRestaurant();
 
    const {
       toggleIsTempResourceChange,
@@ -63,6 +75,10 @@ export const useEditTables = () => {
 
             await waitForModalsToClose();
          }
+      }
+
+      if (is) {
+         setTempRestaurant(restaurant);
       }
 
       dispatch(toggleIsEditAction(is));

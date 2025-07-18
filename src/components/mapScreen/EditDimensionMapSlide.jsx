@@ -1,13 +1,37 @@
+import { useForm } from '@/hook';
 import { Card2 } from '../UI/card';
 import { Button, CardTitle, SlideOver } from '../UI/common';
 import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 
 export const EditDimensionMapSlide = ({
-   name,
-   rows,
-   columns,
+   changeValueTempRestaurant,
+   restaurant,
    isOpen = false
 }) => {
+
+   const {
+      onSubmitForm,
+      onValueChange,
+      formState: {
+         rows,
+         columns
+      },
+   } = useForm({
+      activeValidation: true,
+      initialState: {
+         rows: restaurant.rows || 1,
+         columns: restaurant.columns || 1
+      },
+
+      changeValueCallback: ({ name, value }) => {
+         if (!name || !value) return;
+         changeValueTempRestaurant({ name, value })
+      }
+   });
+
+   const onSubmit = onSubmitForm((value) => {
+      console.log(value)
+   })
 
    return (
       <SlideOver
@@ -18,7 +42,9 @@ export const EditDimensionMapSlide = ({
             <CardTitle>
                {name}
             </CardTitle>
-            <Form>
+            <Form
+               onSubmit={onSubmit}
+            >
                <FormLabel className={'mt-2'}>
                   Plano
                </FormLabel>
@@ -33,7 +59,9 @@ export const EditDimensionMapSlide = ({
                         size='sm'
                         type='number'
                         variant={'crystal'}
-                        // value={rows}
+                        name='rows'
+                        value={rows}
+                        onChange={onValueChange}
                      />
                   </FormItem>
                   <FormItem className={'flex flex-row gap-2 items-center'}>
@@ -44,7 +72,9 @@ export const EditDimensionMapSlide = ({
                         size='sm'
                         type='number'
                         variant={'crystal'}
-                        // value={columns}
+                        name='columns'
+                        value={columns}
+                        onChange={onValueChange}
                      />
                   </FormItem>
                </FromGroup>

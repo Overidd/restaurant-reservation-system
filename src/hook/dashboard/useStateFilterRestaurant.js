@@ -3,9 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
    setChangeFilterAction
 } from '@/doman/store/dashboard';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
-export const useStateFilterRestaurant = () => {
+export const useStateFilterRestaurant = ({
+   tempRestaurant = {},
+   isEdit = false,
+} = {}) => {
+   
    const state = useSelector((state) => state.stateFilterRestaurantReducer)
    const dispatch = useDispatch();
    const changeFilterRef = useRef(false)
@@ -15,6 +19,11 @@ export const useStateFilterRestaurant = () => {
       dispatch(setChangeFilterAction(data));
    }
 
+   const restaurant = useMemo(() => {
+      if (isEdit) return { ...state.filter.restaurant, ...tempRestaurant };
+      return state.filter.restaurant;
+   }, [state.filter.restaurant, isEdit, tempRestaurant]);
+
    return {
       // State
       isInitialChangeFilter: changeFilterRef.current,
@@ -23,7 +32,7 @@ export const useStateFilterRestaurant = () => {
       filter: {
          hour: state.filter.hour,
          dateStr: state.filter.dateStr,
-         restaurant: state.filter.restaurant
+         restaurant: restaurant
       },
 
       // Funcion Actions

@@ -1,6 +1,6 @@
 import { MapEditManager, MapStateManager } from '@/components/mapScreen';
 import { CardLoadding } from '@/components/UI/card';
-import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
+import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant, useTempRestaurant } from '@/hook/dashboard';
 import { cn } from '@/ultils';
 import { Children, isValidElement, useMemo } from 'react';
 import { MapManagerContext } from './MapManagerContext';
@@ -52,6 +52,16 @@ export const MapManagerProvider = ({
       objects
    });
 
+   const {
+      tempRestaurant,
+      changeValueTempRestaurant
+   } = useTempRestaurant();
+
+   const editRestaurant = useMemo(() => {
+      if (isEdit) return { ...restaurant, ...tempRestaurant };
+      return restaurant;
+   }, [restaurant, isEdit, tempRestaurant]);
+
    const mapStateManager = useMemo(() => {
       return Children.toArray(children).filter(child => isValidElement(child) && child.type === MapStateManager)
    }, [children])
@@ -72,6 +82,8 @@ export const MapManagerProvider = ({
          setSelectedResource,
          toggleIsTempResourceChange,
          updateSelectedResource,
+         changeValueTempRestaurant,
+         restaurant: editRestaurant
       }}>
          <div className={cn(
             'relative rounded-md overflow-hidden',
@@ -90,8 +102,8 @@ export const MapManagerProvider = ({
                      'grid items-center justify-center gap-2 overflow-auto [&::-webkit-scrollbar]:hidden'
                   )}
                   style={{
-                     gridTemplateColumns: `repeat(${restaurant.columns}, 1fr)`,
-                     gridTemplateRows: `repeat(${restaurant.rows}, 1fr)`,
+                     gridTemplateColumns: `repeat(${editRestaurant.columns}, 1fr)`,
+                     gridTemplateRows: `repeat(${editRestaurant.rows}, 1fr)`,
                   }}
                >
                   {

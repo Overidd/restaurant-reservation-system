@@ -7,7 +7,8 @@ export const restaurantUiSlice = createSlice({
       isEdit: false,
 
       isTempResourceChange: false,
-      selectedResource: null
+      selectedResource: null,
+      tempRestaurant: {},
    },
 
    reducers: {
@@ -29,6 +30,15 @@ export const restaurantUiSlice = createSlice({
          if (state.selectedResource[payload.name] === payload.value) return;
          state.selectedResource[payload.name] = payload.value;
       },
+
+      setTempRestaurantAction: (state, { payload }) => {
+         state.tempRestaurant = payload ?? {};
+      },
+
+      changeValueTempRestaurantAction: (state, { payload }) => {
+         if (!payload?.name || !payload?.value) return;
+         state.tempRestaurant[payload.name] = payload.value;
+      },
    },
 });
 
@@ -36,5 +46,7 @@ export const {
    toggleIsEditAction,
    toggleIsTempResourceChangeAction,
    setSelectedResourceAction,
-   updateSelectedResourceAction
+   updateSelectedResourceAction,
+   setTempRestaurantAction,
+   changeValueTempRestaurantAction
 } = restaurantUiSlice.actions;

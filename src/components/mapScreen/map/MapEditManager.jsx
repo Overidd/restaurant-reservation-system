@@ -1,7 +1,6 @@
 import { CreateCategoryProvider, CreateObjectProvider } from '@/doman/context/object';
 import { useModalTableEdit, useModalTableEditProperty } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
-import { useStateFilterRestaurant } from '@/hook/dashboard';
 import { useSlideOverObjectCreate } from '@/hook/slideover';
 import { CreateResourceSlide, EditDimensionMapSlide, EditTablePropertySlide, EditTableSlide, MapEdit, ModalManagerObjects } from '..';
 
@@ -10,17 +9,13 @@ export const MapEditManager = () => {
    const {
       isEdit,
       resources,
+      restaurant,
       selectedResource,
       setSelectedResource,
       updateSelectedResource,
-      toggleIsTempResourceChange
+      toggleIsTempResourceChange,
+      changeValueTempRestaurant
    } = useMapManagerContext()
-
-   const {
-      filter: {
-         restaurant,
-      },
-   } = useStateFilterRestaurant();
 
    const {
       isOpen: isOpenModalEdit,
@@ -71,6 +66,7 @@ export const MapEditManager = () => {
       toggleIsTempResourceChange(false);
    };
 
+   console.log(restaurant.rows, restaurant.columns);
    return (
       <>
          <MapEdit
@@ -84,10 +80,9 @@ export const MapEditManager = () => {
          />
 
          <EditDimensionMapSlide
-            name={restaurant.name}
-            rows={restaurant.rows}
-            columns={restaurant.columns}
             isOpen={isEdit}
+            restaurant={restaurant}
+            changeValueTempRestaurant={changeValueTempRestaurant}
          />
 
          {isOpenObjectCreate &&

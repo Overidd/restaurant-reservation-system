@@ -19,7 +19,6 @@ export const stateFilterRestaurantSlice = createSlice({
          dateStr: new Date().toISOString().split('T')[0],
          restaurant: {}
       },
-
    },
 
    reducers: {
