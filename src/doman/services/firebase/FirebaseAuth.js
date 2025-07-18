@@ -6,7 +6,7 @@ import {
    signInWithPopup,
    updateProfile
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore/lite';
 
 import { FirebaseAuth, FirebaseDB } from './config';
 

@@ -3,7 +3,7 @@ import { cn, validateObject } from '@/ultils';
 import { Pen, Trash } from 'lucide-react';
 import { useEffect } from 'react';
 import { Card2 } from '../../UI/card';
-import { Button, Modal } from '../../UI/common';
+import { Button, SlideOver } from '../../UI/common';
 
 import {
    Checkbox,
@@ -37,7 +37,7 @@ const schema = {
    },
 }
 
-export const ModalTableEdit = ({
+export const EditTableSlide = ({
    className,
    initial ={},
    isOpen,
@@ -78,7 +78,7 @@ export const ModalTableEdit = ({
    })
 
    return (
-      <Modal
+      <SlideOver
          isOpen={isOpen}
          onClose={onClose}
          direction='topright'
@@ -200,6 +200,6 @@ export const ModalTableEdit = ({
                </FormItem>
             </Form>
          </Card2>
-      </Modal>
+      </SlideOver>
    )
 }

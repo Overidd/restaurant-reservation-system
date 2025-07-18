@@ -3,7 +3,7 @@ import {
    getDocs,
    query,
    where
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 
 import { FirebaseDB } from './config';
 

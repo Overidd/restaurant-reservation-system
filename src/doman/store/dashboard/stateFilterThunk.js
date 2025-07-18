@@ -30,3 +30,24 @@ export const loadHoursThunks = () => {
       dispatch(setHoursAction(res.hours));
    }
 }
+
+export const loadDataFiltersThunks = () => {
+   return async (dispatch) => {
+      const [resRestaurants, resHours] = await Promise.all([
+         dasboardServiceProvider.getRestaurants(),
+         dasboardServiceProvider.getAllHours(),
+      ]);
+
+      if (resRestaurants.ok) {
+         dispatch(setRestaurantsAction(resRestaurants.restaurants));
+      } else {
+         dispatch(messageErrorActionFilter(resRestaurants.errorMessage));
+      }
+
+      if (resHours.ok) {
+         dispatch(setHoursAction(resHours.hours));
+      } else {
+         dispatch(messageErrorActionFilter(resHours.errorMessage));
+      }
+   };
+};

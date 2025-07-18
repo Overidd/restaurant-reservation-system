@@ -8,11 +8,12 @@ export const Select = ({
   defaultValue,
   onValueChange,
   name,
+  type = 'text',
   ...props
 }) => {
   const handleValueChange = (val) => {
     if (onValueChange) {
-      onValueChange({ name, value: val });
+      onValueChange({ name, value: val, type });
     }
   };
 

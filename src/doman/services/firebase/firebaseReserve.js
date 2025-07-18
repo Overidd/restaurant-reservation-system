@@ -8,7 +8,7 @@ import {
    serverTimestamp,
    setDoc,
    where,
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 
 import { DateParser, typeStatusTable } from '@/ultils';
 

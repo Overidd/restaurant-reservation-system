@@ -2,7 +2,7 @@ import { useCreateCategoryContext } from '@/hook/context';
 import { useModalCreateCategory, useModalCreateItemObject, useModalEditCategoryObject, useModalEditItemObject } from '@/hook/modals';
 import { cn, typeObj } from '@/ultils';
 import { Pen, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateObject, CreateTable, ModalCreateCategoryObject, ModalCreateItemObject, ModalEditCategoryObject, ModalEditItemObject } from '..';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
@@ -18,7 +18,9 @@ import {
    SelectValue
 } from '../../UI/from';
 
-export const CreateResourceSlideOver = ({
+export const CreateResourceSlide = ({
+   selectedResource,
+   onClose,
    isOpen = false
 }) => {
    const [typeCategory, setTypeCategory] = useState(null) // table, y etc...
@@ -49,14 +51,20 @@ export const CreateResourceSlideOver = ({
       openModalEditCategory()
    }
 
+   useEffect(() => {
+      if (!selectedResource.idTemp) return
+      setTypeCategory(null)
+   }, [selectedResource.idTemp])
+
    return (
       <SlideOver
          isOpen={isOpen}
+         onClose={onClose}
          direction='topright'
       >
          <Card2
             className={cn(
-               'w-80'
+               'w-80',
             )}
          >
             <Label className={'text-center w-full mb-4'}>
@@ -120,11 +128,11 @@ export const CreateResourceSlideOver = ({
                </Button>
             </div>
             {
-               (typeObj.TABLE === typeCategory) &&
+               (typeCategory === typeObj.TABLE) &&
                <CreateTable />
             }
             {
-               (typeCategory && !typeObj.TABLE !== typeCategory) &&
+               (!!typeCategory && typeCategory !== typeObj.TABLE) &&
                <CreateObject
                   currentCategory={getCategoryByName(typeCategory)}
                />

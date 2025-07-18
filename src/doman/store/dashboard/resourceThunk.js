@@ -1,7 +1,7 @@
 import { dasboardServiceProvider } from '@/doman/services';
+import { validateObject } from '@/ultils';
 import {
    deleteTableAction,
-   listenTableNofityAction,
    loaddingAction,
    messageErrorAction,
    setTablesAndObjectsAction
@@ -13,20 +13,21 @@ import {
  */
 export const loadTablesAndObjectsThunks = (data) => {
    return async (dispatch) => {
-      if (!data) return;
+      if (!data || !validateObject(data)) return;
       dispatch(loaddingAction());
 
-      const resTables = await dasboardServiceProvider.getTables(data);
+      const [resTables, resObjects] = await Promise.all([
+         dasboardServiceProvider.getTables(data),
+         dasboardServiceProvider.getObjects(data)
+      ]);
 
-      if (!resTables.ok) {
-         dispatch(messageErrorAction(resTables.errorMessage));
+      if (!resTables?.ok) {
+         dispatch(messageErrorAction(resTables?.errorMessage));
          return;
       };
 
-      const resObjects = await dasboardServiceProvider.getObjects(data);
-
-      if (!resObjects.ok) {
-         dispatch(messageErrorAction(resTables.errorMessage));
+      if (!resObjects?.ok) {
+         dispatch(messageErrorAction(resTables?.errorMessage));
          return;
       };
 
@@ -52,21 +53,21 @@ export const deleteTableThunks = (idTable) => {
 let unsubscribeTablesListener = null;
 export const listenModifyTablesThunks = (data) => {
    return async (dispatch) => {
-      if (unsubscribeTablesListener) {
-         unsubscribeTablesListener();
-      }
+      // if (unsubscribeTablesListener) {
+      //    unsubscribeTablesListener();
+      // }
 
-      unsubscribeTablesListener = dasboardServiceProvider.listenReservationsAddedAndModified({
-         ...data,
-         onAdd: (reservation) => {
-            console.log('se agrego', reservation);
-            dispatch(listenTableNofityAction(reservation));
-         },
+      // unsubscribeTablesListener = dasboardServiceProvider.listenReservationsAddedAndModified({
+      //    ...data,
+      //    onAdd: (reservation) => {
+      //       console.log('se agrego', reservation);
+      //       dispatch(listenTableNofityAction(reservation));
+      //    },
 
-         onModify: (reservation) => {
-            console.log('se modifico', reservation);
-            // dispatch(loadTablesThunks(reservation));
-         },
-      });
+      //    onModify: (reservation) => {
+      //       console.log('se modifico', reservation);
+      //       // dispatch(loadTablesThunks(reservation));
+      //    },
+      // });
    };
 };

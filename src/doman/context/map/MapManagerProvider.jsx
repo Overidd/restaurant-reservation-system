@@ -5,14 +5,20 @@ import { cn } from '@/ultils';
 import { Children, isValidElement, useMemo } from 'react';
 import { MapManagerContext } from './MapManagerContext';
 
+
+// 4 render 
 export const MapManagerProvider = ({
    className,
    children
 }) => {
 
    const {
+      hours,
+      restaurants,
       filter: {
          restaurant,
+         dateStr,
+         hour
       },
    } = useStateFilterRestaurant();
 
@@ -20,7 +26,13 @@ export const MapManagerProvider = ({
       tables,
       objects,
       isLoading,
-   } = useLoadRestaurantResource();
+   } = useLoadRestaurantResource({
+      restaurants,
+      restaurant,
+      dateStr,
+      hours,
+      hour,
+   });
 
    const {
       isEdit,
@@ -49,6 +61,8 @@ export const MapManagerProvider = ({
    }, [children])
 
    const colorBorder = 'bg-[#545454]'
+
+   console.log('render MapManagerProvider');
 
    return (
       <MapManagerContext.Provider value={{

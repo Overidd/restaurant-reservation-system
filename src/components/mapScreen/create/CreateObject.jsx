@@ -5,7 +5,7 @@ import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals'
 import { Pen, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '../../UI/from';
 
 const schema = {
    initial: {
@@ -47,7 +47,7 @@ export const CreateObject = ({
       updateSelectedResource,
       selectedResource,
       createTempObject,
-      toggleIsTempResorce
+      toggleIsTempResourceChange
    } = useCreateObject()
 
    const {
@@ -83,7 +83,7 @@ export const CreateObject = ({
       console.log(data);
    })
 
-   const handleSetObject = ({ value }) => {
+   const handleSelectObject = ({ value }) => {
       const object = getObjectByName(value);
       if (!value || !object) return
       setObjectName(value)
@@ -93,7 +93,7 @@ export const CreateObject = ({
          positionY: selectedResource.positionY
       })
       createTempObject(object)
-      toggleIsTempResorce(true)
+      toggleIsTempResourceChange(true)
    }
 
    const handleModalCreateObject = () => {
@@ -132,7 +132,7 @@ export const CreateObject = ({
                <Select
                   name='typeObj'
                   value={objectName}
-                  onValueChange={handleSetObject}
+                  onValueChange={handleSelectObject}
                >
                   <SelectTrigger
                      isLoading={isLoadingLoad}
@@ -155,6 +155,8 @@ export const CreateObject = ({
                            {item.name}
                         </SelectItem>
                      ))}
+
+                     <SelectSeparator />
 
                      <Button
                         type='button'

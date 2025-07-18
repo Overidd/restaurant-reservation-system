@@ -3,7 +3,7 @@ import { useForm } from '@/hook';
 import { cn, validateObject } from '@/ultils';
 import { useState } from 'react';
 import { Card2 } from '../../UI/card';
-import { Button, Modal } from '../../UI/common';
+import { Button, SlideOver } from '../../UI/common';
 
 import {
    Form,
@@ -28,7 +28,7 @@ const schema = {
    },
 }
 
-export const ModalTableEditProperty = ({
+export const EditTablePropertySlide = ({
    className,
    initial,
    isOpen,
@@ -69,7 +69,7 @@ export const ModalTableEditProperty = ({
    };
 
    return (
-      <Modal
+      <SlideOver
          isOpen={isOpen}
          onClose={onClose}
          direction='topright'
@@ -226,6 +226,6 @@ export const ModalTableEditProperty = ({
                </FormItem>
             </Form>
          </Card2>
-      </Modal>
+      </SlideOver>
    )
 }

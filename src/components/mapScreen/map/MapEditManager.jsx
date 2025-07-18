@@ -3,8 +3,7 @@ import { useModalTableEdit, useModalTableEditProperty } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
 import { useStateFilterRestaurant } from '@/hook/dashboard';
 import { useSlideOverObjectCreate } from '@/hook/slideover';
-import { useEffect } from 'react';
-import { CreateResourceSlideOver, MapEdit, ModalManagerObjects, ModalTableEdit, ModalTableEditProperty, SlideOverEditDimensionMap } from '..';
+import { CreateResourceSlide, EditDimensionMapSlide, EditTablePropertySlide, EditTableSlide, MapEdit, ModalManagerObjects } from '..';
 
 export const MapEditManager = () => {
 
@@ -38,50 +37,39 @@ export const MapEditManager = () => {
    const {
       isOpen: isOpenObjectCreate,
       closeModal: closeModalObjectCreate,
-      openModal: openModalCreateObj,
+      openModal: openModalCreateObject,
    } = useSlideOverObjectCreate();
 
-
-   // const onChangeFilter = (data) => {
-   //    setCurrentValue(data);
-   //    loadTables(data);
-   // }
-
-   const onOpenEditTableProperty = () => {
+   const handleOpenEditTableProperty = () => {
+      closeModalEdit();
       openModalEditProperty();
       toggleIsTempResourceChange(true);
-      closeModalEdit();
    }
 
-   const onCloseEditProperty = () => {
-      toggleIsTempResourceChange(false);
-      closeModalEditProperty();
-      setSelectedResource({});
-   };
-
-   const closeModalEditTable = () => {
-      closeModalEdit();
-      setSelectedResource({});
-   };
-   const onOpenEditTable = (table) => {
-      setSelectedResource(table);
+   const handleOpenEditTable = (table) => {
       openModalEdit();
-   }
-
-   const onOpenCreateObject = (data) => {
-      setSelectedResource(data);
-      openModalCreateObj();
-   }
-
-   const handleCloseEdit = () => {
       closeModalObjectCreate();
-      toggleIsTempResourceChange(false);
+      setSelectedResource(table);
    }
 
-   useEffect(() => {
-      if (isEdit) return;
-      handleCloseEdit();
-   }, [isEdit])
+   const handleOpenCreateObject = (data) => {
+      closeModalEdit();
+      openModalCreateObject();
+      setSelectedResource(data);
+      toggleIsTempResourceChange(true);
+   }
+
+   const handleCloseEditProperty = () => {
+      closeModalEditProperty();
+      setSelectedResource(null);
+      toggleIsTempResourceChange(false);
+   };
+
+   const handleCloseModalEditTable = () => {
+      closeModalEdit();
+      setSelectedResource(null);
+      toggleIsTempResourceChange(false);
+   };
 
    return (
       <>
@@ -89,13 +77,13 @@ export const MapEditManager = () => {
             rows={restaurant.rows}
             columns={restaurant.columns}
             resources={resources}
-            onOpenEditTable={onOpenEditTable}
-            onOpenCreateObject={onOpenCreateObject}
+            onOpenEditTable={handleOpenEditTable}
+            onOpenCreateObject={handleOpenCreateObject}
             selectedResource={selectedResource}
             onDeleteTable={() => { }}
          />
 
-         <SlideOverEditDimensionMap
+         <EditDimensionMapSlide
             name={restaurant.name}
             rows={restaurant.rows}
             columns={restaurant.columns}
@@ -105,7 +93,9 @@ export const MapEditManager = () => {
          {isOpenObjectCreate &&
             <CreateCategoryProvider>
                <CreateObjectProvider>
-                  <CreateResourceSlideOver
+                  <CreateResourceSlide
+                     selectedResource={selectedResource}
+                     onClose={closeModalObjectCreate}
                      isOpen={isOpenObjectCreate}
                   />
                   <ModalManagerObjects />
@@ -115,18 +105,18 @@ export const MapEditManager = () => {
 
          {
             isOpenModalEdit &&
-            <ModalTableEdit
+            <EditTableSlide
                initial={selectedResource}
                isOpen={isOpenModalEdit}
-               onClose={closeModalEditTable}
-               onOpenEditProperty={onOpenEditTableProperty}
+               onClose={handleCloseModalEditTable}
+               onOpenEditProperty={handleOpenEditTableProperty}
             />
          }
 
          {isOpenModalEditProperty && (
-            <ModalTableEditProperty
+            <EditTablePropertySlide
                isOpen={isOpenModalEditProperty}
-               onClose={onCloseEditProperty}
+               onClose={handleCloseEditProperty}
                initial={selectedResource}
                onChangeValue={updateSelectedResource}
                axieRestaurant={{

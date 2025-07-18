@@ -46,58 +46,67 @@ export const MapEdit = ({
          if (occupiedCells.has(cellKey)) return null;
 
          const resource = resources.find(
-            (resource) => resource.positionX === x && resource.positionY === y
+            (res) => res.positionX === x && res.positionY === y
          );
 
-         switch (resource?.type) {
-            case typeResource.OBJECT:
-               for (let i = 0; i < resource.width; i++) {
-                  for (let j = 0; j < resource.height; j++) {
-                     occupiedCells.add(`${x + i}-${y + j}`);
-                  }
-               }
-               return (
-                  <ObjectItem
-                     key={resource.id}
-                     object={resource}
-                     selectedObject={selectedResource}
-                  />
-               )
-            case typeResource.TABLE:
-               for (let i = 0; i < resource.width; i++) {
-                  for (let j = 0; j < resource.height; j++) {
-                     occupiedCells.add(`${x + i}-${y + j}`);
-                  }
-               }
-               return (
-                  <TableEditItem
-                     key={resource.id}
-                     table={resource}
-                     onOpenEditTable={onOpenEditTable}
-                     onDeleteTable={handleDeleteTable}
-                     highlighted={
-                        selectedResource?.id === resource?.id
-                     }
-                  />
-               )
+         if (resource) {
+            const { width = 1, height = 1, id, type } = resource;
 
-            default:
-               return (
-                  <ObjectEmpty
-                     key={`empty-node-${x}-${y}`}
-                     idTemp={`empty-node-${x}-${y}`}
-                     onOpenCreateObj={onOpenCreateObject}
-                     positionX={x}
-                     positionY={y}
-                     isHighlighted={
-                        selectTable === resource?.id ||
-                        selectedResource?.id === `empty-node-${x}-${y}`
-                     }
-                  />
-               );
+            // Marcar todas las celdas que ocupa este recurso
+            for (let dx = 0; dx < width; dx++) {
+               for (let dy = 0; dy < height; dy++) {
+                  occupiedCells.add(`${x + dx}-${y + dy}`);
+               }
+            }
+
+            const commonStyle = {
+               width: '100%',
+               height: '100%',
+               gridColumn: `${y} / span ${width}`,
+               gridRow: `${x} / span ${height}`,
+            };
+
+            switch (type) {
+               case typeResource.OBJECT:
+                  return (
+                     <div key={id} style={commonStyle}>
+                        <ObjectItem
+                           object={resource}
+                           selectedObject={selectedResource}
+                           highlighted={selectedResource?.id === id}
+                        />
+                     </div>
+                  );
+
+               case typeResource.TABLE:
+                  return (
+                     <div key={id} style={commonStyle}>
+                        <TableEditItem
+                           table={resource}
+                           onOpenEditTable={onOpenEditTable}
+                           onDeleteTable={handleDeleteTable}
+                           highlighted={selectedResource?.id === id}
+                        />
+                     </div>
+                  );
+            }
          }
+
+         return (
+            <ObjectEmpty
+               key={`empty-node-${x}-${y}`}
+               idTemp={`empty-node-${x}-${y}`}
+               onOpenCreateObject={onOpenCreateObject}
+               positionX={x}
+               positionY={y}
+               isHighlighted={
+                  selectTable === resource?.id 
+               }
+            />
+         );
       });
    };
+
 
    return (
       <>

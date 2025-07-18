@@ -1,8 +1,9 @@
 export * from '../dashboard/NotifyReservation';
 export * from './BackdropEdit';
 export * from './create/CreateObject';
-export * from './create/CreateResourceSlideOver';
+export * from './create/CreateResourceSlide';
 export * from './create/CreateTable';
+export * from './EditDimensionMapSlide';
 export * from './map/MapEdit';
 export * from './map/MapEditManager';
 export * from './map/MapPainted';
@@ -12,13 +13,12 @@ export * from './map/ObjectEmpty';
 export * from './map/ObjectItem';
 export * from './map/TableEditItem';
 export * from './map/TableItem';
+export * from './modal/EditTablePropertySlide';
+export * from './modal/EditTableSlide';
 export * from './modal/ModalCreateCategoryObject';
 export * from './modal/ModalCreateItemObject';
 export * from './modal/ModalEditCategoryObject';
 export * from './modal/ModalEditItemObject';
-export * from './modal/ModalTableEdit';
-export * from './modal/ModalTableEditProperty';
 export * from './modal/ModalTableReserve';
-export * from './SlideOverEditDimensionMap';
 export * from './TableAutoFilter';
 

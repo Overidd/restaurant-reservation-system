@@ -106,6 +106,9 @@ export const useForm = ({
    const changeValueCallbackRef = useRef(changeValueCallback);
    const disabledMap = useRef(new Map());
 
+   const userChangedFields = useRef(new Set());
+   const isInitialForm = useRef(false);
+
    const [state, dispatch] = useReducer(formReducer, {
       values: initialState,
       errors: {},
@@ -115,6 +118,7 @@ export const useForm = ({
    });
 
    useEffect(() => {
+      if (!changeValueCallback) return;
       changeValueCallbackRef.current = changeValueCallback;
    }, [changeValueCallback]);
 
@@ -122,8 +126,12 @@ export const useForm = ({
    // const [disabledMap, setDisabledMap] = useState({});
 
    const onInitialFrom = (newInitialState) => {
-      // dispatch({ type: TYPEACTION.SET_VALIDATIONS, validations: newValidations });
+      isInitialForm.current = true;
+      userChangedFields.current.clear();
       dispatch({ type: TYPEACTION.RESET, initialState: newInitialState });
+      window.requestAnimationFrame(() => {
+         isInitialForm.current = false;
+      });
    };
 
    const onValueChange = useCallback((e) => {
@@ -148,9 +156,19 @@ export const useForm = ({
          dispatch({ type: TYPEACTION.VALIDATE_ONE, field: name });
       }
 
-      changeValueCallbackRef.current?.({ name, value });
+      if (!isInitialForm.current) {
+         userChangedFields.current.add(name);
+         changeValueCallbackRef.current?.({ name, value });
+      }
    }, [activeValidation]);
 
+   const isFieldChangedByUser = (field) => {
+      return userChangedFields.current.has(field);
+   };
+
+   const isAnyFieldChangedByUser = () => {
+      return userChangedFields.current.size > 0;
+   };
 
    const setChangeValueCallback = (callback) => {
       changeValueCallbackRef.current = callback
@@ -216,5 +234,7 @@ export const useForm = ({
       onInitialFrom,
       isFormValid,
       setChangeValueCallback,
+      isAnyFieldChangedByUser,
+      isFieldChangedByUser
    };
 };

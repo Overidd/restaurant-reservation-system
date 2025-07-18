@@ -1,5 +1,5 @@
 import { setSelectedResourceAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction } from '@/doman/store/dashboard';
-import { typeObj } from '@/ultils';
+import { typeObj, typeStatusTable } from '@/ultils';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const useCreateObject = () => {
@@ -8,19 +8,25 @@ export const useCreateObject = () => {
    const selectedResource = useSelector((state) => state.restaurantUiReducer.selectedResource)
 
 
-   const toggleIsTempResorce = (is) => {
+   const toggleIsTempResourceChange = (is) => {
       dispatch(toggleIsTempResourceChangeAction(is));
    };
 
+   const setSelectedResource = (table) => {
+      dispatch(setSelectedResourceAction(table));
+   }
+
    const createTempObject = (data) => {
-      const dateObject = {
+      const dataObject = {
          ...selectedResource,
          ...data,
-         type: typeObj.ANY,
+         type: typeObj.OBJECT,
          imagen: data.linkImage
       }
 
-      dispatch(setSelectedResourceAction(dateObject));
+      console.log('dataObject', dataObject);
+
+      dispatch(setSelectedResourceAction(dataObject));
    }
 
    const updateSelectedResource = (data) => {
@@ -33,8 +39,32 @@ export const useCreateObject = () => {
 
    }
 
-   const createTempTable = (data) => {
+   const createTempTable = (tableType) => {
+      if (!tableType) return;
+      const dataTable = {
+         id: tableType?.id ?? selectedResource?.id,
+         positionX: selectedResource.positionX,
+         positionY: selectedResource.positionY,
+         type: typeObj.TABLE,
+         size: tableType.size,
+         chairs: tableType.chairs,
+         width: tableType.width,
+         height: tableType.height,
+         rotation: tableType.rotation,
+         image: null,
+         zone: null,
+         name: null,
+         description: null,
+         idRestaurant: null,
+         isReservable: false,
+         createdAt: null,
+         status: typeStatusTable.AVAILABLE,
+         hasReservar: false,
+         reservation: null,
+         user: null,
+      }
 
+      dispatch(setSelectedResourceAction(dataTable));
    }
 
    const createTable = (data) => {
@@ -48,6 +78,7 @@ export const useCreateObject = () => {
       createTempObject,
       updateSelectedResource,
       createTempTable,
-      toggleIsTempResorce
+      toggleIsTempResourceChange,
+      setSelectedResource
    }
 }

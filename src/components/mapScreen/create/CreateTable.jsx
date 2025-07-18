@@ -1,5 +1,6 @@
-import { tablesSizeData } from '@/data';
+import { tableTypeData } from '@/data';
 import { useForm } from '@/hook';
+import { useCreateObject } from '@/hook/dashboard';
 import { useState } from 'react';
 import { Button } from '../../UI/common';
 import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../UI/from';
@@ -20,58 +21,92 @@ const schema = {
    },
 }
 
+const keysChange = ['chairs', 'size', 'rotation', 'width', 'height', 'positionX', 'positionY']
+
 export const CreateTable = () => {
-   const [currentTableSize, setCurrentTableSize] = useState(
-      tablesSizeData.find((item) => item.value === size) || tablesSizeData[0]
-   );
+   const [selectTypeTable, setSelectTypeTable] = useState([]);
+
+   const {
+      createTempTable,
+      updateSelectedResource,
+      selectedResource,
+   } = useCreateObject()
 
    const {
       onSubmitForm,
       onValueChange,
       isFormValid,
-      formState: {
-         name,
-         description,
-         linkImage,
-         zone,
-         size,
-         chairs,
-         positionX,
-         positionY,
-         rotation,
-         width,
-         height,
-      },
-      formValidation: {
-         nameValid,
-         descriptionValid,
-         linkImageValid,
-         zoneValid,
-         positionXValid,
-         positionYValid,
-         rotationValid,
-         widthValid,
-         heightValid,
-      }
+      onInitialFrom,
+      formState,
+      formValidation,
    } = useForm({
-      initialState: schema.initial,
       activeValidation: true,
-      // changeValueCallback: onInitialFrom
+      initialState: {
+         ...schema.initial,
+         positionX: selectedResource.positionX,
+         positionY: selectedResource.positionY,
+      },
+      changeValueCallback: ({ name, value }) => {
+         if (!name || !value) return;
+         if (keysChange.includes(name)) {
+            console.log('name', name, 'value', value);
+            updateSelectedResource({ name, value })
+         }
+      }
    });
+   const {
+      name,
+      description,
+      linkImage,
+      zone,
+      size,
+      positionX,
+      positionY,
+      chairs,
+      width,
+      height,
+      rotation,
+   } = formState;
+
+   const {
+      nameValid,
+      descriptionValid,
+      linkImageValid,
+      zoneValid,
+      positionXValid,
+      positionYValid,
+      rotationValid,
+      widthValid,
+      heightValid,
+   } = formValidation
+
+   const handleChangeSize = (name) => {
+      const tableType = tableTypeData.find((item) => item.name === name);
+      setSelectTypeTable({
+         ...tableType,
+         id: `${tableType.id}createtable`,
+      });
+      createTempTable({
+         ...tableType,
+         id: `${tableType.id}createtable`,
+      })
+      onInitialFrom({
+         ...formState,
+         chairs: tableType.chairs ?? 2,
+         width: tableType.width,
+         height: tableType.height,
+         rotation: tableType.rotation,
+      })
+   };
 
    const onSubmit = onSubmitForm((value) => {
       console.log(value)
    })
 
-   const handleChangeSize = (value) => {
-      setCurrentTableSize(
-         tablesSizeData.find((item) => item.value === value) || tablesSizeData[0]
-      );
-   };
-
    return (
       <Form
          onSubmit={onSubmit}
+         className={'max-h-[70vh] overflow-y-auto [&::-webkit-scrollbar]:hidden'}
       >
          <FormItem>
             <FormLabel
@@ -82,6 +117,7 @@ export const CreateTable = () => {
             </FormLabel>
             <Input
                required
+               size='base'
                type='text'
                id='name'
                name='name'
@@ -93,37 +129,41 @@ export const CreateTable = () => {
 
          <FormItem>
             <FormLabel
-               href='linkImage'
+               href='description'
                required
             >
-               Link Image
+               Descripcion
             </FormLabel>
             <Input
                required
-               type='url'
-               id='linkImage'
-               name='linkImage'
-               value={linkImage}
-               isError={!!linkImageValid}
+               size='base'
+               type='text'
+               id='description'
+               name='description'
+               value={description}
+               isError={!!descriptionValid}
                onChange={onValueChange}
             />
          </FormItem>
 
-         <FromGroup>
+         <FromGroup
+            className={'grid grid-cols-2 gap-4'}
+         >
             <FormItem>
                <FormLabel
-                  href='description'
+                  href='linkImage'
                   required
                >
-                  Descripcion
+                  Link Image
                </FormLabel>
                <Input
                   required
-                  type='text'
-                  id='description'
-                  name='description'
-                  value={description}
-                  isError={!!descriptionValid}
+                  size='base'
+                  type='url'
+                  id='linkImage'
+                  name='linkImage'
+                  value={linkImage}
+                  isError={!!linkImageValid}
                   onChange={onValueChange}
                />
             </FormItem>
@@ -135,6 +175,7 @@ export const CreateTable = () => {
                   Zona
                </FormLabel>
                <Input
+                  size='base'
                   type='text'
                   id='zone'
                   name='zone'
@@ -145,7 +186,9 @@ export const CreateTable = () => {
             </FormItem>
          </FromGroup>
 
-         <FromGroup>
+         <FromGroup
+            className={'grid grid-cols-2 gap-4'}
+         >
             <FormItem>
                <FormLabel
                   htmlFor={'size'}
@@ -162,18 +205,19 @@ export const CreateTable = () => {
                   }}
                >
                   <SelectTrigger
-                     variant='crystal'
+                     size='base'
                      className='w-full'
+                     variant='crystal'
                   >
                      <SelectValue
-                        placeholder='Seleccione un tamaño'
+                        placeholder='Tamaño'
                      />
                   </SelectTrigger>
                   <SelectContent>
-                     {tablesSizeData.map((item) => (
+                     {tableTypeData.map((item) => (
                         <SelectItem
                            key={item.id}
-                           value={item.value}
+                           value={item.name}
                         >
                            {item.name}
                         </SelectItem>
@@ -191,25 +235,27 @@ export const CreateTable = () => {
                </FormLabel>
 
                <Select
-                  value={chairs || undefined}
-                  name={'chairs'}
+                  value={String(chairs) || '2'}
                   onValueChange={onValueChange}
+                  name={'chairs'}
+                  type='text'
                >
                   <SelectTrigger
-                     variant='crystal'
+                     size='base'
                      className='w-full'
+                     variant='crystal'
                      name='chairs'
                      id='chairs'
                   >
                      <SelectValue
-                        placeholder='Numero de sillas'
+                        placeholder='Sillas'
                      />
                   </SelectTrigger>
                   <SelectContent>
-                     {currentTableSize && Array.from({ length: currentTableSize.chairs }).map((_, index) => (
+                     {selectTypeTable && Array.from({ length: selectTypeTable.maxChairs }).map((_, index) => (
                         <SelectItem
                            key={`chairs-${index}`}
-                           value={index + 1}
+                           value={String(index + 1)}
                         >
                            {index + 1}
                         </SelectItem>
@@ -219,11 +265,13 @@ export const CreateTable = () => {
             </FormItem>
          </FromGroup>
 
-         <FromGroup>
-            <FormLabel>
-               Posicion
-            </FormLabel>
+         <FormLabel>
+            Posicion
+         </FormLabel>
 
+         <FromGroup
+            className={'grid grid-cols-3 gap-4'}
+         >
             <FormItem>
                <FormLabel
                   htmlFor={'positionX'}
@@ -231,6 +279,7 @@ export const CreateTable = () => {
                   X
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
                   name='positionX'
                   value={positionX}
@@ -246,6 +295,7 @@ export const CreateTable = () => {
                   Y
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
                   name='positionY'
                   value={positionY}
@@ -261,6 +311,7 @@ export const CreateTable = () => {
                   Rotate
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
                   name='rotation'
                   value={rotation}
@@ -269,12 +320,13 @@ export const CreateTable = () => {
                />
             </FormItem>
          </FromGroup>
-         <FromGroup>
 
-            <FormLabel>
-               Tamaño en la escena
-            </FormLabel>
-
+         <FormLabel>
+            Tamaño en la escena
+         </FormLabel>
+         <FromGroup
+            className={'grid grid-cols-3 gap-4'}
+         >
             <FormItem>
                <FormLabel
                   htmlFor={'width'}
@@ -282,6 +334,7 @@ export const CreateTable = () => {
                   Width
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
                   name='width'
                   value={width}
@@ -297,6 +350,7 @@ export const CreateTable = () => {
                   Height
                </FormLabel>
                <Input
+                  size='base'
                   type='number'
                   name='height'
                   value={height}

@@ -2,7 +2,7 @@ import { Card2 } from '../UI/card';
 import { Button, CardTitle, SlideOver } from '../UI/common';
 import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 
-export const SlideOverEditDimensionMap = ({
+export const EditDimensionMapSlide = ({
    name,
    rows,
    columns,

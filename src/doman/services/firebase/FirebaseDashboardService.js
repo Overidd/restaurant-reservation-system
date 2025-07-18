@@ -5,15 +5,12 @@ import {
    doc,
    getDoc,
    getDocs,
-   limit,
-   onSnapshot,
-   orderBy,
    query,
    serverTimestamp,
    setDoc,
    updateDoc,
    where,
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 
 import { DateParser, generateCode, typeResource, typeStatusTable } from '@/ultils';
 
@@ -721,53 +718,53 @@ export class FirebaseDashboardService {
       }
    }
 
-   listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
-      if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') {
-         console.log('NO debería estar escuchando');
-         return;
-      }
+   // listenReservationsAddedAndModified({ dateStr, idRestaurant, hour, onAdd, onModify }) {
+   //    if (import.meta.env.VITE_ACTIVE_LISTENERS !== 'true') {
+   //       console.log('NO debería estar escuchando');
+   //       return;
+   //    }
 
-      console.trace('ACTIVANDO LISTENER');
+   //    console.trace('ACTIVANDO LISTENER');
 
-      const q = query(
-         collection(FirebaseDB, 'reservations'),
-         where('idRestaurant', '==', idRestaurant),
-         where('date', '==', dateStr),
-         where('status', 'in', ['pending', 'confirmed']), // TODO: faltaria agregar el status canceled y released
-         where('hour', '==', hour),
-         orderBy('createdAt', 'desc'),
-         limit(1)
-      );
+   //    const q = query(
+   //       collection(FirebaseDB, 'reservations'),
+   //       where('idRestaurant', '==', idRestaurant),
+   //       where('date', '==', dateStr),
+   //       where('status', 'in', ['pending', 'confirmed']), // TODO: faltaria agregar el status canceled y released
+   //       where('hour', '==', hour),
+   //       orderBy('createdAt', 'desc'),
+   //       limit(1)
+   //    );
 
-      let isInitial = true;
-      const startedAt = Date.now();
+   //    let isInitial = true;
+   //    const startedAt = Date.now();
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-         snapshot.docChanges().forEach((change) => {
-            const data = change.doc.data();
-            const createdAt = data.createdAt?.toDate?.().getTime?.() ?? 0;
+   //    const unsubscribe = onSnapshot(q, (snapshot) => {
+   //       snapshot.docChanges().forEach((change) => {
+   //          const data = change.doc.data();
+   //          const createdAt = data.createdAt?.toDate?.().getTime?.() ?? 0;
 
-            const reservation = {
-               id: change.doc.id,
-               ...data,
-               createdAt: data.createdAt?.toDate?.().toISOString() ?? null
-            };
+   //          const reservation = {
+   //             id: change.doc.id,
+   //             ...data,
+   //             createdAt: data.createdAt?.toDate?.().toISOString() ?? null
+   //          };
 
-            if (isInitial && ['modified', 'added'].includes(change.type)) return;
+   //          if (isInitial && ['modified', 'added'].includes(change.type)) return;
 
-            if (change.type === 'added' && createdAt > startedAt) {
-               onAdd?.(reservation);
-            }
+   //          if (change.type === 'added' && createdAt > startedAt) {
+   //             onAdd?.(reservation);
+   //          }
 
-            if (change.type === 'modified') {
-               onModify?.(reservation);
-            }
-         });
+   //          if (change.type === 'modified') {
+   //             onModify?.(reservation);
+   //          }
+   //       });
 
-         if (isInitial) isInitial = false;
-      });
-      return unsubscribe;
-   }
+   //       if (isInitial) isInitial = false;
+   //    });
+   //    return unsubscribe;
+   // }
 }
 
 

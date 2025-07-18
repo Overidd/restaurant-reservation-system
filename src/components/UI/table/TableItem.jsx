@@ -24,49 +24,60 @@ const chairColors = {
 
 const tableSizes = {
    small: {
-      containerSize: 'w-26 h-23',
-      tableSize: 'w-17 h-14',
+      tableWidth: 'clamp(40px, 50%, 80px)',
+      tableHeight: 'clamp(30px, 80%, 60px)',
+      chairWidth: 'clamp(12px, 40%, 24px)',
+      chairHeight: 'clamp(8px, 40%, 24px)',
+      rounded: 'rounded-lg',
       maxChairs: 4,
+      fontSize: 'clamp(10px, 2.5vw, 12px)',
    },
    medium: {
-      containerSize: 'w-30 h-25',
-      tableSize: 'w-22 h-16',
+      tableWidth: 'clamp(60px, 75%, 120px)',
+      tableHeight: 'clamp(45px, 60%, 90px)',
+      chairWidth: 'clamp(16px, 28%, 32px)',
+      chairHeight: 'clamp(16px, 30%, 32px)',
+      rounded: 'rounded-xl',
       maxChairs: 6,
+      fontSize: 'clamp(12px, 3vw, 14px)',
    },
    big: {
-      containerSize: 'w-35 h-29',
-      tableSize: 'w-28 h-20',
+      tableWidth: 'clamp(80px, 90%, 120px)',
+      tableHeight: 'clamp(60px, 70%, 95px)',
+      chairWidth: 'clamp(20px, 20%, 40px)',
+      chairHeight: 'clamp(20px, 25%, 40px)',
+      rounded: 'rounded-2xl',
       maxChairs: 8,
+      fontSize: 'clamp(14px, 3.5vw, 16px)',
    },
 }
 
 const getChairPositions = (chairCount, size) => {
    const positions = []
-
    const basePositions = {
       small: [
-         { top: '10%', left: '50%', transform: 'translateX(-50%)' }, // top
-         { bottom: '10%', left: '50%', transform: 'translateX(-50%)' }, // bottom
-         { top: '50%', left: '10%', transform: 'translateY(-50%)' }, // left
-         { top: '50%', right: '10%', transform: 'translateY(-50%)' }, // right
+         { top: '-20%', left: '50%', transform: 'translateX(-50%)' }, // top
+         { bottom: '-20%', left: '50%', transform: 'translateX(-50%)' }, // bottom
+         { top: '50%', left: '-20%', transform: 'translateY(-50%)' }, // left
+         { top: '50%', right: '-20%', transform: 'translateY(-50%)' }, // right
       ],
       medium: [
-         { top: '8%', left: '30%', transform: 'translateX(-50%)' }, // top-left
-         { top: '8%', right: '30%', transform: 'translateX(50%)' }, // top-right
-         { bottom: '8%', left: '30%', transform: 'translateX(-50%)' }, // bottom-left
-         { bottom: '8%', right: '30%', transform: 'translateX(50%)' }, // bottom-right
-         { top: '50%', left: '5%', transform: 'translateY(-50%)' }, // left
-         { top: '50%', right: '5%', transform: 'translateY(-50%)' }, // right
+         { top: '-15%', left: '30%', transform: 'translateX(-50%)' }, // top-left
+         { top: '-15%', right: '30%', transform: 'translateX(50%)' }, // top-right
+         { bottom: '-15%', left: '30%', transform: 'translateX(-50%)' }, // bottom-left
+         { bottom: '-15%', right: '30%', transform: 'translateX(50%)' }, // bottom-right
+         { top: '50%', left: '-15%', transform: 'translateY(-50%)' }, // left
+         { top: '50%', right: '-15%', transform: 'translateY(-50%)' }, // right
       ],
       big: [
-         { top: '5%', left: '25%', transform: 'translateX(-50%)' }, // top-left
-         { top: '5%', left: '50%', transform: 'translateX(-50%)' }, // top-center
-         { top: '5%', right: '25%', transform: 'translateX(50%)' }, // top-right
-         { bottom: '5%', left: '25%', transform: 'translateX(-50%)' }, // bottom-left
-         { bottom: '5%', left: '50%', transform: 'translateX(-50%)' }, // bottom-center
-         { bottom: '5%', right: '25%', transform: 'translateX(50%)' }, // bottom-right
-         { top: '50%', left: '3%', transform: 'translateY(-50%)' }, // left
-         { top: '50%', right: '3%', transform: 'translateY(-50%)' }, // right
+         { top: '-13%', left: '25%', transform: 'translateX(-50%)' }, // top-left
+         { top: '-13%', left: '50%', transform: 'translateX(-50%)' }, // top-center
+         { top: '-13%', right: '25%', transform: 'translateX(50%)' }, // top-right
+         { bottom: '-13%', left: '25%', transform: 'translateX(-50%)' }, // bottom-left
+         { bottom: '-13%', left: '50%', transform: 'translateX(-50%)' }, // bottom-center
+         { bottom: '-13%', right: '25%', transform: 'translateX(50%)' }, // bottom-right
+         { top: '50%', left: '-10%', transform: 'translateY(-50%)' }, // left
+         { top: '50%', right: '-10%', transform: 'translateY(-50%)' }, // right
       ],
    }
 
@@ -79,6 +90,19 @@ const getChairPositions = (chairCount, size) => {
    return positions
 }
 
+// interface TableItemProps {
+//    className?: string
+//    onClick?: () => void
+//    name?: string
+//    size?: 'small' | 'medium' | 'big'
+//    color?: keyof typeof colors
+//    user?: any
+//    chairs?: number
+//    rotation?: number
+//    isHighlighted?: boolean
+//    [key: string]: any
+// }
+
 export const TableItem = ({
    className,
    onClick,
@@ -88,96 +112,85 @@ export const TableItem = ({
    user,
    chairs = 2,
    rotation = 0,
-   positionX = 1,
-   positionY = 1,
-   width = 1,
-   height = 1,
    isHighlighted = false,
-   ...props
 }) => {
    const tableConfig = tableSizes[size]
    const chairPositions = getChairPositions(chairs, size)
+
    return (
       <button
          onClick={onClick}
          className={cn(
-            tableConfig.containerSize,
-            'relative transition-all duration-300 hover:scale-105 cursor-pointer',
-            'mx-auto',
+            'relative w-full h-full min-w-[60px] min-h-[60px]',
+            'transition-all duration-300 hover:scale-105 cursor-pointer',
             isHighlighted && 'transition-shadow rounded-2xl shadow-card',
             className,
          )}
          style={{
-            // gridColumn: `${positionX} / span ${width}`,
-            // gridRow: `${positionY} / span ${height}`,
-            transform: `rotate(${rotation}deg)`
+            transform: `rotate(${rotation}deg)`,
+            containerType: 'inline-size',
          }}
-         {...props}
       >
          <div
             className={cn(
-               tableConfig.tableSize,
                'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-               'rounded-xl shadow-md transition-all duration-300',
-               'hover:shadow-lg z-10 pointer-events-none',
-               colors[color],
-               size === 'small' && 'rounded-lg',
-               size === 'medium' && 'rounded-xl',
-               size === 'big' && 'rounded-2xl',
+               'shadow-none',
+               tableConfig.rounded,
             )}
+            style={{
+               width: tableConfig.tableWidth,
+               height: tableConfig.tableHeight,
+            }}
          >
-            <div
-               className='relative h-full w-full'
-            >
-               <span className={cn(
-                  'absolute top-2 left-0 right-0',
-                  'text-white font-semibold text-sm pointer-events-none',
-               )}>
+            {chairPositions.map((position, index) => (
+               <div
+                  key={`chair-${index}`}
+                  className={cn(
+                     'absolute rounded-md transition-all duration-300',
+                     'pointer-events-none bg-amber-950',
+                     chairColors[color],
+                  )}
+                  style={{
+                     width: tableConfig.chairWidth,
+                     height: tableConfig.chairHeight,
+                     ...position,
+                  }}
+               />
+            ))}
+
+            <div className={cn(
+               'transition-all duration-300 z-10',
+               'pointer-events-none shadow-lg',
+               'relative h-full w-full',
+               colors[color],
+               tableConfig.rounded
+            )}>
+               <span
+                  className={cn(
+                     'absolute top-1 left-0 right-0 text-center',
+                     'text-white font-semibold pointer-events-none',
+                     'leading-tight',
+                  )}
+                  style={{
+                     fontSize: tableConfig.fontSize,
+                  }}
+               >
                   {name}
                </span>
 
-               {user && (
+               {user && user.name && (
                   <UserCard
                      size={size === 'small' ? 'xs' : 'sm'}
-                     user={{ ...user }}
+                     user={user}
                      mustShow={['name']}
                      className={cn(
-                        'absolute left-2 bottom-2 z-11 pointer-events-none w-full',
+                        'absolute left-1 bottom-1 right-1',
+                        'pointer-events-none overflow-hidden',
                      )}
                   />
                )}
             </div>
          </div>
-
-         {/* Chairs */}
-         {chairPositions.map((position, index) => (
-            <div
-               key={'position-' + index}
-               className={cn(
-                  'absolute w-full h-full rounded-md transition-all duration-300',
-                  'shadow-sm hover:shadow-md pointer-events-none',
-                  chairColors[color],
-                  // Chair size variations
-                  size === 'small' && 'w-5 h-3',
-                  size === 'medium' && 'w-6 h-4',
-                  size === 'big' && 'w-7 h-5',
-               )}
-               style={position}
-            />
-         ))}
-
-         {/* Status indicator */}
-         {/* <div className='absolute top-2 right-2'>
-            <div
-               className={cn(
-                  'w-3 h-3 rounded-full shadow-sm',
-                  color === 'available' && 'bg-emerald-500 animate-bounce',
-                  color === 'busy' && 'bg-red-500 animate-pulse',
-                  color === 'selected' && 'bg-blue-500 animate-bounce',
-               )}
-            />
-         </div> */}
-         <div className='absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none' />
       </button>
    )
 }
@@ -187,6 +200,9 @@ TableItem.propTypes = {
    onClick: PropTypes.func,
    name: PropTypes.string,
    size: PropTypes.oneOf(['small', 'medium', 'big']),
-   color: PropTypes.oneOf(['available', 'busy', 'selected']),
+   color: PropTypes.oneOf(['available', 'busy', 'selected', 'blocked', 'pending', 'confirmed', 'notAvailable']),
    chairs: PropTypes.number,
+   user: PropTypes.object,
+   rotation: PropTypes.number,
+   isHighlighted: PropTypes.bool,
 }

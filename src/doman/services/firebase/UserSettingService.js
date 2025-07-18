@@ -1,5 +1,5 @@
 import { typeStatusTable } from '@/ultils';
-import { collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore/lite';
 import { FirebaseDB } from './config';
 
 export class UserSettingService {
