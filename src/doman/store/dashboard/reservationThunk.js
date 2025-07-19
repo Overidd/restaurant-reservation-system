@@ -1,5 +1,6 @@
 import { dasboardServiceProvider } from '@/doman/services';
 import { typeStatusTable } from '@/ultils';
+import { addReservationAction } from './calendarSlice';
 import { changeStatusTableAction, clearTablesRelationAction, messageErrorAction } from './restaurantResourceSlice';
 
 
@@ -98,21 +99,32 @@ export const releasedReservationThunks = ({ idReservation, idTable }) => {
  * @param {{ idTables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string,diners: number}} data
  */
 export const reserveTableThunks = (data) => {
-   return async (dispatch) => {
+   return async (dispatch, getState) => {
+      const { hour, dateStr, restaurant } = getState().stateFilterRestaurantReducer.filter;
+
       const res = await dasboardServiceProvider.reserveTable(data);
 
       if (!res.ok) {
          dispatch(messageErrorAction(res.errorMessage));
          throw res.errorMessage
       }
+      if (
+         hour !== res.hour ||
+         dateStr !== res.dateStr ||
+         restaurant.id !== res.idRestaurant
+      ) {
+         dispatch(changeStatusTableAction({
+            idTables: data.idTables,
+            status: typeStatusTable.PENDING,
+            reservation: res
+         }));
+      }
 
-      dispatch(changeStatusTableAction({
-         idTables: data.idTables,
-         status: typeStatusTable.PENDING,
-         reservation: res
-      }));
+      dispatch(addReservationAction({
+         ...res.reservation,
+         user: res.user
+      }))
 
       return res
    }
 }
-

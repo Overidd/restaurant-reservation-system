@@ -177,6 +177,40 @@ export class FirebaseDashboardService {
       }
    }
 
+   async getByStateReservations(states) {
+      try {
+         if (!states || Array.isArray(states).length <= 0) {
+            throw new Error('No se proporciono los estados de las reservas');
+         };
+
+         const reservations = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('status', 'in', states),
+         ));
+
+         return {
+            ok: true,
+            reservations: reservations.docs.map(doc => {
+               const data = doc.data();
+               return {
+                  id: doc.id,
+                  ...data,
+                  start: data.start,
+                  end: data.end,
+                  tables: data.tables,
+                  createdAt: data?.createdAt?.toDate()?.toISOString(),
+                  updatedAt: data?.updatedAt?.toDate()?.toISOString(),
+               }
+            })
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener las reservas'
+         }
+      }
+   }
+
    async getObjects({ dateStr, idRestaurant, hour }) {
       if (!dateStr || !idRestaurant || !hour) return;
 
