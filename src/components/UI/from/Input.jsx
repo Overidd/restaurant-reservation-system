@@ -54,7 +54,7 @@ export const Input = forwardRef(({
    activeEventIcon = false,
    iconPosition = 'left',
    type = 'text',
-   size = '',
+   size = 'base',
    ...props
 }, ref) => {
    const [showPassword, setShowPassword] = useState(false);

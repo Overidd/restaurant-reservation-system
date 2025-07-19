@@ -1,10 +1,10 @@
-import { DialigDeleteTable } from '@/components/UI/dialog';
+import { DialigDeleteObject, DialigDeleteTable } from '@/components/UI/dialog';
 import { useModalAsync } from '@/hook';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { cn, typeResource } from '@/ultils';
 import { useState } from 'react';
-import { ObjectEmpty, ObjectItem, TableEditItem } from '..';
+import { ObjectEditItem, ObjectEmpty, TableEditItem } from '..';
 
 export const MapEdit = ({
    restaurant,
@@ -12,18 +12,21 @@ export const MapEdit = ({
    onOpenEditTable,
    onOpenCreateObject,
    selectedResource,
+   onOpenEditObject,
 }) => {
+
    const { showAsyncModal } = useModalAsync();
-   const [selectTable, setSelectTable] = useState(null);
+   const [selectResource, setSelectResource] = useState(null);
 
    const {
       deleteTable,
+      deleteObject,
    } = useResource();
 
    if (!Array.isArray(resources)) return null;
 
    const handleDeleteTable = async (table) => {
-      setSelectTable(table.id);
+      setSelectResource(table.id);
       // handleSelectTable(table.id);
       const confirmed = await showAsyncModal(({ onConfirm, onCancel }) => (
          <DialigDeleteTable
@@ -37,13 +40,36 @@ export const MapEdit = ({
          AdminTableToasts.deleteTable(
             deleteTable({
                table,
-               idTable: table.id,
-               idRestaurant: restaurant.id
+               idTable: table?.id,
+               idRestaurant: restaurant?.id
             })
          )
       }
-      setSelectTable(null);
+      setSelectResource(null);
    }
+
+   const handleDeleteObject = async (object) => {
+      setSelectResource(object.id);
+      const confirmed = await showAsyncModal(({ onConfirm, onCancel }) => (
+         <DialigDeleteObject
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            object={object}
+         />
+      ));
+
+      if (confirmed) {
+         AdminTableToasts.deleteObject(
+            deleteObject({
+               object,
+               idObject: object?.id,
+               idRestaurant: restaurant?.id
+            })
+         )
+      }
+      setSelectResource(null);
+   }
+
    const paintedBoard = () => {
       const occupiedCells = new Set();
 
@@ -57,6 +83,7 @@ export const MapEdit = ({
          const resource = resources.find(
             (res) => res.positionX === x && res.positionY === y
          );
+
          // if (resource?.isCursor) return null;
          if (resource) {
 
@@ -81,11 +108,16 @@ export const MapEdit = ({
                case typeResource.OBJECT:
                   return (
                      <div key={id} style={commonStyle}>
-                        <ObjectItem
+                        <ObjectEditItem
                            object={resource}
-                           selectedObject={selectedResource}
-                           highlighted={selectedResource?.id === id}
+                           onDelete={handleDeleteObject}
+                           onOpenEdit={onOpenEditObject}
+                           selected={selectedResource}
                            isCursorPreview={resource?.isCursor}
+                           highlighted={
+                              selectedResource?.id === id ||
+                              selectResource === id
+                           }
                         />
                      </div>
                   );
@@ -96,12 +128,12 @@ export const MapEdit = ({
                         <TableEditItem
                            key={id}
                            table={resource}
-                           onOpenEditTable={onOpenEditTable}
-                           onDeleteTable={handleDeleteTable}
+                           onOpenEdit={onOpenEditTable}
+                           onDelete={handleDeleteTable}
                            isCursorPreview={resource?.isCursor}
                            highlighted={
                               selectedResource?.id === id ||
-                              selectTable === id
+                              selectResource === id
                            }
                         />
                      </div>
@@ -117,7 +149,7 @@ export const MapEdit = ({
                positionX={x}
                positionY={y}
                isHighlighted={
-                  selectTable === resource?.id
+                  selectResource === resource?.id
                }
             />
          );
@@ -150,9 +182,9 @@ export const RenderCursorSelect = ({ resource }) => {
       <div
          key={id}
          style={{
-            // gridColumn: `${positionY} / span ${width}`,
-            // gridRow: `${positionX} / span ${height}`,
-            // transform: `rotate(${rotation}deg)`
+            gridColumn: `${positionY} / span ${width}`,
+            gridRow: `${positionX} / span ${height}`,
+            transform: `rotate(${rotation}deg)`
          }}
          className={cn(
             'relative w-full h-full',
@@ -170,7 +202,7 @@ export const RenderCursorSelect = ({ resource }) => {
                className="opacity-60"
             />
          ) : (
-            <ObjectItem
+            <ObjectEditItem
                object={resource}
                isCursorPreview
                highlighted={false}

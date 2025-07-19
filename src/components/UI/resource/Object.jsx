@@ -2,12 +2,14 @@ import { cn } from '@/ultils';
 import { Cuboid } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export const ObjectItem = ({
+export const Object = ({
    object,
-   selectedObject,
-   isCursorPreview,
-   highlighted = false
+   isCursorPreview = false,
+   highlighted = false,
+   onClick,
+   ...Props
 }) => {
+
    const [isLoading, setIsLoading] = useState(true)
    const [hasError, setHasError] = useState(false)
    const [imageSrc, setImageSrc] = useState(null)
@@ -42,6 +44,8 @@ export const ObjectItem = ({
 
    return (
       <div
+         tabIndex={0}
+         role='button'
          className={cn(
             'relative w-full h-full overflow-hidden',
             highlighted && 'transition-shadow rounded-2xl shadow-lg bg-background',
@@ -50,6 +54,9 @@ export const ObjectItem = ({
          style={{
             transform: `rotate(${object.rotation || 0}deg)`,
          }}
+         onClick={onClick}
+         onKeyDown={(e) => e.key === 'Enter' && onClick()}
+         {...Props}
       >
          {isLoading && (
             <div className={cn('animate-pulse rounded-lg flex items-center justify-center')} />

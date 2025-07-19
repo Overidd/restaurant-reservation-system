@@ -152,6 +152,7 @@ export class FirebaseDashboardService {
                reservation: reservation?.reservation ?? null,
                user: reservation?.user ?? null,
                createdAt: data.createdAt?.toDate?.().toISOString?.() ?? null,
+               updatedAt: data.updatedAt?.toDate?.().toISOString?.() ?? null
             };
          });
 
@@ -772,6 +773,94 @@ export class FirebaseDashboardService {
       }
    }
 
+   async updateTable({
+      type,
+      image,
+      size,
+      chairs,
+      positionX,
+      positionY,
+      width,
+      height,
+      rotation,
+      zone,
+      description,
+      name,
+      idRestaurant,
+      isBlocked,
+      idTable
+   }) {
+      try {
+         if (!idRestaurant || !idTable) {
+            throw new Error('Error al actualizar la mesa');
+         }
+
+         const tableRef = doc(FirebaseDB, `restaurants/${idRestaurant}/tables/${idTable}`);
+         const table = await getDoc(tableRef);
+
+         if (!table.exists()) {
+            throw new Error('No se encontro la mesa');
+         }
+         const tableData = table.data();
+
+         const data = {
+            type: type ?? tableData?.type,
+            image: image ?? tableData?.image,
+            size: size ?? tableData?.size,
+            chairs: Number(chairs ?? tableData?.chairs),
+            positionX: positionX ?? tableData?.positionX,
+            positionY: positionY ?? tableData?.positionY,
+            width: width ?? tableData?.width,
+            height: height ?? tableData?.height,
+            rotation: rotation ?? tableData?.rotation,
+            zone: zone ?? tableData?.zone,
+            description: description ?? tableData?.description,
+            name: name ?? tableData?.name,
+            isBlocked: isBlocked ?? tableData?.isBlocked,
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(tableRef, data);
+         return {
+            ok: true,
+            table: {
+               id: tableRef.id,
+               ...data,
+               createdAt: tableData.createdAt?.toDate()?.toISOString() ?? null,
+               updatedAt: tableData.updatedAt?.toDate()?.toISOString() ?? null,
+            }
+         }
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al actualizar la mesa'
+         }
+      }
+
+   }
+
+   async deleteObject({ idObject, idRestaurant }) {
+      try {
+         const objectRef = doc(FirebaseDB, `restaurants/${idRestaurant}/objects/${idObject}`);
+
+
+         await deleteDoc(objectRef);
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al eliminar el objeto'
+         }
+      }
+   }
+
    async createObject({
       idRestaurant,
       idCategory,
@@ -844,7 +933,7 @@ export class FirebaseDashboardService {
       description,
       name,
       idRestaurant,
-      isReservable,
+      isBlocked,
    }) {
       try {
          if (!idRestaurant || positionX == null || positionY == null) {
@@ -874,7 +963,7 @@ export class FirebaseDashboardService {
             zone,
             description,
             name,
-            isReservable,
+            isBlocked,
             idRestaurant,
             createdAt: serverTimestamp()
          };
@@ -951,8 +1040,3 @@ export class FirebaseDashboardService {
 
 
 
-// status: isReserved
-//  ? typeStatusTable.BUSY
-//  : data.isReservable
-//     ? typeStatusTable.AVAILABLE
-//     : typeStatusTable.BLOCKED,

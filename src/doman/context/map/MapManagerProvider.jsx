@@ -1,4 +1,4 @@
-import { MapEditManager, MapStateManager, RenderCursorSelect } from '@/components/mapScreen';
+import { MapEditManager, MapStateManager } from '@/components/mapScreen';
 import { CardLoadding } from '@/components/UI/card';
 import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
 import { cn } from '@/ultils';
@@ -98,7 +98,7 @@ export const MapManagerProvider = ({
                </div>
 
                {/* overlay sólo en modo edición */}
-               {isEdit && (
+               {/* {isEdit && (
                   <div
                      className={cn(
                         'absolute inset-0 select-none pointer-events-none z-50',
@@ -111,7 +111,7 @@ export const MapManagerProvider = ({
                   >
                      <RenderCursorSelect resource={selectedResource} />
                   </div>
-               )}
+               )} */}
 
 
                {/* Top */}

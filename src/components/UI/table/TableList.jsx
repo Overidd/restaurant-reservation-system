@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';
-import { TableItem } from '.';
+import { Table } from '.';
 import { CardLoadding } from '../card';
 
 export const TableList = ({
@@ -28,7 +28,7 @@ export const TableList = ({
          );
 
          return (
-            <TableItem
+            <Table
                key={'table-' + table.id}
                onClick={() => onChangeTable(table)}
                color={table.status}

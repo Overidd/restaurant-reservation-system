@@ -1,10 +1,12 @@
 import { tablesSizeData } from '@/data';
 import { useForm } from '@/hook';
-import { cn, validateObject } from '@/ultils';
+import { cn } from '@/ultils';
 import { useState } from 'react';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
 
+import { useResource } from '@/hook/dashboard';
+import { AdminTableToasts } from '@/toasts';
 import {
    Form,
    FormItem,
@@ -26,47 +28,89 @@ const schema = {
       size: 0,
       chairs: 0
    },
+   validation: {
+      positionX: [
+         (value, _, data) => value > 0 && value <= (data.maxPositionX ?? 15),
+         'El ancho debe ser mayor a 0',
+         true
+      ],
+      positionY: [
+         (value, _, data) => value > 0 && value <= (data.maxPositionY ?? 15),
+         'El alto debe ser mayor a 0',
+         true
+      ],
+      rotation: [
+         (value) => value >= 0 && value <= 360,
+         'La rotación debe ser un valor entre 0 y 360',
+         true
+      ],
+   }
 }
 
 export const EditTablePropertySlide = ({
    className,
-   initial,
    isOpen,
    onClose,
-   onChangeValue,
-   axieRestaurant = {
-      y: 0,
-      x: 0
-   }
+   restaurant = {},
+   selectedResource = {},
 }) => {
    const [currentTableSize, setCurrentTableSize] = useState(
-      tablesSizeData.find((item) => item.value === initial.size) || tablesSizeData[0]
-   );
+      tablesSizeData.find((item) => item.value === selectedResource?.size) ||
+      tablesSizeData[0]);
+
+   const {
+      updateTable,
+      updateSelectedResource,
+      isLoadingUpdateTable,
+   } = useResource();
 
    const {
       onSubmitForm,
       onValueChange,
       isFormValid,
-      formState: { positionX, positionY, rotation, size, chairs },
+      formState: {
+         positionX,
+         positionY,
+         rotation,
+         size,
+         chairs
+      },
    } = useForm({
-      initialState: validateObject(initial) ? initial : schema.initial,
-      activeValidation: false,
-      changeValueCallback: onInitialFrom
+      activeValidation: true,
+      validations: schema.validation,
+      additionalData: {
+         maxPositionX: restaurant?.rows,
+         maxPositionY: restaurant?.columns,
+      },
+      initialState: {
+         ...schema.initial,
+         positionX: selectedResource?.positionX,
+         positionY: selectedResource?.positionY,
+         rotation: selectedResource?.rotation,
+         size: selectedResource?.size,
+         chairs: selectedResource?.chairs
+      },
+      changeValueCallback: ({ name, value }) => {
+         if (!name || !value) return;
+         updateSelectedResource({ name, value });
+      },
    });
-
-   function onInitialFrom(newInitialState) {
-      onChangeValue(newInitialState);
-   };
-
-   const onSubmit = onSubmitForm((value) => {
-      console.log(value)
-   })
 
    const handleChangeSize = (value) => {
       setCurrentTableSize(
          tablesSizeData.find((item) => item.value === value) || tablesSizeData[0]
       );
    };
+
+   const onSubmit = onSubmitForm((value) => {
+      AdminTableToasts.updateTable(
+         updateTable({
+            ...value,
+            idTable: selectedResource?.id,
+            idRestaurant: restaurant?.id
+         })
+      )
+   })
 
    return (
       <SlideOver
@@ -100,10 +144,9 @@ export const EditTablePropertySlide = ({
                         name='positionX'
                         variant='crystal'
                         min={1}
-                        max={axieRestaurant.x}
+                        max={restaurant.x}
                         value={positionX}
                         onChange={onValueChange}
-                        className={'!text-lg py-1'}
                      />
                   </FormItem>
 
@@ -119,10 +162,9 @@ export const EditTablePropertySlide = ({
                         name='positionY'
                         variant='crystal'
                         min={1}
-                        max={axieRestaurant.y}
+                        max={restaurant.y}
                         value={positionY}
                         onChange={onValueChange}
-                        className={'!text-lg py-1'}
                      />
                   </FormItem>
 
@@ -137,11 +179,10 @@ export const EditTablePropertySlide = ({
                         type='number'
                         name='rotation'
                         variant='crystal'
-                        min={1}
+                        min={0}
                         max={360}
                         value={Number(rotation)}
                         onChange={onValueChange}
-                        className={'!text-lg py-1'}
                      />
                   </FormItem>
                </FromGroup>
@@ -190,8 +231,9 @@ export const EditTablePropertySlide = ({
 
                   <Select
                      value={chairs || undefined}
-                     name={'chairs'}
                      onValueChange={onValueChange}
+                     name={'chairs'}
+                     type='number'
                   >
                      <SelectTrigger
                         variant='crystal'
@@ -219,7 +261,7 @@ export const EditTablePropertySlide = ({
                <FormItem>
                   <Button
                      type='submit'
-                     disabled={!isFormValid}
+                     disabled={!isFormValid || isLoadingUpdateTable}
                   >
                      Actualizar
                   </Button>

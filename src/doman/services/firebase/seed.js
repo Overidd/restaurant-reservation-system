@@ -67,7 +67,7 @@ const seed = async () => {
          description: t.description,
          chairs: t.chairs,
          image: t.image,
-         isReservable: t.isReservable,
+         isBlocked: t?.isBlocked || false,
          type: t.type,
          positionX: t.positionX,
          positionY: t.positionY,

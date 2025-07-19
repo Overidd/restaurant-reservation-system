@@ -70,7 +70,11 @@ export const CreateResourceSlide = ({
             )}
          >
             <Label className={'text-center w-full mb-4'}>
-               Crear objeto
+               {
+                  typeCategory === typeObj.TABLE
+                     ? 'Crear una mesa'
+                     : 'Crear un objeto'
+               }
             </Label>
 
             <div className={cn(

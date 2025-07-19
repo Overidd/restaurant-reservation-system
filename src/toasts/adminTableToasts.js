@@ -93,6 +93,17 @@ export class AdminTableToasts {
          .finally(() => onFinally?.());
    }
 
+   static async updateTable(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Actualizando mesa...',
+         success: 'Mesa actualizada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar mesa.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
    static async updateObject(promise, { onSuccess, onError, onFinally } = {}) {
       return toast.promise(promise, {
          loading: 'Actualizando objeto...',

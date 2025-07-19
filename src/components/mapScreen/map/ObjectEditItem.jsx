@@ -1,15 +1,14 @@
-import { Table } from '@/components/UI/table';
+import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '@/components/UI/common';
+import { Object } from '@/components/UI/resource';
 import { Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
-import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '../../UI/common';
 
-
-export const TableEditItem = ({
-   table,
+export const ObjectEditItem = ({
+   object,
    onDelete,
    onOpenEdit,
-   highlighted = false,
-   isCursorPreview = false
+   isCursorPreview,
+   highlighted = false
 }) => {
 
    const [open, setOpen] = useState(false);
@@ -21,18 +20,17 @@ export const TableEditItem = ({
    const handleClose = () => {
       setOpen(false);
    };
-
    const renderContent = () => (
       <>
          <Tooltip>
             <TooltipTrigger asChild>
-               <Button onClick={() => onOpenEdit(table)}>
+               <Button onClick={() => onOpenEdit(object)}>
                   <Pencil />
                </Button>
             </TooltipTrigger>
             <TooltipContent
-               side="right"
-               className="text-inherit rounded"
+               side='right'
+               className='text-inherit rounded'
             >
                Editar
             </TooltipContent>
@@ -40,13 +38,13 @@ export const TableEditItem = ({
 
          <Tooltip>
             <TooltipTrigger asChild>
-               <Button onClick={() => onDelete(table)} variant="destructive">
+               <Button onClick={() => onDelete(object)} variant='destructive'>
                   <Trash />
                </Button>
             </TooltipTrigger>
             <TooltipContent
-               side="right"
-               className="text-inherit rounded"
+               side='right'
+               className='text-inherit rounded'
             >
                Eliminar
             </TooltipContent>
@@ -57,16 +55,11 @@ export const TableEditItem = ({
    return (
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild>
-            <Table
-               onClick={handleClick}
-               color={table?.status}
-               name={table?.name}
-               user={table?.user}
-               size={table?.size}
-               chairs={table?.chairs}
-               rotation={table?.rotation}
-               isHighlighted={highlighted}
+            <Object
+               object={object}
+               highlighted={highlighted}
                isCursorPreview={isCursorPreview}
+               onClick={handleClick}
             />
          </PopoverTrigger>
 
@@ -81,5 +74,6 @@ export const TableEditItem = ({
             {renderContent()}
          </PopoverContent>
       </Popover >
-   );
+   )
 }
+

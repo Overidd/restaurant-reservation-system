@@ -46,6 +46,7 @@ export const MapEditManager = () => {
    const handleOpenEditTable = (table) => {
       openModalEdit();
       closeModalObjectCreate();
+      closeModalEditProperty();
       setSelectedResource(table);
    }
 
@@ -74,6 +75,7 @@ export const MapEditManager = () => {
             restaurant={restaurant}
             resources={resources}
             onOpenEditTable={handleOpenEditTable}
+            onOpenEditObject={() => { }}
             selectedResource={selectedResource}
             onOpenCreateObject={handleOpenCreateObject}
          />
@@ -102,23 +104,22 @@ export const MapEditManager = () => {
          {
             isOpenModalEdit &&
             <EditTableSlide
-               initial={selectedResource}
+               className={'w-80'}
+               restaurant={restaurant}
                isOpen={isOpenModalEdit}
                onClose={handleCloseModalEditTable}
+               selectedResource={selectedResource}
                onOpenEditProperty={handleOpenEditTableProperty}
             />
          }
 
          {isOpenModalEditProperty && (
             <EditTablePropertySlide
+               className={'w-80'}
+               restaurant={restaurant}
                isOpen={isOpenModalEditProperty}
                onClose={handleCloseEditProperty}
-               initial={selectedResource}
-               onChangeValue={updateSelectedResource}
-               axieRestaurant={{
-                  x: restaurant.rows,
-                  y: restaurant.columns
-               }}
+               selectedResource={selectedResource}
             />
          )}
       </>

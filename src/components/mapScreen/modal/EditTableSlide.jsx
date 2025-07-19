@@ -1,17 +1,20 @@
-import { useForm } from '@/hook';
-import { cn, validateObject } from '@/ultils';
+import { useForm, useModalAsync } from '@/hook';
+import { cn } from '@/ultils';
 import { Pen, Trash } from 'lucide-react';
-import { useEffect } from 'react';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
 
+import { DialigDeleteTable } from '@/components/UI/dialog';
+import { useResource } from '@/hook/dashboard';
+import { AdminTableToasts } from '@/toasts';
 import {
    Checkbox,
    Form,
    FormItem,
    FormLabel,
    FromGroup,
-   Input
+   Input,
+   Label
 } from '../../UI/from';
 
 const schema = {
@@ -19,11 +22,11 @@ const schema = {
       name: '',
       description: '',
       image: '',
-      isReservable: false,
+      isBlocked: false,
    },
    valid: {
       name: [
-         (value) => value.length >= 3,
+         (value) => value.length >= 2,
          'El nombre debe tener al menos 3 caracteres',
       ],
       description: [
@@ -39,22 +42,30 @@ const schema = {
 
 export const EditTableSlide = ({
    className,
-   initial ={},
    isOpen,
    onClose,
+   restaurant,
    onOpenEditProperty,
+   selectedResource = {},
 }) => {
+   const { showAsyncModal } = useModalAsync();
+
+   const {
+      updateTable,
+      deleteTable,
+      isLoadingUpdateTable,
+      isLoadingDeleteTable,
+   } = useResource();
 
    const {
       onSubmitForm,
       onValueChange,
       isFormValid,
-      onInitialFrom,
       formState: {
          name,
          description,
          image,
-         isReservable
+         isBlocked
       },
       formValidation: {
          nameValid,
@@ -62,19 +73,45 @@ export const EditTableSlide = ({
          imageValid
       },
    } = useForm({
-      initialState: validateObject(initial) ? initial : schema.initial,
       validations: schema.valid,
       activeValidation: true,
+      initialState: {
+         ...schema.initial,
+         name: selectedResource?.name,
+         image: selectedResource?.image,
+         description: selectedResource?.description,
+         isBlocked: selectedResource?.isBlocked
+      },
    });
 
-   useEffect(() => {
-      if (!initial.id || !isOpen) return
-      onInitialFrom(initial)
-   }, [initial.id, isOpen])
+   const handleDeleteTable = async (table) => {
+      const confirmed = await showAsyncModal(({ onConfirm, onCancel }) => (
+         <DialigDeleteTable
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            table={table}
+         />
+      ));
 
+      if (confirmed) {
+         AdminTableToasts.deleteTable(
+            deleteTable({
+               table,
+               idTable: table?.id,
+               idRestaurant: restaurant?.id
+            })
+         )
+      }
+   }
 
    const onSubmit = onSubmitForm((value) => {
-      console.log(value)
+      AdminTableToasts.updateTable(
+         updateTable({
+            ...value,
+            idTable: selectedResource?.id,
+            idRestaurant: restaurant?.id
+         })
+      )
    })
 
    return (
@@ -90,19 +127,22 @@ export const EditTableSlide = ({
             )}
          >
             <Form onSubmit={onSubmit}>
+               <Label className={'text-center w-full'}>
+                  Actualizar mesa
+               </Label>
 
                <FormItem className={'flex items-center'}>
                   <Checkbox
-                     id='isReservable'
-                     name={'isReservable'}
-                     checked={isReservable}
+                     id='isBlocked'
+                     name={'isBlocked'}
+                     checked={isBlocked}
                      onChange={onValueChange}
                   />
 
                   <FormLabel
-                     htmlFor={'isReservable'}
+                     htmlFor={'isBlocked'}
                   >
-                     Es reservable
+                     Bloquear mesa
                   </FormLabel>
                </FormItem>
 
@@ -116,11 +156,11 @@ export const EditTableSlide = ({
                      type='text'
                      name='name'
                      id={'name'}
+                     size='base'
                      variant='crystal'
                      value={name ?? ''}
                      onChange={onValueChange}
                      isError={!!nameValid}
-                     className={'!text-base py-1'}
                   />
                </FormItem>
 
@@ -138,7 +178,6 @@ export const EditTableSlide = ({
                      value={description ?? ''}
                      onChange={onValueChange}
                      isError={!!descriptionValid}
-                     className={'!text-base py-1'}
                   />
                </FormItem>
 
@@ -156,7 +195,6 @@ export const EditTableSlide = ({
                      value={image ?? ''}
                      onChange={onValueChange}
                      isError={!!imageValid}
-                     className={'!text-base py-1'}
                   />
                </FormItem>
 
@@ -170,6 +208,7 @@ export const EditTableSlide = ({
                      <Button
                         type='button'
                         onClick={onOpenEditProperty}
+                        disabled={isLoadingDeleteTable}
                         variant={'crystal'}
                         size={'icon'}
                      >
@@ -185,6 +224,7 @@ export const EditTableSlide = ({
                         type='button'
                         variant={'crystal'}
                         size={'icon'}
+                        onClick={() => handleDeleteTable(selectedResource)}
                      >
                         <Trash />
                      </Button>
@@ -193,7 +233,7 @@ export const EditTableSlide = ({
 
                <FormItem>
                   <Button
-                     disabled={!isFormValid}
+                     disabled={!isFormValid || isLoadingUpdateTable}
                   >
                      Actualizar
                   </Button>

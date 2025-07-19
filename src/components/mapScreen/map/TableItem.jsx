@@ -2,7 +2,7 @@ import { DateDiff, typeStatusTable } from '@/ultils';
 import { CalendarPlus, CheckCircle, Lock, LockOpen, OctagonX, Unlink2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '../../UI/common';
-import { TableItem as Table } from '../../UI/table';
+import { Table } from '../../UI/table';
 
 
 export const TableItem = ({

@@ -131,7 +131,7 @@ export class FirebaseReserveService {
 
       const tables = await getDocs(query(
          collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
-         where('isReservable', '==', true)
+         where('isBlocked', '==', false),
       ))
 
       const reservations = await getDocs(query(

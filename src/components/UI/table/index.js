@@ -1,2 +1,2 @@
-export * from './TableItem';
+export * from './Table';
 export * from './TableList';

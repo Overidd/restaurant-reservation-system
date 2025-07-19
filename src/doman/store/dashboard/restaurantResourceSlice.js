@@ -16,7 +16,18 @@ export const restaurantResourceSlice = createSlice({
 
    reducers: {
       deleteTableAction: (state, { payload }) => {
+         if (!payload) return;
          state.tables = state.tables.filter(t => t.id !== payload);
+      },
+
+      updateTableAction: (state, { payload }) => {
+         if (!payload) return;
+         state.tables = state.tables.map(t => t.id === payload.id ? { ...t, ...payload } : t);
+      },
+
+      deleteObjectAction: (state, { payload }) => {
+         if (!payload) return;
+         state.objects = state.objects.filter(o => o.id !== payload);
       },
 
       loaddingAction: (state, { payload }) => {
@@ -36,7 +47,7 @@ export const restaurantResourceSlice = createSlice({
          state.tables = [...state.tables, {
             ...payload,
             hasReservar: false,
-            isReservable: true,
+            isBlocked: false,
             status: typeStatusTable.AVAILABLE,
             reservation: null,
             user: null
@@ -172,6 +183,8 @@ export const {
    loaddingAction,
    messageErrorAction,
    deleteTableAction,
+   deleteObjectAction,
    setObjectAction,
-   setTableAction
+   setTableAction,
+   updateTableAction,
 } = restaurantResourceSlice.actions

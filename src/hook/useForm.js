@@ -86,7 +86,7 @@ const formReducer = (state, action) => {
          const resetSate = Object.entries(state.values).map(([key, value]) => {
             const reset = Object.keys(action.dataReset).find((keyReset) => keyReset === key);
             if (reset) {
-               return [key, action.initialaction[key]]
+               return [key, action.initialState[key]]
             }
             return [key, value]
          });

@@ -1,5 +1,5 @@
 import { dasboardServiceProvider } from '@/doman/services';
-import { deleteTableAction, setObjectAction, setSelectedResourceAction, setTableAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction } from '@/doman/store/dashboard';
+import { deleteObjectAction, deleteTableAction, setObjectAction, setSelectedResourceAction, setTableAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction, updateTableAction } from '@/doman/store/dashboard';
 import { typeObj, typeStatusTable, validateObject } from '@/ultils';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -7,7 +7,9 @@ import { useDispatch } from 'react-redux';
 export const useResource = () => {
    const [loading, setLoading] = useState({
       table: false,
-      object: false
+      object: false,
+      updateTable: false,
+      deleteTable: false
    })
 
    const dispatch = useDispatch();
@@ -55,7 +57,7 @@ export const useResource = () => {
          zone: null,
          name: null,
          description: null,
-         isReservable: false,
+         isBlocked: false,
          status: typeStatusTable.AVAILABLE,
          isCursor: true
       }
@@ -86,9 +88,11 @@ export const useResource = () => {
       if (!data || !validateObject(data)) {
          throw new Error('Error al crear el objeto');
       };
-      
+      setLoading((prev) => ({ ...prev, object: true }));
+
       const res = await dasboardServiceProvider.createObject(data);
-      
+
+      setLoading((prev) => ({ ...prev, object: false }));
       if (!res.ok) {
          throw res.errorMessage
       }
@@ -103,6 +107,35 @@ export const useResource = () => {
       dispatch(deleteTableAction(idTable));
    };
 
+   const deleteObject = async ({ idObject, idRestaurant }) => {
+      if (!idRestaurant || !idObject) return;
+
+      setLoading((prev) => ({ ...prev, deleteTable: true }));
+
+      await dasboardServiceProvider?.deleteObject({ idRestaurant, idObject });
+
+      setLoading((prev) => ({ ...prev, deleteTable: false }));
+
+      dispatch(deleteObjectAction(idObject));
+   };
+
+   const updateTable = async (data) => {
+      if (!data || !validateObject(data)) {
+         throw new Error('Error al actualizar la mesa');
+      };
+
+      setLoading((prev) => ({ ...prev, updateTable: true }));
+
+      const res = await dasboardServiceProvider.updateTable(data);
+
+      setLoading((prev) => ({ ...prev, updateTable: false }));
+
+      if (!res.ok) {
+         throw res.errorMessage
+      }
+
+      dispatch(updateTableAction(res.table));
+   }
 
    return {
       createObject,
@@ -113,7 +146,11 @@ export const useResource = () => {
       toggleIsTempResourceChange,
       setSelectedResource,
       deleteTable,
+      deleteObject,
+      updateTable,
       isLoadingCreateTable: loading.table,
-      isLoadingCreateObject: loading.object
+      isLoadingCreateObject: loading.object,
+      isLoadingUpdateTable: loading.updateTable,
+      isLoadingDeleteTable: loading.deleteTable
    }
 }

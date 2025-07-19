@@ -1,9 +1,10 @@
 import { DialigCancelReserve } from '@/components/UI/dialog';
+import { Object } from '@/components/UI/resource';
 import { useModalAsync } from '@/hook';
 import { AdminTableToasts } from '@/toasts';
 import { typeResource } from '@/ultils';
 import { useState } from 'react';
-import { ObjectItem, TableItem } from '..';
+import { TableItem } from '..';
 
 export const MapState = ({
    rows,
@@ -93,7 +94,7 @@ export const MapState = ({
                case typeResource.OBJECT:
                   return (
                      <div key={id} style={commonStyle}>
-                        <ObjectItem
+                        <Object
                            object={resource}
                            selectedObject={selectedResource}
                         />

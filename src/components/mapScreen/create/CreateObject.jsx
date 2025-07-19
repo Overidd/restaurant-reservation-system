@@ -156,11 +156,8 @@ export const CreateObject = ({
             ...selectedResource,
             ...data,
             idRestaurant: restaurant?.id,
-         }), {
-         onSuccess: () => {
-            onResetForm()
-         }
-      })
+         })
+      )
    })
 
    useEffect(() => {

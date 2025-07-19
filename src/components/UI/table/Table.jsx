@@ -103,7 +103,7 @@ const getChairPositions = (chairCount, size) => {
 //    [key: string]: any
 // }
 
-export const TableItem = ({
+export const Table = ({
    className,
    onClick,
    name,
@@ -200,7 +200,7 @@ export const TableItem = ({
    )
 }
 
-TableItem.propTypes = {
+Table.propTypes = {
    className: PropTypes.string,
    onClick: PropTypes.func,
    name: PropTypes.string,
