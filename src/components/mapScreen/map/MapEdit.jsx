@@ -12,7 +12,6 @@ export const MapEdit = ({
    onOpenEditTable,
    onOpenCreateObject,
    selectedResource,
-   onOpenEditObject,
 }) => {
 
    const { showAsyncModal } = useModalAsync();
@@ -111,7 +110,7 @@ export const MapEdit = ({
                         <ObjectEditItem
                            object={resource}
                            onDelete={handleDeleteObject}
-                           onOpenEdit={onOpenEditObject}
+                           // onOpenEdit={onOpenEditObject}
                            selected={selectedResource}
                            isCursorPreview={resource?.isCursor}
                            highlighted={

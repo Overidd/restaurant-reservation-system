@@ -450,7 +450,6 @@ export const CreateTable = ({
             <Button
                type='submit'
                disabled={!isFormValid || isLoadingCreateTable}
-               isLoading={isLoadingCreateTable}
             >
                Crear Mesa
             </Button>

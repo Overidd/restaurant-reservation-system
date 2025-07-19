@@ -221,7 +221,6 @@ export const ModalCreateItemObject = ({
                   <Button
                      type='submit'
                      disabled={isLoadingCreate}
-                     isLoading={isLoadingCreate}
                   >
                      Crear nuevo item
                   </Button>

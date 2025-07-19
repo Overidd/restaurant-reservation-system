@@ -48,7 +48,8 @@ export const ModalEditItemObject = ({
       updateObject,
       deleteObject,
       isLoadingUpdate,
-      isLoadingDelete
+      isLoadingDelete,
+      setSelectObject
    } = useCreateObjectContext()
 
    const {
@@ -92,8 +93,18 @@ export const ModalEditItemObject = ({
                height: value.height,
                rotation: value.rotation,
             }
-         })
-      )
+         }), {
+         onSuccess: () => {
+            setSelectObject({
+               ...selectObject,
+               name: value.name,
+               image: value.image,
+               width: value.width,
+               height: value.height,
+               rotation: value.rotation
+            })
+         }
+      })
    })
 
    const handleDeleteObject = () => {
@@ -104,6 +115,7 @@ export const ModalEditItemObject = ({
          }), {
          onSuccess: () => {
             onClose()
+            setSelectObject(null)
          }
       })
    }
@@ -236,7 +248,6 @@ export const ModalEditItemObject = ({
                   <Button
                      type='submit'
                      disabled={!isFormValid || isLoadingUpdate}
-                     isLoading={isLoadingUpdate}
                   >
                      Actualizar
                   </Button>
@@ -244,7 +255,6 @@ export const ModalEditItemObject = ({
                      type='button'
                      variant={'destructive'}
                      disabled={isLoadingDelete}
-                     isLoading={isLoadingDelete}
                      onClick={handleDeleteObject}
                   >
                      Eliminar

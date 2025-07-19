@@ -2,7 +2,7 @@ import { useCreateCategoryContext } from '@/hook/context';
 import { useModalCreateCategory, useModalCreateItemObject, useModalEditCategoryObject, useModalEditItemObject } from '@/hook/modals';
 import { cn, typeObj } from '@/ultils';
 import { Pen, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { CreateObject, CreateTable, ModalCreateCategoryObject, ModalCreateItemObject, ModalEditCategoryObject, ModalEditItemObject } from '..';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
@@ -25,7 +25,7 @@ export const CreateResourceSlide = ({
    onClose,
    isOpen = false
 }) => {
-   const [typeCategory, setTypeCategory] = useState(null) // table, y etc...
+   // const [category?.name, setTypeCategory] = useState(null) // table, y etc...
 
    const {
       openModal: openModalCreateCategory
@@ -36,6 +36,7 @@ export const CreateResourceSlide = ({
    } = useModalEditCategoryObject()
 
    const {
+      category,
       categorys,
       setCategory,
       isLoadingLoad,
@@ -44,19 +45,19 @@ export const CreateResourceSlide = ({
 
    const handleCategoryChange = ({ value }) => {
       if (!value) return
-      setTypeCategory(value)
+      setCategory(getCategoryByName(value))
    }
 
    const handleModalEditCategory = () => {
-      if (!typeCategory) return
-      setCategory(getCategoryByName(typeCategory))
       openModalEditCategory()
    }
 
    useEffect(() => {
-      if (!selectedResource.idTemp) return
-      setTypeCategory(null)
+      if (!selectedResource.idTemp || restaurant === null) return;
+      setCategory(null)
    }, [selectedResource.idTemp])
+
+   
 
    return (
       <SlideOver
@@ -71,7 +72,7 @@ export const CreateResourceSlide = ({
          >
             <Label className={'text-center w-full mb-4'}>
                {
-                  typeCategory === typeObj.TABLE
+                  category?.name === typeObj.TABLE
                      ? 'Crear una mesa'
                      : 'Crear un objeto'
                }
@@ -89,7 +90,7 @@ export const CreateResourceSlide = ({
 
                <Select
                   name='category'
-                  value={typeCategory}
+                  value={category?.name || ''}
                   onValueChange={handleCategoryChange}
                >
                   <SelectTrigger
@@ -101,7 +102,7 @@ export const CreateResourceSlide = ({
                      className='w-full'
                   >
                      <SelectValue
-                        placeholder='Selecciona una categoria'
+                        placeholder=''
                      />
                   </SelectTrigger>
                   <SelectContent>
@@ -134,18 +135,18 @@ export const CreateResourceSlide = ({
                </Button>
             </div>
             {
-               (typeCategory === typeObj.TABLE) &&
+               (category?.name === typeObj.TABLE) &&
                <CreateTable
                   selectedResource={selectedResource}
                   restaurant={restaurant}
                />
             }
             {
-               (!!typeCategory && typeCategory !== typeObj.TABLE) &&
+               (!!category?.name && category?.name !== typeObj.TABLE) &&
                <CreateObject
                   restaurant={restaurant}
                   selectedResource={selectedResource}
-                  currentCategory={getCategoryByName(typeCategory)}
+                  currentCategory={getCategoryByName(category?.name)}
                />
             }
          </Card2>

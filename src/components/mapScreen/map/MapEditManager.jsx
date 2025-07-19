@@ -75,7 +75,6 @@ export const MapEditManager = () => {
             restaurant={restaurant}
             resources={resources}
             onOpenEditTable={handleOpenEditTable}
-            onOpenEditObject={() => { }}
             selectedResource={selectedResource}
             onOpenCreateObject={handleOpenCreateObject}
          />

@@ -1,12 +1,12 @@
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '@/components/UI/common';
 import { Object } from '@/components/UI/resource';
-import { Pencil, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
 export const ObjectEditItem = ({
    object,
    onDelete,
-   onOpenEdit,
+   // onOpenEdit,
    isCursorPreview,
    highlighted = false
 }) => {
@@ -22,7 +22,7 @@ export const ObjectEditItem = ({
    };
    const renderContent = () => (
       <>
-         <Tooltip>
+         {/* <Tooltip>
             <TooltipTrigger asChild>
                <Button onClick={() => onOpenEdit(object)}>
                   <Pencil />
@@ -34,7 +34,7 @@ export const ObjectEditItem = ({
             >
                Editar
             </TooltipContent>
-         </Tooltip>
+         </Tooltip> */}
 
          <Tooltip>
             <TooltipTrigger asChild>

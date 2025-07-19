@@ -3,8 +3,9 @@ import { useCreateObjectContext } from '@/hook/context';
 import { useResource } from '@/hook/dashboard';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
 import { AdminTableToasts } from '@/toasts';
+import { typeResource } from '@/ultils';
 import { Pen, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from '../../UI/common';
 import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '../../UI/from';
 
@@ -55,8 +56,7 @@ export const CreateObject = ({
    currentCategory,
    restaurant,
 }) => {
-
-   const [objectName, setObjectName] = useState(null) // table, y etc...
+   // const [objectName, setObjectName] = useState(null) // table, y etc...
 
    const {
       openModal: onOpenCreateItemObj
@@ -73,6 +73,7 @@ export const CreateObject = ({
       isLoadingLoad,
       setSelectObject,
       getObjectByName,
+      selectObject,
    } = useCreateObjectContext()
 
    const {
@@ -80,7 +81,8 @@ export const CreateObject = ({
       createTempObject,
       updateSelectedResource,
       toggleIsTempResourceChange,
-      isLoadingCreateObject
+      isLoadingCreateObject,
+      setSelectedResource
    } = useResource()
 
    const {
@@ -124,7 +126,7 @@ export const CreateObject = ({
    const handleSelectObject = ({ value }) => {
       const object = getObjectByName(value);
       if (!value || !object) return
-      setObjectName(value)
+      setSelectObject(getObjectByName(value))
       toggleIsTempResourceChange(true)
 
       createTempObject(
@@ -144,9 +146,8 @@ export const CreateObject = ({
    }
 
    const handleModalEditObject = () => {
-      if (!objectName || !currentCategory || !getObjectByName(objectName)) return
+      if (!currentCategory) return
       setCategory(currentCategory)
-      setSelectObject(getObjectByName(objectName))
       onOpenEditItemObj()
    }
 
@@ -163,11 +164,24 @@ export const CreateObject = ({
    useEffect(() => {
       if (currentCategory) {
          loadObjects(currentCategory.id)
-         setObjectName(null)
+         setSelectObject(null)
          onResetForm()
          return;
       }
    }, [currentCategory])
+
+   useEffect(() => {
+      if (selectObject === null) {
+         setSelectedResource({
+            type: typeResource.OBJECT,
+            idTemp: selectedResource?.idTemp,
+            id: selectedResource.id,
+            positionX,
+            positionY,
+         })
+         onResetForm()
+      };
+   }, [selectObject])
 
    return (
       <Form
@@ -184,7 +198,7 @@ export const CreateObject = ({
 
                <Select
                   name='type'
-                  value={objectName}
+                  value={selectObject?.name}
                   onValueChange={handleSelectObject}
                >
                   <SelectTrigger
@@ -337,7 +351,6 @@ export const CreateObject = ({
                size='base'
                type='submit'
                disabled={!isFormValid || isLoadingCreateObject}
-               isLoading={isLoadingCreateObject}
             >
                Crear objeto
             </Button>

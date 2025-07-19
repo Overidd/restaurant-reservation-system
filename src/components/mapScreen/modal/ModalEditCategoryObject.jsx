@@ -26,6 +26,7 @@ export const ModalEditCategoryObject = ({
 
    const {
       category,
+      setCategory,
       isLoadingUpdate,
       isLoadingDelete,
       updateObjectCategory,
@@ -35,7 +36,6 @@ export const ModalEditCategoryObject = ({
    const {
       onSubmitForm,
       onValueChange,
-      onResetForm,
       formState: {
          name,
       },
@@ -57,9 +57,13 @@ export const ModalEditCategoryObject = ({
             name: name
          }), {
          onSuccess: () => {
-            onResetForm()
+            setCategory({
+               ...category,
+               name
+            })
          }
-      })
+      }
+      )
    })
 
    const handleDeleteObject = () => {
@@ -67,6 +71,7 @@ export const ModalEditCategoryObject = ({
          deleteObjectCategory(category.id), {
          onSuccess: () => {
             onClose()
+            setCategory(null)
          }
       })
    }
@@ -113,7 +118,6 @@ export const ModalEditCategoryObject = ({
                >
                   <Button
                      disabled={isLoadingUpdate}
-                     isLoading={isLoadingUpdate}
                      size={'lg'}
                      type='submit'
                      className={'inline-block align-middle transition-all duration-300'}
@@ -122,7 +126,6 @@ export const ModalEditCategoryObject = ({
                   </Button>
                   <Button
                      disabled={isLoadingDelete}
-                     isLoading={isLoadingDelete}
                      onClick={handleDeleteObject}
                      size={'lg'}
                      type='button'

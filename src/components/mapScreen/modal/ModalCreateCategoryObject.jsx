@@ -96,7 +96,6 @@ export const ModalCreateCategoryObject = ({
                      size='lg'
                      className='inline-block align-middle'
                      disabled={isLoadingCreate}
-                     isLoading={isLoadingCreate}
                   >
                      Crear
                   </Button>
