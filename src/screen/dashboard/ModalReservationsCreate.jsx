@@ -41,7 +41,9 @@ const schema = {
    },
 };
 
-export const ModalReservationsCreate = () => {
+export const ModalReservationsCreate = ({
+   className,
+}) => {
    const { closeModal, isOpen } = useModalReservationsCreate();
 
    const [selectedTables, setSelectedTables] = useState([])
@@ -237,7 +239,7 @@ export const ModalReservationsCreate = () => {
          onClose={handleCloseModal}
       >
          <Card2 className={cn(
-            'w-[35rem]'
+            className,
          )}>
             <Form onSubmit={onSubmit}>
                <FormLabel
@@ -261,7 +263,6 @@ export const ModalReservationsCreate = () => {
                      icon={renderEmailIcon}
                      iconPosition='right'
                      activeEventIcon
-                     className='py-3'
                   />
 
                   {
@@ -285,7 +286,6 @@ export const ModalReservationsCreate = () => {
                         onChange={onValueChange}
                         isError={!!nameValid}
                         variant='crystal'
-                        className='py-3'
                         disabled={isBlockedFields}
                      />
 
@@ -303,7 +303,6 @@ export const ModalReservationsCreate = () => {
                         onChange={onValueChange}
                         isError={!!phoneValid}
                         variant='crystal'
-                        className='py-3'
                         disabled={isBlockedFields}
                      />
                   </FormItem>

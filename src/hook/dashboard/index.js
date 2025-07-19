@@ -7,4 +7,5 @@ export * from './useReservation';
 export * from './useResource';
 export * from './useRestaurantUi';
 export * from './useStateFilterRestaurant';
-
+export * from './useTableStats';
+ 

@@ -38,14 +38,13 @@ export const TableAutoFilter = ({
 
    return (
       <Card2
-         vairant='secondary'
+         vairant='dashed'
          className={cn(
-            'p-2 bg-transparent shadow-none px-4 py-3 border-2 !border-dashed',
+            className
          )}
       >
          <Form className={cn(
             'flex flex-wrap justify-center gap-4',
-            className
          )}>
             <FormItem>
                <Select

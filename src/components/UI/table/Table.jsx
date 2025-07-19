@@ -189,8 +189,8 @@ export const Table = ({
                      user={user}
                      mustShow={['name']}
                      className={cn(
-                        'absolute left-1 bottom-1 right-1',
                         'pointer-events-none overflow-hidden',
+                        'absolute left-2 bottom-2',
                      )}
                   />
                )}

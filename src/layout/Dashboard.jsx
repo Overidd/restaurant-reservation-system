@@ -20,9 +20,12 @@ const Layout = () => {
             <Outlet />
          </div>
 
+         <ModalReservationsCreate
+            className={'w-[35rem]'}
+         />
+         
          <NofityReservation />
          <ActionSpeedDial />
-         <ModalReservationsCreate />
       </div>
    )
 }

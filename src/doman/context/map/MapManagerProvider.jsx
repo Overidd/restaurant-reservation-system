@@ -75,6 +75,7 @@ export const MapManagerProvider = ({
       }}>
          <div className={cn(
             'relative rounded-md overflow-hidden',
+            'overflow-hidden select-none',
             'w-fit h-fit p-4',
             'bg-gray-300/10',
             isEdit && 'z-20',

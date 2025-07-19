@@ -21,16 +21,18 @@ export const CalendarButton = ({
    name,
    disabled,
    required,
+   size = '2xl',
    configDate = (date) => date < new Date(new Date().setDate(new Date().getDate() - 1))
 }) => {
    return (
       <Popover className={className}>
          <PopoverTrigger asChild>
             <Button
-               className={`w-48 p-5 justify-between font-normal ${btnClassName}`}
+               className={`w-48 p-3 justify-between font-normal ${btnClassName}`}
                variant={variant || 'crystal'}
                type='button'
                id='date'
+               size={size}
                disabled={disabled}
             >
                {date ? date.toLocaleDateString() : 'Seleccione una fecha'}

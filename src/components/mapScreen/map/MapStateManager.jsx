@@ -61,6 +61,7 @@ export const MapStateManager = () => {
 
          {isOpenModalReserve && (
             <ModalTableReserve
+               className={'w-[22rem]'}
                currentTable={selectedResource}
                onReserveTable={reserveTable}
                isOpen={isOpenModalReserve}

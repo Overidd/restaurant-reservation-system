@@ -7,25 +7,34 @@ import {
    MapEditManager,
    MapStateManager,
    TableAutoFilter,
+   TableStats,
 } from '@/components/mapScreen';
 
 export const MapScreen = () => {
    return (
       <main
          className={cn(
-            'mt-5 flex flex-col items-center gap-5'
+            'w-fit mx-auto',
+            'mt-5 grid grid-cols-1 md:grid-cols-[auto_auto] gap-5'
          )}
       >
-         <TableAutoFilter />
+         <BackdropEdit
+         />
 
-         <BackdropEdit />
+         <TableAutoFilter
+            className={'md:col-start-2 w-fit mx-auto'}
+         />
+
+         <TableStats
+            className={'md:w-65 w-[90%] ml-auto'}
+         />
 
          <ModalAsyncProvider>
             <MapManagerProvider
                className={cn(
-                  'overflow-hidden mx-auto select-none',
                   'md:w-[44rem] md:h-[40rem]',
                   '2xl:w-[48rem] 2xl:h-[44rem]',
+                  'mr-auto',
                )}
             >
                <MapStateManager />

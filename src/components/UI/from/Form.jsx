@@ -5,7 +5,7 @@ export const Form = ({ className, onSubmit, children, ...props }) => {
    return (
       <form
          className={cn('grid gap-4', className)}
-         data-slot="form"
+         data-slot='form'
          onSubmit={onSubmit}
          {...props}
       >
@@ -28,7 +28,7 @@ export const FormItem = ({ className, children, ...props }) => {
 export const FromGroup = ({ className, children, ...props }) => {
    return (
       <section
-         data-slot="form-group"
+         data-slot='form-group'
          className={cn('', className)}
          {...props}
       >
@@ -47,8 +47,8 @@ export const FormLabel = ({
 }) => {
    return (
       <Label
-         className={cn("data-[error=true]:text-destructive text-[#fff5]", className)}
-         data-slot="form-label"
+         className={cn('data-[error=true]:text-destructive text-background/50', className)}
+         data-slot='form-label'
          size={size}
          data-error={!!isError}
          htmlFor={htmlFor}
@@ -62,8 +62,8 @@ export const FormLabel = ({
 export const FormDescription = ({ className, children, ...props }) => {
    return (
       <p
-         data-slot="form-description"
-         className={cn("text-muted-foreground text-sm", className)}
+         data-slot='form-description'
+         className={cn('text-background/40 text-sm', className)}
          {...props}
       >
          {children}
@@ -78,8 +78,8 @@ export const FormMessage = ({ className, error, ...props }) => {
 
    return (
       <p
-         data-slot="form-message"
-         className={cn("text-destructive text-sm", className)}
+         data-slot='form-message'
+         className={cn('text-destructive text-sm', className)}
          {...props}
       >
          {error}

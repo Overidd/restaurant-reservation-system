@@ -120,11 +120,12 @@ export const Sidebar = ({
                               {nav.name}
                            </span>
                         )}
+
                         {(isExpanded || isHovered || isMobileOpen) && (
                            <ChevronDown
                               className={cn(
                                  'ml-auto w-5 h-5 transition-transform duration-200',
-                                 isOpen ? 'rotate-180 text-sidebar-primary-foreground' : 'text-sidebar-foreground'
+                                 isOpen ? 'rotate-180 text-sidebar-primary-foreground' : 'text-sidebar-primary-foreground'
                               )}
                            />
                         )}

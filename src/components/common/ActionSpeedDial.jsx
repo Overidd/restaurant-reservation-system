@@ -1,26 +1,27 @@
 import { useEditTables } from '@/hook/dashboard';
 import { useModalReservationsCreate } from '@/hook/modals';
-import { CalendarPlus, PackagePlus, Pen } from 'lucide-react';
+import { CalendarPlus, Pen } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { SpeedDial } from '../UI/common/SpeedDial';
 
 export const ActionSpeedDial = () => {
    const { openModal: openReservations } = useModalReservationsCreate();
    const { toggleIsEdit } = useEditTables();
+   const location = useLocation();
 
    const formActions = [
       {
+         id: 'edit',
          icon: Pen,
          label: 'Editar mesas',
+         disabled: location.pathname !== '/dashboard/tables',
          onClick: () => toggleIsEdit(true)
       },
       {
-         icon: PackagePlus,
-         label: 'Agregar mesas',
-         onClick: () => alert('Print Form')
-      },
-      {
+         id: 'reserve',
          icon: CalendarPlus,
          label: 'Reservar mesas',
+         disabled: false,
          onClick: () => openReservations()
       },
    ]

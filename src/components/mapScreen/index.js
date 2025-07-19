@@ -21,4 +21,5 @@ export * from './modal/ModalEditCategoryObject';
 export * from './modal/ModalEditItemObject';
 export * from './modal/ModalTableReserve';
 export * from './TableAutoFilter';
+export * from './TableStats';
 

@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { cn } from '@/ultils';
 import { cva } from 'class-variance-authority';
 import { Plus } from 'lucide-react';
+import { useState } from 'react';
 
 import {
    Button,
    Tooltip,
    TooltipContent,
-   TooltipTrigger,
-   TooltipProvider
+   TooltipProvider,
+   TooltipTrigger
 } from '.';
 
 const speedDialVariants = cva('absolute flex items-center justify-center gap-2', {
@@ -85,7 +85,7 @@ export const SpeedDial = ({
             <div className={speedDialVariants({ direction })}>
                {actions.map((action, index) => (
                   <div
-                     key={index}
+                     key={action.id}
                      className={cn(
                         'transition-all duration-300 ease-in-out',
                         isOpen ? 'opacity-100 translate-y-0 translate-x-0' : 'opacity-0 pointer-events-none',
@@ -100,13 +100,13 @@ export const SpeedDial = ({
                         <TooltipTrigger asChild>
                            <Button
                               size='icon'
+                              aria-label={action.label}
+                              disabled={disabled || action.disabled}
                               className={cn('h-10 w-10 rounded-full shadow-md', action.className)}
                               onClick={() => {
                                  action.onClick()
                                  setIsOpen(false)
                               }}
-                              aria-label={action.label}
-                              disabled={disabled}
                            >
                               <action.icon className='h-5 w-5' />
                            </Button>

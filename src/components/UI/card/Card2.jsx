@@ -11,11 +11,10 @@ export const Card2 = ({
       <div
          style={style}
          className={cn(
-            vairant === 'secondary' && 'bg-[#fff6] shadow-xl',
+            vairant === 'secondary' && 'bg-[#fff6] shadow-xl p-10',
             vairant === 'primary' && 'bg-sidebar-background backdrop-blur-lg text-sidebar-foreground shadow-xl',
-            'rounded-2xl',
-            // 'overflow-hidden',
-            'p-10',
+            'rounded-2xl p-10',
+            vairant === 'dashed' && 'p-2 bg-transparent shadow-none px-4 py-3 border-2 border-dashed',
             className
          )}
       >

@@ -157,11 +157,13 @@ export const ModalTableReserve = ({
    const renderEmailDescription = user ? (
       <UserCard user={user} />
    ) : errorMessage ? (
-      <span className='text-red-300'>{errorMessage}</span>
+      <FormDescription className='text-red-300'>
+         {errorMessage}
+      </FormDescription>
    ) : (
-      <span className='text-card-foreground text-sm'>
+      <FormDescription>
          Buscar por email
-      </span>
+      </FormDescription>
    );
 
    return (
@@ -171,7 +173,9 @@ export const ModalTableReserve = ({
          direction='topright'
          overlayClassName='backdrop-blur-none'
       >
-         <Card2 className={cn('w-[22rem]', className)}>
+         <Card2 className={cn(
+            className
+         )}>
             <Form onSubmit={onSubmit}>
                <FromGroup className='flex gap-4 justify-center items-center text-center'>
                   <FormItem>
@@ -223,7 +227,7 @@ export const ModalTableReserve = ({
                         className='w-full shadow-xl'
                      >
                         <SelectValue
-                           placeholder='Seleccione el numero de comensales'
+                           placeholder='Numero de comensales'
                         />
                      </SelectTrigger>
                      <SelectContent>
@@ -254,7 +258,6 @@ export const ModalTableReserve = ({
                      icon={renderEmailIcon}
                      iconPosition='right'
                      activeEventIcon
-                     className='py-3'
                   />
                   {renderEmailDescription}
                </FormItem>
@@ -273,7 +276,6 @@ export const ModalTableReserve = ({
                      isError={!!nameValid}
                      disabled={isBlockedFields}
                      variant='crystal'
-                     className='py-3'
                   />
                   {!user && (
                      <FormDescription>
@@ -295,7 +297,6 @@ export const ModalTableReserve = ({
                      isError={!!phoneValid}
                      disabled={isBlockedFields}
                      variant='crystal'
-                     className='py-3'
                   />
                   {!user && (
                      <FormDescription>
