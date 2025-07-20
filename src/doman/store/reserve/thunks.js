@@ -68,7 +68,7 @@ export const startReserveTable = () => {
          ...from.info,
          dateStr: from.date,
          hour: from.time.hour,
-         idTables: selectedTables.map(table => table.id),
+         tables: selectedTables,
          idRestaurant: restaurant.id
       });
 

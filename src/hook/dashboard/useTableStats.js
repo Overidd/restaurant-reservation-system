@@ -5,16 +5,16 @@ import { useSelector } from 'react-redux';
 
 const statsData = [
    {
-      status: typeStatusTable.BUSY,
-      value: 12,
-   },
-   {
       status: typeStatusTable.AVAILABLE,
       value: 8,
    },
    {
       status: typeStatusTable.PENDING,
       value: 3,
+   },
+   {
+      status: typeStatusTable.CONFIRMED,
+      value: 12,
    },
    {
       status: typeStatusTable.BLOCKED,

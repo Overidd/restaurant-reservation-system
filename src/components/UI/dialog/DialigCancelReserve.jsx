@@ -46,7 +46,7 @@ export const DialigCancelReserve = ({
       if (localHighlightedId.length === table.reservation.relatedTables.length) {
          onConfirm({
             user: table.user,
-            idTables: localHighlightedId,
+            tables: relatedTables.filter(t => localHighlightedId.includes(t.id)),
             idReservation: table.reservation.idReservation,
             isNoShow: isCheckedNoShowRef.current,
          });
@@ -58,8 +58,8 @@ export const DialigCancelReserve = ({
          AdminTableToasts.cancelATablesReservation(
             onCancelATablesReservation({
                idReservation: table.reservation.idReservation,
-               idTables: localHighlightedId,
-               idTablesNoSelect: table.reservation.relatedTables.map(t => t.id).filter(id => !localHighlightedId.includes(id))
+               tables: relatedTables.filter(t => localHighlightedId.includes(t.id)),
+               tablesNoSelect: relatedTables.filter(t => !localHighlightedId.includes(t.id)),
             }),
             {
                onSuccess: () => {

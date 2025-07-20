@@ -96,7 +96,7 @@ export class FirebaseReserveService {
       const hourCounts = new Map();
       reservationSnap.docs.forEach((doc) => {
          const data = doc.data();
-         data.idTables.forEach(() => {
+         data.tables.forEach(() => {
             hourCounts.set(data.hour, (hourCounts.get(data.hour) || 0) + 1);
          })
       });
@@ -146,11 +146,10 @@ export class FirebaseReserveService {
       reservations.forEach(doc => {
          const data = doc.data();
 
-         if (data.idTables && Array.isArray(data.idTables)) {
-            data.idTables.forEach(id => reservedTablesIds.add(Number(id)));
+         if (data.tables && Array.isArray(data.tables)) {
+            data.tables.forEach(({ id }) => reservedTablesIds.add(id));
             return;
          }
-         reservedTablesIds.add(Number(doc.id));
       });
 
       const assignStatus = ({ id, dinersTable }) => {
@@ -216,12 +215,12 @@ export class FirebaseReserveService {
       reason,
       diners,
       idRestaurant,
-      idTables = [],
+      tables = [],
    }) {
       try {
          const auth = getAuth();
          const user = auth.currentUser;
-         console.log(hour, dateStr, idTables);
+         console.log(hour, dateStr, tables);
 
          if (!user) {
             throw new Error('Usuario no autenticado');
@@ -244,17 +243,17 @@ export class FirebaseReserveService {
 
          reservations.forEach(doc => {
             const data = doc.data();
-            if (data.idTables && Array.isArray(data.idTables)) {
-               data.idTables.forEach(id => reservedTables.add(Number(id)));
+            if (data.tables && Array.isArray(data.tables)) {
+               data.tables.forEach(({ id }) => reservedTables.add(id));
             }
             if (data.code) {
                existingCodes.add(data.code);
             }
          });
 
-         for (const idTable of idTables) {
-            if (reservedTables.has(Number(idTable))) {
-               throw new Error(`La mesa ${idTable} ya fue reservada en esta hora.`);
+         for (const table of tables) {
+            if (reservedTables.has(table.id)) {
+               throw new Error(`La mesa ${table.name} ya fue reservada en esta hora.`);
             }
          }
 
@@ -278,10 +277,12 @@ export class FirebaseReserveService {
             reason,
             hour,
             comment: '',
-            idTables,
+            tables,
             date: dateStr,
             code: newCode,
             status: 'pending',
+            start: new Date().getTime(),
+            end: timestamp,
             timestamp: timestamp,
             createdAt: serverTimestamp(),
             name: displayName || 'No Name',

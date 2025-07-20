@@ -41,6 +41,7 @@ const schema = {
 };
 
 const mergeInitialValues = ({ initial, newInitial }) => {
+   if (!newInitial) return initial;
    const initialValues = Object.entries(initial).map(([key, value]) => {
       const newValue = newInitial[key] ?? value;
       return [key, newValue];
@@ -220,12 +221,11 @@ export const FromReservation = ({
          return;
       }
 
-      const idTables = selectedTables.map(table => table.id);
       onSubmit({
          resetForm,
          selectedTables,
          formState: {
-            idTables,
+            tables: selectedTables,
             idRestaurant: getIdRestaurantByName(restaurant),
             dateStr: DateParser.toString(date),
             hour: data.hour,

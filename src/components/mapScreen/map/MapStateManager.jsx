@@ -1,6 +1,6 @@
 import { useModalTableReserve } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
-import { useReservation, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
+import { useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
 import { MapState, ModalTableReserve } from '..';
 
 export const MapStateManager = () => {
@@ -20,14 +20,6 @@ export const MapStateManager = () => {
          hour
       },
    } = useStateFilterRestaurant();
-
-   const {
-      cancelATablesReservation,
-      cancelFullReservation,
-      confirmReservation,
-      releasedReservation,
-      reserveTable,
-   } = useReservation()
 
    const {
       isOpen: isOpenModalReserve,
@@ -51,10 +43,6 @@ export const MapStateManager = () => {
             rows={restaurant.rows}
             columns={restaurant.columns}
             resources={resources}
-            onCancelFullReservation={cancelFullReservation}
-            onCancelATablesReservation={cancelATablesReservation}
-            onConfirmReservation={confirmReservation}
-            onReleasedReservation={releasedReservation}
             selectedResource={selectedResource}
             onOpenReserveTable={onOpenReserveTable}
          />
@@ -63,7 +51,6 @@ export const MapStateManager = () => {
             <ModalTableReserve
                className={'w-[22rem]'}
                currentTable={selectedResource}
-               onReserveTable={reserveTable}
                isOpen={isOpenModalReserve}
                onClose={closeModalReserveTable}
                currentHour={hour}

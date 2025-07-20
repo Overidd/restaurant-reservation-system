@@ -139,7 +139,7 @@ export const SearchReservationScreen = () => {
                            <div className='flex items-center gap-2'>
                               <MapPin className='w-4 h-4 text-gray-500' />
                               <span className='font-medium'>Mesa:</span>
-                              <span>Mesa {reservation.idTables.join(', ')}</span>
+                              <span>Mesa {reservation.tables.join(', ')}</span>
                            </div>
                         </div>
                      </div>

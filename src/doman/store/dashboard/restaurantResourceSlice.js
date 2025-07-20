@@ -64,7 +64,7 @@ export const restaurantResourceSlice = createSlice({
       // Escuchar notificaciones
       listenTableNofityAction: (state, { payload }) => {
          state.tables = state.tables.map(table => {
-            if (payload.idTables.includes(table.id)) {
+            if (payload.tables.find(t => t.id === table.id)) {
                return {
                   ...table,
                   status: payload.status,
@@ -78,10 +78,7 @@ export const restaurantResourceSlice = createSlice({
                      code: payload.code,
                      idReservation: payload.id,
                      timestamp: payload.timestamp,
-                     relatedTables: payload.idTables.map(id => ({
-                        id,
-                        name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
-                     }))
+                     relatedTables: payload.tables
                   }
                }
             }
@@ -108,7 +105,7 @@ export const restaurantResourceSlice = createSlice({
             if (idTablesNoSelect.includes(t.id)) {
                return {
                   ...t,
-                  relatedTables: t.relatedTables.filter((r) => !idTables.includes(r.id))
+                  relatedTables: t.reservation.relatedTables.filter((r) => !idTables.includes(r.id))
                };
             } else {
                return t;
@@ -119,7 +116,7 @@ export const restaurantResourceSlice = createSlice({
       changeStatusTableAction: (state, { payload }) => {
          if (payload.status === typeStatusTable.AVAILABLE) {
             state.tables = state.tables.map((t) => {
-               if (t.id === payload.idTable) {
+               if (payload.idTables.includes(t.id)) {
                   return {
                      ...t,
                      status: typeStatusTable.AVAILABLE,
@@ -136,7 +133,7 @@ export const restaurantResourceSlice = createSlice({
 
          if (payload.status === typeStatusTable.CONFIRMED) {
             state.tables = state.tables.map((t) => {
-               if (t.id === payload.idTable) {
+               if (payload.idTables.includes(t.id)) {
                   return {
                      ...t,
                      status: typeStatusTable.CONFIRMED
@@ -150,7 +147,7 @@ export const restaurantResourceSlice = createSlice({
          if (payload.status === typeStatusTable.PENDING) {
             const { reservation, idTables } = payload;
             state.tables = state.tables.map((t) => {
-               if (idTables.includes(t.id)) {
+               if (payload.idTables.includes(t.id)) {
                   return {
                      ...t,
                      hasReservar: true,

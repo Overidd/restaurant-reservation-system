@@ -6,7 +6,7 @@ import { changeStatusTableAction, clearTablesRelationAction, messageErrorAction 
 
 /**
  * 
- * @param {{ user: Object, idReservation: string, idTables: string[], isNoShow: boolean }} data 
+ * @param {{ user: Object, idReservation: string, tables: string[], isNoShow: boolean }} data 
  * @returns 
  */
 export const cancelFullReservationThunks = (data) => {
@@ -23,7 +23,7 @@ export const cancelFullReservationThunks = (data) => {
       }
 
       dispatch(changeStatusTableAction({
-         idTables: data.idTables,
+         idTables: data.tables.map((t) => t.id),
          status: typeStatusTable.AVAILABLE
       }));
    }
@@ -31,7 +31,7 @@ export const cancelFullReservationThunks = (data) => {
 
 /**
  * 
- * @param {{idReservation, idTables, idTablesNoSelect: string[]}} data 
+ * @param {{idReservation, tables: string[], tablesNoSelect: string[]}} data 
  * @returns 
  */
 export const cancelATablesReservationThunks = (data) => {
@@ -45,22 +45,25 @@ export const cancelATablesReservationThunks = (data) => {
       }
 
       dispatch(clearTablesRelationAction({
-         idTablesNoSelect: data.idTablesNoSelect,
-         idTables: data.idTables
+         idTablesNoSelect: data.tablesNoSelect.map((t) => t.id),
+         idTables: data.tables.map((t) => t.id)
       }));
 
       dispatch(changeStatusTableAction({
-         idTables: data.idTables,
+         idTables: data.tables.map((t) => t.id),
          status: typeStatusTable.AVAILABLE
       }));
    }
 }
+// Cannot read properties of undefined (reading 'map')
+// Cannot read properties of undefined (reading 'filter')
+
 
 /**
- * @param {{ idReservation: string, idTable: string }} param0 
+ * @param {{ idReservation: string, table: object,tablesReservation: [] }} param0 
  * @returns 
  */
-export const confirmReservationThunks = ({ idReservation, idTable }) => {
+export const confirmReservationThunks = ({ idReservation, tablesReservation }) => {
    return async (dispatch) => {
 
       const res = await dasboardServiceProvider.confirmReservation({ idReservation });
@@ -71,13 +74,13 @@ export const confirmReservationThunks = ({ idReservation, idTable }) => {
       }
 
       dispatch(changeStatusTableAction({
-         idTable: idTable,
+         idTables: tablesReservation.map((t) => t.id),
          status: typeStatusTable.CONFIRMED
       }));
    }
 }
 
-export const releasedReservationThunks = ({ idReservation, idTable }) => {
+export const releasedReservationThunks = ({ idReservation, tablesReservation }) => {
    return async (dispatch) => {
 
       const res = await dasboardServiceProvider.releaseReservation({ idReservation });
@@ -88,7 +91,7 @@ export const releasedReservationThunks = ({ idReservation, idTable }) => {
       }
 
       dispatch(changeStatusTableAction({
-         idTable: idTable,
+         idTables: tablesReservation.map((t) => t.id),
          status: typeStatusTable.AVAILABLE
       }));
    }
@@ -96,7 +99,7 @@ export const releasedReservationThunks = ({ idReservation, idTable }) => {
 
 /**
  * 
- * @param {{ idTables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string,diners: number}} data
+ * @param {{ tables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string,diners: number}} data
  */
 export const reserveTableThunks = (data) => {
    return async (dispatch, getState) => {
@@ -114,7 +117,7 @@ export const reserveTableThunks = (data) => {
          restaurant.id !== res.idRestaurant
       ) {
          dispatch(changeStatusTableAction({
-            idTables: data.idTables,
+            idTables: data.tables.map((t) => t.id),
             status: typeStatusTable.PENDING,
             reservation: res
          }));

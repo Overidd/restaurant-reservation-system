@@ -106,19 +106,7 @@ export class FirebaseDashboardService {
                   code: data?.code ?? null,
                   idReservation: doc.id,
                   timestamp: data?.timestamp ?? null,
-                  relatedTables: data?.idTables ?
-                     data.idTables.map(id => {
-                        const table = tables.docs.find(doc => doc.id == id);
-                        if (!table) return {
-                           id: id,
-                           name: 'Not Name',
-                        };
-                        return {
-                           id: id,
-                           name: table.data().name
-                        }
-                     })
-                     : [],
+                  relatedTables: data?.tables ?? [],
                },
                user: {
                   name: data.name ?? null,
@@ -127,14 +115,12 @@ export class FirebaseDashboardService {
                },
             };
 
-            if (data.idTables && Array.isArray(data.idTables)) {
-               data.idTables.forEach(id => {
+            if (data.tables && Array.isArray(data.tables)) {
+               data.tables.forEach(({ id }) => {
                   tableInfoMap.set(String(id), info);
                });
                return;
             }
-
-            tableInfoMap.set(String(doc.idTables), info);
          });
 
          const resul = tables.docs.map((doc) => {
@@ -271,9 +257,9 @@ export class FirebaseDashboardService {
       }
    }
 
-   async cancelATablesReservation({ idReservation, idTables }) {
+   async cancelATablesReservation({ idReservation, tables }) {
       try {
-         if (!idReservation || Array.isArray(idTables).length <= 0) {
+         if (!idReservation || Array.isArray(tables).length <= 0) {
             throw new Error('No se proporciono el id de la reserva');
          }
 
@@ -281,17 +267,23 @@ export class FirebaseDashboardService {
 
          const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
 
+         const data = reservation.data();
+         const updateTables = data.tables?.filter(({ id }) => {
+            return !tables?.find((table) => table.id === id)
+         });
+
          await updateDoc(reservationRef, {
-            idTables: reservation.data().idTables.filter(id => !idTables.includes(id)),
+            tables: updateTables,
             updatedAt: serverTimestamp()
          });
 
          return {
             ok: true
          }
+         // Cannot read properties of undefined (reading 'filter')
 
       } catch (error) {
-         console.log(error);
+         console.error(error);
          return {
             ok: false,
             errorMessage: error.message || 'Error al cancelar la reserva'
@@ -338,7 +330,7 @@ export class FirebaseDashboardService {
     */
    async reserveTable({
       idRestaurant,
-      idTables,
+      tables,
       dateStr,
       hour,
       idUser,
@@ -350,7 +342,7 @@ export class FirebaseDashboardService {
       comment,
    }) {
       try {
-         if (!idRestaurant || Array.isArray(idTables).length <= 0) {
+         if (!idRestaurant || Array.isArray(tables).length <= 0) {
             throw new Error('No se proporciono el id de la reserva');
          }
 
@@ -372,17 +364,17 @@ export class FirebaseDashboardService {
 
          reservations.forEach(doc => {
             const data = doc.data();
-            if (data.idTables && Array.isArray(data.idTables)) {
-               data.idTables.forEach(id => reservedTables.add(Number(id)));
+            if (data.tables && Array.isArray(data.tables)) {
+               data.tables.forEach(({ id }) => reservedTables.add(id));
             }
             if (data.code) {
                existingCodes.add(data.code);
             }
          });
 
-         for (const idTable of idTables) {
-            if (reservedTables.has(Number(idTable))) {
-               throw new Error(`La mesa ${idTable} ya fue reservada en esta hora.`);
+         for (const table of tables) {
+            if (reservedTables.has(table.id)) {
+               throw new Error(`La mesa ${table.name} ya fue reservada en esta hora.`);
             }
          }
 
@@ -403,10 +395,12 @@ export class FirebaseDashboardService {
             reason: reason ?? 'Sin motivo',
             hour,
             comment: comment ?? 'Reserva por el panel de administrador',
-            idTables: Array.isArray(idTables) ? idTables : [idTables],
+            tables: tables.map(t => ({ id: t.id, name: t.name })),
             date: dateStr,
             code: newCode,
             status: 'pending',
+            start: new Date().getTime(),
+            end: timestamp,
             timestamp: timestamp,
             name: name || null,
             email: email || null,
@@ -423,10 +417,7 @@ export class FirebaseDashboardService {
                code: newCode,
                idReservation: reservationRef.id,
                timestamp: timestamp,
-               relatedTables: idTables.map(id => ({
-                  id,
-                  name: idTables.find(t => t.id === id)?.name ?? 'Sin nombre'
-               }))
+               relatedTables: tables
             },
             user: {
                name,
@@ -436,6 +427,7 @@ export class FirebaseDashboardService {
          }
 
       } catch (error) {
+         console.log(error);
          return {
             ok: false,
             errorMessage: error?.message || String(error) || 'Error al cancelar la reserva'
@@ -1040,6 +1032,8 @@ export class FirebaseDashboardService {
    //       orderBy('createdAt', 'desc'),
    //       limit(1)
    //    );
+
+
 
    //    let isInitial = true;
    //    const startedAt = Date.now();

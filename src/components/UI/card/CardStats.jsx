@@ -135,15 +135,6 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '../common';
 // }
 const typeStats = [
    {
-      title: 'Mesas Reservadas',
-      status: typeStatusTable.BUSY,
-      icon: Calendar,
-      color: 'bg-blue-500',
-      textColor: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      description: 'Reservas confirmadas',
-   },
-   {
       title: 'Mesas Disponibles',
       status: typeStatusTable.AVAILABLE,
       icon: CheckCircle,
@@ -151,6 +142,15 @@ const typeStats = [
       textColor: 'text-green-600',
       bgColor: 'bg-green-50',
       description: 'Listas para reservar',
+   },
+   {
+      title: 'Mesas Confirmadas',
+      status: typeStatusTable.CONFIRMED,
+      icon: Calendar,
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+      description: 'Reservas confirmadas',
    },
    {
       title: 'Reservas Pendientes',

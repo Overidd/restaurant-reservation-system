@@ -4,12 +4,13 @@ import {
    ReservaRejected,
    ReservaSuccess
 } from '@/components/reservation';
+import { isObjetError } from '@/ultils';
 
 export const ReservationToast = ({ promise, onSuccess, onError, onFinally }) =>
    toast.promise(promise, {
       loading: 'Confirmando reserva...',
       success: 'Reserva exitosa 🎉',
-      error: (err) => err.message || 'Error al realizar la reserva',
+      error: (err) => isObjetError(err) ? err?.message : err || 'Error al realizar la reserva',
    },
       {
          style: {

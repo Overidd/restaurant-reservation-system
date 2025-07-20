@@ -1,5 +1,5 @@
 
-import { useForm } from '@/hook';
+import { useReservation } from '@/hook/dashboard';
 import { useGetUserFetchin } from '@/hook/fetchings';
 
 import { cn } from '@/ultils';
@@ -24,6 +24,7 @@ import {
    SelectValue,
 } from '../../UI/from';
 
+import { useForm } from '@/hook';
 import { useUserSearch } from '@/hook/user';
 import { ReservationToast } from '@/toasts';
 import {
@@ -65,11 +66,14 @@ export const ModalTableReserve = ({
    onClose,
    className,
    currentTable,
-   onReserveTable,
    currentHour,
    currentDate,
    currentRestaurant,
 }) => {
+
+   const {
+      reserveTable
+   } = useReservation()
 
    const {
       clearUser,
@@ -122,8 +126,8 @@ export const ModalTableReserve = ({
       }
 
       ReservationToast({
-         promise: onReserveTable({
-            idTables: [currentTable.id],
+         promise: reserveTable({
+            tables: [currentTable],
             idRestaurant: currentRestaurant.id,
             dateStr: currentDate,
             hour: currentHour,

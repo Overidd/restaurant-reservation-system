@@ -1,6 +1,7 @@
 import { DialigCancelReserve } from '@/components/UI/dialog';
 import { Object } from '@/components/UI/resource';
 import { useModalAsync } from '@/hook';
+import { useReservation } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { typeResource } from '@/ultils';
 import { useState } from 'react';
@@ -10,16 +11,18 @@ export const MapState = ({
    rows,
    columns,
    resources,
-   onCancelFullReservation,
-   onCancelATablesReservation,
-   onConfirmReservation,
-   onReleasedReservation,
    selectedResource,
    onOpenReserveTable,
 }) => {
-
    const { showAsyncModal } = useModalAsync();
    const [highlightedTableIds, setHighlightedTableIds] = useState([]);
+
+   const {
+      cancelATablesReservation,
+      cancelFullReservation,
+      confirmReservation,
+      releasedReservation,
+   } = useReservation()
 
    const handleCancelReserve = async (table) => {
       const res = await showAsyncModal(({ onConfirm, onCancel }) => (
@@ -27,14 +30,14 @@ export const MapState = ({
             table={table}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            onCancelATablesReservation={onCancelATablesReservation}
+            onCancelATablesReservation={cancelATablesReservation}
             setHighlightedTableIds={setHighlightedTableIds}
          />
       ));
 
       if (res) {
          AdminTableToasts.cancelFullReservation(
-            onCancelFullReservation(res?.data)
+            cancelFullReservation(res?.data)
          )
       }
 
@@ -43,8 +46,8 @@ export const MapState = ({
 
    const handleConfirmReservation = async (table) => {
       AdminTableToasts.confirmReserve(
-         onConfirmReservation({
-            idTable: table.id,
+         confirmReservation({
+            tablesReservation: table.reservation.relatedTables,
             idReservation: table.reservation.idReservation
          })
       );
@@ -52,8 +55,8 @@ export const MapState = ({
 
    const handleReleaseReservation = async (table) => {
       AdminTableToasts.releaseReserve(
-         onReleasedReservation({
-            idTable: table.id,
+         releasedReservation({
+            tablesReservation: table.reservation.relatedTables,
             idReservation: table.reservation.idReservation
          })
       );

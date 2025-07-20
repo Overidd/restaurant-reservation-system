@@ -26,8 +26,10 @@ export const ModalReservationsCreate = ({
    }) => {
       ReservationToast({
          promise: reserveTable(formState),
+         onSuccess: () => {
+            window.requestAnimationFrame(() => resetForm());
+         },
          onFinally: () => {
-            resetForm();
             toggleLoading(false);
          },
       });
