@@ -1,9 +1,8 @@
-import { StatsSummary } from "@/components/dashboard"
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, ChartContainer, ChartTooltip, ChartTooltipContent, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/common"
+import { StatsSummary, TrendsChart } from "@/components/dashboard"
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/common"
 import { Input } from "@/components/UI/from"
 import { useLoadDashboard } from "@/hook/dashboard"
 import { Calendar, CheckCircle, Clock, Mail, Phone, Search, XCircle } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 // Datos de ejemplo
 const topClientsData = [
@@ -210,41 +209,10 @@ export function DashboardScreen() {
                metrics={data?.metrics}
             />
             {/* Gráfico de tendencias */}
-            <Card>
-               <CardHeader>
-                  <CardTitle>Tendencia de Reservas por Mes</CardTitle>
-                  <CardDescription>Comparativa de reservas confirmadas, canceladas y no-show</CardDescription>
-               </CardHeader>
-               <CardContent>
-                  <ChartContainer
-                     config={{
-                        confirmadas: {
-                           label: "Confirmadas",
-                           color: "hsl(var(--chart-1))",
-                        },
-                        canceladas: {
-                           label: "Canceladas",
-                           color: "hsl(var(--chart-2))",
-                        },
-                        noShow: {
-                           label: "No Show",
-                           color: "hsl(var(--chart-3))",
-                        },
-                     }}
-                     className="h-[300px]"
-                  >
-                     <BarChart data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis dataKey="mes" tickLine={false} tickMargin={10} axisLine={false} />
-                        <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="confirmadas" fill="var(--color-confirmadas)" radius={[0, 0, 0, 0]} />
-                        <Bar dataKey="canceladas" fill="var(--color-canceladas)" radius={[0, 0, 0, 0]} />
-                        <Bar dataKey="noShow" fill="var(--color-noShow)" radius={[4, 4, 0, 0]} />
-                     </BarChart>
-                  </ChartContainer>
-               </CardContent>
-            </Card>
+            <TrendsChart
+               trends={data?.trends}
+            />
+
 
             <div className="grid gap-6 lg:grid-cols-2">
                {/* Top 5 clientes con más reservas */}
