@@ -14,6 +14,7 @@ import {
 
 import { DateParser, generateCode, typeResource, typeStatusTable } from '@/ultils';
 
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { FirebaseDB } from './config';
 
 export class FirebaseDashboardService {
@@ -90,7 +91,7 @@ export class FirebaseDashboardService {
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
             where('idRestaurant', '==', idRestaurant),
-            where('date', '==', dateStr),
+            where('dateStr', '==', dateStr),
             where('status', 'in', ['pending', 'confirmed']),
             where('hour', '==', hour),
          ));
@@ -353,7 +354,7 @@ export class FirebaseDashboardService {
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
             where('idRestaurant', '==', idRestaurant),
-            where('date', '==', dateStr),
+            where('dateStr', '==', dateStr),
             where('hour', '==', hour),
             where('status', 'in', ['confirmed', 'pending'])
          ));
@@ -396,9 +397,9 @@ export class FirebaseDashboardService {
             hour,
             comment: comment ?? 'Reserva por el panel de administrador',
             tables: tables.map(t => ({ id: t.id, name: t.name })),
-            date: dateStr,
+            dateStr: dateStr,
             code: newCode,
-            status: 'pending',
+            status: typeStatusTable.PENDING,
             start: new Date().getTime(),
             end: timestamp,
             timestamp: timestamp,
@@ -417,13 +418,18 @@ export class FirebaseDashboardService {
                code: newCode,
                idReservation: reservationRef.id,
                timestamp: timestamp,
-               relatedTables: tables
+               relatedTables: tables.map(t => ({ id: t.id, name: t.name }))
             },
             user: {
                name,
                email,
                phone
+            },
+            reservationData: {
+               ...reservationData,
+               createdAt: null
             }
+
          }
 
       } catch (error) {
@@ -434,6 +440,258 @@ export class FirebaseDashboardService {
          }
       }
    }
+
+   async updateReservation({
+      idReservation,
+      idRestaurant,
+      tables,
+      dateStr,
+      hour,
+      idUser,
+      email,
+      phone,
+      name,
+      diners,
+      reason,
+      comment,
+   }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+
+         const data = {
+            idUser: idUser ?? null,
+            idRestaurant,
+            diners: diners ?? 1,
+            reason: reason ?? 'Sin motivo',
+            hour,
+            comment: comment ?? 'Reserva por el panel de administrador',
+            tables: tables.map(t => ({ id: t.id, name: t.name })),
+            dateStr: dateStr,
+            status: typeStatusTable.PENDING,
+            name: name || null,
+            email: email || null,
+            phone: phone || null,
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(reservationRef, data);
+
+         return {
+            ok: true,
+            reservationData: {
+               ...data,
+               id: idReservation,
+               updatedAt: null
+            }
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al cancelar la reserva'
+         }
+      }
+   }
+
+   // filter {
+   //    request: 'all' | 'restaurant',
+   //    idRestaurant
+   // }
+   async getDashboardData({ request, idRestaurant }) { // filterRestaurant, all, idRestaurant
+      try {
+
+         console.log({ request, idRestaurant });
+         if (!request) request = 'all';
+
+         const reservationQuery = [collection(FirebaseDB, 'reservations')];
+         if (request !== 'all') {
+            reservationQuery.push(where('idRestaurant', '==', idRestaurant));
+         }
+         const reservationsData = await getDocs(query(...reservationQuery));
+
+         const noShowsQuery = [collection(FirebaseDB, 'noShow')];
+         if (request !== 'all') {
+            noShowsQuery.push(where('idRestaurant', '==', idRestaurant));
+         }
+         const noShowsData = await getDocs(query(...noShowsQuery));
+
+         // const clientsData = await getDocs(query(
+         //    collection(FirebaseDB, 'clients'),
+         // ))
+
+         // const total = new Set(reservationsData.docs.map(doc => doc.data()));
+         const totalReservations = reservationsData.docs.map(doc => doc.data());
+         const confirmedCount = totalReservations.filter(d => d.status === typeStatusTable.CONFIRMED).length;
+         const pendingCount = totalReservations.filter(d => d.status === typeStatusTable.PENDING).length;
+         const canceledCount = totalReservations.filter(d => d.status === typeStatusTable.CANCELED).length;
+         const releasedCount = totalReservations.filter(d => d.status === typeStatusTable.RELEASED).length;
+         const noShowReservations = noShowsData.docs.map(doc => doc.data());
+
+         const trendsMap = new Map();
+         const clientsMap = new Map();
+         const problematicClientsMap = new Map();
+
+         totalReservations.forEach(reservation => {
+            const month = DateParser.getNameMonth(reservation.dateStr);
+            if (trendsMap.has(month)) {
+               const data = trendsMap.get(month);
+               data.total += 1;
+               data.confirmed += reservation.status === typeStatusTable.CONFIRMED ? 1 : 0;
+               data.released += reservation.status === typeStatusTable.RELEASED ? 1 : 0;
+               data.pending += reservation.status === typeStatusTable.PENDING ? 1 : 0;
+               data.canceled += reservation.status === typeStatusTable.CANCELED ? 1 : 0;
+               data.noShow += reservation.status === typeStatusTable.NO_SHOW ? 1 : 0;
+               trendsMap.set(month, data);
+
+            } else trendsMap.set(month, {
+               month,
+               total: 1,
+               confirmed: reservation.status === typeStatusTable.CONFIRMED ? 1 : 0,
+               released: reservation.status === typeStatusTable.RELEASED ? 1 : 0,
+               pending: reservation.status === typeStatusTable.PENDING ? 1 : 0,
+               canceled: reservation.status === typeStatusTable.CANCELED ? 1 : 0,
+               noShow: reservation.status === typeStatusTable.NO_SHOW ? 1 : 0,
+            });
+
+            if (!reservation?.idUser) return;
+
+            if (clientsMap.has(reservation.idUser)) {
+               const data = clientsMap.get(reservation.idUser);
+               data.count += 1;
+               data.total += 1;
+               data.confirmed += reservation.status === typeStatusTable.CONFIRMED ? 1 : 0;
+               data.released += reservation.status === typeStatusTable.RELEASED ? 1 : 0;
+               data.pending += reservation.status === typeStatusTable.PENDING ? 1 : 0;
+               data.canceled += reservation.status === typeStatusTable.CANCELED ? 1 : 0;
+               data.noShow += reservation.status === typeStatusTable.NO_SHOW ? 1 : 0;
+               clientsMap.set(reservation.idUser, data);
+            } else {
+               const client = {
+                  idUser: reservation.idUser,
+                  name: reservation.name,
+                  email: reservation.email,
+                  phone: reservation.phone,
+                  dataStr: reservation.dateStr,
+                  diners: reservation.diners,
+                  count: 1,
+                  total: 1,
+                  confirmed: reservation.status === typeStatusTable.CONFIRMED ? 1 : 0,
+                  released: reservation.status === typeStatusTable.RELEASED ? 1 : 0,
+                  pending: reservation.status === typeStatusTable.PENDING ? 1 : 0,
+                  canceled: reservation.status === typeStatusTable.CANCELED ? 1 : 0,
+                  noShow: reservation.status === typeStatusTable.NO_SHOW ? 1 : 0,
+               };
+               clientsMap.set(reservation.idUser, client);
+            }
+         })
+
+         noShowReservations.forEach(noShow => {
+            if (problematicClientsMap.has(noShow.idUser)) {
+               const data = problematicClientsMap.get(noShow.idUser);
+               data.noShow += 1;
+               problematicClientsMap.set(noShow.idUser, data);
+            } else {
+               problematicClientsMap.set(noShow.idUser, {
+                  noShow: 1
+               });
+            }
+         })
+
+         noShowReservations.forEach(noShow => {
+            if (clientsMap.has(noShow.idUser)) {
+               const data = clientsMap.get(noShow.idUser);
+               data.noShow += 1;
+               data.lastNoShowDate = noShow.dateStr;
+               clientsMap.set(noShow.idUser, data);
+            }
+         });
+
+
+         const growthRateClients = await this.getClientGrowthRate()
+
+         const metrics = {
+            total: totalReservations.length,
+            confirmed: confirmedCount,
+            pending: pendingCount,
+            canceled: canceledCount,
+            released: releasedCount,
+            noShow: noShowReservations.length,
+         }
+
+         const trends = Array.from(trendsMap.values());
+
+         const topClients = Array.from(clientsMap.values()).sort((a, b) => b.count - a.count).slice(0, 5);
+
+         const problematicClients = Array.from(clientsMap.values())
+            .filter(c => c.noShow > 0)
+            .sort((a, b) => b.noShow - a.noShow)
+            .slice(0, 5);
+
+
+         const topClientAnalysis = Array.from(clientsMap.values()).sort((a, b) => b.total - a.total).slice(0, 5);
+
+         return {
+            ok: true,
+            metrics,
+            trends,
+            topClients,
+            problematicClients,
+            topClientAnalysis,
+            growthRateClients,
+            clientReservations: Array.from(clientsMap.values())
+         }
+
+      } catch (error) {
+         console.error(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener los datos del dashboard'
+         }
+      }
+   }
+
+   async getClientGrowthRate() {
+      const now = new Date();
+      const startOfCurrentMonth = startOfMonth(now);
+      const startOfLastMonth = startOfMonth(subMonths(now, 1));
+      const endOfLastMonth = endOfMonth(subMonths(now, 1));
+
+      // Obtener todos los clientes
+      const allClientsSnap = await getDocs(collection(FirebaseDB, 'users'));
+      const allClients = allClientsSnap.docs.map(doc => doc.data());
+
+      // Filtrar clientes creados este mes
+      const clientsThisMonth = allClients.filter(client => {
+         const createdAt = client.createdAt?.toDate?.();
+         return createdAt && createdAt >= startOfCurrentMonth;
+      });
+
+      // Filtrar clientes creados el mes pasado
+      const clientsLastMonth = allClients.filter(client => {
+         const createdAt = client.createdAt?.toDate?.();
+         return createdAt && createdAt >= startOfLastMonth && createdAt <= endOfLastMonth;
+      });
+
+      const thisMonthCount = clientsThisMonth.length;
+      const lastMonthCount = clientsLastMonth.length;
+
+      const growthRate =
+         lastMonthCount > 0
+            ? Math.round(((thisMonthCount - lastMonthCount) / lastMonthCount) * 100)
+            : thisMonthCount > 0
+               ? 100
+               : 0;
+
+      return {
+         totalClients: allClients.length,
+         newClientsThisMonth: thisMonthCount,
+         growthRate,
+      };
+   };
 
 
    async confirmReservation({ idReservation }) {

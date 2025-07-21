@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/doman/context/sidebar';
 import { ActionSpeedDial } from '@/components/common';
 import { NofityReservation } from '@/components/mapScreen';
 import { Sidebar } from '@/components/sidebar';
-import { ModalReservationsCreate } from '@/screen/dashboard';
+import { CreateReservationsModal } from '@/screen/dashboard';
 
 const Layout = () => {
    return (
@@ -20,7 +20,7 @@ const Layout = () => {
             <Outlet />
          </div>
 
-         <ModalReservationsCreate
+         <CreateReservationsModal
             className={'w-[35rem]'}
          />
          

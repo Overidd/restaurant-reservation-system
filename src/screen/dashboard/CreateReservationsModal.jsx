@@ -8,7 +8,7 @@ import { ReservationToast } from '@/toasts';
 import { cn } from '@/ultils';
 import { CalendarPlus, LoaderCircle } from 'lucide-react';
 
-export const ModalReservationsCreate = ({
+export const CreateReservationsModal = ({
    className
 }) => {
    const { closeModal, isOpen } = useModalReservationsCreate();

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { authSlice } from './auth';
-import { calendarSlice, restaurantResourceSlice, restaurantUiSlice, stateFilterRestaurantSlice } from './dashboard';
+import { calendarSlice, dashboardSlice, restaurantResourceSlice, restaurantUiSlice, stateFilterRestaurantSlice } from './dashboard';
 import { reserveSlice } from './reserve';
 import { reserveTimeSlice } from './reserve/reserveTimeSlice';
 import { UISlice } from './UISlice';
@@ -16,6 +16,7 @@ export const store = configureStore({
       stateFilterRestaurantReducer: stateFilterRestaurantSlice.reducer,
       restaurantResourceReducer: restaurantResourceSlice.reducer,
       calendarReducer: calendarSlice.reducer,
+      dashboardReducer: dashboardSlice.reducer,
       // tableAdminReducer: tableAdminSlice.reducer
    },
 })

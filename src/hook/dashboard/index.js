@@ -1,6 +1,7 @@
 export * from './useDimensionMap';
 export * from './useEditTables';
 export * from './useGenerateResources';
+export * from './useLoadDashboard';
 export * from './useLoadDataCalendar';
 export * from './useLoadFilterRestaurant';
 export * from './useLoadRestaurantResource';

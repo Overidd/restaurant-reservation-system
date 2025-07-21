@@ -10,6 +10,17 @@ export class AdminTableToasts {
       });
    }
 
+   static updateReservation(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Actualizando reserva...',
+         success: 'Reserva actualizada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar reserva.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
    static async cancelATablesReservation(promise, { onSuccess, onError, onFinally } = {}) {
       return toast
          .promise(promise, {

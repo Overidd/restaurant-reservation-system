@@ -10,6 +10,11 @@ export class DateParser {
       return new Date(year, month - 1, day);
    }
 
+   static toDate(dateStr) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+   }
+
 
    /**
     * 
@@ -35,6 +40,20 @@ export class DateParser {
       const [year, month, day] = dateStr.split('-').map(Number);
       const [hour, minute] = timeStr.split(':').map(Number);
       return new Date(year, month - 1, day, hour, minute);
+   }
+
+   static getNameMonth(fechaStr) {
+      if (!fechaStr) return null;
+
+      const meses = [
+         'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+         'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+      ];
+
+      const fecha = new Date(fechaStr);
+      const indiceMes = fecha.getMonth();
+
+      return meses[indiceMes];
    }
 }
 

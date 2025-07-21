@@ -56,9 +56,9 @@
   --color-table-pending: var(--table-pending);
   --color-table-confirmed: var(--table-confirmed);
   --color-table-notAvailable: var(--table-notAvailable);
-  
+
   --color-backdrop-modal: var(--backdrop-modal);
-  
+
   /* Custom shadow */
   --shadow-card: var(--shadow-card);
 }
@@ -300,4 +300,40 @@ input[type=number] {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+
+
+/* ESTILOS DE CALENDARIO */
+/* calendar.css */
+.rbc-calendar {
+  /* @apply bg-white text-gray-800; */
+}
+
+.rbc-toolbar {
+  /* @apply flex flex-wrap justify-between items-center p-4 bg-blue-50; */
+  @apply border-2 border-dashed border-gray-300 p-2 rounded-2xl;
+}
+
+.rbc-toolbar-label {
+  @apply text-lg font-semibold;
+}
+
+.rbc-btn-group button {
+  /* @apply bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600; */
+}
+
+.rbc-event {
+  /* @apply bg-green-500 text-white px-2 py-1 rounded; */
+}
+
+.rbc-time-view,
+.rbc-time-header,
+.rbc-time-content {
+  @apply rounded-2xl [&::-webkit-scrollbar]:hidden;
+}
+
+.rbc-today {
+  @apply !bg-primary/5;
 }

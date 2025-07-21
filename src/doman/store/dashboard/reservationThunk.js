@@ -1,12 +1,12 @@
 import { dasboardServiceProvider } from '@/doman/services';
 import { typeStatusTable } from '@/ultils';
-import { addReservationAction } from './calendarSlice';
+import { addReservationAction, updateReservationAction } from './calendarSlice';
 import { changeStatusTableAction, clearTablesRelationAction, messageErrorAction } from './restaurantResourceSlice';
 
 
 /**
  * 
- * @param {{ user: Object, idReservation: string, tables: string[], isNoShow: boolean }} data 
+ * @param {{ idReservation: string, tables: string[], isNoShow: boolean }} data 
  * @returns 
  */
 export const cancelFullReservationThunks = (data) => {
@@ -123,11 +123,46 @@ export const reserveTableThunks = (data) => {
          }));
       }
 
-      dispatch(addReservationAction({
-         ...res.reservation,
-         user: res.user
-      }))
+      dispatch(addReservationAction(res.reservationData))
 
+      return res
+   }
+}
+/**
+ * 
+ * @param {{ tables: Array<string>, idRestaurant: string, dateStr: string, hour: string, email: string, idUser: string, phone: string, name: string,diners: number}} data
+ */
+export const updateReservationThunks = (data) => {
+   return async (dispatch, getState) => {
+      if (!data?.idReservation) {
+         throw new Error('No se proporciono el id de la reserva');
+      }
+
+      const { hour, dateStr, restaurant } = getState().stateFilterRestaurantReducer.filter;
+
+      const res = await dasboardServiceProvider.updateReservation(data);
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         throw res.errorMessage
+      }
+
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         throw res.errorMessage
+      }
+      if (
+         hour !== res.hour ||
+         dateStr !== res.dateStr ||
+         restaurant.id !== res.idRestaurant
+      ) {
+         dispatch(changeStatusTableAction({
+            idTables: data.tables.map((t) => t.id),
+            status: typeStatusTable.PENDING,
+            reservation: res
+         }));
+      }
+
+      dispatch(updateReservationAction(res.reservationData))
       return res
    }
 }

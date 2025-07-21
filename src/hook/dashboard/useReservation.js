@@ -1,4 +1,4 @@
-import { cancelATablesReservationThunks, cancelFullReservationThunks, confirmReservationThunks, releasedReservationThunks, reserveTableThunks } from '@/doman/store/dashboard';
+import { cancelATablesReservationThunks, cancelFullReservationThunks, confirmReservationThunks, releasedReservationThunks, reserveTableThunks, updateReservationThunks } from '@/doman/store/dashboard';
 import { useDispatch } from 'react-redux';
 
 export const useReservation = () => {
@@ -23,11 +23,17 @@ export const useReservation = () => {
       return dispatch(reserveTableThunks(data));
    }
 
+   const updateReservation = async (data) => {
+      if (!data) return;
+      return dispatch(updateReservationThunks(data));
+   }
+
    return {
       cancelFullReservation,
       cancelATablesReservation,
       confirmReservation,
       releasedReservation,
+      updateReservation,
       reserveTable
    }
 }

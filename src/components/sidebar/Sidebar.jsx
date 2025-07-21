@@ -2,14 +2,19 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation } from 'react-router';
 
-import { AlignLeft, Bookmark, CalendarCheck, ChartColumnStacked, ChevronDown, Dice1, X } from 'lucide-react';
+import { AlignLeft, CalendarCheck, ChevronDown, Dice1, LayoutDashboard, ReceiptText, Users, X } from 'lucide-react';
 
 import { useSidebar } from '@/hook';
 import { cn } from '@/ultils';
 
 const navItems = [
    {
-      icon: <Bookmark className='text-inherit' />,
+      icon: <LayoutDashboard className='text-inherit' />,
+      name: 'Dashboard',
+      path: '/dashboard',
+   },
+   {
+      icon: <ReceiptText className='text-inherit' />,
       name: 'Reservas',
       subItems: [
          {
@@ -26,9 +31,9 @@ const navItems = [
    },
 
    {
-      name: 'Estadisticas',
-      icon: <ChartColumnStacked className='text-inherit' />,
-      path: '/dashboard/statistic',
+      name: 'Detalle',
+      icon: <Users className='text-inherit' />,
+      path: '/dashboard/details',
    },
 ];
 

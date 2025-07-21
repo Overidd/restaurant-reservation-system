@@ -51,32 +51,23 @@ const mergeInitialValues = ({ initial, newInitial }) => {
    }
 }
 
-
-// const initialValues = {
-//    tables: [],
-//    user: null,
-//    email,
-//    phone,
-//    diners,
-//    name,
-//    restaurant,
-//    date,
-//    hour
-// }
-
 export const FromReservation = ({
-   onSubmit,
-   children,
-   className,
-   initialValues,
    isOpen,
+   onSubmit,
+   className,
+   children,
+   initialValues,
+   btns = [],
+   isEdit = false,
 }) => {
    const [selectedTables, setSelectedTables] = useState(initialValues?.tables || []);
 
    const {
       restaurants,
       getIdRestaurantByName,
+      getRestaurantById,
       isLoadRestaurants,
+      loadRestaurants,
       isLoading: isLoadingRestaurants,
    } = useGetAllRestauranFetching()
 
@@ -145,12 +136,13 @@ export const FromReservation = ({
       onValueChange,
       onSubmitForm,
       onResetForm,
+      onInitialValues,
    } = useForm({
       activeValidation: true,
       validations: schema.valid,
       initialState: mergeInitialValues({
          initial: schema.initial,
-         newInitial: initialValues
+         newInitial: initialValues,
       }),
       changeValueCallback: ({ name, value }) => {
          if (name === 'restaurant') {
@@ -211,12 +203,41 @@ export const FromReservation = ({
    }
 
    useEffect(() => {
+      if (!isEdit) return;
+      loadRestaurants();
+   }, [isEdit])
+
+   useEffect(() => {
+      if (!isEdit) return;
+      if (!initialValues?.idRestaurant) return;
+      loadRestaurants();
+
+      loadHours({
+         idRestaurant: initialValues?.idRestaurant,
+         dateStr: DateParser.toString(date)
+      });
+
+      loadTables({
+         idRestaurant: initialValues?.idRestaurant,
+         dateStr: DateParser.toString(date),
+         hour: initialValues?.hour
+      });
+   }, [isEdit])
+
+   useEffect(() => {
+      if (!isEdit || !hours || hours?.length <= 0) return;
+      onInitialValues({
+         restaurant: getRestaurantById(initialValues?.idRestaurant)?.name,
+      })
+   }, [isEdit, hours])
+
+   useEffect(() => {
       if (!isOpen) handleCloseModal();
    }, [isOpen])
 
    // TODO: Mas adelante agregar validaciones con animaciones en cada input de la sección de reserva 
    const onSubmitReservation = onSubmitForm((data) => {
-      if (!hasSearched && !initialValues?.user) {
+      if (!hasSearched && !isEdit) {
          animateSearchButton();
          return;
       }
@@ -234,6 +255,7 @@ export const FromReservation = ({
             email: user?.email || data.email,
             phone: user?.phone || data.phone || null,
             diners: Number(data.diners),
+            ...(isEdit && { idReservation: initialValues?.id })
          },
       })
    });
@@ -281,6 +303,7 @@ export const FromReservation = ({
                isError={!!emailValid}
                variant='crystal'
                icon={initialValues?.user ? null : renderEmailIcon}
+               disabled={initialValues?.user || isBlockedFields}
                iconPosition='right'
                activeEventIcon
             />
@@ -324,7 +347,7 @@ export const FromReservation = ({
                   onChange={onValueChange}
                   isError={!!phoneValid}
                   variant='crystal'
-                  disabled={isBlockedFields}
+                  disabled={isBlockedFields && initialValues?.user}
                />
             </FormItem>
 
@@ -485,8 +508,27 @@ export const FromReservation = ({
             />
          </FormItem>
 
+         {
+            btns.length > 0 && (
+               <FormItem className='flex flex-row gap-4'>
+                  {
+                     btns.map((item, index) => (
+                        <Button
+                           className={'flex-1'}
+                           key={`btn-${index}`}
+                           size={item.size || 'lg'}
+                           type={item.type || 'button'}
+                           variant={item.variant || 'default'}
+                           disabled={item.disabledBySelected && selectedTables.length === 0}
+                        >
+                           {item.label}
+                        </Button>
+                     ))
+                  }
+               </FormItem>
+            )
+         }
          {children}
-
       </Form>
    )
 }

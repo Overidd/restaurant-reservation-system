@@ -234,3 +234,34 @@ export const CardStatsResume = ({
       </Card>
    )
 }
+
+export const CardStatsResume2 = ({
+   title,
+   icon,
+   color,
+   textColor,
+   description,
+   count,
+   rase
+}) => {
+   const Icon = icon
+
+   return (
+      <Card>
+         <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
+               {title}
+            </CardTitle>
+            <Icon className={`h-4 w-4 ${color}`} />
+         </CardHeader>
+         <CardContent>
+            <div className={`text-2xl font-bold ${textColor}`}>
+               {count}
+            </div>
+            <p className='text-xs text-muted-foreground'>
+               {rase} {description}
+            </p>
+         </CardContent>
+      </Card>
+   )
+}

@@ -26,6 +26,7 @@ export const useStateFilterRestaurant = ({
 
    return {
       // State
+      lastParams: state.lastParams,
       isInitialChangeFilter: changeFilterRef.current,
       restaurants: state.restaurants,
       hours: state.hours,

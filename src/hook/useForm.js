@@ -27,6 +27,7 @@ const TYPEACTION = {
    RESET: 'RESET',
    SET_VALIDATIONS: 'SET_VALIDATIONS',
    DATA_RESET: 'DATA_RESET',
+   DATA_RESET_VALUE: 'DATA_RESET_VALUE',
 }
 
 const validateField = (key, state, validations, additionalData, disabledMap) => {
@@ -79,6 +80,18 @@ const formReducer = (state, action) => {
             ...state,
             values: action.initialState,
             errors: {},
+         };
+      }
+
+      case TYPEACTION.DATA_RESET_VALUE: {
+
+         return {
+            ...state,
+            values: {
+               ...state.values,
+               ...action.initialState
+            }
+            
          };
       }
 
@@ -154,6 +167,16 @@ export const useForm = ({
       isInitialForm.current = true;
       userChangedFields.current.clear();
       dispatch({ type: TYPEACTION.RESET, initialState: newInitialState });
+      window.requestAnimationFrame(() => {
+         isInitialForm.current = false;
+      });
+   };
+
+   const onInitialValues = (initialValue) => {
+      if (!initialValue) return;
+      isInitialForm.current = true;
+      userChangedFields.current.clear();
+      dispatch({ type: TYPEACTION.DATA_RESET_VALUE, initialState: initialValue });
       window.requestAnimationFrame(() => {
          isInitialForm.current = false;
       });
@@ -263,6 +286,7 @@ export const useForm = ({
       onResetForm,
       onSubmitForm,
       onInitialFrom,
+      onInitialValues,
       isFormValid,
       setChangeValueCallback,
       isAnyFieldChangedByUser,

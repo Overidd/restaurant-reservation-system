@@ -15,6 +15,7 @@ export const MapManagerProvider = ({
    const {
       hours,
       restaurants,
+      lastParams,
       filter: {
          restaurant,
          dateStr,
@@ -27,6 +28,7 @@ export const MapManagerProvider = ({
       objects,
       isLoading,
    } = useLoadRestaurantResource({
+      lastParams,
       restaurants,
       restaurant,
       dateStr,

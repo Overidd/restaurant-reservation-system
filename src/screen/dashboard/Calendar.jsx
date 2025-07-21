@@ -1,9 +1,14 @@
-import { useLoadDataCalendar } from '@/hook/dashboard'
+import { FromReservation } from '@/components/common'
+import { Card2 } from '@/components/UI/card'
+import { Button, Modal } from '@/components/UI/common'
+import { FormItem, Label } from '@/components/UI/from'
+import { useLoadDataCalendar, useReservation } from '@/hook/dashboard'
+import { AdminTableToasts, ReservationToast } from '@/toasts'
+import { cn, DateParser } from '@/ultils'
 import { format, getDay, parse, startOfWeek } from 'date-fns'
 import esES from 'date-fns/locale/es'
 import { useCallback, useState } from 'react'
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar'
-
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const locales = {
@@ -20,169 +25,245 @@ export const localizer = dateFnsLocalizer({
 
 export const CalendarScreen = () => {
    return (
-      <div>
+      <div className='w-[90%] mx-auto max-h-dvh overflow-hidden'>
          <CalendarReservations />
       </div>
    )
 }
 
-export default function CalendarReservations() {
+const CalendarReservations = () => {
+   const [selectedReservation, setSelectedReservation] = useState(null)
+   const [isOpenCreateReserve, setisOpenCreateReserve] = useState(false)
+   const [isOpenEditReserve, setisOpenEditReserve] = useState(false)
+
    const { isLoading, reservations } = useLoadDataCalendar()
 
-   const [selectedReservation, setSelectedReservation] = useState(null)
-   const [isEditing, setIsEditing] = useState(false)
-
    const eventStyleGetter = (event) => {
-      let backgroundColor = "#3174ad"
+      let backgroundColor = '#3174ad'
 
       switch (event.status) {
-         case "confirmed":
-            backgroundColor = "#10b981"
+         case 'confirmed':
+            backgroundColor = '#3B82F6'
             break
-         case "pending":
-            backgroundColor = "#f59e0b"
-            break
-         case "cancelled":
-            backgroundColor = "#ef4444"
+         case 'pending':
+            backgroundColor = '#eca668'
             break
       }
 
       return {
          style: {
             backgroundColor,
-            color: "white",
-            borderRadius: "4px",
-            border: "none",
+            color: 'white',
+            borderRadius: '4px',
+            border: 'none',
          },
       }
    }
 
-   // Manejar selección de evento
    const handleSelectEvent = useCallback((event) => {
+      setisOpenEditReserve(true)
+      setisOpenCreateReserve(false)
       setSelectedReservation(event)
-
-      setIsEditing(true)
-      // setIsModalOpen(true)
    }, [])
 
-   // Manejar selección de slot para nueva reserva
-   const handleSelectSlot = useCallback(({ start, end }) => { //: { start: Date; end: Date }
-      setSelectedReservation(null)
-      // setFormData({
-      //    name: "",
-      //    phone: "",
-      //    email: "",
-      //    tables: [],
-      //    guests: 2,
-      //    status: "pending",
-      //    notes: "",
-      //    start: new Date(start),
-      //    end: new Date(end),
-      // })
-      setIsEditing(false)
-      // setIsModalOpen(true)
+   const handleSelectSlot = useCallback(({ start, end }) => {
+      setisOpenCreateReserve(true)
+      setisOpenEditReserve(false)
+      setSelectedReservation({
+         start: start,
+         end: end,
+      })
    }, [])
 
-
-   // Guardar reserva
-   const handleSaveReservation = () => {
-      // if (!formData.name || !formData.tables?.length || !formData.start || !formData.end) {
-      // alert("Por favor, completa todos los campos obligatorios")
-      // return
-      // }
-
-      // const startDate = new Date(formData.start)
-      // const endDate = new Date(formData.end)
-
-      // if (startDate >= endDate) {
-      //    alert("La fecha de fin debe ser posterior a la fecha de inicio")
-      //    return
-      // }
-
-      // const reservation = {
-      //    id: isEditing ? selectedReservation.id : Date.now().toString(),
-      //    title: `${formData.tables.join(", ")} - ${formData.name}`,
-      //    start: startDate,
-      //    end: endDate,
-      //    status: formData.status, // "pending" | "confirmed" | "cancelled",
-      //    name: formData.name,
-      //    phone: formData.phone || "",
-      //    email: formData.email || "",
-      //    tables: formData.tables,
-      //    guests: formData.guests || 2,
-      //    notes: formData.notes || "",
-      // }
-
-      // if (isEditing) {
-      //    setReservations((prev) => prev.map((r) => (r.id === reservation.id ? reservation : r)))
-      // } else {
-      //    setReservations((prev) => [...prev, reservation])
-      // }
-
-      // setIsModalOpen(false)
-      // setFormData({})
-   }
-
-   // Eliminar reserva
-   const handleDeleteReservation = () => {
-      if (selectedReservation) {
-         // setReservations((prev) => prev.filter((r) => r.id !== selectedReservation.id))
-         // setIsModalOpen(false)
-      }
-   }
-
-   // Cambiar estado de reserva
-   const handleStatusChange = (status) => {//: "pending" | "confirmed" | "cancelled"
-      if (selectedReservation) {
-         const updatedReservation = { ...selectedReservation, status }
-         // setReservations((prev) => prev.map((r) => (r.id === selectedReservation.id ? updatedReservation : r)))
-         // setSelectedReservation(updatedReservation)
-         // setFormData((prev) => ({ ...prev, status }))
-      }
-   }
-
-   // Manejar cambio en mesas seleccionadas
-   const handleTableChange = (table, checked) => {
-      // setFormData((prev) => ({
-      //    ...prev,
-      //    tables: checked ? [...(prev.tables || []), table] : (prev.tables || []).filter((t) => t !== table),
-      // }))
+   const style = {
+      height: '90dvh',
    }
 
    return (
-      <div className="p-4">
-
-         <h2 className="text-xl font-semibold mb-4">Calendario de Reservas</h2>
-
+      <div className='p-4'>
+         <h2 className='text-xl font-semibold mb-4'>Calendario de Reservas</h2>
          <Calendar
             localizer={localizer}
             events={reservations}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: "100%" }}
+            startAccessor='start'
+            endAccessor='end'
+            style={style}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}
             selectable
             eventPropGetter={eventStyleGetter}
-            views={["month", "week", "day"]}
+            views={['month', 'week', 'day']}
             defaultView={Views.WEEK}
             step={30}
             timeslots={2}
             messages={{
-               next: "Siguiente",
-               previous: "Anterior",
-               today: "Hoy",
-               month: "Mes",
-               week: "Semana",
-               day: "Día",
-               agenda: "Agenda",
-               date: "Fecha",
-               time: "Hora",
-               event: "Evento",
-               noEventsInRange: "No hay reservas en este rango",
+               next: 'Siguiente',
+               previous: 'Anterior',
+               today: 'Hoy',
+               month: 'Mes',
+               week: 'Semana',
+               day: 'Día',
+               agenda: 'Agenda',
+               date: 'Fecha',
+               time: 'Hora',
+               event: 'Evento',
+               noEventsInRange: 'No hay reservas en este rango',
                showMore: (total) => `+ Ver más (${total})`,
             }}
+            
          />
+
+         {
+            isOpenCreateReserve &&
+            <CreateReservationModal
+               className={'w-xl'}
+               isOpen={isOpenCreateReserve}
+               onClose={() => setisOpenCreateReserve(false)}
+               date={selectedReservation?.start}
+            />
+         }
+         {
+            isOpenEditReserve &&
+            <EditReservationModal
+               className={'w-xl'}
+               isOpen={isOpenEditReserve}
+               onClose={() => setisOpenEditReserve(false)}
+               reservation={selectedReservation}
+            />
+         }
       </div>
+   )
+}
+
+
+const CreateReservationModal = ({
+   className,
+   isOpen,
+   onClose,
+   date,
+}) => {
+   const {
+      reserveTable,
+   } = useReservation()
+
+   const onSubmit = (({
+      formState,
+      resetForm,
+   }) => {
+      ReservationToast({
+         promise: reserveTable(formState),
+         onSuccess: () => {
+            window.requestAnimationFrame(() => resetForm());
+         },
+      });
+   });
+
+   return (
+
+      <Modal
+         isOpen={isOpen}
+         onClose={onClose}
+      >
+         <Card2 className={cn(
+            className
+         )}>
+            <Label className={'text-center w-full'}>
+               Crear nueva reserva
+            </Label>
+
+            <FromReservation
+               isOpen={isOpen}
+               onSubmit={onSubmit}
+               initialValues={{
+                  date,
+               }}
+            >
+               <FormItem>
+                  <Button
+                     size='lg'
+                     type='submit'
+                     className='mt-2 flex items-center gap-2'
+                  // disabled={isLoadingReservation}
+                  >
+                     Reservar
+                  </Button>
+               </FormItem>
+            </FromReservation>
+         </Card2>
+      </Modal>
+   )
+}
+
+const EditReservationModal = ({
+   className,
+   isOpen,
+   onClose,
+   reservation
+}) => {
+   const {
+      cancelFullReservation,
+      updateReservation,
+   } = useReservation()
+
+   const onSubmit = (({
+      formState,
+   }) => {
+      AdminTableToasts.updateReservation(
+         updateReservation(formState),
+      );
+   });
+
+   const cancelReservation = () => {
+      AdminTableToasts.cancelFullReservation(
+         cancelFullReservation({
+            idReservation: reservation?.id,
+            tables: reservation?.tables
+         }), {
+         onSuccess: () => {
+            window.requestAnimationFrame(() => onClose());
+         },
+      });
+   }
+
+   return (
+      <Modal
+         isOpen={isOpen}
+         onClose={onClose}
+      >
+         <Card2 className={cn(
+            className
+         )}>
+            <Label className={'text-center w-full'}>
+               Editar reserva
+            </Label>
+
+            <FromReservation
+               isOpen={isOpen}
+               isEdit={true}
+               onSubmit={onSubmit}
+               initialValues={{
+                  ...reservation,
+                  date: DateParser.toDate(reservation?.dateStr),
+               }}
+               btns={[
+                  {
+                     label: 'Actualizar',
+                     variant: 'default',
+                     disabledBySelected: true,
+                     type: 'submit',
+                     size: 'lg',
+                  },
+                  {
+                     label: 'Cancelar',
+                     variant: 'destructive',
+                     onClick: cancelReservation,
+                     disabledBySelected: false,
+                     type: 'button',
+                     size: 'lg',
+                  },
+               ]}
+            />
+         </Card2>
+      </Modal>
    )
 }

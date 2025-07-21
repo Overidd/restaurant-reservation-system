@@ -19,9 +19,19 @@ export const stateFilterRestaurantSlice = createSlice({
          dateStr: new Date().toISOString().split('T')[0],
          restaurant: {}
       },
+
+      lastParams: {
+         restaurantId: '',
+         dateStr: '',
+         hour: '',
+      }
    },
 
    reducers: {
+      setLastParams: (state, action) => {
+         state.lastParams = action.payload;
+      },
+
       messageErrorAction: (state, { payload }) => {
          state.messageError = payload
       },
@@ -72,5 +82,6 @@ export const {
    setRestaurantsAction,
    updateRestaurantAction,
    setHoursAction,
-   setChangeFilterAction
+   setChangeFilterAction,
+   setLastParams
 } = stateFilterRestaurantSlice.actions;

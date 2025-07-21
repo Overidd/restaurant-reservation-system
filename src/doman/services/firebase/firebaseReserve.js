@@ -80,7 +80,7 @@ export class FirebaseReserveService {
       const unavailableSnap = await getDocs(query(
          collection(FirebaseDB, 'unavailableSlots'),
          where('idRestaurant', '==', idRestaurant),
-         where('date', '==', dateStr)
+         where('dateStr', '==', dateStr)
       ));
 
       // 5. Obtener todas las reservas confirmadas para esa fecha
@@ -88,7 +88,7 @@ export class FirebaseReserveService {
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
          where('status', 'in', ['confirmed', 'pending']),
-         where('date', '==', dateStr)
+         where('dateStr', '==', dateStr)
       ));
 
       const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
@@ -137,7 +137,7 @@ export class FirebaseReserveService {
       const reservations = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
          where('idRestaurant', '==', idRestaurant),
-         where('date', '==', dateStr),
+         where('dateStr', '==', dateStr),
          where('status', 'in', ['confirmed', 'pending']),
          where('hour', '==', hour),
       ));
@@ -232,7 +232,7 @@ export class FirebaseReserveService {
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
             where('idRestaurant', '==', idRestaurant),
-            where('date', '==', dateStr),
+            where('dateStr', '==', dateStr),
             where('hour', '==', hour),
             where('status', 'in', ['confirmed', 'pending'])
          ));
@@ -278,7 +278,7 @@ export class FirebaseReserveService {
             hour,
             comment: '',
             tables,
-            date: dateStr,
+            dateStr: dateStr,
             code: newCode,
             status: 'pending',
             start: new Date().getTime(),

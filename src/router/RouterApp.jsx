@@ -17,6 +17,7 @@ import {
 } from '@/screen/auth';
 import {
    CalendarScreen,
+   DashboardScreen,
    MapScreen
 } from '@/screen/dashboard';
 import { StatisticScreen } from '@/screen/dashboard/Statistic';
@@ -77,11 +78,11 @@ const AppRoutes = () => {
          </Route> */}
 
          <Route path='/dashboard' element={<DashboardLayout />} >
+            <Route index element={<DashboardScreen />} />
             <Route path='tables' element={<MapScreen />} />
             <Route path='calendar' element={<CalendarScreen />} />
-            <Route path='statistic' element={<StatisticScreen />} />
-
-            <Route index element={<Navigate to='tables' />} />
+            <Route path='details' element={<StatisticScreen />} />
+            {/* <Route index element={<Navigate to='tables' />} /> */}
          </Route>
 
          <Route path='search-reservation' element={<SearchReservationScreen />} />

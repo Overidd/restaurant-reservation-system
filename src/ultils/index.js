@@ -1,3 +1,4 @@
+export * from './calculateRate';
 export * from './cn';
 export * from './DateUtils';
 export * from './generateCode';

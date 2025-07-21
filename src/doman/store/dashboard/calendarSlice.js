@@ -24,7 +24,12 @@ export const calendarSlice = createSlice({
 
       updateReservationAction: (state, { payload }) => {
          if (!payload || !payload?.id) return;
-         state.reservations = state.reservations.map(r => r.id === payload.id ? { ...r, ...payload } : r);
+         state.reservations = state.reservations.map(r => {
+            if (r.id === payload.id) {
+               return { ...r, ...payload, tables: payload?.tables }
+            }
+            return r
+         });
       },
 
       removeReservationAction: (state, { payload }) => {
