@@ -242,12 +242,17 @@ export const CardStatsResume2 = ({
    textColor,
    description,
    count,
-   rase
+   rate,
+   className
 }) => {
    const Icon = icon
 
    return (
-      <Card>
+      <Card
+         className={cn(
+            className
+         )}
+      >
          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
                {title}
@@ -259,7 +264,7 @@ export const CardStatsResume2 = ({
                {count}
             </div>
             <p className='text-xs text-muted-foreground'>
-               {rase} {description}
+               {rate}% {description}
             </p>
          </CardContent>
       </Card>

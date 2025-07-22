@@ -6,7 +6,6 @@ export const StatsSummary = ({
    className,
    metrics = [],
 }) => {
-   console.log(metrics);
 
    return (
       <div className={cn(

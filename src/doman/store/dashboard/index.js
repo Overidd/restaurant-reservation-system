@@ -8,4 +8,6 @@ export * from './restaurantResourceSlice';
 export * from './restaurantUiSlice';
 export * from './stateFilterRestaurantSlice';
 export * from './stateFilterThunk';
+export * from './usersSlice';
+export * from './usersThunk';
 

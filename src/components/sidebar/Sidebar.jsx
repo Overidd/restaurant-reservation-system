@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation } from 'react-router';
 
-import { AlignLeft, CalendarCheck, ChevronDown, Dice1, LayoutDashboard, ReceiptText, Users, X } from 'lucide-react';
+import { AlignLeft, CalendarCheck, ChevronDown, Dice1, LayoutDashboard, ReceiptText, Store, Users, X } from 'lucide-react';
 
 import { useSidebar } from '@/hook';
 import { cn } from '@/ultils';
@@ -35,6 +35,11 @@ const navItems = [
       icon: <Users className='text-inherit' />,
       path: '/dashboard/details',
    },
+   {
+      name: 'Tienda',
+      icon: <Store className='text-inherit' />,
+      path: '/dashboard/store',
+   }
 ];
 
 export const Sidebar = ({

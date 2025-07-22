@@ -51,11 +51,14 @@
   /* Custom Color  */
   --color-table-avaible: var(--table-avaible);
   --color-table-busy: var(--table-busy);
+  --color-table-canceled: var(--table-canceled);
   --color-table-selected: var(--table-selected);
   --color-table-blocked: var(--table-blocked);
   --color-table-pending: var(--table-pending);
   --color-table-confirmed: var(--table-confirmed);
   --color-table-notAvailable: var(--table-notAvailable);
+  --color-table-noshow: var(--table-noshow);
+  --color-table-released: var(--table-released);
 
   --color-backdrop-modal: var(--backdrop-modal);
 
@@ -67,19 +70,19 @@
   --radius: 0.65rem;
   --background: #FAF3E6;
   --foreground: #6d5f5c;
-  --card: #FAF3E6;
+  --card: #fcf8f0;
   --card-foreground: #4e403cc4;
   --card-primary: #ffffff9a;
   --popover: #FAF3E6;
   --popover-foreground: #4e403cc4;
   --primary: #E0822D;
   --primary-foreground: oklch(0.98 0.016 73.684);
-  --secondary: #8F521E;
+  --secondary: #e38d40;
   --secondary-foreground: #fff;
-  --muted: #8F521E;
+  --muted: #FAF3E6;
   /** Color apagado*/
   --muted-foreground: #4e403cc4;
-  --accent: #8F521E;
+  --accent: #060606ce;
   --accent-foreground: #FAF3E6;
   --destructive: #D0534B;
   --border: oklch(0.92 0.004 286.32);
@@ -106,6 +109,9 @@
   --width-search: 12rem;
   --table-avaible: #4a977b;
   --table-busy: #d9524e;
+  --table-canceled: #d9524e;
+  --table-noshow: #d9524e;
+  --table-released: #4a977b;
   --table-selected: #5485CE;
   --table-blocked: #ccc;
   --table-pending: #eca668;
@@ -235,6 +241,26 @@
   background: linear-gradient(to right, rgba(255, 255, 255, 0.09), transparent 80%);
 }
 
+.style-class {
+  /* background: rgba(255, 255, 255, 0.05); */
+  /* color: var(text-background); */
+  /* background-color: #fbf3e7 !; */
+  /* fondo oscuro y translúcido */
+  /* borde suave y claro */
+  /* texto claro */
+  /* font-family: 'Segoe UI', sans-serif; */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.3);
+  /* sombra elegante */
+  backdrop-filter: blur(8px);
+  appearance: none;
+  /* background-image: url("data:image/svg+xml,%3Csvg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); */
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.09), transparent 80%);
+}
+
 
 /** Style item menu  */
 .item-menu {
@@ -308,13 +334,14 @@ input[type=number] {
 /* ESTILOS DE CALENDARIO */
 /* calendar.css */
 .rbc-calendar {
-  /* @apply bg-white text-gray-800; */
+  /* @apply bg-card; */
 }
 
 .rbc-toolbar {
   /* @apply flex flex-wrap justify-between items-center p-4 bg-blue-50; */
-  @apply border-2 border-dashed border-gray-300 p-2 rounded-2xl;
+  @apply border-2 border-dashed border-gray-300 p-2 rounded-2xl bg-card;
 }
+
 
 .rbc-toolbar-label {
   @apply text-lg font-semibold;
@@ -328,10 +355,12 @@ input[type=number] {
   /* @apply bg-green-500 text-white px-2 py-1 rounded; */
 }
 
+.rbc-month-view,
+.rbc-row,
 .rbc-time-view,
 .rbc-time-header,
 .rbc-time-content {
-  @apply rounded-2xl [&::-webkit-scrollbar]:hidden;
+  @apply rounded-2xl [&::-webkit-scrollbar]:hidden bg-card;
 }
 
 .rbc-today {

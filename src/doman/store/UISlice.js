@@ -15,7 +15,8 @@ export const UISlice = createSlice({
       isOpenModalCreateItemObject: false,
       isOpenModalEditItemObject: false,
       isOpenModalCreateCategoryObject: false,
-      isOpenModalEditCategoryObject: false
+      isOpenModalEditCategoryObject: false,
+      isOpenModalUserDetail: false
    },
 
    reducers: {
@@ -126,6 +127,14 @@ export const UISlice = createSlice({
       closeModalEditCategoryObjectAction: (state) => {
          state.isOpenModalEditCategoryObject = false;
       },
+
+      openModalUserDetailAction: (state) => {
+         state.isOpenModalUserDetail = true;
+      },
+
+      closeModalUserDetailAction: (state) => {
+         state.isOpenModalUserDetail = false;
+      },
    },
 });
 
@@ -168,5 +177,8 @@ export const {
    closeModalCreateCategoryObjectAction,
 
    openModalEditCategoryObjectAction,
-   closeModalEditCategoryObjectAction
+   closeModalEditCategoryObjectAction,
+
+   openModalUserDetailAction,
+   closeModalUserDetailAction
 } = UISlice.actions;

@@ -10,6 +10,7 @@ export const typeStatusTable = {
    CANCELED: 'canceled',
    ACTIVE: 'active',
    COMPLETED: 'completed',
+   NOSHOW: 'noShow',
 };
 
 
@@ -35,6 +36,8 @@ export const translateStatus = (status) => {
          return 'Activo'
       case typeStatusTable.COMPLETED:
          return 'Completado'
+      case typeStatusTable.NOSHOW:
+         return 'No presentado'
       default:
          return 'Desconocido'
    }

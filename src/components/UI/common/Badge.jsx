@@ -23,7 +23,7 @@ export const Badge = ({
                   "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
                none: '',
             },
-            
+
          },
          defaultVariants: {
             variant: "primary",
@@ -40,14 +40,16 @@ export const Badge = ({
          blocked: 'bg-table-blocked text-gray-800',
          pending: 'bg-table-pending text-white',
          confirmed: 'bg-table-confirmed text-white',
+         canceled: 'bg-table-canceled text-white',
+         noShow: 'bg-table-noshow text-white',
       }
 
-      return cn(stateClasses[state], badgeVariants({ variant, className }))
+      return cn(badgeVariants({ variant, className }), stateClasses[state])
    }
 
    return (
       <span className={getStateClasses(state)}>
-         {children || translateStatus(state)}
+         {children ?? translateStatus(state)}
       </span>
    )
 }

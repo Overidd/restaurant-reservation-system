@@ -80,8 +80,8 @@ const CalendarReservations = () => {
    }
 
    return (
-      <div className='p-4'>
-         <h2 className='text-xl font-semibold mb-4'>Calendario de Reservas</h2>
+      <div className='min-h-screen md:mt-6 mt-4 mx-auto max-w-7xl space-y-6'>
+         {/* <h2 className='text-xl font-semibold mb-4'>Calendario de Reservas</h2> */}
          <Calendar
             localizer={localizer}
             events={reservations}

@@ -21,12 +21,12 @@ export const MapScreen = () => {
          <BackdropEdit
          />
 
-         <TableAutoFilter
-            className={'md:col-start-2 w-fit mx-auto'}
+         <TableStats
+            className={'md:row-span-2 md:col-span-1 md:w-65 w-[90%]'}
          />
 
-         <TableStats
-            className={'md:w-65 w-[90%] ml-auto'}
+         <TableAutoFilter
+            className={'md:col-span-1 w-fit mx-auto'}
          />
 
          <ModalAsyncProvider>

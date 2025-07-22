@@ -6,6 +6,7 @@ export * from './Chart';
 export * from './ColorStatus';
 export * from './DayPicker';
 export * from './Modal';
+export * from './Pagination';
 export * from './Popover';
 export * from './ProgresBar';
 export * from './Skeleton';

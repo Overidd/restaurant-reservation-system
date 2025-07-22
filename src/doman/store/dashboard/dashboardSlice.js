@@ -9,7 +9,7 @@ export const dashboardSlice = createSlice({
          total: 0,
          confirmed: 0,
          released: 0,
-         cancelled: 0,
+         canceled: 0,
          noShow: 0,
       },
       growthRateClients: {
@@ -21,7 +21,7 @@ export const dashboardSlice = createSlice({
       topClients: [],
       problematicClients: [],
       topClientAnalysis: [],
-      clientReservations: [],
+      clientReservations: [], // TODO: 
       messageError: null,
    }, // DashboardState,
    reducers: {

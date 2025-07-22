@@ -1,6 +1,6 @@
 import { dashboardDataThunk } from '@/doman/store/dashboard';
 import { calculateRate } from '@/ultils';
-import { CalendarDays, CheckCircle, Clock, Users, XCircle } from 'lucide-react';
+import { CalendarClock, CalendarDays, CheckCircle, Clock, Users, XCircle } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,14 +16,35 @@ export const useLoadDashboard = () => {
    const metrics = useMemo(() => {
       return [
          {
+            id: 'clients',
+            count: state.growthRateClients.totalClients,
+            rate: state.growthRateClients.growthRate,
+            title: 'Clientes Activos',
+            icon: Users,
+            color: 'text-muted-foreground',
+            textColor: 'text-muted-foreground',
+            description: 'Nuevos clientes',
+            className: 'md:col-span-2',
+         },
+         {
             id: 'total',
-            value: state.metrics.total,
-            rate: calculateRate(state.metrics.total, state.metrics.growthRateClients.totalClients),
+            count: state.metrics.total,
+            rate: calculateRate(state.metrics.total, state.growthRateClients.totalClients),
             title: 'Total Reservas',
             icon: CalendarDays,
             color: 'text-muted-foreground',
             textColor: 'text-muted-foreground',
             description: 'Desde el mes pasado',
+         },
+         {
+            id: 'pending',
+            count: state.metrics.pending,
+            rate: calculateRate(state.metrics.pending, state.metrics.total),
+            title: 'Pendientes',
+            icon: CalendarClock,
+            color: 'text-table-pending',
+            textColor: 'text-table-pending',
+            description: 'Del total',
          },
          {
             id: 'confirmed',
@@ -36,20 +57,20 @@ export const useLoadDashboard = () => {
             description: 'Del total',
          },
          {
-            id: 'pending',
+            id: 'Liberados',
             count: state.metrics.released,
             rate: calculateRate(state.metrics.released, state.
                metrics.total),
             title: 'Liberados',
             icon: CheckCircle,
-            color: 'text-table-selected',
-            textColor: 'text-table-selected',
+            color: 'text-table-released',
+            textColor: 'text-table-released',
             description: 'Del total',
          },
          {
-            id: 'cancelled',
-            count: state.metrics.cancelled,
-            rate: calculateRate(state.metrics.cancelled, state.metrics.total),
+            id: 'canceled',
+            count: state.metrics.canceled,
+            rate: calculateRate(state.metrics.canceled, state.metrics.total),
             title: 'Canceladas',
             icon: XCircle,
             color: 'text-red-600',
@@ -66,16 +87,6 @@ export const useLoadDashboard = () => {
             textColor: 'text-orange-600',
             description: 'Del total',
          },
-         {
-            id: 'clients',
-            count: state.metrics.growthRateClients.totalClients,
-            rate: state.metrics.growthRateClients.growthRate,
-            title: 'Clientes Activos',
-            icon: Users,
-            color: 'text-muted-foreground',
-            textColor: 'text-muted-foreground',
-            description: 'Nuevos clientes',
-         }
       ]
    }, [state.metrics]);
 
@@ -84,9 +95,9 @@ export const useLoadDashboard = () => {
       isLoading: state.isLoading,
       metrics: metrics,
       growthRateClients: {
-         totalClients: state.metrics.growthRateClients.totalClients,
-         newClientsThisMonth: state.metrics.growthRateClients.newClientsThisMonth,
-         growthRate: state.metrics.growthRateClients.growthRate
+         totalClients: state.growthRateClients.totalClients,
+         newClientsThisMonth: state.growthRateClients.newClientsThisMonth,
+         growthRate: state.growthRateClients.growthRate
       },
       trends: state.trends,
       topClients: state.topClients,

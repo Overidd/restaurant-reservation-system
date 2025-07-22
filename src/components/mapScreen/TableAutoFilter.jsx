@@ -54,7 +54,7 @@ export const TableAutoFilter = ({
                >
                   <SelectTrigger
                      size='lg'
-                     className='w-full bg-[#fcf8f0]'
+                     className='w-full bg-card'
                   >
                      <SelectValue
                         placeholder='Seleccione una restaurante'
@@ -76,7 +76,7 @@ export const TableAutoFilter = ({
             <CalendarButton
                name={'dateStr'}
                variant='outline'
-               btnClassName={'hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0]'}
+               btnClassName={'hover:bg-card hover:text-muted-foreground bg-card'}
                onValueChange={onValueChange}
                date={DateParser.fromString(dateStr)}
                configDate={null}
@@ -90,7 +90,7 @@ export const TableAutoFilter = ({
                >
                   <SelectTrigger
                      size='lg'
-                     className='w-full bg-[#fcf8f0]'
+                     className='w-full bg-card'
                   // variant='crystal'
                   >
                      <SelectValue

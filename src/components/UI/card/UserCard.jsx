@@ -40,11 +40,10 @@ export const UserCard = ({
    }
 
    const config = sizeConfig[size]
-
    return (
 
       <div className={cn(
-         'flex items-center gap-2 text-card',
+         'flex items-center gap-2 text-card-foreground',
          className
       )}>
          <div
@@ -55,9 +54,12 @@ export const UserCard = ({
          >
             {photoURL ? (
                <img
-                  src={photoURL || '/icon/iconUser.png'}
+                  src={photoURL}
                   alt={`${name} profile`}
+                  referrerPolicy='no-referrer'
                   className='w-full h-full object-cover'
+                  width={48}
+                  height={48}
                   onError={(e) => {
                      e.currentTarget.style.display = 'none'
                   }}
@@ -84,7 +86,7 @@ export const UserCard = ({
                   {mustShow.includes('lastName') && lastName}
                </strong>
                {email && mustShow.includes('email') &&
-                  <span className='text-muted-foreground text-xs block truncate'>
+                  <span className='text-xs block truncate'>
                      {email}
                   </span>}
             </p>
@@ -103,20 +105,20 @@ export const UserCardReservation = ({
          'flex items-center gap-3 text-card-primary',
          className
       )}>
-         <div className="w-9 h-9 bg-primary/20 rounded-full flex items-center justify-center shrink-0">
-            <User className="w-4 h-4 text-primary" />
+         <div className='w-9 h-9 bg-primary/20 rounded-full flex items-center justify-center shrink-0'>
+            <User className='w-4 h-4 text-primary' />
          </div>
 
-         <div className="text-sm leading-tight space-y-0.5">
-            <p className="font-semibold text-foreground">{name}</p>
+         <div className='text-sm leading-tight space-y-0.5'>
+            <p className='font-semibold text-foreground'>{name}</p>
 
             {date && (
-               <p className="text-xs text-muted-foreground">
+               <p className='text-xs text-muted-foreground'>
                   {date}
                </p>
             )}
             {code && (
-               <p className="text-xs text-muted-foreground">
+               <p className='text-xs text-muted-foreground'>
                   {code}
                </p>
             )}
