@@ -1,10 +1,12 @@
-import { cn } from '@/ultils'
-import { Badge, Card, CardContent, CardDescription, CardHeader, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../UI/common'
+import { cn } from '@/ultils';
+import { Badge, Card, CardContent, CardDescription, CardHeader, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../UI/common';
 
 export const TopReservationAnalysis = ({
    className,
    topClientAnalysis = []
 }) => {
+
+   console.log(topClientAnalysis);
 
    return (
       <Card

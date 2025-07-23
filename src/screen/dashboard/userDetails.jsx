@@ -1,5 +1,6 @@
+import { StatsSummary } from '@/components/common';
 import { Button } from '@/components/UI/common';
-import { StatsSummary, UserDetailModal, UsersTable } from '@/components/userDetails';
+import { UserDetailModal, UsersTable } from '@/components/userDetails';
 import { useLoadUsers } from '@/hook/dashboard/useLoadUsers';
 import { useModalUserDetail } from '@/hook/modals';
 import { useState } from 'react';
@@ -56,7 +57,7 @@ export function ClientDetails() {
           itemsPerPage={10}
           users={users}
         />
-        
+
       </div>
       {
         isOpen &&

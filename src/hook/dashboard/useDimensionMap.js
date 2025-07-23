@@ -2,7 +2,7 @@ import { dasboardServiceProvider } from '@/doman/services';
 import {
    changeValueTempRestaurantAction,
    setTempRestaurantAction,
-   updateRestaurantAction
+   updateDimensionRestaurantAction
 } from '@/doman/store/dashboard';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -30,7 +30,7 @@ export const useDimensionMap = () => {
          throw new errorMessage;
       }
 
-      dispatch(updateRestaurantAction(data))
+      dispatch(updateDimensionRestaurantAction(data))
       setIsLodding(false)
    }
 

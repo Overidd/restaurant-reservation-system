@@ -18,7 +18,8 @@ import {
 import {
    CalendarScreen,
    DashboardScreen,
-   MapScreen
+   MapScreen,
+   RestaurantScreen
 } from '@/screen/dashboard';
 import { ClientDetails } from '@/screen/dashboard/userDetails';
 import { LocationScreen } from '@/screen/location';
@@ -82,6 +83,7 @@ const AppRoutes = () => {
             <Route path='tables' element={<MapScreen />} />
             <Route path='calendar' element={<CalendarScreen />} />
             <Route path='details' element={<ClientDetails />} />
+            <Route path='store' element={<RestaurantScreen />} />
             {/* <Route index element={<Navigate to='tables' />} /> */}
          </Route>
 

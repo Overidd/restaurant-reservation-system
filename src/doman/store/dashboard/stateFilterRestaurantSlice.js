@@ -48,7 +48,7 @@ export const stateFilterRestaurantSlice = createSlice({
          state.messageError = null;
       },
 
-      updateRestaurantAction: (state, { payload }) => {
+      updateDimensionRestaurantAction: (state, { payload }) => {
          if (!payload) return;
          state.filter.restaurant = {
             ...state.filter.restaurant,
@@ -80,7 +80,7 @@ export const stateFilterRestaurantSlice = createSlice({
 export const {
    messageErrorAction: messageErrorActionFilter,
    setRestaurantsAction,
-   updateRestaurantAction,
+   updateDimensionRestaurantAction,
    setHoursAction,
    setChangeFilterAction,
    setLastParams

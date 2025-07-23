@@ -71,6 +71,126 @@ export class FirebaseDashboardService {
       }
    }
 
+   async updateRestaurant({
+      idRestaurant,
+      name,
+      description,
+      image,
+      rows,
+      columns,
+      status,
+      latitude,
+      longitude,
+      linkMap,
+      hours = []
+   }) {
+      try {
+
+         if (!idRestaurant) {
+            throw new Error('No se proporciono el id del restaurante');
+         }
+
+         const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
+
+         if (!restaurant.exists()) {
+            throw new Error('No se encontro el restaurante');
+         }
+
+         const data = {
+            name: name ?? restaurant.data().name,
+            description: description ?? restaurant.data().description,
+            image: image ?? restaurant.data().image,
+            rows: rows ?? restaurant.data().rows,
+            columns: columns ?? restaurant.data().columns,
+            status: status ?? restaurant.data().status,
+            latitude: latitude ?? restaurant.data().latitude,
+            longitude: longitude ?? restaurant.data().longitude,
+            linkMap: linkMap ?? restaurant.data().linkMap,
+            hours: hours ?? restaurant.data().hours,
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(doc(FirebaseDB, 'restaurants', idRestaurant), data);
+
+         return {
+            ok: true,
+            restaurant: {
+               id: idRestaurant,
+               ...data,
+               createdAt: restaurant.data().createdAt.toDate().toISOString(),
+               updatedAt: new Date().toISOString()
+            }
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error || 'Error al actualizar el restaurante'
+         }
+      }
+   }
+
+   deleteRestaurant = async (id) => {
+      try {
+         if (!id) return;
+         await deleteDoc(doc(FirebaseDB, 'restaurants', id));
+         return {
+            ok: true
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error || 'Error al eliminar el restaurante'
+         }
+      }
+   }
+
+   async createRestaurant({
+      name,
+      description,
+      image,
+      rows,
+      columns,
+      status,
+      latitude,
+      longitude,
+      linkMap,
+      hours
+   }) {
+      try {
+         const data = {
+            name,
+            description,
+            image,
+            rows,
+            columns,
+            status,
+            latitude,
+            longitude,
+            linkMap,
+            hours,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+         }
+
+         const newRestaurant = await setDoc(doc(FirebaseDB, 'restaurants'), data);
+
+         return {
+            ok: true,
+            restaurant: {
+               id: newRestaurant.id,
+               ...data,
+               createdAt: new Date().toISOString(),
+               updatedAt: new Date().toISOString()
+            }
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error || 'Error al crear el restaurante'
+         }
+      }
+   }
+
    async getTables({ dateStr, idRestaurant, hour }) {
       if (!dateStr || !idRestaurant || !hour) return;
 

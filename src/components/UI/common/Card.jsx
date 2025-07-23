@@ -106,3 +106,13 @@ export const CardFooter = ({ className, ...props }) => {
       />
    )
 }
+
+export const Separator = ({ className, ...props }) => {
+   return (
+      <div
+         data-slot='separator'
+         className={cn('h-px bg-border', className)}
+         {...props}
+      />
+   )
+}

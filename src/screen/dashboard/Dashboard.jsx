@@ -1,9 +1,16 @@
-import { ProblematicClients, StatsSummary, TopClients, TopReservationAnalysis, TrendsChart } from '@/components/dashboard'
+import { StatsSummary } from '@/components/common'
+import { ProblematicClients, TopClients, TopReservationAnalysis, TrendsChart } from '@/components/dashboard'
 import { Button } from '@/components/UI/common'
 import { useLoadDashboard } from '@/hook/dashboard'
 
 export const DashboardScreen = () => {
-   const data = useLoadDashboard()
+   const {
+      metrics,
+      trends,
+      topClients,
+      problematicClients,
+      topClientAnalysis
+   } = useLoadDashboard()
 
    return (
       <div className='min-h-screen p-4 md:p-6 lg:p-8 mx-auto max-w-7xl space-y-6'>
@@ -24,25 +31,26 @@ export const DashboardScreen = () => {
          </div>
 
          <StatsSummary
-            metrics={data?.metrics}
+            className={'grid gap-4 md:grid-cols-4'}
+            metrics={metrics}
          />
 
          <TrendsChart
-            trends={data?.trends}
+            trends={trends}
          />
 
          <div className='grid gap-6 lg:grid-cols-2'>
             <TopClients
-               topClients={data?.topClients}
+               topClients={topClients}
             />
 
             <ProblematicClients
-               problematicClients={data?.problematicClients}
+               problematicClients={problematicClients}
             />
          </div>
 
          <TopReservationAnalysis
-            topClientAnalysis={data?.topClientAnalysis}
+            topClientAnalysis={topClientAnalysis}
          />
       </div>
    )
