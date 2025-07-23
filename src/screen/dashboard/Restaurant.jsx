@@ -41,10 +41,12 @@ export const RestaurantScreen = () => {
          </div>
 
          <StatsSummary
+            isLoading={isLoading}
             metrics={metrics}
          />
 
          <RestaurantList
+            isLoading={isLoading}
             openModalEdit={handleOpenEditModal}
             restaurants={restaurants}
          />
@@ -64,7 +66,7 @@ export const RestaurantScreen = () => {
                />
             }
          </ModalAsyncProvider>
-         {restaurants.length === 0 &&
+         {!isLoading && restaurants.length === 0 &&
             <EmptyState
                title={'No hay tiendas registradas'}
                description={'Comienza agregando tu primera tienda al sistema'}

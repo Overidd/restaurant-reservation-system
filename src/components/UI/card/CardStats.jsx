@@ -2,6 +2,7 @@
 import { cn, typeStatusTable } from '@/ultils';
 import { Calendar, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '../common';
+import { NumberSkeleton } from '../skeleton';
 
 // interface TableStatsProps {
 //   reserved?: number
@@ -236,6 +237,7 @@ export const CardStatsResume = ({
 }
 
 export const CardStatsResume2 = ({
+   isLoading,
    title,
    icon,
    color,
@@ -261,10 +263,25 @@ export const CardStatsResume2 = ({
          </CardHeader>
          <CardContent>
             <div className={`text-2xl font-bold ${textColor}`}>
-               {count}
+               {!isLoading
+                  ? count
+                  : <NumberSkeleton
+                     size='md'
+                  />
+               }
             </div>
             <p className='text-xs text-muted-foreground'>
-               {rate}{rate && '%'} {description}
+               {rate && (
+                  !isLoading
+                     ? `${rate}%`
+                     : <NumberSkeleton
+                        size='sm'
+                     />
+               )
+               }
+               <span className='ml-1'>
+                  {description && description}
+               </span>
             </p>
          </CardContent>
       </Card>

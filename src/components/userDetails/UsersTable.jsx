@@ -4,11 +4,13 @@ import { Phone, Search } from 'lucide-react'
 import { UserCard } from '../UI/card'
 import { Button, Card, CardContent, CardHeader, CardTitle, Pagination, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../UI/common'
 import { Input } from '../UI/from'
+import { CardSkeleton } from '../UI/skeleton'
 
 export const UsersTable = ({
    onSelectUser,
    className,
    users,
+   isLoading = false,
    itemsPerPage = 10
 }) => {
 
@@ -78,7 +80,50 @@ export const UsersTable = ({
                   </TableHeader>
                   <TableBody
                   >
-                     {filteredClientes.map((user) => {
+                     {isLoading && Array.from({ length: 3 }).map((_, index) => (
+                        <TableRow key={'loading-' + index}>
+                           <TableCell>
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                           <TableCell>
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                           <TableCell
+                           >
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                           <TableCell>
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                           <TableCell>
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                           <TableCell>
+                              <CardSkeleton
+                                 variant='line'
+                                 className={'h-6'}
+                              />
+                           </TableCell>
+                        </TableRow>
+                     ))
+
+                     }
+                     {!isLoading && filteredClientes.map((user) => {
                         const rateSuccess = ((user.metrics?.released || 0) / (user.metrics?.total || 0) * 100).toFixed(1)
                         return (
                            <TableRow key={user.id}>
@@ -157,7 +202,7 @@ export const UsersTable = ({
                   />
                )}
 
-               {filteredClientes.length === 0 && (
+               {!isLoading && filteredClientes.length === 0 && (
                   <div className='text-center py-8 text-muted-foreground'>
                      No se encontraron clientes que coincidan con la búsqueda.
                   </div>

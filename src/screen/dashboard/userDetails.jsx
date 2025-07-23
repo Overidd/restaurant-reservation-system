@@ -11,6 +11,7 @@ export function ClientDetails() {
   const {
     metrics,
     users,
+    loadings
   } = useLoadUsers()
 
   const {
@@ -47,6 +48,7 @@ export function ClientDetails() {
       </div>
 
       <StatsSummary
+        isLoading={loadings?.users}
         metrics={metrics}
       />
 

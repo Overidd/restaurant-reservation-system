@@ -9,7 +9,8 @@ export const DashboardScreen = () => {
       trends,
       topClients,
       problematicClients,
-      topClientAnalysis
+      topClientAnalysis,
+      isLoading
    } = useLoadDashboard()
 
    return (
@@ -32,6 +33,7 @@ export const DashboardScreen = () => {
 
          <StatsSummary
             className={'grid gap-4 md:grid-cols-4'}
+            isLoading={isLoading}
             metrics={metrics}
          />
 

@@ -3,6 +3,7 @@ import { CardStatsResume2 } from '../UI/card';
 
 
 export const StatsSummary = ({
+   isLoading,
    className,
    metrics = [],
 }) => {
@@ -15,6 +16,7 @@ export const StatsSummary = ({
          {
             metrics.map((metric) => (
                <CardStatsResume2
+                  isLoading={isLoading}
                   key={metric?.id}
                   {...metric}
                />
