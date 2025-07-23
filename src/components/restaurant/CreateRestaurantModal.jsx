@@ -1,5 +1,8 @@
+import { useRestaurant } from '@/hook/restaurant';
+import { AdminTableToasts } from '@/toasts';
 import { Card2 } from '../UI/card';
 import { Button, Modal } from '../UI/common';
+import { Label } from '../UI/from';
 import { RestaurantForm } from './RestaurantForm';
 
 
@@ -8,10 +11,20 @@ export const CreateRestaurantModal = ({
    onClose,
 }) => {
 
+   const {
+      createRestaurant
+   } = useRestaurant()
+
    const onSubmit = ({ form, reset }) => {
-
+      AdminTableToasts.createRestaurant(
+         createRestaurant(form),
+         {
+            onSuccess: () => {
+               requestAnimationFrame(() => reset?.());
+            },
+         }
+      );
    }
-
    return (
       <Modal
          isOpen={isOpen}
@@ -20,13 +33,16 @@ export const CreateRestaurantModal = ({
          <Card2
             className='space-y-4'
          >
+            <Label className={'text-center'}>
+               Crear restaurante
+            </Label>
             <RestaurantForm
                onSubmit={onSubmit}
             >
                <Button
                   type='submit'
                >
-                  Crear nuevo restaurante
+                  Crear
                </Button>
             </RestaurantForm>
          </Card2>

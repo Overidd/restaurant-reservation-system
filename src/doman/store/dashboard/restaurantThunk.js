@@ -25,6 +25,7 @@ export const updateRestaurantThunks = (data) => {
          dispatch(messageErrorRestauranAction(res.errorMessage));
          throw res.errorMessage
       }
+
       dispatch(updateRestaurantAction(res.restaurant));
    }
 }

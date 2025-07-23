@@ -1,4 +1,4 @@
-import { createRestaurantThunks, deleteRestaurantThunks, getAllRestaurantsThunk, setSelectedRestaurantAction, updateRestaurantThunks } from '@/doman/store/dashboard';
+import { getAllRestaurantsThunk, setSelectedRestaurantAction } from '@/doman/store/dashboard';
 import { Store } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,22 +12,9 @@ export const useLoadRestaurant = () => {
     dispatch(getAllRestaurantsThunk());
   }, [state.isRequest]);
 
-  const updateRestaurant = async (data) => {
-    return dispatch(updateRestaurantThunks(data));
-  }
-
-  const deleteRestaurant = async (idRestauran) => {
-    return dispatch(deleteRestaurantThunks(idRestauran));
-  }
-
   const setSelectedRestaurant = (data) => {
     dispatch(setSelectedRestaurantAction(data));
   }
-
-  const createRestaurant = async (data) => {
-    return dispatch(createRestaurantThunks(data));
-  }
-
   const metrics = useMemo(() => {
     return [
       {
@@ -51,7 +38,7 @@ export const useLoadRestaurant = () => {
         description: null,
       },
     ]
-  }, [state.metrics]);
+  }, [state.metrics, state.restaurants]);
 
   return {
     isLoading: state.isLoading,
@@ -60,9 +47,6 @@ export const useLoadRestaurant = () => {
     metrics,
 
     // Function
-    updateRestaurant,
-    deleteRestaurant,
     setSelectedRestaurant,
-    createRestaurant
   }
 }

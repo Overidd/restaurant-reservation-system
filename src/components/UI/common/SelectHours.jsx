@@ -1,3 +1,4 @@
+import { cn, generateId } from '@/ultils';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Badge, Button } from '.';
@@ -8,8 +9,8 @@ export const SelectHours = ({
    className,
    name,
    isError,
-   onValueChange,
-   value = [],
+   onChange,
+   hours = [],
 }) => {
    const [hour, setHour] = useState('')
 
@@ -17,53 +18,72 @@ export const SelectHours = ({
       setHour(value)
    }
 
-   const handleAddHour = ({ target: { value } }) => {
-      if (!value) return
+   const handleAddHour = () => {
+      if (!hour) return
 
-      onValueChange((hours) => {
-         return [...hours, value]
+      if (hours.includes(hour)) return
+      const data = {
+         id: generateId(),
+         name: hour,
+      }
+
+      onChange({
+         name: name,
+         value: [...hours, data]
       })
+
+      setHour('')
    }
 
    const handleRemoveHour = (hour) => {
       if (!hour) return
 
-      onValueChange((hours) => {
-         return hours.filter((h) => h !== hour)
+      onChange({
+         target: {
+            name: name,
+            value: hours.filter(h => h.id !== hour.id)
+         }
       })
    }
 
    return (
-      <>
-         <div className={
+      <div
+         className={cn(
+            'flex flex-col gap-2',
             className
-         }>
+         )}
+      >
+         <div className={cn(
+            'flex items-center gap-2 w-full',
+         )}>
             <Input
                value={hour}
                type='time'
                name={name}
-               isError={!isError}
+               isError={!!isError}
                onChange={handlSetHour}
+               className='flex-1 w-full'
                required
             />
             <Button
                type='button'
                onClick={handleAddHour}
-               variant='outline'
+               variant='crystal'
             >
                <Plus className='w-4 h-4' />
             </Button>
          </div>
-         <div className={
+         <div className={cn(
+            'flex flex-wrap gap-2 items-center',
             classNameItem
-         }>
-            {value.map((hour) => (
+         )}>
+            {hours.map((hour) => (
                <Badge
                   key={hour.id}
                   variant='secondary'
                   className='flex items-center gap-1'
                >
-                  {hour.hour}
+                  {hour.name}
                   <button
                      onClick={() => handleRemoveHour(hour)} className='ml-1 hover:text-destructive'
                   >
@@ -72,6 +92,6 @@ export const SelectHours = ({
                </Badge>
             ))}
          </div>
-      </>
+      </div>
    )
 }

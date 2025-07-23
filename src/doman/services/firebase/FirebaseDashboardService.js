@@ -1,4 +1,5 @@
 import {
+   addDoc,
    collection,
    deleteDoc,
    doc,
@@ -79,8 +80,8 @@ export class FirebaseDashboardService {
       rows,
       columns,
       status,
-      latitude,
-      longitude,
+      latitud,
+      longitud,
       linkMap,
       hours = []
    }) {
@@ -89,42 +90,43 @@ export class FirebaseDashboardService {
          if (!idRestaurant) {
             throw new Error('No se proporciono el id del restaurante');
          }
-
          const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
 
          if (!restaurant.exists()) {
             throw new Error('No se encontro el restaurante');
          }
 
-         const data = {
-            name: name ?? restaurant.data().name,
-            description: description ?? restaurant.data().description,
-            image: image ?? restaurant.data().image,
-            rows: rows ?? restaurant.data().rows,
-            columns: columns ?? restaurant.data().columns,
-            status: status ?? restaurant.data().status,
-            latitude: latitude ?? restaurant.data().latitude,
-            longitude: longitude ?? restaurant.data().longitude,
-            linkMap: linkMap ?? restaurant.data().linkMap,
-            hours: hours ?? restaurant.data().hours,
+         const data = restaurant.data();
+
+         const dataUpdate = {
+            name: name ?? data.name,
+            description: description ?? data.description,
+            image: image ?? data.image,
+            rows: rows ?? data.rows,
+            columns: columns ?? data.columns,
+            status: status ?? data.status,
+            latitud: latitud ?? data.latitud,
+            longitud: longitud ?? data.longitud,
+            linkMap: linkMap ?? data.linkMap,
+            hours: hours ?? data.hours,
             updatedAt: serverTimestamp()
          }
 
-         await updateDoc(doc(FirebaseDB, 'restaurants', idRestaurant), data);
+         await updateDoc(doc(FirebaseDB, 'restaurants', idRestaurant), dataUpdate);
 
          return {
             ok: true,
             restaurant: {
                id: idRestaurant,
-               ...data,
-               createdAt: restaurant.data().createdAt.toDate().toISOString(),
+               ...dataUpdate,
+               createdAt: data.createdAt.toDate().toISOString(),
                updatedAt: new Date().toISOString()
             }
          }
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error || 'Error al actualizar el restaurante'
+            errorMessage: String(error.message) || 'Error al actualizar el restaurante'
          }
       }
    }
@@ -139,7 +141,7 @@ export class FirebaseDashboardService {
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error || 'Error al eliminar el restaurante'
+            errorMessage: String(error.message) || 'Error al eliminar el restaurante'
          }
       }
    }
@@ -151,8 +153,8 @@ export class FirebaseDashboardService {
       rows,
       columns,
       status,
-      latitude,
-      longitude,
+      latitud,
+      longitud,
       linkMap,
       hours
    }) {
@@ -164,29 +166,29 @@ export class FirebaseDashboardService {
             rows,
             columns,
             status,
-            latitude,
-            longitude,
+            latitud,
+            longitud,
             linkMap,
             hours,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
          }
-
-         const newRestaurant = await setDoc(doc(FirebaseDB, 'restaurants'), data);
+         const restaurantRef = await addDoc(collection(FirebaseDB, 'restaurants'), data);
 
          return {
             ok: true,
             restaurant: {
-               id: newRestaurant.id,
+               id: restaurantRef.id,
                ...data,
                createdAt: new Date().toISOString(),
                updatedAt: new Date().toISOString()
             }
          }
       } catch (error) {
+         console.log(error);
          return {
             ok: false,
-            errorMessage: error || 'Error al crear el restaurante'
+            errorMessage: String(error.message) || 'Error al crear el restaurante'
          }
       }
    }

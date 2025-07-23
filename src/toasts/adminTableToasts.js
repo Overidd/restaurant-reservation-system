@@ -159,4 +159,36 @@ export class AdminTableToasts {
          .finally(() => onFinally?.());
    }
 
+   static async createRestaurant(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Creando restaurante...',
+         success: 'Restaurante creado correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al crear restaurante.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async updateRestaurant(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Actualizando restaurante...',
+         success: 'Restaurante actualizado correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al actualizar restaurante.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async deleteRestaurant(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Eliminando restaurante...',
+         success: 'Restaurante eliminado correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al eliminar restaurante.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
 }

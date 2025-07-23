@@ -264,7 +264,7 @@ export const CardStatsResume2 = ({
                {count}
             </div>
             <p className='text-xs text-muted-foreground'>
-               {rate}% {description}
+               {rate}{rate && '%'} {description}
             </p>
          </CardContent>
       </Card>

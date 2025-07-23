@@ -1,6 +1,7 @@
 import { StatsSummary } from '@/components/common';
 import { CreateRestaurantModal, EditRestaurantModal, RestaurantList } from '@/components/restaurant';
 import { Button, EmptyState } from '@/components/UI/common';
+import { ModalAsyncProvider } from '@/doman/context/dialogAsync';
 import { useLoadRestaurant } from '@/hook/restaurant';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -10,29 +11,30 @@ export const RestaurantScreen = () => {
    const [isOpenModalEdit, setOpenModalEdit] = useState(false)
 
    const {
-      isLoading,
       restaurants,
-      deleteRestaurant,
       setSelectedRestaurant,
       selectedRestaurant,
-      updateRestaurant,
-      createRestaurant,
-      metrics
+      isLoading,
+      metrics,
    } = useLoadRestaurant();
 
-   const handleDelete = (id) => {
-      deleteRestaurant(id);
-   }
-
-   const handleUpdate = (data) => {
-      updateRestaurant();
+   const handleOpenEditModal = (data) => {
+      setOpenModalEdit(true);
+      setOpenModalCreate(false);
       setSelectedRestaurant(data);
    }
 
+   const handleOpenCreateModal = () => {
+      setOpenModalCreate(true);
+      setOpenModalEdit(false);
+   }
+
    return (
-      <div className='container mx-auto p-6 space-y-6'>
+      <div className='min-h-screen p-4 md:p-6 lg:p-8 mx-auto max-w-7xl space-y-6'>
          <div className='flex items-center justify-end'>
-            <Button>
+            <Button
+               onClick={handleOpenCreateModal}
+            >
                <Plus className="w-4 h-4 mr-2" />
                Agregar Tienda
             </Button>
@@ -43,8 +45,7 @@ export const RestaurantScreen = () => {
          />
 
          <RestaurantList
-            onDelete={handleDelete}
-            onEdit={handleUpdate}
+            openModalEdit={handleOpenEditModal}
             restaurants={restaurants}
          />
 
@@ -54,15 +55,15 @@ export const RestaurantScreen = () => {
                onClose={() => setOpenModalCreate(false)}
             />
          }
-
-         {isOpenModalEdit &&
-            <EditRestaurantModal
-               isOpen={isOpenModalEdit}
-               onClose={() => setOpenModalEdit(false)}
-               selectedRestaurant={selectedRestaurant}
-            />
-         }
-
+         <ModalAsyncProvider>
+            {isOpenModalEdit &&
+               <EditRestaurantModal
+                  isOpen={isOpenModalEdit}
+                  onClose={() => setOpenModalEdit(false)}
+                  selectedRestaurant={selectedRestaurant}
+               />
+            }
+         </ModalAsyncProvider>
          {restaurants.length === 0 &&
             <EmptyState
                title={'No hay tiendas registradas'}

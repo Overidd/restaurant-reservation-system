@@ -1,6 +1,7 @@
 import { useForm } from '@/hook';
+import { Validations } from '@/ultils';
 import { SelectHours } from '../UI/common/SelectHours';
-import { Checkbox, Form, FormItem, FromGroup, Input, Label } from '../UI/from';
+import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 
 const schema = {
    initial: {
@@ -9,11 +10,11 @@ const schema = {
       description: '',
       rows: 0,
       columns: 0,
-      status: false,
-      latitude: 0,
-      longitude: 0,
+      status: true,
+      latitud: 0,
+      longitud: 0,
       linkMap: '',
-      hours: []
+      hours: [],
    },
    validation: {
       name: [
@@ -21,12 +22,8 @@ const schema = {
          'El nombre debe tener al menos 3 caracteres',
       ],
       image: [
-         (value) => value.length >= 3,
+         (value) => Validations.urlImage(value),
          'La url de la imagen no es valida',
-      ],
-      description: [
-         (value) => value.length >= 3,
-         'La descripcion debe tener al menos 3 caracteres',
       ],
       rows: [
          (value) => value >= 0,
@@ -36,11 +33,11 @@ const schema = {
          (value) => value >= 0,
          'El numero de columnas debe ser mayor o igual a 0',
       ],
-      latitude: [
+      latitud: [
          (value) => value >= -90 && value <= 90,
          'La latitud debe estar entre -90 y 90',
       ],
-      longitude: [
+      longitud: [
          (value) => value >= -180 && value <= 180,
          'La longitud debe estar entre -180 y 180',
       ],
@@ -72,8 +69,8 @@ export const RestaurantForm = ({
          rows,
          columns,
          status,
-         latitude,
-         longitude,
+         latitud,
+         longitud,
          linkMap,
          hours
       },
@@ -83,8 +80,8 @@ export const RestaurantForm = ({
          descriptionValid,
          rowsValid,
          columnsValid,
-         latitudeValid,
-         longitudeValid,
+         latitudValid,
+         longitudValid,
          linkMapValid,
          hoursValid
       }
@@ -99,25 +96,29 @@ export const RestaurantForm = ({
 
    const onSubmitModal = onSubmitForm((value) => {
       onSubmit({
-         form: value,
+         form: {
+            ...value,
+            idRestaurant: (selectedRestaurant?.id && selectedRestaurant.id ),
+         },
          reset: onResetForm,
       });
    });
 
    return (
       <Form
+         noValidate
          onSubmit={onSubmitModal}
       >
          <FromGroup className='grid grid-cols-2 gap-4'>
             <FormItem>
-               <FormItem htmlFor='name'>
+               <FormLabel htmlFor='name'>
                   Nombre de la Tienda
-               </FormItem>
+               </FormLabel>
                <Input
                   id='name'
                   name='name'
                   value={name}
-                  isError={!nameValid}
+                  isError={!!nameValid}
                   onChange={onValueChange}
                   required
                // placeholder='Tienda'
@@ -125,14 +126,14 @@ export const RestaurantForm = ({
             </FormItem>
 
             <FormItem>
-               <FormItem htmlFor='image'>
+               <FormLabel htmlFor='image'>
                   Imagen de la Tienda
-               </FormItem>
+               </FormLabel>
                <Input
                   id='image'
                   name='image'
                   value={image}
-                  isError={!imageValid}
+                  isError={!!imageValid}
                   onChange={onValueChange}
                   required
                // placeholder='Tienda'
@@ -141,14 +142,14 @@ export const RestaurantForm = ({
          </FromGroup>
 
          <FormItem>
-            <FormItem htmlFor='description'>
+            <FormLabel htmlFor='description'>
                Descripción de la Tienda
-            </FormItem>
+            </FormLabel>
             <Input
                id='description'
                name='description'
                value={description}
-               isError={!descriptionValid}
+               isError={!!descriptionValid}
                onChange={onValueChange}
                required
             // placeholder='Tienda'
@@ -157,26 +158,30 @@ export const RestaurantForm = ({
 
          <FromGroup className='grid grid-cols-2 gap-4'>
             <FormItem>
-               <FormItem htmlFor='rows'>Filas</FormItem>
+               <FormLabel htmlFor='rows'>
+                  Filas
+               </FormLabel>
                <Input
                   id='rows'
                   name='rows'
                   type='number'
                   value={rows}
-                  isError={!rowsValid}
+                  isError={!!rowsValid}
                   onChange={onValueChange}
                   required
                />
             </FormItem>
 
             <FormItem>
-               <FormItem htmlFor='columns'>Columnas</FormItem>
+               <FormLabel htmlFor='columns'>
+                  Columnas
+               </FormLabel>
                <Input
                   id='columns'
                   name='columns'
                   type='number'
                   value={columns}
-                  isError={!columnsValid}
+                  isError={!!columnsValid}
                   onChange={onValueChange}
                   required
                />
@@ -185,28 +190,30 @@ export const RestaurantForm = ({
 
          <FromGroup className='grid grid-cols-2 gap-4'>
             <FormItem>
-               <FormItem htmlFor='latitud'>Latitud</FormItem>
+               <FormLabel htmlFor='latitud'>
+                  Latitud
+               </FormLabel>
                <Input
                   id='latitud'
                   type='number'
                   name='latitud'
-                  value={latitude}
-                  isError={!latitudeValid}
+                  value={latitud}
+                  isError={!!latitudValid}
                   onChange={onValueChange}
                   required
                />
             </FormItem>
 
             <FormItem>
-               <Label htmlFor='longitude'>
-                  Longitud
-               </Label>
+               <FormLabel htmlFor='longitud'>
+                  longitud
+               </FormLabel>
                <Input
-                  id='longitude'
+                  id='longitud'
                   type='number'
                   step='any'
-                  value={longitude}
-                  isError={!longitudeValid}
+                  value={longitud}
+                  isError={!!longitudValid}
                   onChange={onValueChange}
                   required
                />
@@ -214,28 +221,29 @@ export const RestaurantForm = ({
          </FromGroup>
 
          <FormItem>
-            <Label htmlFor='linkMap'>
+            <FormLabel htmlFor='linkMap'>
                Enlace de Google Maps
-            </Label>
+            </FormLabel>
             <Input
                id='linkMap'
                value={linkMap}
                name='linkMap'
-               isError={!linkMapValid}
+               isError={!!linkMapValid}
                onChange={onValueChange}
                required
             />
          </FormItem>
 
          <FromGroup>
-            <Label>
+            <FormLabel>
                Horarios Disponibles
-            </Label>
-            <FormItem className='flex gap-2'>
+            </FormLabel>
+            <FormItem>
                <SelectHours
-                  value={hours}
-                  isError={hoursValid}
-                  onValueChange={onValueChange}
+                  name='hours'
+                  hours={hours}
+                  isError={!!hoursValid}
+                  onChange={onValueChange}
                />
             </FormItem>
          </FromGroup>
@@ -243,12 +251,13 @@ export const RestaurantForm = ({
          <FormItem className='flex items-center space-x-2'>
             <Checkbox
                id='status'
+               name='status'
                checked={status}
-               onCheckedChange={onValueChange}
+               onChange={onValueChange}
             />
-            <Label htmlFor='status'>
+            <FormLabel htmlFor='status'>
                Tienda Activa
-            </Label>
+            </FormLabel>
          </FormItem>
 
          {

@@ -186,7 +186,6 @@ export const useForm = ({
       if (!e) return;
       const name = e?.target?.name ?? e.name;
       let value = e?.target?.value ?? e.value;
-
       const type = e?.target?.type ?? e.type;
 
       if (type === 'number' && value !== '') {
