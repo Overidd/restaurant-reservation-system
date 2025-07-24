@@ -1,2 +1,3 @@
-export * from './ListLocations';
+export * from './LocationsList';
 export * from './MapaLoactions';
+

@@ -74,19 +74,23 @@ export const ReservationScreen = () => {
          preventBackdropClose={true}
          className={cn(
             'relative h-full w-fit',
-            'flex flex-row justify-center gap-4',
-            '-ml-3',
+            'md:-ml-3',
          )}
       >
          <Card2
             className={cn(
-               'transition-all',
-               'w-[50rem] 2xl:w-[60rem] h-full mx-auto',
-               'flex flex-col justify-between gap-4',
-               'rounded-none rounded-r-2xl',
+               'w-dvw md:w-[50rem] md:2xl:w-[60rem] h-dvh',
+               'rounded-none md:rounded-r-2xl',
             )}
          >
-            <StepFormProvider>
+            <StepFormProvider
+               classNameStepForm={'flex-1 h-full w-full'}
+               className={cn(
+                  'transition-all',
+                  'w-full h-full',
+                  'flex flex-col gap-3',
+               )}
+            >
                <StepFormHeader>
                   <StepFromContextProvider>
                      {
@@ -110,7 +114,7 @@ export const ReservationScreen = () => {
                   <ReservationStepDate />
                </StepForm>
 
-               <StepForm name='time'>
+               <StepForm name='hour'>
                   <ReservationStepTime />
                </StepForm>
 
@@ -136,7 +140,7 @@ export const ReservationScreen = () => {
          </Card2>
          <ReservationInfoTable
             className={cn(
-               'w-[20rem] h-[40rem]',
+               'hidden md:flex w-[20rem] h-[35rem]',
                'absolute bottom-0 -right-[22rem]',
             )}
          />

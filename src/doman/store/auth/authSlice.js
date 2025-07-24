@@ -19,32 +19,28 @@ export const authSlice = createSlice({
       status: authStateEmun.checking, // 'checking', 'not-authenticated', 'authenticated' 
       isLoading: false,
       errorMessage: null,
-      uid: null,
-      email: null,
-      name: null,
-      photoURL: null,
-      role: null
+      user: {
+         id: null,
+         email: null,
+         name: null,
+         photoURL: null,
+         phone: null,
+         address: null,
+         role: null
+      }
    },
-   
+
    reducers: {
       loginAction: (state, { payload }) => {
          state.status = authStateEmun.authenticated
-         state.uid = payload.uid;
-         state.email = payload.email;
-         state.name = payload.name;
-         state.photoURL = payload.photoURL;
-         state.role = payload.role;
+         state.user = payload;
          state.errorMessage = null;
          state.isLoading = false;
       },
 
       logoutAction: (state, { payload }) => {
          state.status = authStateEmun.notAuthenticated;
-         state.uid = null;
-         state.email = null;
-         state.name = null;
-         state.photoURL = null;
-         state.role = null;
+         state.user = {};
          state.errorMessage = payload?.errorMessage || null;
          state.isLoading = false;
       },

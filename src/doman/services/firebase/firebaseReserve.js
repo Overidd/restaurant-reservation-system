@@ -124,11 +124,11 @@ export class FirebaseReserveService {
       if (!idRestaurant) {
          throw new Error('No se proporciono el id del restaurante');
       }
-
+      
       if (!dateStr) {
          throw new Error('No se proporciono la fecha');
       }
-
+      
       const tables = await getDocs(query(
          collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
          where('isBlocked', '==', false),
@@ -171,10 +171,11 @@ export class FirebaseReserveService {
          return {
             id: doc.id,
             ...data,
-            size: data.type,
+            size: data.size,
             status: assignStatus({ id: doc.id, dinersTable: data.chairs }),
             idRestaurant: data.idRestaurant?.id ?? null,
-            createdAt: data.createdAt.toDate().toISOString(),
+            createdAt: data.createdAt?.toDate()?.toISOString(),
+            updatedAt: data.updatedAt?.toDate()?.toISOString(),
          }
       });
    }

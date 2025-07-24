@@ -64,11 +64,11 @@ export const ReservationStepInfo = ({
          <Form
             onSubmit={onSubmit}
             className={cn(
-               'w-[50%] h-full mx-auto space-y-4',
+               'md:w-[50%] h-full mx-auto flex flex-col justify-center gap-8',
                className
             )}
          >
-            <FormItem>
+            <FormItem className={'md:w-[23rem]'}>
                <Select
                   name='location'
                   value={location || undefined}
@@ -130,7 +130,7 @@ export const ReservationStepInfo = ({
                   value={diners ?? ''}
                   onChange={onValueChange}
                   isError={!!dinersValid}
-                  className={'!text-lg py-1'}
+                  placeholder='Personas'
                />
             </FormItem>
 

@@ -1,6 +1,6 @@
+import { useRole } from '@/hook/auth';
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { useRole } from '@/hook';
 
 export const ProtectedRoute = ({ allowedRoles, redirectTo = '/' }) => {
    const { role } = useRole();

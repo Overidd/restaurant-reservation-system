@@ -42,26 +42,26 @@ export const CategoryNav = ({ className, data = [] }) => {
     <div className={`relative bg-card shadow-xl rounded-2xl p-2 px-3 ${className}`}>
       <Button
         ref={btnLeft}
-        variant="link"
-        size="icon"
+        variant='link'
+        size='icon'
         onClick={scrollPrev}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10"
+        className='absolute left-0 top-1/2 -translate-y-1/2 z-10'
       >
-        <ChevronLeft className="w-8 h-8 text-primary" strokeWidth={4} />
+        <ChevronLeft className='w-8 h-8 text-primary' strokeWidth={4} />
       </Button>
 
       <Button
         ref={btnRight}
-        variant="link"
-        size="icon"
+        variant='link'
+        size='icon'
         onClick={scrollNext}
-        className="absolute -right-5 top-1/2 -translate-y-1/2 z-10"
+        className='absolute -right-6 top-1/2 -translate-y-1/2 z-10'
       >
-        <ChevronRight className="w-8 h-8 text-primary" strokeWidth={4} />
+        <ChevronRight className='w-8 h-8 text-primary' strokeWidth={4} />
       </Button>
 
       <div
-        className="overflow-x-auto overflow-y-hidden flex flex-nowrap justify-start gap-4 scroll-smooth w-[99%] mx-auto [&::-webkit-scrollbar]:hidden rounded-2xl"
+        className='overflow-x-auto overflow-y-hidden flex flex-nowrap justify-start gap-4 scroll-smooth w-[99%] mx-auto [&::-webkit-scrollbar]:hidden rounded-2xl'
         ref={container}
       >
         {data.map((value) => (

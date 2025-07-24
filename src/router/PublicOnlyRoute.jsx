@@ -1,6 +1,6 @@
+import { useRole } from '@/hook/auth';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import { useRole } from '@/hook';
 
 export const PublicOnlyRoute = () => {
    const location = useLocation();

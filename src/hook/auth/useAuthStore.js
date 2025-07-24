@@ -1,9 +1,7 @@
-import { useMemo } from 'react';
 
 import toast from 'react-hot-toast';
 import {
-   useDispatch,
-   useSelector
+   useDispatch
 } from 'react-redux';
 
 import {
@@ -15,10 +13,8 @@ import {
    startLogin,
    startLogout
 } from '@/doman/store/auth';
-import { ROLEAUHT } from '@/enum';
 
 export const useAuthStore = (messageState) => {
-   const stateAuth = useSelector((state) => state.authReducer)
    const dispatch = useDispatch()
 
    /**
@@ -79,29 +75,14 @@ export const useAuthStore = (messageState) => {
    const checkingCredentials = (state = authStateEmun.checking) => {
       dispatch(checkingCredentialAction(state))
    }
-
-   const isAuthenticated = useMemo(() => stateAuth.status === authStateEmun.authenticated, [stateAuth.status])
-
-   const isRoleAdmin = useMemo(() => stateAuth.role === ROLEAUHT.ADMIN, [stateAuth.role])
-
+   
    return {
-      // ...stateAuth,
-      uid: stateAuth.uid,
-      email: stateAuth.email,
-      name: stateAuth.name,
-      photoURL: stateAuth.photoURL,
-      role: stateAuth.role,
-
-      stateAuth,
       login,
       loginGoogle,
       register,
       logout,
       checkingCredentials,
-      isAuthenticated,
       loginIntial,
       logoutPermanently,
-      isLoading: stateAuth.isLoading,
-      isRoleAdmin,
    }
 }

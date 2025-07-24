@@ -4,7 +4,6 @@ import {
 } from 'lucide-react'
 
 import {
-  useAuthStore,
   useForm
 } from '@/hook'
 
@@ -17,6 +16,7 @@ import {
   Input,
   LinkCustom
 } from '@/components/UI/from'
+import { useAuthStore } from '@/hook/auth'
 
 const initValidation = {
   name: [

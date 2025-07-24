@@ -1,6 +1,6 @@
 import { DialigCancelReserve } from '@/components/UI/dialog';
 import { Object } from '@/components/UI/resource';
-import { useModalAsync } from '@/hook';
+import { useModalAsync, usePaintedGrid } from '@/hook';
 import { useReservation } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { typeResource } from '@/ultils';
@@ -62,77 +62,112 @@ export const MapState = ({
       );
    }
 
-   const paintedBoard = () => {
-      const occupiedCells = new Set();
-
-      return Array.from({ length: rows * columns }).map((_, index) => {
-         const x = Math.floor(index / columns) + 1;
-         const y = (index % columns) + 1;
-
-         const cellKey = `${x}-${y}`;
-         if (occupiedCells.has(cellKey)) return null;
-
-         const resource = resources.find(
-            (res) => res.positionX === x && res.positionY === y
-         );
-
-         if (resource) {
-            const { width = 1, height = 1, id, type } = resource;
-
-            // Marcar todas las celdas que ocupa este recurso
-            for (let dx = 0; dx < width; dx++) {
-               for (let dy = 0; dy < height; dy++) {
-                  occupiedCells.add(`${x + dx}-${y + dy}`);
-               }
-            }
-
-            const commonStyle = {
-               width: '100%',
-               height: '100%',
-               gridColumn: `${y} / span ${width}`,
-               gridRow: `${x} / span ${height}`,
-            };
-
-            switch (type) {
-               case typeResource.OBJECT:
-                  return (
-                     <div key={id} style={commonStyle}>
-                        <Object
-                           object={resource}
-                           selectedObject={selectedResource}
-                        />
-                     </div>
-                  )
-               case typeResource.TABLE:
-
-                  return (
-                     <div key={id} style={commonStyle}>
-                        <TableItem
-                           key={'table-' + resource.id}
-                           table={resource}
-                           onCancelReserve={handleCancelReserve}
-                           onConfirmReservation={handleConfirmReservation}
-                           onReleasedReservation={handleReleaseReservation}
-                           onOpenReserveTable={onOpenReserveTable}
-                           highlighted={
-                              highlightedTableIds.includes(resource.id) ||
-                              selectedResource?.id === resource.id
-                           }
-                        />
-                     </div>
-                  )
-            }
+   const paintedBoard = usePaintedGrid({
+      rows: rows,
+      columns: columns,
+      resources,
+      renderResource: (resource, style) => {
+         switch (resource.type) {
+            case typeResource.TABLE:
+               return <div key={resource.id} style={style}>
+                  <TableItem
+                     key={'table-' + resource.id}
+                     table={resource}
+                     onCancelReserve={handleCancelReserve}
+                     onConfirmReservation={handleConfirmReservation}
+                     onReleasedReservation={handleReleaseReservation}
+                     onOpenReserveTable={onOpenReserveTable}
+                     highlighted={
+                        highlightedTableIds.includes(resource.id) ||
+                        selectedResource?.id === resource.id
+                     }
+                  />
+               </div>
+            case typeResource.OBJECT:
+               return <div key={resource.id} style={style}>
+                  <Object
+                     object={resource}
+                     selectedObject={selectedResource}
+                  />
+               </div>
+            default:
+               break;
          }
-
-         return (
-            <div key={`empty-node-${x}-${y}`} />
-         );
-      });
-   };
+      },
+      renderEmptyCell: (x, y) => <div key={`empty-node-${x}-${y}`} />
+   })
 
    return (
       <>
-         {paintedBoard()}
+         {paintedBoard}
       </>
    )
 }
+
+// const paintedBoard1 = () => {
+//    const occupiedCells = new Set();
+
+//    return Array.from({ length: rows * columns }).map((_, index) => {
+//       const x = Math.floor(index / columns) + 1;
+//       const y = (index % columns) + 1;
+
+//       const cellKey = `${x}-${y}`;
+//       if (occupiedCells.has(cellKey)) return null;
+
+//       const resource = resources.find(
+//          (res) => res.positionX === x && res.positionY === y
+//       );
+
+//       if (resource) {
+//          const { width = 1, height = 1, id, type } = resource;
+
+//          // Marcar todas las celdas que ocupa este recurso
+//          for (let dx = 0; dx < width; dx++) {
+//             for (let dy = 0; dy < height; dy++) {
+//                occupiedCells.add(`${x + dx}-${y + dy}`);
+//             }
+//          }
+
+//          const commonStyle = {
+//             width: '100%',
+//             height: '100%',
+//             gridColumn: `${y} / span ${width}`,
+//             gridRow: `${x} / span ${height}`,
+//          };
+
+//          switch (type) {
+//             case typeResource.OBJECT:
+//                return (
+//                   <div key={id} style={commonStyle}>
+//                      <Object
+//                         object={resource}
+//                         selectedObject={selectedResource}
+//                      />
+//                   </div>
+//                )
+//             case typeResource.TABLE:
+
+//                return (
+//                   <div key={id} style={commonStyle}>
+//                      <TableItem
+//                         key={'table-' + resource.id}
+//                         table={resource}
+//                         onCancelReserve={handleCancelReserve}
+//                         onConfirmReservation={handleConfirmReservation}
+//                         onReleasedReservation={handleReleaseReservation}
+//                         onOpenReserveTable={onOpenReserveTable}
+//                         highlighted={
+//                            highlightedTableIds.includes(resource.id) ||
+//                            selectedResource?.id === resource.id
+//                         }
+//                      />
+//                   </div>
+//                )
+//          }
+//       }
+
+//       return (
+//          <div key={`empty-node-${x}-${y}`} />
+//       );
+//    });
+// };

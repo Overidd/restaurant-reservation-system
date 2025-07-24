@@ -1,6 +1,7 @@
 import { userSettingProvider } from '@/doman/services';
 
 export const useUserSettings = () => {
+   // const dispatch = useDispatch()
 
    const editProfile = async () => {
 
@@ -19,7 +20,10 @@ export const useUserSettings = () => {
    }
 
    return {
+      // State
+
+      // Funciones
       editProfile,
-      cancelReservation
+      cancelReservation,
    }
 }

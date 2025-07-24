@@ -9,7 +9,7 @@ import {
 } from '@/hook';
 import { cn } from '@/ultils/cn';
 
-import { Button, ColorStatus } from '../UI/common';
+import { Badge, Button, ColorStatus } from '../UI/common';
 import { TableList } from '../UI/table';
 
 import { ReservationLoadding } from '.';
@@ -47,7 +47,9 @@ export const ReservationSelecTable = () => {
       reserveResetStateTables,
    } = useReserve()
 
-   const { prevStep } = useStepFormContext();
+   const {
+      prevStep
+   } = useStepFormContext();
 
    const onChangePrevStep = () => {
       prevStep()
@@ -69,13 +71,13 @@ export const ReservationSelecTable = () => {
    return (
       <ReservationLoadding
          isLodding={isLoading.tables}
+         className={'h-full flex flex-col justify-center items-center'}
       >
          <div className={cn(
-            'flex-1 grid justify-center content-between gap-4',
-         )}
-         >
+            'h-full w-full flex flex-col 2xl:gap-4 gap-2',
+         )}>
             <header className={cn(
-               'flex justify-between items-center',
+               'flex w-[90%] mx-auto flex-col md:flex-row gap-4 md:gap-0 justify-between items-center',
             )}>
                <Button
                   onClick={onChangePrevStep}
@@ -88,22 +90,23 @@ export const ReservationSelecTable = () => {
                />
 
                <h4 className='text-muted-foreground font-bold'>
-                  {from.time.tablesAvailable} Mesas disponibles
+                  <Badge className={'bg-gray-700'}>
+                     {from.time.tablesAvailable} Mesas Disponibles
+                  </Badge>
                </h4>
 
-               <TiemLimit />
+               {/* <TiemLimit /> */}
             </header>
 
-            <main>
-               <TableList
-                  tables={tables}
-                  rows={restaurant.rows}
-                  columns={restaurant.columns}
-                  selectedTables={selectedTables}
-                  onChangeTable={onChangeTable}
-                  className={'max-w-[50rem] max-h-[50rem] overflow-hidden mx-auto select-none'}
-               />
-            </main>
+            <TableList
+               tables={tables}
+               rows={restaurant.rows}
+               columns={restaurant.columns}
+               selectedTables={selectedTables}
+               onChangeTable={onChangeTable}
+               className={'h-[20rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
+            />
+
          </div >
       </ReservationLoadding>
    )

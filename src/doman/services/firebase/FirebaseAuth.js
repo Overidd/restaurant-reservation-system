@@ -36,23 +36,24 @@ export class FirebaseAuthService {
 
          const userDoc = await getDoc(doc(FirebaseDB, 'users', uid));
 
+         const data = {
+            id: uid,
+            email: email,
+            name: displayName,
+            photoURL: photoURL,
+            phone: '',
+            address: '',
+            role: 'user'
+         }
+
          if (!userDoc.exists()) {
-            await setDoc(doc(FirebaseDB, 'users', uid), {
-               email,
-               name: displayName,
-               photoURL,
-               role: 'user'
-            });
+            await setDoc(doc(FirebaseDB, 'users', uid), data);
          }
 
          return {
             ok: true,
             token,
-            uid,
-            email,
-            name: displayName,
-            photoURL,
-            role: userDoc.data().role
+            user: data
          };
       } catch (error) {
          return {
@@ -62,28 +63,35 @@ export class FirebaseAuthService {
       }
    }
 
-   async register({ email, password, name }) {
+   async register({
+      email,
+      password,
+      name,
+      phone,
+      address,
+   }) {
       try {
          const res = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
          await updateProfile(FirebaseAuth.currentUser, { displayName: name });
          const { uid, email: emailUser, displayName, photoURL } = res.user;
 
-         await setDoc(doc(FirebaseDB, 'users', uid), {
-            email: emailUser,
-            name: displayName,
-            photoURL,
+         const data = {
+            id: res.uid,
+            email: email ?? emailUser,
+            name: name ?? displayName,
+            photoURL: photoURL,
+            phone: phone,
+            address: address,
             role: 'user'
-         });
+         }
+
+         await setDoc(doc(FirebaseDB, 'users', uid), data);
 
          return {
             ok: true,
-            uid,
-            email,
-            name: displayName,
-            photoURL,
-            role: 'user'
+            user: data
          }
-         
+
       } catch (error) {
          const code = error.code;
          return {
@@ -99,13 +107,19 @@ export class FirebaseAuthService {
 
          const userDoc = await getDoc(doc(FirebaseDB, 'users', res.user.uid));
 
+         const data = userDoc.data();
+
          return {
             ok: true,
-            uid: res.user.uid,
-            email: res.user.email,
-            name: res.user.displayName,
-            photoURL: res.user.photoURL,
-            role: userDoc.data().role
+            user: {
+               id: res.user.uid,
+               email: data?.email ?? res.user.email,
+               name: data?.name ?? res.user.displayName,
+               photoURL: data?.photoURL ?? res.user.photoURL,
+               phone: data?.phone,
+               address: data?.address,
+               role: data?.role
+            }
          };
       } catch (error) {
          const code = error.code;
@@ -130,15 +144,18 @@ export class FirebaseAuthService {
          });
 
          const userDoc = await getDoc(doc(FirebaseDB, 'users', user.uid));
-
+         const data = userDoc.data();
          return {
             ok: true,
-            uid: user.uid,
-            email: user.email,
-            name: user.displayName,
-            photoURL: user.photoURL,
-            isUserLogged: !!user,
-            role: userDoc.data().role
+            user: {
+               id: user.uid,
+               email: data?.email ?? user.email,
+               name: data?.name ?? user.displayName,
+               photoURL: data?.photoURL ?? user.photoURL,
+               phone: data?.phone,
+               address: data?.address,
+               role: data?.role
+            }
          }
       } catch (error) {
          const code = error.code;

@@ -53,6 +53,7 @@ export const startGetTables = () => {
          dispatch(reserveSetTablesAction(tables));
          dispatch(reserveSetRestaurantAction(restaurant));
       } catch (error) {
+         console.log(error);
          dispatch(reserveMessageErrorAction(error.message));
       }
    }

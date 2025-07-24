@@ -91,7 +91,6 @@ export const useReserve = () => {
       return !isSelected && ![typeStatusTable.BUSY, typeStatusTable.NOTAVAILABLE].includes(table.status);
    };
 
-
    const reserveReset = () => {
       dispatch(reserveResetAction());
    };

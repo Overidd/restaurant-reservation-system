@@ -13,12 +13,10 @@ L.Icon.Default.mergeOptions({
 });
 
 export const MapaLoactions = ({ className, data = [] }) => {
-  const locations = data.map((item) => (
-    {
-      ...item,
-      position: [item.latitud, item.longitud]
-    }
-  ))
+  const locations = data.map((item) => ({
+    position: [item.latitud, item.longitud],
+    name: item.name,
+  }));
 
   return (
     <MapContainer
@@ -26,9 +24,8 @@ export const MapaLoactions = ({ className, data = [] }) => {
         'rounded-2xl shadow-xl overflow-hidden z-0',
         className
       )}
-      center={locations[0].position}
+      center={[-6.476290191744883, -76.38743536910783]}
       zoom={14}
-    // style={{ height: "500px", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

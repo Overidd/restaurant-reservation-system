@@ -24,11 +24,11 @@ export const ReservationStepTime = ({ className }) => {
    return (
       <ReservationLoadding
          isLodding={isLoading.time}
-         className={'flex-1'}
+         className={'h-full mx-auto'}
       >
          <section
             className={cn(
-               'w-[50%] h-full mx-auto space-y-10',
+               'md:w-[50%] h-full mx-auto flex flex-col justify-center gap-8',
                'text-center',
                className
             )}

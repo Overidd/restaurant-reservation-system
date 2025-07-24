@@ -33,7 +33,7 @@ export const ReservationStepDate = ({ className }) => {
    return (
       <section
          className={cn(
-            'w-[70%] h-full mx-auto text-center space-y-10',
+            'md:w-[70%] h-full mx-auto flex flex-col justify-center gap-8',
             className,
          )}
       >
@@ -49,9 +49,11 @@ export const ReservationStepDate = ({ className }) => {
             className={'mx-auto'}
          />
 
-         <CalendarButton
-            onValueChange={onValueChange}
-         />
+         <div className={'mx-auto w-fit'}>
+            <CalendarButton
+               onValueChange={onValueChange}
+            />
+         </div>
       </section>
    )
 }

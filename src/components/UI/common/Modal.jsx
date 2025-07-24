@@ -1,7 +1,6 @@
-import { X } from 'lucide-react';
+import { cn } from '@/ultils';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button } from '.';
 
 export const Modal = ({
    isOpen,
@@ -178,18 +177,20 @@ export const Modal = ({
          style={{ zIndex: 50 }}
       >
 
-         <Button
+         {/* <Button
             className='absolute top-4 right-4'
             // variant={'outline'}
             onClick={onClose}
             size={'icon'}
          >
             <X className='h-4 w-4' />
-         </Button>
+         </Button> */}
          <div
             ref={modalRef}
-            className={getModalClasses()}
-            // onClick={(e) => e.stopPropagation()}
+            className={cn(
+               getModalClasses()
+            )}
+         // onClick={(e) => e.stopPropagation()}
          >
             {children}
          </div>

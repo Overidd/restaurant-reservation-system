@@ -5,11 +5,16 @@ export const Card2 = ({
    className,
    children,
    vairant = 'primary',
-   style
+   style,
+   onClick
 }) => {
    return (
       <div
          style={style}
+         onClick={onClick}
+         tabIndex={0}
+         role='button'
+         onKeyDown={(e) => e.key === 'Enter' && onClick()}
          className={cn(
             vairant === 'secondary' && 'bg-[#fff6] shadow-xl p-10',
             vairant === 'primary' && 'bg-sidebar-background backdrop-blur-lg text-sidebar-foreground shadow-xl',

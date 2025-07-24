@@ -1,5 +1,5 @@
 import { DialigDeleteObject, DialigDeleteTable } from '@/components/UI/dialog';
-import { useModalAsync } from '@/hook';
+import { useModalAsync, usePaintedGrid } from '@/hook';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { cn, typeResource } from '@/ultils';
@@ -8,7 +8,7 @@ import { ObjectEditItem, ObjectEmpty, TableEditItem } from '..';
 
 export const MapEdit = ({
    restaurant,
-   resources,
+   resources = [],
    onOpenEditTable,
    onOpenCreateObject,
    selectedResource,
@@ -22,7 +22,7 @@ export const MapEdit = ({
       deleteObject,
    } = useResource();
 
-   if (!Array.isArray(resources)) return null;
+   // if (!Array.isArray(resources)) return null;
 
    const handleDeleteTable = async (table) => {
       setSelectResource(table.id);
@@ -69,96 +69,57 @@ export const MapEdit = ({
       setSelectResource(null);
    }
 
-   const paintedBoard = () => {
-      const occupiedCells = new Set();
-
-      return Array.from({ length: restaurant.rows * restaurant.columns }).map((_, index) => {
-         const x = Math.floor(index / restaurant.columns) + 1;
-         const y = (index % restaurant.columns) + 1;
-
-         const cellKey = `${x}-${y}`;
-         if (occupiedCells.has(cellKey)) return null;
-
-         const resource = resources.find(
-            (res) => res.positionX === x && res.positionY === y
-         );
-
-         // if (resource?.isCursor) return null;
-         if (resource) {
-
-            const { width = 1, height = 1, id, type } = resource;
-
-            // Marcar todas las celdas que ocupa este recurso
-            for (let dx = 0; dx < width; dx++) {
-               for (let dy = 0; dy < height; dy++) {
-                  occupiedCells.add(`${x + dx}-${y + dy}`);
-               }
-            }
-
-            const commonStyle = {
-               width: '100%',
-               height: '100%',
-               gridColumn: `${y} / span ${width}`,
-               gridRow: `${x} / span ${height}`,
-            };
-
-
-            switch (type) {
-               case typeResource.OBJECT:
-                  return (
-                     <div key={id} style={commonStyle}>
-                        <ObjectEditItem
-                           object={resource}
-                           onDelete={handleDeleteObject}
-                           // onOpenEdit={onOpenEditObject}
-                           selected={selectedResource}
-                           isCursorPreview={resource?.isCursor}
-                           highlighted={
-                              selectedResource?.id === id ||
-                              selectResource === id
-                           }
-                        />
-                     </div>
-                  );
-
-               case typeResource.TABLE:
-                  return (
-                     <div key={id} style={commonStyle}>
-                        <TableEditItem
-                           key={id}
-                           table={resource}
-                           onOpenEdit={onOpenEditTable}
-                           onDelete={handleDeleteTable}
-                           isCursorPreview={resource?.isCursor}
-                           highlighted={
-                              selectedResource?.id === id ||
-                              selectResource === id
-                           }
-                        />
-                     </div>
-                  );
-            }
+   const paintedBoard = usePaintedGrid({
+      rows: restaurant.rows,
+      columns: restaurant.columns,
+      resources,
+      renderResource: (resource, style) => {
+         switch (resource.type) {
+            case typeResource.TABLE:
+               return <div key={resource.id} style={style}>
+                  <TableEditItem
+                     table={resource}
+                     onOpenEdit={onOpenEditTable}
+                     onDelete={handleDeleteTable}
+                     isCursorPreview={resource?.isCursor}
+                     highlighted={
+                        selectedResource?.id === resource.id ||
+                        selectResource === resource.id
+                     }
+                  />
+               </div>
+            case typeResource.OBJECT:
+               return <div key={resource.id} style={style}>
+                  <ObjectEditItem
+                     object={resource}
+                     onDelete={handleDeleteObject}
+                     // onOpenEdit={onOpenEditObject}
+                     selected={selectedResource}
+                     isCursorPreview={resource?.isCursor}
+                     highlighted={
+                        selectedResource?.id === resource.id ||
+                        selectResource === resource.id
+                     }
+                  />
+               </div>
+            default:
+               break;
          }
-
-         return (
-            <ObjectEmpty
-               key={`empty-node-${x}-${y}`}
-               idTemp={`empty-node-${x}-${y}`}
-               onOpenCreateObject={onOpenCreateObject}
-               positionX={x}
-               positionY={y}
-               isHighlighted={
-                  selectResource === resource?.id
-               }
-            />
-         );
-      });
-   };
-
-
+      },
+      renderEmptyCell: (x, y) => <ObjectEmpty
+         key={`empty-node-${x}-${y}`}
+         idTemp={`empty-node-${x}-${y}`}
+         onOpenCreateObject={onOpenCreateObject}
+         positionX={x}
+         positionY={y}
+         isHighlighted={
+            selectResource === `empty-node-${x}-${y}` || selectedResource?.id
+         }
+      />,
+   })
    return (
       <>
-         {paintedBoard()}
+         {paintedBoard}
       </>
    )
 }
@@ -214,3 +175,91 @@ export const RenderCursorSelect = ({ resource }) => {
       </div>
    );
 };
+
+
+
+// const paintedBoard1 = () => {
+//    const occupiedCells = new Set();
+
+//    return Array.from({ length: restaurant.rows * restaurant.columns }).map((_, index) => {
+//       const x = Math.floor(index / restaurant.columns) + 1;
+//       const y = (index % restaurant.columns) + 1;
+
+//       const cellKey = `${x}-${y}`;
+//       if (occupiedCells.has(cellKey)) return null;
+
+//       const resource = resources.find(
+//          (res) => res.positionX === x && res.positionY === y
+//       );
+
+//       // if (resource?.isCursor) return null;
+//       if (resource) {
+
+//          const { width = 1, height = 1, id, type } = resource;
+
+//          // Marcar todas las celdas que ocupa este recurso
+//          for (let dx = 0; dx < width; dx++) {
+//             for (let dy = 0; dy < height; dy++) {
+//                occupiedCells.add(`${x + dx}-${y + dy}`);
+//             }
+//          }
+
+//          const commonStyle = {
+//             width: '100%',
+//             height: '100%',
+//             gridColumn: `${y} / span ${width}`,
+//             gridRow: `${x} / span ${height}`,
+//          };
+
+
+//          switch (type) {
+//             case typeResource.OBJECT:
+//                return (
+//                   <div key={id} style={commonStyle}>
+//                      <ObjectEditItem
+//                         object={resource}
+//                         onDelete={handleDeleteObject}
+//                         // onOpenEdit={onOpenEditObject}
+//                         selected={selectedResource}
+//                         isCursorPreview={resource?.isCursor}
+//                         highlighted={
+//                            selectedResource?.id === id ||
+//                            selectResource === id
+//                         }
+//                      />
+//                   </div>
+//                );
+
+//             case typeResource.TABLE:
+//                return (
+//                   <div key={id} style={commonStyle}>
+//                      <TableEditItem
+//                         key={id}
+//                         table={resource}
+//                         onOpenEdit={onOpenEditTable}
+//                         onDelete={handleDeleteTable}
+//                         isCursorPreview={resource?.isCursor}
+//                         highlighted={
+//                            selectedResource?.id === id ||
+//                            selectResource === id
+//                         }
+//                      />
+//                   </div>
+//                );
+//          }
+//       }
+
+//       return (
+//          <ObjectEmpty
+//             key={`empty-node-${x}-${y}`}
+//             idTemp={`empty-node-${x}-${y}`}
+//             onOpenCreateObject={onOpenCreateObject}
+//             positionX={x}
+//             positionY={y}
+//             isHighlighted={
+//                selectResource === resource?.id
+//             }
+//          />
+//       );
+//    });
+// };

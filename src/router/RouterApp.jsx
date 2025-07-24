@@ -37,11 +37,8 @@ const AppRoutes = () => {
       <Routes>
          <Route element={<PublicRoute />}>
             <Route path='/' element={<AppLayout />}>
-
                <Route path='product' element={<ProductScreen />}>
-
                   <Route path='reserve' element={<ReservationScreen />} />
-
                   <Route element={<PublicOnlyRoute />}>
                      <Route element={<AuthLayout />}>
                         <Route path='login' element={<LoginScreen />} />
@@ -51,9 +48,7 @@ const AppRoutes = () => {
                </Route>
 
                <Route path='location' element={<LocationScreen />}>
-
                   <Route path='reserve' element={<ReservationScreen />} />
-
                   <Route element={<PublicOnlyRoute />}>
                      <Route element={<AuthLayout />}>
                         <Route path='login' element={<LoginScreen />} />
@@ -62,6 +57,16 @@ const AppRoutes = () => {
                   </Route>
                </Route>
 
+               <Route path='search-reservation' element={<SearchReservationScreen />}
+               >
+                  <Route path='reserve' element={<ReservationScreen />} />
+                  <Route element={<PublicOnlyRoute />}>
+                     <Route element={<AuthLayout />}>
+                        <Route path='login' element={<LoginScreen />} />
+                        <Route path='register' element={<RegisterScreen />} />
+                     </Route>
+                  </Route>
+               </Route>
 
                <Route index element={<Navigate to='product' />} />
                <Route path='*' element={<Navigate to='/product' />} />
@@ -86,8 +91,6 @@ const AppRoutes = () => {
             <Route path='store' element={<RestaurantScreen />} />
             {/* <Route index element={<Navigate to='tables' />} /> */}
          </Route>
-
-         <Route path='search-reservation' element={<SearchReservationScreen />} />
          {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
    );

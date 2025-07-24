@@ -14,7 +14,7 @@ const translation = {
 
 const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => {
    const dataArray = [];
-
+   // console.log();
    if (info && typeof info === 'object') {
       const infoItems = Object.entries(info)
          .map(([key, value]) => ({
@@ -22,8 +22,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
             name: [translation[key] ?? key],
             icon: null,
          }))
-         .filter(({ name }) => !['Motivo', 'locationId'].includes(name[0]));
-
+         .filter(({ name }) => !['Motivo', 'locationId', 'restaurant'].includes(name[0]));
       dataArray.push(infoItems);
    }
 
@@ -50,23 +49,28 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
 }
 
 
-export const ReservationHeader = ({ className, date, hour, info, currentStepIndex }) => {
+export const ReservationHeader = ({ className, date, time:{hour}, info, currentStepIndex }) => {
    if (!currentStepIndex) return null;
    const stepsHeader = buildStepArray({ info, date, hour, translation, currentStepIndex });
 
    return (
       <header
          className={cn(
-            'text-white/80 flex flex-wrap gap-4 justify-center',
+            'text-primary-foreground flex flex-wrap gap-4 justify-center',
             className
          )}
       >
-         <div className='flex flex-row gap-2'>
+         <div className='flex flex-wrap gap-2'>
             {
                stepsHeader.map(({ value, name, icon }, index) => (
                   <p
-                     className='flex flex-row gap-2 border border-accent-foreground/20 rounded-2xl px-2 py-1'
                      key={'step-' + index}
+                     className={cn(
+                        'border border-accent-foreground/20 rounded-2xl',
+                        'flex flex-row gap-2 items-center',
+                        'text-sm md:text-base',
+                        'px-2 py-1'
+                     )}
                   >
                      {
                         value

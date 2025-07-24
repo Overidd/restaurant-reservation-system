@@ -3,7 +3,7 @@ import {
    Mail
 } from 'lucide-react';
 
-import { useAuthStore, useForm } from '@/hook';
+import { useForm } from '@/hook';
 
 import { Button } from '@/components/UI/common';
 import {
@@ -13,6 +13,7 @@ import {
    Input,
    LinkCustom
 } from '@/components/UI/from';
+import { useAuthStore } from '@/hook/auth';
 
 const initValidation = {
    email: [

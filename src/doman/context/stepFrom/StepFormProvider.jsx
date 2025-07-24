@@ -21,6 +21,8 @@ import { StepFromContext } from './StepFromContext';
 
 export const StepFormProvider = ({
    children,
+   className,
+   classNameStepForm,
 }) => {
    const steps = useMemo(() => {
       return Children.toArray(children).filter(child => isValidElement(child) && child.type === StepForm)
@@ -39,22 +41,27 @@ export const StepFormProvider = ({
 
    return (
       <StepFromContext.Provider value={{ multiStepForm }}>
-         {header}
-         {steps.map((step, index) => {
-            const isActive = index === multiStepForm.currentStepIndex;
-            return (
-               <AnimatedStep
-                  key={step.props.name}
-                  direction={multiStepForm.direction}
-                  isActive={isActive}
-                  index={index}
-                  currentIndex={multiStepForm.currentStepIndex}
-               >
-                  {step}
-               </AnimatedStep>
-            );
-         })}
-         {footer}
+         <div className={className}>
+            {header}
+            <div className={classNameStepForm}>
+               {steps.map((step, index) => {
+                  const isActive = index === multiStepForm.currentStepIndex;
+                  return (
+                     <AnimatedStep
+                        className={'w-full h-full'}
+                        key={step.props.name}
+                        direction={multiStepForm.direction}
+                        isActive={isActive}
+                        index={index}
+                        currentIndex={multiStepForm.currentStepIndex}
+                     >
+                        {step}
+                     </AnimatedStep>
+                  );
+               })}
+            </div>
+            {footer}
+         </div>
       </StepFromContext.Provider>
    )
 }

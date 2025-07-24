@@ -11,6 +11,11 @@ export class Validations {
       return urlRegex.test(value)
    }
 
+   static phone(value) {
+      const phoneRegex = /^\+?(\d{1,3})?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
+      return phoneRegex.test(value)
+   }
+
 }
 export const validateObject = (obj) => {
    if (!obj || typeof obj !== 'object') return false;

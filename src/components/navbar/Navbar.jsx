@@ -1,19 +1,12 @@
 import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
-import toast from 'react-hot-toast';
 
 import { ShoppingCart, Table, User } from 'lucide-react';
 
-import {
-   useCheckAuth,
-   useIfAuthenticated,
-   useOnAuthReserve
-} from '@/hook';
 import { cn } from '@/ultils';
 
 import { UserDropdown } from '../common';
-import { ReservaRejected, ReservaSuccess } from '../reservation';
 import {
    Button,
    Popover,
@@ -23,61 +16,27 @@ import {
 import { LinkCustom } from '../UI/from';
 import { NoAuthenticated } from '../user';
 
-import { NavbarList } from './NavbarList';
+import { useOnAuthReserve } from '@/hook';
+import { useAutoCheckAuth, useIfAuthenticated, useUser } from '@/hook/auth';
+import { ReservationToast } from '@/toasts';
+import { listMenuData, NavbarListResponsive } from '.';
 
-const listMenu = [
-   {
-      id: 1,
-      name: 'Realiza tu pedido',
-      path: '/product',
-   },
-   {
-      id: 2,
-      name: 'Localidades',
-      path: '/location',
-   },
-   {
-      id: 3,
-      name: 'Consulta tu reserva',
-      path: '/search-reservation',
-   }
-]
 
 export const Navbar = ({ className }) => {
-   const { isAuthenticated } = useCheckAuth({ autoCheck: true })
+   useAutoCheckAuth()
 
-   const { reserveConfirm, isPendingAuth } = useOnAuthReserve()
+   const {
+      isAuthenticated
+   } = useUser()
+
+   const {
+      reserveConfirm,
+      isPendingAuth,
+   } = useOnAuthReserve()
 
    const handleReserve = () => {
       if (!isPendingAuth) return;
-      toast.promise(
-         reserveConfirm(),
-         {
-            loading: 'Confirmando reserva...',
-            success: 'Reserva exitosa 🎉',
-            error: (err) => err.message || 'Error al realizar la reserva',
-         },
-         {
-            style: {
-               minWidth: '250px',
-            },
-         }
-      )
-         .then((data) => {
-            toast((t) => <ReservaSuccess t={t} code={data.code} />, {
-               duration: Infinity,
-            });
-         })
-         .catch((err) => {
-            toast((t) => (
-               <ReservaRejected
-                  t={t}
-                  message={err.message || 'Ocurrió un error inesperado'}
-               />
-            ), {
-               duration: 6000,
-            });
-         });
+      ReservationToast(reserveConfirm());
    };
 
    useIfAuthenticated(isAuthenticated, handleReserve);
@@ -85,10 +44,9 @@ export const Navbar = ({ className }) => {
    return (
       <nav
          className={cn(
-            // `bg-menu gradient-radial-primary`,
             `bg-sidebar-background gradient-radial-primary`,
-            'shadow-primary rounded-2xl backdrop-blur-lg p-4',
-            'flex items-center gap-4',
+            'shadow-primary rounded-2xl md:backdrop-blur-lg p-4',
+            'flex items-center gap-2 md:gap-4',
             'sticky top-4 z-50',
             className,
          )}
@@ -97,12 +55,15 @@ export const Navbar = ({ className }) => {
             <figure className='w-[3rem] h-[3rem]'>
                <img
                   className='w-full h-full'
-                  src="/logo-while.png"
-                  alt="Logo de la empresa"
+                  src='/logo-while.png'
+                  alt='Logo de la empresa'
                />
             </figure>
          </Link>
-         <NavbarList data={listMenu} />
+
+         <NavbarListResponsive
+            data={listMenuData}
+         />
 
          <ul className='ml-auto flex gap-3 items-center select-none'>
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
@@ -112,13 +73,11 @@ export const Navbar = ({ className }) => {
                   <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
                </PopoverTrigger>
                <PopoverContent className={'mt-8 bg-transparent'}>
-                  {/* <Card2 className='flex flex-col gap-2 shadow-2xl'> */}
                   {
                      isAuthenticated
                         ? <UserDropdown />
                         : <NoAuthenticated />
                   }
-                  {/* </Card2> */}
                </PopoverContent>
             </Popover>
 
@@ -130,7 +89,6 @@ export const Navbar = ({ className }) => {
                   <Table />
                </Button>
             </LinkCustom>
-
          </ul>
       </nav >
    )

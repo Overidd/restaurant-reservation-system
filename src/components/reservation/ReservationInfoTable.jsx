@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 
 import {
-   useCheckAuth,
    useModalAuth,
    useModalReserve,
    useReserve
@@ -21,6 +20,7 @@ import {
    CardImage
 } from '../UI/common';
 
+import { useUser } from '@/hook/auth';
 import {
    ReservaRejected,
    ReservaSuccess
@@ -31,9 +31,7 @@ import {
 
 
 export const ReservationInfoTable = ({ className }) => {
-   const {
-      isAuthenticated
-   } = useCheckAuth({ autoCheck: false })
+   const { isAuthenticated } = useUser()
 
    const {
       getCurrentSelectedTable,
@@ -101,7 +99,7 @@ export const ReservationInfoTable = ({ className }) => {
    return (
       <Card2
          className={cn(
-            'transition-all flex flex-col justify-between gap-4',
+            'transition-all flex flex-col justify-between gap-4 p-4',
             (!isActive || isPending) && 'translate-y-full',
             (isActive && !isPending) && 'animate__animated animate__fadeInUp',
             className
@@ -111,7 +109,7 @@ export const ReservationInfoTable = ({ className }) => {
          <Card className={'block flex-1 w-full bg-transparent border-0 space-y-4'}>
             <CardImage
                zoom={true}
-               className={'w-full min-h-[60%] overflow-hidden rounded-2xl'}
+               className={'w-full overflow-hidden rounded-2xl'}
                src={image}
                alt={name ?? 'La imagen no esta disponible'}
             />
@@ -135,11 +133,11 @@ export const ReservationInfoTable = ({ className }) => {
             </CardContent>
          </Card>
 
-         <section className='space-y-4'>
+         <section className='flex flex-row gap-4'>
             <Button
                size={'lg'}
+               className={'flex-1'}
                onClick={onClickReserve}
-               className={'w-full'}
                disabled={isPending}
             >
                Reservar
@@ -147,8 +145,8 @@ export const ReservationInfoTable = ({ className }) => {
 
             <Button
                size={'lg'}
+               className={'flex-1'}
                variant={'destructive'}
-               className={'w-full'}
             >
                Cancelar
             </Button>

@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/hook';
+import { useAuthStore, useUser } from '@/hook/auth';
 import { useModalUser } from '@/hook/modals';
 import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
 import { Link } from 'react-router';
@@ -6,21 +6,13 @@ import { Card2 } from '../UI/card';
 import { DropdownItem } from '../UI/dropdown';
 
 export const UserDropdown = () => {
-   // const [isOpen, setIsOpen] = useState(false);
-   const { name, email, photoURL, logout, isRoleAdmin } = useAuthStore();
+   const { logout } = useAuthStore();
+   const { photoURL, name, email, isRoleAdmin } = useUser()
    const { openModal } = useModalUser()
 
-   // function toggleDropdown() {
-   //    setIsOpen(!isOpen);
-   // }
-
-   // function closeDropdown() {
-   //    setIsOpen(false);
-   // }
    return (
       <Card2 className="relative">
          <button
-            // onClick={toggleDropdown}
             className="flex items-center dark:text-gray-400"
          >
             <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
@@ -44,9 +36,6 @@ export const UserDropdown = () => {
          <ul className="flex flex-col gap-1 pt-4 pb-3">
             <li>
                <DropdownItem
-                  // onItemClick={closeDropdown}
-                  // tag="a"
-                  // href="/profile"
                   onClick={() => openModal('profile')}
                   className="flex items-center gap-3 px-3 py-2 font-medium"
                >
@@ -57,7 +46,6 @@ export const UserDropdown = () => {
 
             <li>
                <DropdownItem
-                  // tag="a"
                   onClick={() => openModal('reservations')}
                   className="flex items-center gap-3 px-3 py-2 font-medium"
                >
