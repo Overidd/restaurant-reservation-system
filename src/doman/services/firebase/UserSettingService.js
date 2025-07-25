@@ -59,7 +59,7 @@ export class UserSettingService {
                ...reservation.data(),
                id: reservation.id,
                createdAt: reservation.data().createdAt.toDate().toISOString(),
-               updatedAt: reservation.data().updatedAt.toDate().toISOString()
+               updatedAt: reservation.data()?.updatedAt?.toDate()?.toISOString() ?? null
             }
          }
       } catch (error) {
