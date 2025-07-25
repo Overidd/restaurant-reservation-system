@@ -5,6 +5,16 @@ import { useDispatch } from 'react-redux';
 export const useUserSettings = () => {
    const dispatch = useDispatch()
 
+   const updateReservation = async (data) => {
+      if (!data) return;
+      const { reservation, ok, errorMessage } = await userSettingProvider.updateReservation(data);
+      if (!ok) {
+         throw errorMessage
+      }
+
+      return reservation
+   }
+
    const updateProfile = async (data) => {
       if (!data) {
          throw new Error('Error Inesperado');
@@ -37,5 +47,6 @@ export const useUserSettings = () => {
       // Funciones
       updateProfile,
       cancelReservation,
+      updateReservation
    }
 }

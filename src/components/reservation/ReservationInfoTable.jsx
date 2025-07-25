@@ -79,7 +79,7 @@ export const ReservationInfoTable = ({ className }) => {
       <Card2
          className={cn(
             'transition-all flex flex-col justify-between gap-4 !p-5 animate__animated',
-            (!isOpen || isPending) && 'absolute translate-x-full md:translate-y-full md:translate-x-0 opacity-0 md:opacity-100 duration-0 md:duration-500',
+            (!isOpen || isPending) && 'translate-x-[150%] md:translate-y-full md:translate-x-0 opacity-0 md:opacity-100 duration-0 md:duration-500 hidden md:flex',
             (isOpen && !isPending) && 'animate__fadeInUp',
             'rounded-none md:rounded-2xl opacity-100',
             className

@@ -190,7 +190,7 @@ export const Table = ({
                      mustShow={['name']}
                      className={cn(
                         'pointer-events-none overflow-hidden',
-                        'absolute left-2 bottom-2',
+                        'absolute left-1 bottom-1 text-primary-foreground',
                      )}
                   />
                )}

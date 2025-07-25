@@ -43,7 +43,7 @@ export const UserCard = ({
    return (
 
       <div className={cn(
-         'flex items-center gap-2 text-card-foreground',
+         'flex items-center gap-1 text-card-foreground',
          className
       )}>
          <div

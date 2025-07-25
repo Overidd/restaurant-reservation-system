@@ -115,4 +115,64 @@ export class UserSettingService {
          }
       }
    }
+
+   async updateReservation({
+      idReservation,
+      idRestaurant,
+      tables,
+      dateStr,
+      hour,
+      idUser,
+      email,
+      phone,
+      name,
+      diners,
+      reason,
+      comment,
+   }) {
+      try {
+         if (!idReservation) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+         const user = await getDoc(doc(FirebaseDB, 'users', idUser));
+
+         if (!user.exists()) {
+            throw new Error('No se encontro el usuario');
+         }
+
+         const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
+
+         const data = {
+            idUser: idUser ?? null,
+            idRestaurant,
+            diners: diners ?? 1,
+            reason: reason ?? 'Sin motivo',
+            hour,
+            comment: comment ?? 'Reserva por el panel de administrador',
+            tables: tables.map(t => ({ id: t.id, name: t.name })),
+            dateStr: dateStr,
+            email: email ?? user.data().email,
+            phone: phone ?? user.data().phone,
+            name: name ?? user.data().name,
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(reservationRef, data);
+
+         return {
+            ok: true,
+            reservation: {
+               ...data,
+               id: idReservation,
+               createdAt: new Date().toISOString()
+            }
+         }
+      } catch (error) {
+         console.error(error.message);
+         return {
+            ok: false,
+            errorMessage: 'Error al actualizar la reserva'
+         }
+      }
+   }
 }

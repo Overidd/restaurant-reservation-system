@@ -34,7 +34,7 @@ export const MapManagerProvider = ({
       hours,
       hour,
    });
-
+   console.log(hour);
    const {
       isEdit,
       isTempResourceChange,

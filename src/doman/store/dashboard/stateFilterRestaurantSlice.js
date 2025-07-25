@@ -39,12 +39,13 @@ export const stateFilterRestaurantSlice = createSlice({
       setRestaurantsAction: (state, { payload }) => {
          state.restaurants = payload;
          state.filter.restaurant = payload[0] || {};
+         state.filter.hour = state.filter.restaurant.hours[0].name || {};
+         state.hours = state.filter.restaurant.hours;
          state.messageError = null;
       },
 
       setHoursAction: (state, { payload }) => {
          state.hours = payload;
-         state.filter.hour = payload[0].hour || {};
          state.messageError = null;
       },
 
@@ -60,20 +61,24 @@ export const stateFilterRestaurantSlice = createSlice({
          if (payload.name === 'restaurant') {
             const data = state.restaurants.find((r) => r.name === payload.value);
             state.filter.restaurant = data || {};
+            state.hours = state.filter.restaurant.hours;
             return;
          }
 
          if (payload.name === 'hour') {
-            const data = state.hours.find((h) => h.hour === payload.value);
-            state.filter.hour = data.hour || {};
-            return;
+            state.hours.forEach((hour) => {
+               if (hour.name === payload.value) {
+                  state.filter.hour = payload.value || '';
+                  return;
+               }
+            });
          }
 
          if (payload.name === 'dateStr') {
             state.filter.dateStr = payload.value;
             return;
          }
-      },
+      }
    },
 });
 

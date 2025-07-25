@@ -477,12 +477,12 @@ export const FromReservation = ({
                      />
                   </SelectTrigger>
                   <SelectContent>
-                     {hours.map((item, index) => (
+                     {hours && hours.map((item, index) => (
                         <SelectItem
                            key={item.id || 'hour' + index}
-                           value={item.hour}
+                           value={item.hour ?? item.name}
                         >
-                           {item.hour}
+                           {item.hour ?? item.name}
                         </SelectItem>
                      ))}
                   </SelectContent>

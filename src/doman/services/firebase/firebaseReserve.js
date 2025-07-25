@@ -118,7 +118,7 @@ export class FirebaseReserveService {
             availableHours: availableHours.map((item) => ({
                ...item,
                tablesAvailable: item.tablesAvailable - (hourCounts.get(item.name) || 0)
-            })).sort((a, b) => a.name - b.name)
+            })).sort((a, b) => a.name - b.name),
          }
 
       } catch (error) {

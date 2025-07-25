@@ -101,9 +101,9 @@ export const TableAutoFilter = ({
                      {hours.map((item, index) => (
                         <SelectItem
                            key={item.id || 'hour' + index}
-                           value={item.hour}
+                           value={item.name}
                         >
-                           {item.hour}
+                           {item.name}
                         </SelectItem>
                      ))}
                   </SelectContent>

@@ -39,7 +39,6 @@ export const useLoadRestaurantResource = ({
       //    dateStr: dateStr,
       //    hour: hour
       // }));
-
    }, [restaurant.id, hour, dateStr]);
 
    return {
