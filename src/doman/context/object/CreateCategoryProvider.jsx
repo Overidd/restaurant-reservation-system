@@ -22,7 +22,7 @@ export const CreateCategoryProvider = ({ children }) => {
    return (
       <CreateCategoryContext.Provider value={{
          category,
-         setCategory,
+         setCategory,   
          categorys,
          createObjectCategory,
          updateObjectCategory,
