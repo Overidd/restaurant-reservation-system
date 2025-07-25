@@ -63,43 +63,39 @@ export class FirebaseAuthService {
       }
    }
 
-   async register({
-      email,
-      password,
-      name,
-      phone,
-      address,
-   }) {
+   async register({ email, password, name, phone, address }) {
       try {
          const res = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
          await updateProfile(FirebaseAuth.currentUser, { displayName: name });
          const { uid, email: emailUser, displayName, photoURL } = res.user;
 
          const data = {
-            id: res.uid,
+            id: uid,
             email: email ?? emailUser,
             name: name ?? displayName,
             photoURL: photoURL,
             phone: phone ?? '',
             address: address ?? '',
             role: 'user'
-         }
+         };
 
          await setDoc(doc(FirebaseDB, 'users', uid), data);
 
          return {
             ok: true,
             user: data
-         }
+         };
 
       } catch (error) {
          const code = error.code;
+         console.error(error);
          return {
             ok: false,
             errorMessage: firebaseErrorMessages[code] || 'Ocurrió un error al iniciar sesión.',
          };
       }
    }
+
 
    async login({ email, password }) {
       try {

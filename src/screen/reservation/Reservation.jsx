@@ -26,7 +26,7 @@ import {
 const reasonData = [
    {
       id: 1,
-      name: 'Cumpliaños',
+      name: 'Cumpleaños',
    },
    {
       id: 2,
@@ -34,8 +34,12 @@ const reasonData = [
    },
    {
       id: 3,
-      name: 'Otros',
+      name: 'Aniversario',
    },
+   {
+      id: 4,
+      name: 'Otros',
+   }
 ]
 
 const schema = {
