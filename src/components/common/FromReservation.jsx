@@ -303,7 +303,7 @@ export const FromReservation = ({
                isError={!!emailValid}
                variant='crystal'
                icon={initialValues?.user ? null : renderEmailIcon}
-               disabled={initialValues?.user || isBlockedFields}
+               disabled={initialValues?.user}
                iconPosition='right'
                activeEventIcon
             />

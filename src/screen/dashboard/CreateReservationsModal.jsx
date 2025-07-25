@@ -46,6 +46,7 @@ export const CreateReservationsModal = ({
             <FromReservation
                isOpen={isOpen}
                onSubmit={onSubmit}
+               isEdit={false}
             >
                <FormItem>
                   <Button
