@@ -7,6 +7,7 @@ import {
    reserveResetAction,
    reserveResetSelectedTablesAction,
    reserveSetAvailableHoursAction,
+   reserveSetObjectAction,
    reserveSetRestaurantAction,
    reserveSetTablesAction,
    typeLoading,
@@ -48,11 +49,17 @@ export const startGetTables = () => {
             hour: name,
          });
 
+
+         const object = await serviceProvider.getObject({
+            idRestaurant: locationId,
+         });
+
          const restaurant = await serviceProvider.getRestaurant({
             idRestaurant: locationId
          });
 
          dispatch(reserveSetTablesAction(tables));
+         dispatch(reserveSetObjectAction(object));
          dispatch(reserveSetRestaurantAction(restaurant));
       } catch (error) {
          console.log(error);

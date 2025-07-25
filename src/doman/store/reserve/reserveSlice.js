@@ -49,6 +49,7 @@ export const reserveSlice = createSlice({
       },
 
       tables: [],
+      objects: [],
       availableHour: [],
 
       currentSelectedTable: {},
@@ -66,6 +67,12 @@ export const reserveSlice = createSlice({
       reserveSetTablesAction: (state, { payload }) => {
          state.tables = payload;
          state.isLoading.tables = false;
+         state.errorMessage = null;
+      },
+
+      reserveSetObjectAction: (state, { payload }) => {
+         state.objects = payload;
+         state.isLoading.hour = false;
          state.errorMessage = null;
       },
 
@@ -232,6 +239,7 @@ export const {
    reserveResetStateTablesAction,
    reserveResetInfoAction,
    reserveResetSelectedTablesAction,
+   reserveSetObjectAction,
 
    reserveResetAction,
 } = reserveSlice.actions;

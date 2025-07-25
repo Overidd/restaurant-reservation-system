@@ -13,6 +13,7 @@ import { cn } from '@/ultils/cn';
 import { Badge, Button, ColorStatus } from '../UI/common';
 import { TableList } from '../UI/table';
 
+import { useGenerateResources } from '@/hook/dashboard';
 import { ReservationLoadding } from '.';
 
 
@@ -39,6 +40,7 @@ export const ReservationSelecTable = () => {
    const {
       from,
       tables,
+      objects,
       isLoading,
       isTableExceeded,
       isTableExceededDiners,
@@ -47,6 +49,17 @@ export const ReservationSelecTable = () => {
       reserveSelectTable,
       reserveResetStateTables,
    } = useReserve()
+
+   const {
+      resources
+   } = useGenerateResources({
+      tables,
+      objects,
+      isTempResourceChange: false,
+      selectedResource: {}
+   });
+
+   console.log(resources);
 
    const {
       prevStep
@@ -118,7 +131,7 @@ export const ReservationSelecTable = () => {
             </header>
 
             <TableList
-               tables={tables}
+               resources={resources}
                rows={restaurant.rows}
                columns={restaurant.columns}
                selectedTables={selectedTables}

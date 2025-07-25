@@ -196,6 +196,30 @@ export class FirebaseReserveService {
       });
    }
 
+   async getObject({ idRestaurant }) {
+      if (!idRestaurant) {
+         throw new Error('No se proporcionó el id del restaurante');
+      }
+
+      try {
+         const objectsSnap = await getDocs(collection(FirebaseDB, `restaurants/${idRestaurant}/objects`));
+
+         return objectsSnap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data()?.createdAt?.toDate()?.toISOString(),
+            updatedAt: doc.data()?.updatedAt?.toDate()?.toISOString(),
+         }));
+
+      } catch (error) {
+
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al obtener los objetos'
+         }
+      }
+   }
+
    async getRestaurant({ idRestaurant }) {
       if (!idRestaurant) {
          throw new Error('No se proporcionó el id del restaurante');

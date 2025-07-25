@@ -11,7 +11,7 @@ export const TableList = ({
    className,
    onChangeTable,
    isLoading = false,
-   tables = []
+   resources = []
 }) => {
 
    // if (!Array.isArray(tables)) return null;
@@ -19,7 +19,7 @@ export const TableList = ({
    const paintedBoard = usePaintedGrid({
       rows: rows,
       columns: columns,
-      resources: tables,
+      resources: resources,
       renderResource: (resource, style) => {
          switch (resource.type) {
             case typeResource.TABLE:
