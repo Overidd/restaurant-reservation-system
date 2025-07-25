@@ -29,7 +29,7 @@ export const HistoryReservationUser = () => {
    }
 
    return (
-      <Card className={'p-4 bg-transparent border-none shadow-none'}>
+      <Card className={'p-4 h-full bg-transparent border-none shadow-none overflow-y-auto [&::-webkit-scrollbar]:hidden'}>
          <CardHeader>
             <CardTitle className='flex items-center gap-2 text-background'>
                <CalendarCheck className='h-5 w-5' />
@@ -38,7 +38,6 @@ export const HistoryReservationUser = () => {
          </CardHeader>
          <CardContent>
             {reservations.length === 0 ? (
-
                isLoading ? (
                   <div className='flex items-center justify-center h-40'>
                      <Loader2 className='h-6 w-6 animate-spin' />
@@ -78,7 +77,7 @@ export const HistorialReservationItem = ({
       )}>
          <CardContent className='p-4 flex flex-col md:flex-row md:items-center justify-between gap-4'>
             <div className='space-y-2'>
-               <p className='flex items-center gap-2'>
+               <p className='flex items-center justify-between'>
                   <span className='font-semibold text-base'>{reservation.restaurantName}</span>
                   <Badge state={reservation.status} />
                </p>
@@ -103,22 +102,26 @@ export const HistorialReservationItem = ({
                   </div>
                </div>
 
-               <p className='flex items-center gap-1 text-sm'>
-                  <MapPin className='h-4 w-4' />
-                  {reservation.restaurantName}
-               </p>
+               <div className='flex items-center justify-between'>
+                  <p className='flex items-center gap-1 text-sm'>
+                     <MapPin className='h-4 w-4' />
+                     {reservation.restaurantName}
+                  </p>
+
+                  {
+                     reservation.status !== typeStatusTable.CANCELED && (
+                        <Button
+                           onClick={() => onCancelReservation(reservation)}
+                           variant='destructive'
+                           size='sm'
+                        >
+                           Cancelar
+                        </Button>
+                     )
+                  }
+               </div>
             </div>
-            {
-               reservation.status !== typeStatusTable.CANCELED && (
-                  <Button
-                     onClick={() => onCancelReservation(reservation)}
-                     variant='destructive'
-                     size='sm'
-                  >
-                     Cancelar
-                  </Button>
-               )
-            }
+
          </CardContent>
       </Card>
    )

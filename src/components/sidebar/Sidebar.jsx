@@ -1,276 +1,327 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-
-import { Link, useLocation } from 'react-router';
-
-import { AlignLeft, CalendarCheck, ChevronDown, Dice1, LayoutDashboard, ReceiptText, Store, Users, X } from 'lucide-react';
-
-import { useSidebar } from '@/hook';
 import { cn } from '@/ultils';
+import {
+   AlignLeft,
+   CalendarCheck,
+   ChevronDown,
+   Dice1,
+   LayoutDashboard,
+   Menu,
+   ReceiptText,
+   Store,
+   Users,
+   X,
+} from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router';
 
 const navItems = [
    {
-      icon: <LayoutDashboard className='text-inherit' />,
+      icon: <LayoutDashboard className='h-5 w-5' />,
       name: 'Dashboard',
       path: '/dashboard',
    },
    {
-      icon: <ReceiptText className='text-inherit' />,
+      icon: <ReceiptText className='h-5 w-5' />,
       name: 'Reservas',
       subItems: [
          {
             name: 'Calendario',
             path: '/dashboard/calendar',
-            icon: <CalendarCheck />,
+            icon: <CalendarCheck className='h-4 w-4' />,
          },
          {
             name: 'Mesas',
             path: '/dashboard/tables',
-            icon: <Dice1 />,
-         }
+            icon: <Dice1 className='h-4 w-4' />,
+         },
       ],
    },
-
    {
       name: 'Detalle',
-      icon: <Users className='text-inherit' />,
+      icon: <Users className='h-5 w-5' />,
       path: '/dashboard/details',
    },
    {
       name: 'Tienda',
-      icon: <Store className='text-inherit' />,
+      icon: <Store className='h-5 w-5' />,
       path: '/dashboard/store',
-   }
-];
+   },
+]
 
-export const Sidebar = ({
-   widthDesktop,
-   widthHover,
-   widthMobile,
-   className,
-}) => {
-   const { isExpanded, isMobileOpen, isHovered, setIsHovered, toggleMobileSidebar, toggleSidebar } = useSidebar();
-   const location = useLocation();
-
-   const [openSubmenu, setOpenSubmenu] = useState(null); // < { type: 'main' | 'others'; index: number } | null > 
-   const [subMenuHeight, setSubMenuHeight] = useState({});
-   const subMenuRefs = useRef({});
-
-   const isActive = useCallback((path) => (
-      location.pathname === path || path.startsWith('/client-profile') && location.pathname.startsWith('/client-profile')
-   ), [location.pathname]);
-
+function useSidebar() {
+   const [isExpanded, setIsExpanded] = useState(true)
+   const [isMobileOpen, setIsMobileOpen] = useState(false)
+   const [isHovered, setIsHovered] = useState(false)
+   const [isMobile, setIsMobile] = useState(false)
 
    useEffect(() => {
-      if (openSubmenu !== null) {
-         const key = `${openSubmenu.type}-${openSubmenu.index}`;
-         if (subMenuRefs.current[key]) {
-            setSubMenuHeight((prevHeights) => ({
-               ...prevHeights,
-               [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-            }));
+      const checkMobile = () => {
+         setIsMobile(window.innerWidth < 768)
+         if (window.innerWidth >= 768) {
+            setIsMobileOpen(false)
          }
       }
-   }, [openSubmenu]);
 
-   const handleSubmenuToggle = (index, menuType) => { // menuType: 'main' | 'others'
-      setOpenSubmenu((prevOpenSubmenu) => {
-         if (
-            prevOpenSubmenu &&
-            prevOpenSubmenu.type === menuType &&
-            prevOpenSubmenu.index === index
-         ) {
-            return null;
-         }
-         return { type: menuType, index };
-      });
-   };
+      checkMobile()
+      window.addEventListener('resize', checkMobile)
+      return () => window.removeEventListener('resize', checkMobile)
+   }, [])
 
-   const handleToggle = () => {
-      if (window.innerWidth >= 991) {
-         toggleSidebar();
+   const toggleSidebar = useCallback(() => {
+      if (isMobile) {
+         setIsMobileOpen(!isMobileOpen)
       } else {
-         toggleMobileSidebar();
+         setIsExpanded(!isExpanded)
       }
-   };
+   }, [isMobile, isMobileOpen, isExpanded])
 
-   const renderMenuItems = (items = [], menuType) => (
-      <ul className='flex flex-col gap-4'>
-         {items.map((nav, index) => {
-            const isOpen = openSubmenu?.type === menuType && openSubmenu?.index === index;
-            const isItemActive = nav.subItems ? isOpen : isActive(nav.path);
-            const subItem = nav.subItems?.find((item) => isActive(item.path));
+   const closeMobileSidebar = useCallback(() => {
+      if (isMobile) {
+         setIsMobileOpen(false)
+      }
+   }, [isMobile])
 
-            return (
-               <li key={nav.name}>
-                  {nav.subItems ? (
-                     <button
-                        onClick={() => handleSubmenuToggle(index, menuType)}
-                        className={cn(
-                           'cursor-pointer flex flex-row gap-2 p-2 rounded-2xl items-center',
-                           'transition-all w-full',
-                           !isExpanded && !isHovered ? 'lg:justify-center' : 'lg:justify-start',
-                           isItemActive || subItem
-                              ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                              : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                        )}
-                     >
-                        <span
-                           className={cn(
-                              isItemActive || subItem
-                                 ? 'text-sidebar-primary-foreground'
-                                 : 'text-sidebar-foreground group-hover:text-sidebar-accent-foreground'
-                           )}
-                        >
-                           {nav.icon}
-                        </span>
-                        {(isExpanded || isHovered || isMobileOpen) && (
-                           <span className={cn(
-                              'menu-item-text text-left',
-                           )}>
-                              {nav.name}
-                           </span>
-                        )}
+   return {
+      isExpanded,
+      isMobileOpen,
+      isHovered,
+      isMobile,
+      setIsHovered,
+      toggleSidebar,
+      closeMobileSidebar,
+   }
+}
 
-                        {(isExpanded || isHovered || isMobileOpen) && (
-                           <ChevronDown
-                              className={cn(
-                                 'ml-auto w-5 h-5 transition-transform duration-200',
-                                 isOpen ? 'rotate-180 text-sidebar-primary-foreground' : 'text-sidebar-primary-foreground'
-                              )}
-                           />
-                        )}
-                     </button>
-                  ) : (
-                     // Main items, No tiene sub items
-                     nav.path && (
-                        <Link
-                           to={nav.path}
-                           className={cn(
-                              'menu-item group transition-all flex flex-row gap-2 p-2 rounded-2xl items-center',
-                              isItemActive
-                                 ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                                 : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                           )}
-                        >
-                           <span
-                              className={cn(
-                                 isItemActive
-                                    ? 'text-sidebar-primary-foreground'
-                                    : 'text-sidebar-foreground group-hover:text-sidebar-accent-foreground'
-                              )}
-                           >
-                              {nav.icon}
-                           </span>
-                           {(isExpanded || isHovered || isMobileOpen) && (
-                              <span className=''>
-                                 {nav.name}
-                              </span>
-                           )}
-                        </Link>
-                     )
-                  )}
+export function Sidebar() {
+   const {
+      isExpanded,
+      isMobileOpen,
+      isHovered,
+      isMobile,
+      setIsHovered,
+      toggleSidebar,
+      closeMobileSidebar
+   } = useSidebar()
 
-                  {/* Sub items */}
-                  {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
-                     <div
-                        ref={el => { subMenuRefs.current[`${menuType}-${index}`] = el; }}
-                        className='overflow-hidden transition-all duration-300'
-                        style={{
-                           height: isOpen ? `${subMenuHeight[`${menuType}-${index}`]}px` : '0px',
-                        }}
-                     >
-                        <ul className='mt-2 space-y-1 ml-5'>
-                           {nav.subItems.map(subItem => (
-                              <li key={subItem.name}>
-                                 <Link
-                                    to={subItem.path}
-                                    className={cn(
-                                       'menu-dropdown-item transition-all flex flex-row gap-2 p-2 px-3 rounded-2xl items-center',
-                                       isActive(subItem.path)
-                                          ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                                          : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                                    )}
-                                 >
-                                    <span>
-                                       {subItem.icon}
-                                    </span>
-                                    {subItem.name}
-                                 </Link>
-                              </li>
-                           ))}
-                        </ul>
-                     </div>
-                  )}
-               </li>
-            );
-         })}
-      </ul>
-   );
+   const location = useLocation()
+   const [openSubmenu, setOpenSubmenu] = useState(null)
+   const [subMenuHeight, setSubMenuHeight] = useState({})
+   const subMenuRefs = useRef({})
 
+   const isActive = useCallback(
+      (path) => {
+         return (
+            location.pathname === path ||
+            (path.startsWith('/client-profile') && location.pathname.startsWith('/client-profile'))
+         )
+      },
+      [location.pathname],
+   )
+
+   useEffect(() => {
+      if (openSubmenu !== null && subMenuRefs.current[openSubmenu]) {
+         setSubMenuHeight((prev) => ({
+            ...prev,
+            [openSubmenu]: subMenuRefs.current[openSubmenu]?.scrollHeight || 0,
+         }))
+      }
+   }, [openSubmenu])
+
+   const handleSubmenuToggle = (index) => {
+      setOpenSubmenu((prev) => (prev === index ? null : index))
+   }
+
+   const handleLinkClick = () => {
+      closeMobileSidebar()
+   }
+
+   // Cerrar sidebar móvil al hacer click fuera
+   useEffect(() => {
+      const handleClickOutside = (event) => {
+         if (isMobileOpen && isMobile) {
+            const sidebar = document.getElementById('sidebar')
+            const mobileButton = document.getElementById('mobile-toggle')
+
+            if (
+               sidebar &&
+               !sidebar.contains(event.target) &&
+               mobileButton &&
+               !mobileButton.contains(event.target)
+            ) {
+               closeMobileSidebar()
+            }
+         }
+      }
+
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+   }, [isMobileOpen, isMobile, closeMobileSidebar])
+
+   const sidebarWidth = isExpanded || isHovered || isMobileOpen ? 'w-64' : 'w-20'
+   const showLabels = isExpanded || isHovered || isMobileOpen
 
    return (
-      <aside
-         onMouseEnter={() => !isExpanded && setIsHovered(true)}
-         onMouseLeave={() => setIsHovered(false)}
-         className={cn(
-            'lg:translate-x-0',
-            `bg-sidebar-background`,
-            'backdrop-blur-lg rounded-r-lg',
-            `fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 h-screen transition-all duration-300 ease-in-out z-50`,
-            isExpanded || isMobileOpen ? widthDesktop : isHovered ? widthHover : widthMobile,
-            isMobileOpen ? 'translate-x-0' : '-translate-x-full',
-            className
-         )}
+      <div
+         className='h-full relative'
       >
          <button
-            className="bg-tertiary-light-100 flex items-center justify-center w-10 h-10 text-gray-500 rounded-lg z-50 lg:h-11 lg:w-11"
-            onClick={handleToggle}
-            aria-label="Toggle Sidebar"
+            id='mobile-toggle'
+            onClick={toggleSidebar}
+            className={cn(
+               'fixed top-4 left-4 z-50 md:hidden',
+               'rounded-lg shadow-lg p-2 transition-all duration-200',
+               'focus:outline-none focus:ring-2',
+               'backdrop-blur-sm border',
+               'bg-sidebar-background text-sidebar-foreground',
+               isMobileOpen && 'left-[272px]',
+            )}
+            aria-label='Toggle Menu'
          >
-            {isMobileOpen ? (
-               <X className="teXt-secondary-light-200" />
-            ) : <AlignLeft className="text-secondary-light-200" />}
+            {isMobileOpen
+               ? <X className='h-5 w-5' />
+               : <Menu className='h-5 w-5' />
+            }
          </button>
 
-         {/* <div
+         {isMobileOpen && isMobile && (
+            <div
+               role='presentation'
+               className='fixed inset-0 z-40 md:hidden transition-opacity duration-300'
+               onClick={closeMobileSidebar}
+            />
+         )}
+
+         <aside
+            id='sidebar'
+            onMouseEnter={() => !isExpanded && !isMobile && setIsHovered(true)}
+            onMouseLeave={() => !isMobile && setIsHovered(false)}
             className={cn(
-               'py-8 flex',
-               !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
+               'fixed top-0 z-20 h-dvh transition-all duration-300 ease-in-out',
+               'flex flex-col shadow-lg backdrop-blur-2xl',
+               'bg-sidebar-background text-sidebar-foreground',
+               isMobile ? (isMobileOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0',
+               !isMobile && 'md:translate-x-0',
+               sidebarWidth,
             )}
          >
-            <Link to='/'>
-               {isExpanded || isHovered || isMobileOpen ? (
-                  <>
-                     <img
-                        className='dark:hidden'
-                        src='/logo/TextLogo2.png'
-                        alt='Logo'
-                        width={240}
-                        height={40}
-                     />
-                     <img
-                        className='hidden dark:block'
-                        src='/images/logo/logo-dark.svg'
-                        alt='Logo 1'
-                        width={150}
-                        height={40}
-                     />
-                  </>
-               ) : (
-                  <img
-                     className='object-contain'
-                     src='/logo/logoSmall.png'
-                     alt='Logo'
-                     width={32}
-                     height={32}
-                  />
+            <button
+               onClick={toggleSidebar}
+               className={cn(
+                  'hidden md:flex absolute -right-3 top-6 z-10',
+                  'rounded-full p-1.5 shadow-md transition-all duration-200',
+                  'focus:outline-none focus:ring-2',
+                  ' backdrop-blur-lg',
+                  'bg-sidebar-background text-sidebar-foreground',
                )}
-            </Link>
-         </div> */}
+            >
+               <AlignLeft className='h-4 w-4' />
+            </button>
 
-         <div className='flex flex-col overflow-y-auto duration-300 ease-linear overflow-hidden'>
-            {renderMenuItems(navItems, 'main')}
-         </div>
-      </aside>
-   );
-};
+            <div className={cn('p-4')}>
+               {showLabels ? (
+                  <img className='h-16 w-auto' src='/logo-while.png' alt='Logo' />
+               ) : (
+                  <img className='h-10 mx-auto' src='/logo-while.png' alt='Logo' />
+               )}
+            </div>
+
+            <nav className='flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-2'>
+               {navItems.map((item, index) => {
+                  const isOpen = openSubmenu === index
+                  const hasActiveSubItem = item.subItems?.some((subItem) => isActive(subItem.path))
+                  const isItemActive = item.path ? isActive(item.path) : hasActiveSubItem
+
+                  return (
+                     <div key={item.name}>
+                        {item.subItems ? (
+                           <div>
+                              <button
+                                 onClick={() => handleSubmenuToggle(index)}
+                                 className={cn(
+                                    'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                                    'text-left focus:outline-none focus:ring-2',
+                                    !showLabels && 'justify-center',
+                                 )}
+                              >
+                                 <span className='flex-shrink-0'>{item.icon}</span>
+                                 {showLabels && (
+                                    <>
+                                       <span className='flex-1 font-medium'>{item.name}</span>
+                                       <ChevronDown
+                                          className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')}
+                                       />
+                                    </>
+                                 )}
+                              </button>
+
+                              {/* Submenu */}
+                              {item.subItems && showLabels && (
+                                 <div
+                                    ref={(el) => {
+                                       subMenuRefs.current[index] = el
+                                    }}
+                                    className='overflow-hidden transition-all duration-300 ease-in-out'
+                                    style={{
+                                       height: isOpen ? `${subMenuHeight[index] || 0}px` : '0px',
+                                    }}
+                                 >
+                                    <div className='mt-1 ml-8 space-y-1'>
+                                       {item.subItems.map((subItem) => (
+                                          <Link
+                                             key={subItem.name}
+                                             to={subItem.path}
+                                             onClick={handleLinkClick}
+                                             className={cn(
+                                                'flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200',
+                                                'text-sm focus:outline-none focus:ring-2',
+                                                isActive(subItem.path) && 'bg-sidebar-primary text-sidebar-primary-foreground',
+                                             )}
+                                          >
+                                             <span className='flex-shrink-0'>{subItem.icon}</span>
+                                             <span>{subItem.name}</span>
+                                          </Link>
+                                       ))}
+                                    </div>
+                                 </div>
+                              )}
+                           </div>
+                        ) : (
+                           // Regular menu item
+                           <Link
+                              to={item.path}
+                              onClick={handleLinkClick}
+                              className={cn(
+                                 'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                                 'focus:outline-none focus:ring-2',
+                                 !showLabels && 'justify-center',
+                                 isItemActive && 'bg-sidebar-primary text-sidebar-primary-foreground',
+                              )}
+                           >
+                              <span className='flex-shrink-0'>{item.icon}</span>
+                              {showLabels && <span className='font-medium'>{item.name}</span>}
+                           </Link>
+                        )}
+                     </div>
+                  )
+               })}
+            </nav>
+
+            {/* Footer */}
+            {/* {showLabels && (
+               <div
+                  className='p-4 border-t'
+                  style={{
+                     borderColor: 'var(--sidebar-border)',
+                     color: 'var(--sidebar-foreground)',
+                  }}
+               >
+                  <div className='text-xs opacity-70 text-center'>© 2024 Tu Empresa</div>
+               </div>
+            )} */}
+         </aside>
+
+         {/* Main content spacer for desktop */}
+         <div className={cn('hidden md:block transition-all duration-300', sidebarWidth)} />
+      </div>
+   )
+}

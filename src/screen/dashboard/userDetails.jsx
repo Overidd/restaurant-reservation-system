@@ -61,7 +61,7 @@ export function ClientDetails() {
       {
         isOpen &&
         <UserDetailModal
-          className={'w-xl'}
+          className={'md:w-xl'}
           isOpen={isOpen}
           onClose={closeModal}
           client={selectedUser}

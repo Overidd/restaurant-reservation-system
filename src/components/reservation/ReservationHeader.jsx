@@ -49,9 +49,9 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
 }
 
 
-export const ReservationHeader = ({ className, date, time:{hour}, info, currentStepIndex }) => {
+export const ReservationHeader = ({ className, date, hour: { name }, info, currentStepIndex }) => {
    if (!currentStepIndex) return null;
-   const stepsHeader = buildStepArray({ info, date, hour, translation, currentStepIndex });
+   const stepsHeader = buildStepArray({ info, date, hour: name, translation, currentStepIndex });
 
    return (
       <header

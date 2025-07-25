@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast';
 
 import {
    Users,
@@ -21,10 +20,9 @@ import {
 } from '../UI/common';
 
 import { useUser } from '@/hook/auth';
-import {
-   ReservaRejected,
-   ReservaSuccess
-} from '.';
+
+
+import { ReservationToast } from '@/toasts';
 
 
 
@@ -57,7 +55,7 @@ export const ReservationInfoTable = ({ className }) => {
       closeModal
    } = useModalReserve()
 
-   const isActive = existSelectedTable();
+   const isOpen = existSelectedTable();
 
    const onClickReserve = async () => {
       if (!isAuthenticated) {
@@ -68,40 +66,22 @@ export const ReservationInfoTable = ({ className }) => {
 
       reservePending()
 
-      toast.promise(
-         reserveConfirm(),
-         {
-            loading: 'Confirmando reserva...',
-            success: 'Reserva exitosa 🎉',
-            error: (err) => err.message || 'Error al realizar la reserva'
-         },
-         {
-            style: {
-               minWidth: '250px'
-            }
-         })
-         .then((data) => {
-            toast((t) => (
-               <ReservaSuccess t={t} code={data.code} />
-            ), { duration: Infinity })
-
-            closeModal()
-         })
-         .catch((err) => {
-            toast((t) => (
-               <ReservaRejected t={t} message={err.message || 'Ocurrió un error inesperado'} />
-            ), { duration: 6000 })
-
-            // reserveResetSelectTables();
-         })
+      ReservationToast(reserveConfirm(), {
+         onSuccess: () => {
+            window.requestAnimationFrame(() => {
+               closeModal();
+            })
+         }
+      });
    }
 
    return (
       <Card2
          className={cn(
-            'transition-all flex flex-col justify-between gap-4 p-4',
-            (!isActive || isPending) && 'translate-y-full',
-            (isActive && !isPending) && 'animate__animated animate__fadeInUp',
+            'transition-all flex flex-col justify-between gap-4 !p-5 animate__animated',
+            (!isOpen || isPending) && 'absolute translate-x-full md:translate-y-full md:translate-x-0 opacity-0 md:opacity-100 duration-0 md:duration-500',
+            (isOpen && !isPending) && 'animate__fadeInUp',
+            'rounded-none md:rounded-2xl opacity-100',
             className
          )}
          style={{ animationDuration: '0.5s' }}
@@ -133,24 +113,14 @@ export const ReservationInfoTable = ({ className }) => {
             </CardContent>
          </Card>
 
-         <section className='flex flex-row gap-4'>
-            <Button
-               size={'lg'}
-               className={'flex-1'}
-               onClick={onClickReserve}
-               disabled={isPending}
-            >
-               Reservar
-            </Button>
-
-            <Button
-               size={'lg'}
-               className={'flex-1'}
-               variant={'destructive'}
-            >
-               Cancelar
-            </Button>
-         </section>
+         <Button
+            size={'lg'}
+            className={'mx-auto w-full'}
+            onClick={onClickReserve}
+            disabled={isPending}
+         >
+            Reservar
+         </Button>
       </Card2>
    )
 }

@@ -9,8 +9,8 @@ import {
    reserveResetStateTablesAction,
    reserveSelectTableAction,
    reserveSetDateAction,
+   reserveSetHoursAction,
    reserveSetInfoAction,
-   reserveSetTimeAction,
    reserveToggleTableAction,
    startGetAvailableHours,
    startGetTables,
@@ -30,15 +30,15 @@ export const useReserve = () => {
       from,
       tables,
       restaurant,
-      availableTime,
+      availableHour,
       stateReserve,
    } = useSelector((state) => state.reserveReducer);
 
    const isPending = useMemo(() => stateReserve === typeStatus.PENDING, [stateReserve]);
 
    const isTableExceeded = useMemo(() => {
-      return (selectedTables.length >= from.time.tablesAvailable)
-   }, [selectedTables, from.time.tablesAvailable]);
+      return (selectedTables.length >= from.hour.tablesAvailable)
+   }, [selectedTables, from.hour.tablesAvailable]);
 
    const isTableExceededDiners = useMemo(() => {
       return (selectedTables.reduce((acc, table) => acc + table.chairs, 0) >= from.info.diners)
@@ -72,8 +72,8 @@ export const useReserve = () => {
       dispatch(reserveSetDateAction(dateStr));
    }
 
-   const reserveSetTime = (data) => {
-      dispatch(reserveSetTimeAction(data));
+   const reserveSetHour = (data) => {
+      dispatch(reserveSetHoursAction(data));
       serviceGetTables();
    }
 
@@ -132,7 +132,7 @@ export const useReserve = () => {
       from,
       tables,
       restaurant,
-      availableTime,
+      availableHour,
       isPending,
       isTableExceeded,
       isTableExceededDiners,
@@ -144,7 +144,7 @@ export const useReserve = () => {
       // Acciones
       reserveSetInfo,
       reserveSetDate,
-      reserveSetTime,
+      reserveSetHour,
       reserveToggleTable,
       reserveSelectTable,
       reserveReset,

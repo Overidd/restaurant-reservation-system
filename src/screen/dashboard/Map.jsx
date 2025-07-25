@@ -22,11 +22,11 @@ export const MapScreen = () => {
          />
 
          <TableStats
-            className={'md:row-span-2 md:col-span-1 md:w-65 w-[90%]'}
+            className={'md:row-span-2 md:col-span-1 md:w-65 w-[90%] mx-auto !p-4'}
          />
 
          <TableAutoFilter
-            className={'md:col-span-1 w-fit mx-auto'}
+            className={'md:col-span-1 w-fit mx-auto !p-4'}
          />
 
          <ModalAsyncProvider>

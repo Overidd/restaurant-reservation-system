@@ -85,7 +85,6 @@ export const LoginScreen = () => {
                   onChange={onValueChange}
                   isError={!!emailValid}
                   icon={<Mail />}
-                  className={'py-3'}
                />
             </FormItem>
 
@@ -105,7 +104,6 @@ export const LoginScreen = () => {
                   onChange={onValueChange}
                   isError={!!passwordValid}
                   icon={<Key />}
-                  className={'py-3'}
                />
 
             </FormItem>

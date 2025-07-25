@@ -143,6 +143,9 @@ export const Modal = ({
             break
 
          case 'center':
+            positionClasses = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+            animationClasses = isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            break
          default:
             positionClasses = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
             animationClasses = isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
@@ -153,10 +156,7 @@ export const Modal = ({
    }
 
    const getOverlayClasses = () => {
-      const baseClasses =
-         direction === 'center'
-            ? 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
-            : 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg flex transition-opacity duration-300'
+      const baseClasses = 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg flex transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }
@@ -188,6 +188,7 @@ export const Modal = ({
          <div
             ref={modalRef}
             className={cn(
+               'w-[90%] md:w-auto',
                getModalClasses()
             )}
          // onClick={(e) => e.stopPropagation()}

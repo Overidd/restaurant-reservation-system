@@ -5,7 +5,7 @@ export const Card = ({ className, ...props }) => {
       <div
          data-slot='card'
          className={cn(
-            'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border p-4 shadow-sm overflow-hidden',
+            'bg-card flex flex-col gap-6 rounded-xl border p-4 shadow-sm overflow-hidden',
             className
          )}
          {...props}

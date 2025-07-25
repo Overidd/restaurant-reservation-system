@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
@@ -51,7 +50,7 @@ export const Navbar = ({ className }) => {
             className,
          )}
       >
-         <Link to={'/'}>
+         {/* <Link to={'/'}> */}
             <figure className='w-[3rem] h-[3rem]'>
                <img
                   className='w-full h-full'
@@ -59,7 +58,7 @@ export const Navbar = ({ className }) => {
                   alt='Logo de la empresa'
                />
             </figure>
-         </Link>
+         {/* </Link> */}
 
          <NavbarListResponsive
             data={listMenuData}

@@ -6,7 +6,7 @@ import {
 } from '@/components/reservation';
 import { isObjetError } from '@/ultils';
 
-export const ReservationToast = ({ promise, onSuccess, onError, onFinally }) =>
+export const ReservationToast = (promise, { onSuccess, onError, onFinally } = {}) =>
    toast.promise(promise, {
       loading: 'Confirmando reserva...',
       success: 'Reserva exitosa 🎉',

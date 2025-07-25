@@ -1,22 +1,19 @@
 import { cn } from '@/ultils';
-import { Bell, ChevronRight, Dice1, Settings, Timer } from 'lucide-react';
+import { Bell, ChevronRight, Settings, Timer } from 'lucide-react';
 import { useState } from 'react';
 import { CalendarButton } from '../UI/calendar';
-import { Card2, UserCardReservation } from '../UI/card';
+import { UserCardReservation } from '../UI/card';
 
 import {
    Badge,
    Button,
+   Card,
    CardContent,
-   CardHeader,
    CardTitle,
    Popover,
    PopoverContent,
    PopoverTrigger,
-   Toggle,
-   Tooltip,
-   TooltipContent,
-   TooltipTrigger
+   Toggle
 } from '../UI/common';
 
 import {
@@ -33,63 +30,49 @@ export const NofityReservation = () => {
    const [openHistory, setOpenHistory] = useState(false);
 
    return (
-      <div className="sticky top-0 h-dvh flex items-start">
-         <Tooltip>
-            <TooltipTrigger asChild>
-               <Button
-                  className="my-4 rounded-full shadow-lg p-2 transition-all cursor-pointer absolute -left-12 bg-[#fcf8f0] text-primary hover:bg-primary hover:text-primary-foreground"
-                  onClick={() => setOpenHistory(!openHistory)}
-                  size="icon"
-                  aria-label="Abrir historial"
-               >
-                  {!openHistory ? (
-                     <div className="relative">
-                        <span className="absolute -top-1 right-0 flex size-3">
-                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                           <span className="relative inline-flex size-3 rounded-full bg-primary" />
-                        </span>
-                        <Bell />
-                     </div>
-                  ) : (
-                     <ChevronRight />
-                  )}
-               </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="text-inherit rounded">
-               {
-                  !openHistory ? 'Abrir Notificaciones' : 'Cerrar Notificaciones'
-               }
-            </TooltipContent>
-         </Tooltip>
+      <div className='hidden md:flex md:sticky top-0 h-dvh items-start'>
+         <Button
+            className='my-4 rounded-full shadow-lg p-2 transition-all cursor-pointer absolute -left-12 bg-[#fcf8f0] text-primary hover:bg-primary hover:text-primary-foreground'
+            onClick={() => setOpenHistory(!openHistory)}
+            aria-label='Abrir historial'
+            size='icon'
+         >
+            {!openHistory ? (
+               <div className='relative'>
+                  <span className='absolute -top-1 right-0 flex size-3'>
+                     <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75' />
+                     <span className='relative inline-flex size-3 rounded-full bg-primary' />
+                  </span>
+                  <Bell />
+               </div>
+            ) : (
+               <ChevronRight />
+            )}
+         </Button>
 
-         <Card2
+         <Card
             vairant='secondary'
             className={cn(
                'h-full shadow-xl transition-all duration-200 overflow-x-hidden overflow-y-auto rounded-none rounded-l-lg',
-               'p-0 py-4',
                '[&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0',
                'overflow-x-hidden',
-               openHistory ? 'w-80 min-w-[23rem] max-w-[23rem]' : 'w-0 min-w-0 max-w-0'
+               'p-0 py-4',
+               openHistory && 'w-80 min-w-[23rem] max-w-[23rem]',
+               !openHistory && 'w-0 min-w-0 max-w-0'
             )}
          >
             {openHistory && (
                <>
-                  <CardTitle className="text-pretty text-center mb-4 px-4">
+                  <CardTitle className='text-pretty text-center mb-4 px-4'>
                      Notificaciones de reservas
                   </CardTitle>
 
-                  <CardHeader className="px-4 flex flex-col gap-4">
-                     <NofityReservationFilter />
-                  </CardHeader>
-
-                  {/* <hr className="border-border my-4" /> */}
-
-                  <CardContent className="overflow-x-hidden px-4">
+                  <CardContent className='overflow-x-hidden px-4 [&::-webkit-scrollbar]:w-0'>
                      <NotifyReservationList />
                   </CardContent>
                </>
             )}
-         </Card2>
+         </Card>
       </div>
    );
 };
@@ -102,7 +85,7 @@ export const NofityReservationFilter = () => {
    };
 
    return (
-      <div className="flex flex-wrap items-center justify-between gap-2 w-full">
+      <div className='flex flex-wrap items-center justify-between gap-2 w-full'>
          <Popover>
             <PopoverTrigger asChild>
                <Button
@@ -146,7 +129,7 @@ const restaurants = [
 export const HistorialControls = () => {
 
    return (
-      <div className="flex flex-wrap gap-2 items-center animate__animated animate__fadeIn w-full">
+      <div className='flex flex-wrap gap-2 items-center animate__animated animate__fadeIn w-full'>
          <div
             className='flex flex-row gap-2 w-full'
          >
@@ -176,21 +159,21 @@ export const HistorialControls = () => {
             </Select>
 
             <CalendarButton
-               name="dateStr"
-               variant="outline"
-               btnClassName="hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0] flex-1"
+               name='dateStr'
+               variant='outline'
+               btnClassName='hover:bg-[#fcf8f0] hover:text-muted-foreground bg-[#fcf8f0] flex-1'
                date={new Date()}
                configDate={null}
             />
          </div>
 
-         <Label htmlFor="auto-date" >
+         <Label htmlFor='auto-date' >
             <Checkbox
-               size="sm"
-               id="auto-date"
+               size='sm'
+               id='auto-date'
                className='inline-block align-middle mr-2'
             />
-            <span className="text-sm align-middle">
+            <span className='text-sm align-middle'>
                Auto date
             </span>
          </Label>
@@ -201,7 +184,7 @@ export const HistorialControls = () => {
 export const NotifyReservationList = () => {
 
    return (
-      <table className="min-w-full table-auto border-separate border-spacing-y-5 text-sm text-left">
+      <table className='min-w-full table-auto border-separate border-spacing-y-5 text-sm text-left'>
          <tbody>
             {[...Array(10)].map((_, index) => (
                <NotifyReservationItem key={'notify-reservation-item-' + index} />
@@ -214,30 +197,31 @@ export const NotifyReservationList = () => {
 export const NotifyReservationItem = () => {
 
    return (
-      <tr className="">
-         <td className="">
+      <tr className=''>
+         <td className=''>
             <UserCardReservation
-               className="text-foreground"
+               className='text-foreground'
                user={{ name: 'John Doe', code: 'RESERVE-D2KWQ3', date: new Date().toISOString().split('T')[0] }}
             />
          </td>
 
-         <td className="">
-            <Badge variant='primary' className={'py-1'}>
+         <td className=''>
+            <Badge
+               variant='primary'
+               className={'py-1'}
+            >
                <Timer
                />
                6:00
             </Badge>
          </td>
 
-         <td className="">
+         <td className=''>
             <Badge
                variant='none'
-               state="pending"
+               state='pending'
+               className={'py-1'}
             />
-         </td>
-         <td className="">
-            <Dice1 />
          </td>
       </tr>
    )

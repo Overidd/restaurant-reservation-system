@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { ChevronLeft, Clock } from 'lucide-react';
 
 import {
+   useModalReserve,
    useReserve,
    useReserveTimer,
    useStepFormContext,
@@ -51,8 +52,17 @@ export const ReservationSelecTable = () => {
       prevStep
    } = useStepFormContext();
 
+   const {
+      closeModal
+   } = useModalReserve()
+
    const onChangePrevStep = () => {
       prevStep()
+      reserveResetStateTables()
+   }
+
+   const handleCloseModal = () => {
+      closeModal()
       reserveResetStateTables()
    }
 
@@ -64,7 +74,7 @@ export const ReservationSelecTable = () => {
       }
 
       if (wasSelected && isTableExceeded) {
-         toast.error(`No puedes seleccionar más de ${from.time.tablesAvailable} mesas.`);
+         toast.error(`No puedes seleccionar más de ${from.hour.tablesAvailable} mesas.`);
       }
    };
 
@@ -79,11 +89,20 @@ export const ReservationSelecTable = () => {
             <header className={cn(
                'flex w-[90%] mx-auto flex-col md:flex-row gap-4 md:gap-0 justify-between items-center',
             )}>
-               <Button
-                  onClick={onChangePrevStep}
-               >
-                  <ChevronLeft />
-               </Button>
+               <div className='space-x-4'>
+                  <Button
+                     className={'align-middle'}
+                     onClick={onChangePrevStep}
+                  >
+                     <ChevronLeft />
+                  </Button>
+                  <Button
+                     className={'align-middle'}
+                     onClick={handleCloseModal}
+                  >
+                     Cancelar
+                  </Button>
+               </div>
                <ColorStatus
                   className="flex flex-row gap-5"
                   data={dataInfo}
@@ -91,7 +110,7 @@ export const ReservationSelecTable = () => {
 
                <h4 className='text-muted-foreground font-bold'>
                   <Badge className={'bg-gray-700'}>
-                     {from.time.tablesAvailable} Mesas Disponibles
+                     {from.hour.tablesAvailable} Mesas Disponibles
                   </Badge>
                </h4>
 

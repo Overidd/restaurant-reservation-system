@@ -1,9 +1,21 @@
 import { userSettingProvider } from '@/doman/services';
+import { updateProfileAction } from '@/doman/store/auth';
+import { useDispatch } from 'react-redux';
 
 export const useUserSettings = () => {
-   // const dispatch = useDispatch()
+   const dispatch = useDispatch()
 
-   const editProfile = async () => {
+   const updateProfile = async (data) => {
+      if (!data) {
+         throw new Error('Error Inesperado');
+      }
+      const { user, ok, errorMessage } = await userSettingProvider.updateProfile(data);
+      if (!ok) {
+         throw errorMessage
+      }
+
+      dispatch(updateProfileAction(user))
+      return user
 
    }
 
@@ -23,7 +35,7 @@ export const useUserSettings = () => {
       // State
 
       // Funciones
-      editProfile,
+      updateProfile,
       cancelReservation,
    }
 }

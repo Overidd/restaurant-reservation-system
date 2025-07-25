@@ -68,7 +68,7 @@ export const ReservationStepInfo = ({
                className
             )}
          >
-            <FormItem className={'md:w-[23rem]'}>
+            <FormItem>
                <Select
                   name='location'
                   value={location || undefined}

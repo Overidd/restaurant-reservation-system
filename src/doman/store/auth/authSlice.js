@@ -51,6 +51,13 @@ export const authSlice = createSlice({
 
       loaddingAction: (state) => {
          state.isLoading = true
+      },
+
+      updateProfileAction: (state, { payload }) => {
+         state.user = {
+            ...state.user,
+            ...payload
+         };
       }
    },
 });
@@ -59,5 +66,6 @@ export const {
    loginAction,
    logoutAction,
    loaddingAction,
-   checkingCredentialAction
+   checkingCredentialAction,
+   updateProfileAction
 } = authSlice.actions;

@@ -24,7 +24,7 @@ export const useGelHourFromStateFetching = (typeState = typeStatusTable.AVAILABL
       }));
 
       try {
-         const hours = await serviceProvider.getAvailableTimes({ dateStr, idRestaurant });
+         const hours = await serviceProvider.getAvailableHours({ dateStr, idRestaurant });
 
          setState(prev => ({
             ...prev,

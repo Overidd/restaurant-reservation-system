@@ -9,21 +9,21 @@ import { CreateReservationsModal } from '@/screen/dashboard';
 
 const Layout = () => {
    return (
-      <div className='grid grid-cols-[1fr_auto] grid-rows-1 relative'>
+      <div className='md:grid grid-cols-[auto_1fr_auto] grid-rows-1'>
          <Sidebar
-            widthDesktop='w-[230px]'
-            widthHover='w-[230px]'
-            widthMobile='w-[80px]'
+            widthDesktop='w-[14rem]'
+            widthHover='w-[14rem]'
+            widthMobile='w-[5rem]'
          />
 
-         <div className='ml-[100px]'>
+         <div className='w-full'>
             <Outlet />
          </div>
 
          <CreateReservationsModal
-            className={'w-[35rem]'}
+            className={'md:w-[35rem]'}
          />
-         
+
          <NofityReservation />
          <ActionSpeedDial />
       </div>

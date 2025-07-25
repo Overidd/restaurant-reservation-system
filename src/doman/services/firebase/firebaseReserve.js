@@ -51,67 +51,83 @@ export class FirebaseReserveService {
    /**
     * 
     * @param {{ dateStr: string, idRestaurant: string }} param0 date -> 2025-06-28 
-    * @returns {Promise<Array<{hour: string, tablesAvailable: number}>>}
     */
-   async getAvailableTimes({ dateStr, idRestaurant }) {
-      let allowedHours = await getDocs(collection(FirebaseDB, 'allowedhour'));
-      allowedHours = allowedHours.docs.map(doc => ({
-         id: doc.id,
-         ...doc.data()
-      }));
+   async getAvailableHours({ dateStr, idRestaurant }) {
+      try {
+         const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
 
-      // 2. Ignorar horas pasadas si la fecha es hoy
-      const now = new Date();
+         const tables = await getDocs(query(
+            collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
+            where('isBlocked', '==', false),
+         ))
 
-      if (!this.isValidReservationDate(dateStr)) {
-         throw new Error('No se pueden reservar fechas pasadas');
-      }
-      if (dateStr === DateParser.toString()) {
-         const currentMinutes = now.getHours() * 60 + now.getMinutes();
+         let allowedHours = restaurant.data().hours.map((item) => ({
+            ...item,
+            tablesAvailable: tables.size
+         })) ?? [];
 
-         allowedHours = allowedHours.filter(({ hour }) => {
-            const [h, m] = hour.split(':').map(Number);
-            const totalMinutes = h * 60 + m;
-            return totalMinutes > currentMinutes;
+         const now = new Date();
+
+         if (!this.isValidReservationDate(dateStr)) {
+            throw new Error('No se pueden reservar fechas pasadas');
+         }
+
+         if (dateStr === DateParser.toString()) {
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            allowedHours = allowedHours.filter(({ name }) => {
+               const [h, m] = name.split(':').map(Number);
+               const totalMinutes = h * 60 + m;
+               return totalMinutes > currentMinutes;
+            });
+         }
+
+         // 3. Obtener horas bloqueadas manualmente
+         const unavailableSnap = await getDocs(query(
+            collection(FirebaseDB, 'unavailableSlots'),
+            where('idRestaurant', '==', idRestaurant),
+            where('dateStr', '==', dateStr)
+         ));
+
+         // 5. Obtener todas las reservas confirmadas para esa fecha
+         const reservationSnap = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idRestaurant', '==', idRestaurant),
+            where('status', 'in', ['confirmed', 'pending']),
+            where('dateStr', '==', dateStr)
+         ));
+
+         const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
+
+         const hourCounts = new Map();
+         reservationSnap.docs.forEach((doc) => {
+            const data = doc.data();
+            data.tables.forEach(() => {
+               hourCounts.set(data.hour, (hourCounts.get(data.hour) || 0) + 1);
+            })
          });
+
+         // 7. Filtrar las horas disponibles
+         const availableHours = allowedHours.filter(({ name, tablesAvailable }) => {
+            const reservedCount = hourCounts.get(name) || 0;
+            const isBlocked = unavailableHours.has(name);
+            return reservedCount < tablesAvailable && !isBlocked;
+         });
+
+         return {
+            ok: true,
+            availableHours: availableHours.map((item) => ({
+               ...item,
+               tablesAvailable: item.tablesAvailable - (hourCounts.get(item.name) || 0)
+            })).sort((a, b) => a.name - b.name)
+         }
+
+      } catch (error) {
+         console.log(error);
+         return {
+            ok: false,
+            messageError: error.message || 'Error al obtener las horas disponibles'
+         }
       }
-
-      // 3. Obtener horas bloqueadas manualmente
-      const unavailableSnap = await getDocs(query(
-         collection(FirebaseDB, 'unavailableSlots'),
-         where('idRestaurant', '==', idRestaurant),
-         where('dateStr', '==', dateStr)
-      ));
-
-      // 5. Obtener todas las reservas confirmadas para esa fecha
-      const reservationSnap = await getDocs(query(
-         collection(FirebaseDB, 'reservations'),
-         where('idRestaurant', '==', idRestaurant),
-         where('status', 'in', ['confirmed', 'pending']),
-         where('dateStr', '==', dateStr)
-      ));
-
-      const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
-
-      const hourCounts = new Map();
-      reservationSnap.docs.forEach((doc) => {
-         const data = doc.data();
-         data.tables.forEach(() => {
-            hourCounts.set(data.hour, (hourCounts.get(data.hour) || 0) + 1);
-         })
-      });
-
-      // 7. Filtrar las horas disponibles
-      const availableHours = allowedHours.filter(({ hour, tablesAvailable }) => {
-         const reservedCount = hourCounts.get(hour) || 0;
-         const isBlocked = unavailableHours.has(hour);
-         return reservedCount < tablesAvailable && !isBlocked;
-      });
-
-      return availableHours.map((item) => ({
-         ...item,
-         tablesAvailable: item.tablesAvailable - (hourCounts.get(item.hour) || 0)
-      }));
    }
 
 
@@ -124,11 +140,11 @@ export class FirebaseReserveService {
       if (!idRestaurant) {
          throw new Error('No se proporciono el id del restaurante');
       }
-      
+
       if (!dateStr) {
          throw new Error('No se proporciono la fecha');
       }
-      
+
       const tables = await getDocs(query(
          collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
          where('isBlocked', '==', false),
@@ -221,13 +237,25 @@ export class FirebaseReserveService {
       try {
          const auth = getAuth();
          const user = auth.currentUser;
-         console.log(hour, dateStr, tables);
 
          if (!user) {
             throw new Error('Usuario no autenticado');
          }
 
          // TODO faltaria validar si la mesa fue bloqueada
+
+         const querySnapshot = await getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idRestaurant', '==', idRestaurant),
+            where('dateStr', '==', dateStr),
+            where('hour', '==', hour),
+            where('idUser', '==', user.uid),
+            where('status', 'in', ['confirmed', 'pending'])
+         ));
+
+         if (!querySnapshot.empty) {
+            throw new Error('Ya realizaste una reserva en esa hora');
+         }
 
          // Buscar todas las reservas confirmadas para ese restaurante, fecha y hora
          const reservations = await getDocs(query(
@@ -306,10 +334,11 @@ export class FirebaseReserveService {
          };
 
       } catch (error) {
+         console.error(error);
          const code = error.code || 'default';
          return {
             ok: false,
-            errorMessage: firebaseErrorMessages[code] || error.message || 'Error desconocido',
+            errorMessage: firebaseErrorMessages[code] || error || 'Error desconocido',
          };
       }
    }

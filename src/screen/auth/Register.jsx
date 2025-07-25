@@ -111,7 +111,6 @@ export const RegisterScreen = () => {
               value={name}
               onChange={onValueChange}
               isError={!!nameValid}
-              className={'p-3'}
             />
           </FormItem>
 
@@ -130,7 +129,6 @@ export const RegisterScreen = () => {
               value={lastname}
               onChange={onValueChange}
               isError={!!lastnameValid}
-              className={'py-3'}
             />
           </FormItem>
         </FromGroup>
@@ -152,7 +150,6 @@ export const RegisterScreen = () => {
             onChange={onValueChange}
             isError={!!emailValid}
             icon={<Mail />}
-            className={'py-3'}
           />
         </FormItem>
 
@@ -172,7 +169,6 @@ export const RegisterScreen = () => {
             onChange={onValueChange}
             isError={!!passwordValid}
             icon={<Key />}
-            className={'py-3'}
           />
 
         </FormItem>
@@ -193,7 +189,6 @@ export const RegisterScreen = () => {
             onChange={onValueChange}
             isError={!!passwordConfirmValid}
             icon={<Key />}
-            className={'py-3'}
           />
         </FormItem>
 
@@ -208,7 +203,6 @@ export const RegisterScreen = () => {
           <Button
             type='submit'
             disabled={isLoading}
-            className={'py-5'}
           >
             Registrate
           </Button>
@@ -225,7 +219,7 @@ export const RegisterScreen = () => {
             type='button'
             size={'icon'}
             variant={'crystal'}
-            onclick={loginGoogle}
+            onClick={loginGoogle}
             className={'mx-auto'}
           >
             <img

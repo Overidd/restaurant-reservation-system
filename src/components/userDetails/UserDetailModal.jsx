@@ -15,6 +15,7 @@ export const UserDetailModal = ({
       <Modal
          isOpen={isOpen}
          onClose={onClose}
+         className=''
       >
          <Card2
             className={cn(
@@ -58,7 +59,7 @@ export const UserDetailModal = ({
                </div>
             </div>
 
-            <div className='grid grid-cols-2 md:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                <Card className={'border-transparent shadow input-style-class bg-transparent text-background'}>
                   <CardContent className='p-4'>
                      <div className='text-2xl font-bold'>
@@ -95,7 +96,7 @@ export const UserDetailModal = ({
                      // className='style-class'
                      value='historical'
                   >
-                     Historial de Reservas
+                     Historial
                   </TabsTrigger>
                   <TabsTrigger
                      value='resumen'

@@ -70,4 +70,49 @@ export class UserSettingService {
          }
       }
    }
+
+   async updateProfile({ name, photoURL, phone, address, idUser }) {
+      try {
+         if (!idUser) {
+            throw new Error('No se proporciono el id de la reserva');
+         }
+
+         const user = await getDoc(doc(FirebaseDB, 'users', idUser));
+
+         if (!user.exists()) {
+            throw new Error('No se encontro el usuario');
+         }
+
+         const dataUser = user.data();
+
+         const userRef = doc(FirebaseDB, 'users', idUser);
+
+         const data = {
+            ...dataUser,
+            name: name,
+            phone: phone,
+            address: address,
+            photoURL: photoURL ?? '',
+            updatedAt: serverTimestamp()
+         }
+
+         await updateDoc(userRef, data);
+
+         return {
+            ok: true,
+            user: {
+               ...data,
+               id: user.id,
+               createdAt: dataUser?.createdAt?.toDate()?.toISOString(),
+               updatedAt: new Date().toISOString()
+            }
+         }
+      } catch (error) {
+         console.error(error.message);
+         return {
+            ok: false,
+            errorMessage: 'Error al actualizar el perfil'
+         }
+      }
+   }
 }

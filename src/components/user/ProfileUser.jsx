@@ -1,5 +1,6 @@
 import { useForm } from '@/hook';
 import { useUser, useUserSettings } from '@/hook/auth';
+import { UserToasts } from '@/toasts/UserToasts';
 import { Validations } from '@/ultils';
 import { User } from 'lucide-react';
 import { UserCard } from '../UI/card';
@@ -9,25 +10,20 @@ import { Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
 const schema = {
    initial: {
       name: '',
-      email: '',
       phone: '',
       address: '',
    },
    valid: {
       name: [
-         (value) => value.length >= 3,
+         (value) => value && value?.length >= 3,
          'El nombre debe tener al menos 3 caracteres',
-      ],
-      email: [
-         (value) => Validations.email(value),
-         'El email debe tener al menos 3 caracteres',
       ],
       phone: [
          (value) => Validations.phone(value),
          'El telefono debe tener al menos 3 caracteres',
       ],
       address: [
-         (value) => value.length >= 3,
+         (value) => value && value?.length >= 3,
          'La direccion debe tener al menos 3 caracteres',
       ],
    }
@@ -36,20 +32,18 @@ const schema = {
 
 export const ProfileUser = () => {
    const {
-      editProfile
+      updateProfile
    } = useUserSettings()
 
    const user = useUser()
 
    const {
       formState: {
-         email,
          phone,
          name,
          address
       },
       formValidation: {
-         emailValid,
          phoneValid,
          nameValid,
          addressValid
@@ -57,72 +51,74 @@ export const ProfileUser = () => {
       onValueChange,
       onSubmitForm,
    } = useForm({
+      validations: schema.valid,
+      activeValidation: true,
       initialState: {
          ...schema.initial,
          name: user.name,
-         email: user.email,
          phone: user.phone,
          address: user.address,
       },
-      validations: schema.valid,
-      activeValidation: true,
    });
 
    const onSubmit = onSubmitForm((value) => {
+      UserToasts.updateProfile(updateProfile({
+         ...value,
+         idUser: user.id
+      }))
    });
 
    return (
       <Card
-         className={'p-4 bg-transparent border-none shadow-none'}
+         className={'p-4 bg-transparent border-none shadow-none h-full'}
       >
          <CardHeader>
-            <CardTitle className='flex items-center gap-2 text-background'>
-               <User className='h-5 w-5' />
-               Información Personal
+            <CardTitle className='flex items-center justify-between text-background'>
+               <div className='space-x-2'>
+                  <User className='hidden md:inline-block h-5 w-5 align-middle' />
+                  <span className='align-middle text-sm md:text-base'>
+                     Información Personal
+                  </span>
+               </div>
+               {user.isRoleAdmin && (
+                  <Badge
+                     variant='secondary'
+                  >
+                     Administrador
+                  </Badge>
+               )}
             </CardTitle>
          </CardHeader>
-         <CardContent className='space-y-4'>
+         <CardContent className='space-y-4 h-full'>
             <UserCard
                className={'text-background '}
                mustShow={['name', 'lastName', 'email']}
-               user={{ name: 'Eduardo', lastName: 'Gonzalez', photoURL: 'https://i.pravatar.cc/150?u=a042581f4e29026024d', email: 'M5M2J@example.com' }}
+               user={{
+                  name: user.name,
+                  email: user.email,
+                  photoURL: user.photoURL,
+               }}
             />
 
             <Form
                onSubmit={onSubmit}
             >
-               <FromGroup className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <FormItem>
-                     <FormLabel
-                        htmlFor='name'
-                     >
-                        Nombre completo
-                     </FormLabel>
-                     <Input
-                        id='name'
-                        name='name'
-                        value={name}
-                        isError={!!nameValid}
-                        onChange={onValueChange}
-                        placeholder='Ingresa tu nombre completo'
-                     />
-                  </FormItem>
-
-                  <FormItem>
-                     <FormLabel htmlFor='email'>
-                        Correo electrónico
-                     </FormLabel>
-                     <Input
-                        id='email'
-                        type='email'
-                        name='email'
-                        value={email}
-                        isError={!!emailValid}
-                        onChange={onValueChange}
-                        placeholder='Ingresa tu correo electrónico'
-                     />
-                  </FormItem>
-               </FromGroup>
+               <FormItem>
+                  <FormLabel
+                     htmlFor='name'
+                  >
+                     Nombre completo
+                  </FormLabel>
+                  <Input
+                     id='name'
+                     type='text'
+                     name='name'
+                     value={name}
+                     isError={!!nameValid}
+                     onChange={onValueChange}
+                     placeholder='Ingresa tu nombre completo'
+                  />
+               </FormItem>
 
                <FromGroup className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   <FormItem>
@@ -131,6 +127,7 @@ export const ProfileUser = () => {
                      </FormLabel>
                      <Input
                         id='phone'
+                        type='text'
                         name='phone'
                         value={phone}
                         isError={!!phoneValid}
@@ -141,10 +138,11 @@ export const ProfileUser = () => {
 
                   <FormItem>
                      <FormLabel htmlFor='address'>
-                        Teléfono
+                        Direccion
                      </FormLabel>
                      <Input
                         id='address'
+                        type='text'
                         name='address'
                         value={address}
                         isError={!!addressValid}
@@ -154,25 +152,12 @@ export const ProfileUser = () => {
                   </FormItem>
                </FromGroup>
 
-               <FromGroup>
-                  {user.isRoleAdmin && (
-                     <div className='pt-4'>
-                        <Badge
-                           variant='secondary'
-                           className='bg-purple-100 text-purple-800'
-                        >
-                           Administrador
-                        </Badge>
-                     </div>
-                  )}
-
-                  <Button
-                     // onClick={handleSaveProfile}
-                     className='px-8'
-                  >
-                     Guardar Cambios
-                  </Button>
-               </FromGroup>
+               <Button
+                  type='submit'
+                  className='mt-auto px-8 mx-auto w-fit'
+               >
+                  Guardar Cambios
+               </Button>
             </Form>
          </CardContent>
       </Card>

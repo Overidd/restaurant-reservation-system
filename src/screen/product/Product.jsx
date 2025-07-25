@@ -36,7 +36,7 @@ export const ProductScreen = () => {
       <main className='space-y-10'>
         <section className='flex flex-row items-center justify-between gap-4'>
           <CategoryNav
-            className='w-fit md:max-w-2xl'
+            className='w-full md:w-fit md:max-w-2xl'
             data={categoryData}
           />
           {/* <ProductSearch /> */}

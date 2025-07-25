@@ -6,7 +6,7 @@ import {
    reserveMessageErrorAction,
    reserveResetAction,
    reserveResetSelectedTablesAction,
-   reserveSetAvailableTimesAction,
+   reserveSetAvailableHoursAction,
    reserveSetRestaurantAction,
    reserveSetTablesAction,
    typeLoading,
@@ -15,26 +15,28 @@ import {
 
 export const startGetAvailableHours = (date) => {
    return async (dispatch, getState) => {
+      const { info: { locationId } } = getState().reserveReducer.from;
 
-      try {
-         const { info: { locationId } } = getState().reserveReducer.from;
+      if (!locationId) throw new Error('No se ha seleccionado una localidad');
 
-         if (!locationId) throw new Error('No se ha seleccionado una localidad');
+      dispatch(reserveLoadingAction(typeLoading.HOUR));
 
-         dispatch(reserveLoadingAction(typeLoading.TIME));
+      const { ok, availableHours, messageError } = await serviceProvider.getAvailableHours({
+         dateStr: date,
+         idRestaurant: locationId
+      });
+      if (!ok) {
+         dispatch(reserveMessageErrorAction(messageError));
+         return;
+      };
 
-         const availableTime = await serviceProvider.getAvailableTimes({ dateStr: date, idRestaurant: locationId });
-
-         dispatch(reserveSetAvailableTimesAction(availableTime));
-      } catch (error) {
-         dispatch(reserveMessageErrorAction(error.message));
-      }
+      dispatch(reserveSetAvailableHoursAction(availableHours));
    }
 }
 
 export const startGetTables = () => {
    return async (dispatch, getState) => {
-      const { info: { locationId, diners }, date, time: { hour } } = getState().reserveReducer.from;
+      const { info: { locationId, diners }, date, hour: { name } } = getState().reserveReducer.from;
 
       try {
          dispatch(reserveLoadingAction(typeLoading.TABLES));
@@ -43,7 +45,7 @@ export const startGetTables = () => {
             dateStr: date,
             idRestaurant: locationId,
             diners: diners,
-            hour: hour,
+            hour: name,
          });
 
          const restaurant = await serviceProvider.getRestaurant({
@@ -63,21 +65,21 @@ export const startReserveTable = () => {
    return async (dispatch, getState) => {
       dispatch(reserveLoadingAction(typeLoading.RESERVE));
 
-      const { from, selectedTables, restaurant, errorMessage } = getState().reserveReducer;
+      const { from, selectedTables, restaurant } = getState().reserveReducer;
 
       const res = await serviceProvider.reserveTable({
          ...from.info,
          dateStr: from.date,
-         hour: from.time.hour,
-         tables: selectedTables,
+         hour: from.hour.name,
+         tables: selectedTables?.map(table => ({ id: table.id, name: table.name, chairs: table.chairs })) || [],
          idRestaurant: restaurant.id
       });
 
       if (!res.ok) {
          dispatch(reserveChangeStateAction(typeStatus.ACTIVE));
-         dispatch(reserveMessageErrorAction(errorMessage || 'No se pudo realizar la reserva'));
+         dispatch(reserveMessageErrorAction(res.errorMessage));
          dispatch(reserveResetSelectedTablesAction());
-         throw errorMessage || 'No se pudo realizar la reserva';
+         throw res.errorMessage;
       }
 
       dispatch(reserveChangeStateAction(typeStatus.COMPLETED));

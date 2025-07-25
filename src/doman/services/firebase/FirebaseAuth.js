@@ -80,8 +80,8 @@ export class FirebaseAuthService {
             email: email ?? emailUser,
             name: name ?? displayName,
             photoURL: photoURL,
-            phone: phone,
-            address: address,
+            phone: phone ?? '',
+            address: address ?? '',
             role: 'user'
          }
 
@@ -116,9 +116,9 @@ export class FirebaseAuthService {
                email: data?.email ?? res.user.email,
                name: data?.name ?? res.user.displayName,
                photoURL: data?.photoURL ?? res.user.photoURL,
-               phone: data?.phone,
-               address: data?.address,
-               role: data?.role
+               phone: data?.phone ?? '',
+               address: data?.address ?? '',
+               role: data?.role ?? 'user'
             }
          };
       } catch (error) {
@@ -147,14 +147,15 @@ export class FirebaseAuthService {
          const data = userDoc.data();
          return {
             ok: true,
+            isUserLogged: user !== null,
             user: {
                id: user.uid,
                email: data?.email ?? user.email,
                name: data?.name ?? user.displayName,
                photoURL: data?.photoURL ?? user.photoURL,
-               phone: data?.phone,
-               address: data?.address,
-               role: data?.role
+               phone: data?.phone ?? '',
+               address: data?.address ?? '',
+               role: data?.role ?? 'user'
             }
          }
       } catch (error) {

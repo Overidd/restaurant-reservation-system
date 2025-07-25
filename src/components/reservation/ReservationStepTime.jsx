@@ -12,19 +12,19 @@ import {
    ReservationTitle
 } from '.';
 
-export const ReservationStepTime = ({ className }) => {
-   const { isLoading, availableTime, reserveSetTime } = useReserve();
+export const ReservationStepHour = ({ className }) => {
+   const { isLoading, availableHour, reserveSetHour } = useReserve();
    const { nextStep } = useStepFormContext();
 
    const onValueChange = (data) => {
-      reserveSetTime(data);
+      reserveSetHour(data);
       nextStep();
    }
 
    return (
       <ReservationLoadding
-         isLodding={isLoading.time}
-         className={'h-full mx-auto'}
+         isLodding={isLoading.hour}
+         className={'h-full mx-auto flex flex-col justify-center'}
       >
          <section
             className={cn(
@@ -41,17 +41,17 @@ export const ReservationStepTime = ({ className }) => {
 
             <div className='flex flex-wrap gap-5 justify-center'>
                {
-                  availableTime.map(({ id, hour, tablesAvailable }) => (
+                  availableHour.map(({ id, name, tablesAvailable }) => (
                      <div
                         className='space-y-2'
                         key={id}
                      >
                         <Button
                            className={'w-24'}
-                           onClick={() => onValueChange({ id, hour, tablesAvailable })}
+                           onClick={() => onValueChange({ id, name, tablesAvailable })}
                            type='button'
                         >
-                           {hour}
+                           {name}
                         </Button>
                         <span className="block capitalize text-sm text-muted-foreground font-bold">
                            {tablesAvailable} Disponibles
@@ -60,7 +60,7 @@ export const ReservationStepTime = ({ className }) => {
                   ))
                }
                {
-                  !availableTime.length && (
+                  !availableHour.length && (
                      <span className="block capitalize text-muted-foreground font-bold">
                         No hay horas disponibles
                      </span>

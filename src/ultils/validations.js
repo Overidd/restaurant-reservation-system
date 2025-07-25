@@ -12,10 +12,9 @@ export class Validations {
    }
 
    static phone(value) {
-      const phoneRegex = /^\+?(\d{1,3})?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
-      return phoneRegex.test(value)
+      const phoneRegex = /^(?:\+?51)?[-.\s]?9\d{2}[-.\s]?\d{3}[-.\s]?\d{3}$/;
+      return phoneRegex.test(value);
    }
-
 }
 export const validateObject = (obj) => {
    if (!obj || typeof obj !== 'object') return false;

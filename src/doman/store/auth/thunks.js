@@ -13,7 +13,7 @@ export const startGoogleAuth = () => {
          return;
       }
 
-      dispatch(loginAction(res));
+      dispatch(loginAction(res.user));
    };
 };
 
@@ -34,7 +34,7 @@ export const startCreateUser = (dataRegister) => {
          throw new Error(res.errorMessage);
       }
 
-      dispatch(loginAction(res));
+      dispatch(loginAction(res.user));
    }
 }
 
@@ -54,7 +54,7 @@ export const startLogin = (dataLoginUser) => {
          dispatch(logoutAction({ errorMessage: res.errorMessage }));
          throw new Error(res.errorMessage);
       }
-      dispatch(loginAction(res));
+      dispatch(loginAction(res.user));
    }
 }
 
@@ -68,10 +68,10 @@ export const startLogout = () => {
 
 export const startChecking = () => {
    return async (dispatch) => {
-      const { isUserLogged, ...res } = await authService.checking();
+      const { isUserLogged, ok, errorMessage, user } = await authService.checking();
 
-      if (!res.ok) {
-         dispatch(logoutAction({ errorMessage: res.errorMessage }));
+      if (!ok) {
+         dispatch(logoutAction({ errorMessage: errorMessage }));
          // throw new Error(res.errorMessage);
          return;
       }
@@ -81,6 +81,6 @@ export const startChecking = () => {
          return;
       }
 
-      dispatch(loginAction(res));
+      dispatch(loginAction(user));
    }
 }

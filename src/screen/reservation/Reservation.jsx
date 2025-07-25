@@ -8,8 +8,8 @@ import {
    ReservationInfoTable,
    ReservationSelecTable,
    ReservationStepDate,
+   ReservationStepHour,
    ReservationStepInfo,
-   ReservationStepTime,
 } from '@/components/reservation';
 import {
    Card2
@@ -72,9 +72,10 @@ export const ReservationScreen = () => {
          onClose={closeModal}
          direction='left'
          preventBackdropClose={true}
+         overlayClassName='overflow-y-auto md:overflow-hidden'
          className={cn(
-            'relative h-full w-fit',
-            'md:-ml-3',
+            'relative w-fit',
+            'md:-ml-3 m-0 p-0',
          )}
       >
          <Card2
@@ -115,7 +116,7 @@ export const ReservationScreen = () => {
                </StepForm>
 
                <StepForm name='hour'>
-                  <ReservationStepTime />
+                  <ReservationStepHour />
                </StepForm>
 
                <StepForm name='table'>
@@ -127,6 +128,7 @@ export const ReservationScreen = () => {
                      {
                         (state) => (
                            <ReservationFooter
+                              closeModal={closeModal}
                               maxStep={3}
                               numStep={4}
                               {...state}
@@ -140,8 +142,8 @@ export const ReservationScreen = () => {
          </Card2>
          <ReservationInfoTable
             className={cn(
-               'hidden md:flex w-[20rem] h-[35rem]',
-               'absolute bottom-0 -right-[22rem]',
+               'md:w-[20rem] md:h-[32rem]',
+               'md:absolute bottom-0 md:-right-[22rem]',
             )}
          />
       </Modal>

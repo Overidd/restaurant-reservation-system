@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import { ChevronLeft } from 'lucide-react';
 
-import { cn } from '@/ultils';
 
 import { Button, ProgressBar } from '../UI/common';
 
@@ -10,7 +9,8 @@ export const ReservationFooter = ({
    currentStepIndex,
    prevStep,
    maxStep = 3,
-   numStep = 3
+   numStep = 3,
+   closeModal,
 }) => {
 
    if (currentStepIndex >= maxStep) return null
@@ -24,15 +24,23 @@ export const ReservationFooter = ({
             steps={numStep}
             currentStep={currentStepIndex}
          />
-         <Button
-            onClick={prevStep}
-            className={cn(
-               'mx-auto w-10 h-10',
-               currentStepIndex <= 0 && 'opacity-0 pointer-events-none'
-            )}
-         >
-            <ChevronLeft />
-         </Button>
+         <div className='w-fit mx-auto space-x-4'>
+            {
+               !currentStepIndex <= 0 &&
+               <Button
+                  className={'align-middle'}
+                  onClick={prevStep}
+               >
+                  <ChevronLeft />
+               </Button>
+            }
+            <Button
+               className={'align-middle'}
+               onClick={closeModal}
+            >
+               Cerrar
+            </Button>
+         </div>
       </div>
    )
 }

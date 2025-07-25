@@ -362,7 +362,7 @@ export const FromReservation = ({
 
          {/* Informacion de la reserva */}
 
-         <FromGroup className={'grid grid-cols-2 gap-4'}>
+         <FromGroup className={'md:grid grid-cols-2 gap-4'}>
             <FormItem>
                <FormLabel
                   htmlFor='diners'
@@ -434,7 +434,7 @@ export const FromReservation = ({
             </FormItem>
          </FromGroup>
 
-         <FromGroup className={'grid grid-cols-2 gap-4'}>
+         <FromGroup className={'md:grid grid-cols-2 gap-4'}>
             <FormItem>
                <FormLabel
                   htmlFor='diners'

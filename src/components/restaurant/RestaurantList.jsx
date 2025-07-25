@@ -15,14 +15,14 @@ export const RestaurantList = ({
          'grid grid-cols-[repeat(auto-fill,minmax(18rem,20rem))] gap-6',
          className
       )}>
-         {!isLoading && Array.from({ length: 3 }).map((_, index) => (
+         {isLoading && Array.from({ length: 3 }).map((_, index) => (
             <CardSkeleton
                key={index}
                variant='product'
             />
          ))}
 
-         {isLoading && restaurants.map((restaurant) => (
+         {!isLoading && restaurants.map((restaurant) => (
             <RestaurantItem
                key={restaurant.id}
                restaurant={restaurant}
