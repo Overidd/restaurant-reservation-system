@@ -243,7 +243,7 @@ export class FirebaseReserveService {
    }
 
    async getAllocation() {
-      const locations = await getDocs(collection(FirebaseDB, 'locations'));
+      const locations = await getDocs(collection(FirebaseDB, 'restaurants'));
       return locations.docs.map(doc => ({
          id: doc.id,
          ...doc.data()
