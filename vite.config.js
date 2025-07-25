@@ -13,7 +13,8 @@ export const viteConfig = defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') }
-  }
+  },
+  base: '/',
 })
 
 export default viteConfig
