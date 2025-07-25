@@ -1,4 +1,4 @@
-import { CreateObjectContext } from '@/doman/context/object';
+import { CreateObjectContext } from '@/doman/context/object/createObjectContext';
 import { useContext } from 'react';
 
 export const useCreateObjectContext = () => {

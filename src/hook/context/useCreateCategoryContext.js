@@ -1,4 +1,4 @@
-import { CreateCategoryContext } from '@/doman/context/object';
+import { CreateCategoryContext } from '@/doman/context/object/createCategoryContext';
 import { useContext } from 'react';
 
 export const useCreateCategoryContext = () => {

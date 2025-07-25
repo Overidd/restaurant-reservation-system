@@ -1,4 +1,5 @@
-import { CreateCategoryProvider, CreateObjectProvider } from '@/doman/context/object';
+import { CreateCategoryProvider } from '@/doman/context/object/CreateCategoryProvider';
+import { CreateObjectProvider } from '@/doman/context/object/CreateObjectProvider';
 import { useModalTableEdit, useModalTableEditProperty } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
 import { useRestaurantUi } from '@/hook/dashboard';

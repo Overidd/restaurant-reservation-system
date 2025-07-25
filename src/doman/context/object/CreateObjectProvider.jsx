@@ -1,6 +1,6 @@
 import { useObjects } from '@/hook/fetchings';
 import { useRef, useState } from 'react';
-import { CreateObjectContext } from '.';
+import { CreateObjectContext } from './createObjectContext';
 
 export const CreateObjectProvider = ({ children }) => {
    const [category, setCategory] = useState(null)
