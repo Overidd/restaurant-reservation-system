@@ -203,7 +203,7 @@ export const FromReservation = ({
    }
 
    useEffect(() => {
-      if (!isEdit) return;
+      if (isEdit) return;
       loadRestaurants();
    }, [isEdit])
 
