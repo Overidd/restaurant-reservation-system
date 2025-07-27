@@ -87,7 +87,7 @@ export const MapState = ({
                return <div key={resource.id} style={style}>
                   <Object
                      object={resource}
-                     selectedObject={selectedResource}
+                  // selectedObject={selectedResource}
                   />
                </div>
             default:

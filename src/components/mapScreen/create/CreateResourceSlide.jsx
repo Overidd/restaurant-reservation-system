@@ -49,6 +49,7 @@ export const CreateResourceSlide = ({
    }
 
    const handleModalEditCategory = () => {
+      if (!category) return
       openModalEditCategory()
    }
 
@@ -57,7 +58,7 @@ export const CreateResourceSlide = ({
       setCategory(null)
    }, [selectedResource.idTemp])
 
-   
+
 
    return (
       <SlideOver

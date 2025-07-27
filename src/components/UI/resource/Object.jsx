@@ -6,6 +6,7 @@ export const Object = ({
    object,
    isCursorPreview = false,
    highlighted = false,
+   hasConflict = false,
    onClick,
    ...Props
 }) => {
@@ -47,9 +48,10 @@ export const Object = ({
          tabIndex={0}
          role='button'
          className={cn(
-            'relative w-full h-full overflow-hidden',
+            'relative w-full h-full overflow-hidden rounded-xl',
             highlighted && 'transition-shadow rounded-2xl shadow-lg bg-background',
             isCursorPreview && 'opacity-60 pointer-events-none',
+            hasConflict && 'bg-red-500/30',
          )}
          style={{
             transform: `rotate(${object.rotation || 0}deg)`,

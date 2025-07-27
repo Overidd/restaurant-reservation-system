@@ -13,7 +13,7 @@ import {
    where,
 } from 'firebase/firestore/lite';
 
-import { DateParser, generateCode, typeResource, typeStatusTable } from '@/ultils';
+import { DateFormat, DateParser, generateCode, typeResource, typeStatusTable } from '@/ultils';
 
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { FirebaseDB } from './config';
@@ -29,7 +29,9 @@ export class FirebaseDashboardService {
 
          const resul = hours.docs.map(doc => ({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+            updatedAt: doc.data()?.updatedAt?.toDate()?.toISOString(),
          }));
 
          return {
@@ -67,7 +69,7 @@ export class FirebaseDashboardService {
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error || 'Error al obtener los restaurantes'
+            errorMessage: error.message || 'Error al obtener los restaurantes'
          }
       }
    }
@@ -967,7 +969,8 @@ export class FirebaseDashboardService {
          const categoryRef = doc(collection(FirebaseDB, 'categories'));
          await setDoc(categoryRef, {
             name,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
          });
 
          return {
@@ -1107,7 +1110,8 @@ export class FirebaseDashboardService {
             image,
             idCategory,
             rotation,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
          }
 
          await setDoc(objectRef, data);
@@ -1116,7 +1120,8 @@ export class FirebaseDashboardService {
             newObject: {
                id: objectRef.id,
                ...data,
-               createdAt: new Date().toISOString()
+               createdAt: DateFormat.toYYYYMMDD(new Date()),
+               updatedAt: DateFormat.toYYYYMMDD(new Date()),
             }
          }
 
@@ -1158,6 +1163,7 @@ export class FirebaseDashboardService {
                id: objectRef.id,
                ...data,
                createdAt: objectData.createdAt.toDate().toISOString(),
+               updatedAt: DateFormat.toYYYYMMDD(new Date()),
             }
          }
 
@@ -1299,7 +1305,7 @@ export class FirebaseDashboardService {
                id: tableRef.id,
                ...data,
                createdAt: tableData.createdAt?.toDate()?.toISOString() ?? null,
-               updatedAt: tableData.updatedAt?.toDate()?.toISOString() ?? null,
+               updatedAt: DateFormat.toYYYYMMDD(new Date()),
             }
          }
 
@@ -1369,7 +1375,8 @@ export class FirebaseDashboardService {
             rotation,
             image,
             type,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
          };
 
          await setDoc(objectRef, data);
@@ -1378,7 +1385,9 @@ export class FirebaseDashboardService {
             object: {
                id: objectRef.id,
                ...data,
-               createdAt: new Date().toISOString()
+               createdAt: DateFormat.toYYYYMMDD(new Date()),
+               updatedAt: DateFormat.toYYYYMMDD(new Date()),
+
             }
          };
 
@@ -1437,7 +1446,8 @@ export class FirebaseDashboardService {
             name,
             isBlocked,
             idRestaurant,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
          };
 
          await setDoc(tableRef, data);
@@ -1447,7 +1457,8 @@ export class FirebaseDashboardService {
                id: tableRef.id,
                ...data,
                idRestaurant,
-               createdAt: new Date().toISOString()
+               createdAt: DateFormat.toYYYYMMDD(new Date()),
+               updatedAt: DateFormat.toYYYYMMDD(new Date()),
             }
          };
 

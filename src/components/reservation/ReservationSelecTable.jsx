@@ -59,8 +59,6 @@ export const ReservationSelecTable = () => {
       selectedResource: {}
    });
 
-   console.log(resources);
-
    const {
       prevStep
    } = useStepFormContext();

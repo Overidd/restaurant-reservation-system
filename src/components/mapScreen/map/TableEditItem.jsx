@@ -9,6 +9,7 @@ export const TableEditItem = ({
    onDelete,
    onOpenEdit,
    highlighted = false,
+   hasConflict = false,
    isCursorPreview = false
 }) => {
 
@@ -58,6 +59,7 @@ export const TableEditItem = ({
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild>
             <Table
+               hasConflict={hasConflict}
                onClick={handleClick}
                color={table?.status}
                name={table?.name}

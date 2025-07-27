@@ -113,6 +113,7 @@ export const Table = ({
    chairs = 2,
    rotation = 0,
    isHighlighted = false,
+   hasConflict = false,
    isCursorPreview = false,
    ...props
 }) => {
@@ -128,6 +129,7 @@ export const Table = ({
             'transition-all duration-300 hover:scale-105 cursor-pointer',
             isHighlighted && 'transition-shadow rounded-2xl shadow-card bg-background',
             isCursorPreview && 'opacity-60 pointer-events-none',
+            hasConflict && 'bg-red-500/30',
             className,
          )}
          style={{

@@ -1,15 +1,14 @@
 import { useForm } from '@/hook';
 import { useDimensionMap } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
+import { BetweenHorizontalStart, BetweenVerticalStart } from 'lucide-react';
+import { memo } from 'react';
 import { Card2 } from '../UI/card';
 import { Button, CardTitle, SlideOver } from '../UI/common';
-import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, NumberInput } from '../UI/from';
 
-export const EditDimensionMapSlide = ({
-   className,
-   restaurant,
-   isOpen = false
-}) => {
+export const EditDimensionMapSlide = memo(({ className, restaurant, isOpen = false }) => {
+
    const {
       updateDimension,
       changeValueDimension,
@@ -64,41 +63,45 @@ export const EditDimensionMapSlide = ({
                <FromGroup
                   className={'flex flex-row gap-4'}
                >
-                  <FormItem className={'flex flex-row gap-2 items-center'}>
+                  <FormItem>
                      <FormLabel>
-                        X
+                        Filas
                      </FormLabel>
-                     <Input
-                        size='sm'
-                        type='number'
-                        variant={'crystal'}
-                        name='rows'
+                     <NumberInput
+                        min={1}
+                        axis='y'
+                        name={'rows'}
                         value={rows}
                         onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <BetweenHorizontalStart
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
                      />
                   </FormItem>
-                  <FormItem className={'flex flex-row gap-2 items-center'}>
+                  <FormItem>
                      <FormLabel>
-                        Y
+                        Columnas
                      </FormLabel>
-                     <Input
-                        size='sm'
-                        type='number'
-                        variant={'crystal'}
-                        name='columns'
+                     <NumberInput
+                        min={1}
+                        axis='x'
+                        name={'columns'}
                         value={columns}
                         onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <BetweenVerticalStart
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
                      />
                   </FormItem>
                </FromGroup>
-               <FormItem
-                  className={'flex flex-row gap-2 items-center'}
-               >
-                  <Checkbox size='sm' />
-                  <FormLabel>
-                     Mostrar lineas
-                  </FormLabel>
-               </FormItem>
 
                <FormItem>
                   <Button
@@ -113,4 +116,6 @@ export const EditDimensionMapSlide = ({
          </Card2>
       </SlideOver>
    )
-}
+})
+
+EditDimensionMapSlide.displayName = 'EditDimensionMapSlide';

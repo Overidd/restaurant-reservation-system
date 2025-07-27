@@ -7,12 +7,13 @@ import { Button, SlideOver } from '../../UI/common';
 
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
+import { BetweenHorizontalStart, BetweenVerticalStart, MoveHorizontal, MoveVertical, RotateCwSquare } from 'lucide-react';
 import {
    Form,
    FormItem,
    FormLabel,
    FromGroup,
-   Input,
+   NumberInput,
    Select,
    SelectContent,
    SelectItem,
@@ -24,6 +25,8 @@ const schema = {
    initial: {
       positionX: 0,
       positionY: 0,
+      width: 1,
+      height: 1,
       rotation: 0,
       size: 0,
       chairs: 0
@@ -71,6 +74,8 @@ export const EditTablePropertySlide = ({
       formState: {
          positionX,
          positionY,
+         width,
+         height,
          rotation,
          size,
          chairs
@@ -136,17 +141,23 @@ export const EditTablePropertySlide = ({
                      <FormLabel
                         htmlFor={'positionX'}
                      >
-                        X
+                        Y
                      </FormLabel>
-                     <Input
-                        id='positionX'
-                        type='number'
-                        name='positionX'
-                        variant='crystal'
+                     <NumberInput
+                        axis='y'
                         min={1}
-                        max={restaurant.x}
+                        max={restaurant?.rows}
+                        name={'positionX'}
                         value={positionX}
+                        // isError={!!positionXValid}
                         onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <MoveVertical
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
                      />
                   </FormItem>
 
@@ -154,17 +165,24 @@ export const EditTablePropertySlide = ({
                      <FormLabel
                         htmlFor={'positionY'}
                      >
-                        Y
+                        X
                      </FormLabel>
-                     <Input
-                        id='positionY'
-                        type='number'
-                        name='positionY'
-                        variant='crystal'
+
+                     <NumberInput
+                        axis='x'
                         min={1}
-                        max={restaurant.y}
+                        max={restaurant?.columns}
+                        name={'positionY'}
                         value={positionY}
+                        // isError={!!positionYValid}
                         onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <MoveHorizontal
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
                      />
                   </FormItem>
 
@@ -174,15 +192,77 @@ export const EditTablePropertySlide = ({
                      >
                         Rotación
                      </FormLabel>
-                     <Input
-                        id='rotation'
-                        type='number'
-                        name='rotation'
-                        variant='crystal'
+                     <NumberInput
                         min={0}
                         max={360}
-                        value={Number(rotation)}
+                        axis='x'
+                        step={10}
+                        name={'rotation'}
+                        value={rotation}
+                        // isError={!!rotationValid}
                         onChange={onValueChange}
+                        prefix={
+                           <RotateCwSquare
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
+                     />
+                  </FormItem>
+               </FromGroup>
+
+               <FormLabel>
+                  Tamaño en la escena
+               </FormLabel>
+               <FromGroup
+                  className={'grid grid-cols-3 gap-4'}
+               >
+                  <FormItem>
+                     <FormLabel
+                        htmlFor={'width'}
+                     >
+                        Width
+                     </FormLabel>
+
+                     <NumberInput
+                        min={1}
+                        axis='x'
+                        name={'width'}
+                        value={width}
+                        max={restaurant?.rows}
+                        // isError={!!widthValid}
+                        onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <BetweenVerticalStart
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
+                     />
+                  </FormItem>
+
+                  <FormItem>
+                     <FormLabel
+                        htmlFor={'height'}
+                     >
+                        Height
+                     </FormLabel>
+                     <NumberInput
+                        min={1}
+                        axis='y'
+                        name={'height'}
+                        value={height}
+                        max={restaurant?.columns}
+                        // isError={!!heightValid}
+                        onChange={onValueChange}
+                        sensitivity={0.03}
+                        prefix={
+                           <BetweenHorizontalStart
+                              size={14}
+                              className={'-mr-2'}
+                           />
+                        }
                      />
                   </FormItem>
                </FromGroup>
@@ -268,6 +348,6 @@ export const EditTablePropertySlide = ({
                </FormItem>
             </Form>
          </Card2>
-      </SlideOver>
+      </SlideOver >
    )
 }

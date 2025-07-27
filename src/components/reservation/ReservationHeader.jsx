@@ -14,7 +14,6 @@ const translation = {
 
 const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => {
    const dataArray = [];
-   // console.log();
    if (info && typeof info === 'object') {
       const infoItems = Object.entries(info)
          .map(([key, value]) => ({

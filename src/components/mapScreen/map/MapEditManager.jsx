@@ -17,7 +17,6 @@ export const MapEditManager = () => {
       selectedResource,
       setSelectedResource,
       toggleIsTempResourceChange,
-      updateSelectedResource,
    } = useRestaurantUi();
 
    const {

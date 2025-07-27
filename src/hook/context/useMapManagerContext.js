@@ -11,5 +11,6 @@ export const useMapManagerContext = () => {
       resources: ctx.resources,
       isEdit: ctx.isEdit,
       restaurant: ctx.restaurant,
+      cardTableRef: ctx.cardTableRef
    }
 }

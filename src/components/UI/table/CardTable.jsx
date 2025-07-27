@@ -7,17 +7,20 @@ export const CardTable = ({
    isLoading,
    columns,
    rows,
+   ref,
 }) => {
    const colorBorder = 'bg-[#545454]'
 
    return (
-      <div className={cn(
-         'relative rounded-md overflow-hidden',
-         'overflow-hidden select-none',
-         'w-fit h-fit p-4',
-         'bg-gray-300/10',
-         className
-      )}>
+      <div
+         ref={ref}
+         className={cn(
+            'relative rounded-md',
+            'w-full h-full p-4',
+            'bg-gray-300/10',
+            'select-none',
+            className
+         )}>
          <CardLoadding
             className='w-full h-full flex items-center justify-center relative'
             isLodding={isLoading}
@@ -25,7 +28,7 @@ export const CardTable = ({
             <div
                className={cn(
                   'w-full h-full',
-                  'grid items-center justify-center gap-2 overflow-auto [&::-webkit-scrollbar]:hidden'
+                  'grid gap-2 items-center justify-center overflow-auto [&::-webkit-scrollbar]:hidden'
                )}
                style={{
                   gridTemplateColumns: `repeat(${columns}, 1fr)`,

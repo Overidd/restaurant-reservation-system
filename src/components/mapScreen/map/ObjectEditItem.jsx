@@ -4,12 +4,14 @@ import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
 export const ObjectEditItem = ({
-   object,
    onDelete,
    // onOpenEdit,
    isCursorPreview,
-   highlighted = false
+   object = {},
+   hasConflict = false,
+   highlighted = false,
 }) => {
+
 
    const [open, setOpen] = useState(false);
 
@@ -53,11 +55,15 @@ export const ObjectEditItem = ({
    );
 
    return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+         open={open}
+         onOpenChange={setOpen}
+      >
          <PopoverTrigger asChild>
             <Object
                object={object}
                highlighted={highlighted}
+               hasConflict={hasConflict}
                isCursorPreview={isCursorPreview}
                onClick={handleClick}
             />
@@ -71,7 +77,10 @@ export const ObjectEditItem = ({
             onClick={handleClose}
             className='flex flex-col gap-4 w-fit p-4 rounded-2xl shadow-xl'
          >
-            {renderContent()}
+            {// eslint-disable-next-line no-prototype-builtins
+               !object?.hasOwnProperty('idTemp') &&
+               renderContent()
+            }
          </PopoverContent>
       </Popover >
    )

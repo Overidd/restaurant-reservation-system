@@ -69,6 +69,11 @@ export const useResource = () => {
       if (!data || !validateObject(data)) {
          throw new Error('Error al crear la mesa');
       };
+      const isConflict = document.querySelector(`[data-conflict="true"]`);
+
+      if (isConflict) {
+         throw new Error('Error. hay un conflicto en la posicion de la mesa');
+      };
 
       setLoading((prev) => ({ ...prev, table: true }));
 
@@ -88,6 +93,13 @@ export const useResource = () => {
       if (!data || !validateObject(data)) {
          throw new Error('Error al crear el objeto');
       };
+
+      const isConflict = document.querySelector(`[data-conflict="true"]`);
+
+      if (isConflict) {
+         throw new Error('Error. hay un conflicto en la posicion del objeto');
+      };
+
       setLoading((prev) => ({ ...prev, object: true }));
 
       const res = await dasboardServiceProvider.createObject(data);
@@ -124,6 +136,12 @@ export const useResource = () => {
          throw new Error('Error al actualizar la mesa');
       };
 
+      const isConflict = document.querySelector(`[data-conflict="true"]`);
+
+      if (isConflict) {
+         throw new Error('Error. hay un conflicto en la posicion de la mesa');
+      };
+      
       setLoading((prev) => ({ ...prev, updateTable: true }));
 
       const res = await dasboardServiceProvider.updateTable(data);

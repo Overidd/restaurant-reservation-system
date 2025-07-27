@@ -57,7 +57,6 @@ export const Modal = ({
          }, 10)
          document.body.style.overflow = 'hidden'
       } else if (isVisible) {
-         // Solo ejecutar la animación de cierre si el modal está visible
          // pero NO ejecutar onClose aquí, se ejecutará en handleClose
          setIsAnimating(false)
          // Cancelar cualquier timeout de apertura pendiente
@@ -73,7 +72,6 @@ export const Modal = ({
       }
 
       return () => {
-         // Limpiar timeouts si el componente se desmonta
          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
          if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
          document.body.style.overflow = 'unset'
@@ -84,7 +82,7 @@ export const Modal = ({
    useEffect(() => {
       const handleEscape = (e) => {
          if (e.key === 'Escape' && isOpen && !preventBackdropClose) {
-            handleClose() // Usar handleClose en lugar de onClose
+            handleClose()
          }
       }
       document.addEventListener('keydown', handleEscape)
@@ -98,7 +96,7 @@ export const Modal = ({
             setShouldShake(true)
             setTimeout(() => setShouldShake(false), 500)
          } else {
-            handleClose() // Usar handleClose en lugar de onClose
+            handleClose()
          }
       }
    }

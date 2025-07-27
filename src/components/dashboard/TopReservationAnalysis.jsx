@@ -6,8 +6,6 @@ export const TopReservationAnalysis = ({
    topClientAnalysis = []
 }) => {
 
-   console.log(topClientAnalysis);
-
    return (
       <Card
          className={cn(

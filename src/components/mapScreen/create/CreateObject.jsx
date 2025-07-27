@@ -4,10 +4,10 @@ import { useResource } from '@/hook/dashboard';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';
 import { AdminTableToasts } from '@/toasts';
 import { typeResource } from '@/ultils';
-import { Pen, Plus } from 'lucide-react';
+import { BetweenHorizontalStart, BetweenVerticalStart, MoveHorizontal, MoveVertical, Pen, Plus, RotateCwSquare } from 'lucide-react';
 import { useEffect } from 'react';
 import { Button } from '../../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input, Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '../../UI/from';
+import { Form, FormItem, FormLabel, FromGroup, NumberInput, Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '../../UI/from';
 
 const schema = {
    initial: {
@@ -56,7 +56,6 @@ export const CreateObject = ({
    currentCategory,
    restaurant,
 }) => {
-   // const [objectName, setObjectName] = useState(null) // table, y etc...
 
    const {
       openModal: onOpenCreateItemObj
@@ -256,16 +255,23 @@ export const CreateObject = ({
                <FormLabel
                   htmlFor={'positionX'}
                >
-                  X
+                  Y
                </FormLabel>
-               <Input
-                  size='base'
-                  type='number'
-                  id='positionX'
-                  name='positionX'
+               <NumberInput
+                  axis='y'
+                  min={1}
+                  max={restaurant?.rows}
+                  name={'positionX'}
                   value={positionX}
                   isError={!!positionXValid}
                   onChange={onValueChange}
+                  sensitivity={0.03}
+                  prefix={
+                     <MoveVertical
+                        size={14}
+                        className={'-mr-2'}
+                     />
+                  }
                />
             </FormItem>
 
@@ -273,16 +279,24 @@ export const CreateObject = ({
                <FormLabel
                   htmlFor={'positionY'}
                >
-                  Y
+                  X
                </FormLabel>
-               <Input
-                  size='base'
-                  type='number'
-                  id='positionY'
-                  name='positionY'
+
+               <NumberInput
+                  axis='x'
+                  min={1}
+                  max={restaurant?.columns}
+                  name={'positionY'}
                   value={positionY}
                   isError={!!positionYValid}
                   onChange={onValueChange}
+                  sensitivity={0.03}
+                  prefix={
+                     <MoveHorizontal
+                        size={14}
+                        className={'-mr-2'}
+                     />
+                  }
                />
             </FormItem>
 
@@ -292,14 +306,20 @@ export const CreateObject = ({
                >
                   Rotate
                </FormLabel>
-               <Input
-                  size='base'
-                  type='number'
-                  id='rotation'
-                  name='rotation'
+               <NumberInput
+                  min={0}
+                  max={360}
+                  axis='x'
+                  name={'rotation'}
                   value={rotation}
                   isError={!!rotationValid}
                   onChange={onValueChange}
+                  prefix={
+                     <RotateCwSquare
+                        size={14}
+                        className={'-mr-2'}
+                     />
+                  }
                />
             </FormItem>
          </FromGroup>
@@ -317,14 +337,22 @@ export const CreateObject = ({
                >
                   Width
                </FormLabel>
-               <Input
-                  size='base'
-                  type='number'
-                  id='width'
-                  name='width'
+
+               <NumberInput
+                  min={1}
+                  axis='x'
+                  name={'width'}
                   value={width}
+                  max={restaurant?.rows}
                   isError={!!widthValid}
                   onChange={onValueChange}
+                  sensitivity={0.03}
+                  prefix={
+                     <BetweenVerticalStart
+                        size={14}
+                        className={'-mr-2'}
+                     />
+                  }
                />
             </FormItem>
 
@@ -334,14 +362,22 @@ export const CreateObject = ({
                >
                   Height
                </FormLabel>
-               <Input
-                  size='base'
-                  type='number'
-                  id='height'
-                  name='height'
+
+               <NumberInput
+                  min={1}
+                  axis='y'
+                  name={'height'}
                   value={height}
+                  max={restaurant?.columns}
                   isError={!!heightValid}
                   onChange={onValueChange}
+                  sensitivity={0.03}
+                  prefix={
+                     <BetweenHorizontalStart
+                        size={14}
+                        className={'-mr-2'}
+                     />
+                  }
                />
             </FormItem>
          </FromGroup>

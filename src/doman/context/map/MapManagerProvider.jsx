@@ -2,7 +2,7 @@ import { MapEditManager, MapStateManager } from '@/components/mapScreen';
 import { CardTable } from '@/components/UI/table';
 import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
 import { cn } from '@/ultils';
-import { Children, isValidElement, useMemo } from 'react';
+import { Children, isValidElement, useMemo, useRef } from 'react';
 import { MapManagerContext } from './MapManagerContext';
 
 // 4 render 
@@ -34,7 +34,7 @@ export const MapManagerProvider = ({
       hours,
       hour,
    });
-   console.log(hour);
+
    const {
       isEdit,
       isTempResourceChange,
@@ -63,38 +63,48 @@ export const MapManagerProvider = ({
    const mapEditManager = useMemo(() => {
       return Children.toArray(children).filter(child => isValidElement(child) && child.type === MapEditManager)
    }, [children])
+
+   const cardTableRef = useRef(null);
+
    return (
       <MapManagerContext.Provider value={{
          isEdit,
          resources,
-         restaurant: editRestaurant
+         cardTableRef,
+         restaurant: editRestaurant,
       }}>
          <CardTable
-            columns={restaurant.columns}
-            rows={restaurant.rows}
+            ref={cardTableRef}
+            columns={editRestaurant.columns}
+            rows={editRestaurant.rows}
             isLoading={isLoading}
             className={cn(
                isEdit && 'z-20',
                className
             )}
          >
-            {isEdit ? mapEditManager : mapStateManager}
-            {/* overlay sólo en modo edición */}
-            {/* {isEdit && (
-                     <div
-                        className={cn(
-                           'absolute inset-0 select-none pointer-events-none z-50',
-                           'grid items-center justify-center gap-2'
-                        )}
-                        style={{
-                           gridTemplateColumns: `repeat(${restaurant.columns}, 1fr)`,
-                           gridTemplateRows: `repeat(${restaurant.rows}, 1fr)`
-                        }}
-                     >
-                        <RenderCursorSelect resource={selectedResource} />
-                     </div>
-                  )} */}
+            {isEdit
+               ? mapEditManager
+               : mapStateManager
+            }
          </CardTable>
       </MapManagerContext.Provider>
    )
 }
+
+
+{/* overlay sólo en modo edición */ }
+{/* {isEdit && (
+<div
+   className={cn(
+      'absolute inset-0 select-none pointer-events-none z-50',
+      'grid items-center justify-center gap-2'
+   )}
+   style={{
+      gridTemplateColumns: `repeat(${restaurant.columns}, 1fr)`,
+      gridTemplateRows: `repeat(${restaurant.rows}, 1fr)`
+   }}
+>
+   <RenderCursorSelect resource={selectedResource} />
+</div>
+)} */}
