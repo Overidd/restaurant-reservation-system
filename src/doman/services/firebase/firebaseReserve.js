@@ -145,18 +145,25 @@ export class FirebaseReserveService {
          throw new Error('No se proporciono la fecha');
       }
 
-      const tables = await getDocs(query(
-         collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
-         where('isBlocked', '==', false),
-      ))
-
-      const reservations = await getDocs(query(
-         collection(FirebaseDB, 'reservations'),
-         where('idRestaurant', '==', idRestaurant),
-         where('dateStr', '==', dateStr),
-         where('status', 'in', ['confirmed', 'pending']),
-         where('hour', '==', hour),
-      ));
+      const [tables, reservations, blockTempTables] = await Promise.all([
+         getDocs(query(
+            collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
+            where('isBlocked', '==', false),
+         )),
+         getDocs(query(
+            collection(FirebaseDB, 'reservations'),
+            where('idRestaurant', '==', idRestaurant),
+            where('dateStr', '==', dateStr),
+            where('status', 'in', ['confirmed', 'pending']),
+            where('hour', '==', hour),
+         )),
+         getDocs(query(
+            collection(FirebaseDB, 'blockTempTable'),
+            where('idRestaurant', '==', idRestaurant),
+            where('hour', '==', hour),
+            where('dateStr', '==', dateStr),
+         ))
+      ]);
 
       const reservedTablesIds = new Set();
       reservations.forEach(doc => {
@@ -179,6 +186,8 @@ export class FirebaseReserveService {
          }
       }
 
+      const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
+
       // Debemos obtener el restaurante y sus mesas corespodientes
       // Obtener las reservas en esa fecha
       // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
@@ -193,7 +202,7 @@ export class FirebaseReserveService {
             createdAt: data.createdAt?.toDate()?.toISOString(),
             updatedAt: data.updatedAt?.toDate()?.toISOString(),
          }
-      });
+      }).filter((item) => !blockTempTablesSet.has(item.id));
    }
 
    async getObject({ idRestaurant }) {

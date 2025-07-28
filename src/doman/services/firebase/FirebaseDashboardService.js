@@ -295,10 +295,11 @@ export class FirebaseDashboardService {
             }
          });
 
+         const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
+         
          const resul = tables.docs.map((doc) => {
             const data = doc.data();
             const reservation = tableInfoMap.get(String(doc.id));
-            const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
 
             return {
                id: doc.id,
