@@ -78,7 +78,7 @@ export const ReservationScreen = () => {
          preventBackdropClose={true}
          overlayClassName='overflow-y-auto md:overflow-hidden'
          className={cn(
-            // 'relative w-fit',
+            'overflow-visible',
             'md:-ml-3 m-0 p-0',
          )}
       >
@@ -146,8 +146,8 @@ export const ReservationScreen = () => {
          </Card2>
          <ReservationInfoTable
             className={cn(
-               'w-dvw md:w-[20rem] md:h-[32rem]',
-               'md:absolute md:bottom-0 md:-right-[22rem]',
+               'w-dvw md:w-[20rem] md:h-[25rem]',
+               'md:absolute md:top-3 md:-right-[74%]',
             )}
          />
       </Modal>

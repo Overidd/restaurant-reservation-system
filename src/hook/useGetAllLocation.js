@@ -1,8 +1,8 @@
 import { fetcher, serviceProvider } from '@/doman/services';
-export const locationsResource = fetcher(serviceProvider.getAllocation());
+export const restaurantResource = fetcher(serviceProvider.getAllRestaurants());
 
-export const useGetAllLocation = () => {
+export const useGetAllRestaurants = () => {
    return {
-      locations: locationsResource.read(),
+      restaurants: restaurantResource.read(),
    };
 };

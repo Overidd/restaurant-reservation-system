@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import {
    useForm,
-   useGetAllLocation,
+   useGetAllRestaurants,
    useReserve,
    useStepFormContext,
 } from '@/hook';
@@ -27,7 +27,7 @@ export const ReservationStepInfo = ({
    className,
    reasonData = []
 }) => {
-   const { locations } = useGetAllLocation();
+   const { restaurants } = useGetAllRestaurants();
    const { nextStep } = useStepFormContext();
    const { reserveSetInfo, from } = useReserve();
 
@@ -35,25 +35,25 @@ export const ReservationStepInfo = ({
       onSubmitForm,
       onValueChange,
       isFormValid,
-      formState: { location, reason, diners },
+      formState: { restaurant, reason, diners },
       formValidation: { locationValid, reasonValid, dinersValid },
    } = useForm({
       initialState: validateObject(from.info) ? from.info : schema.initial,
       validations: schema.valid,
       activeValidation: true,
       additionalData: {
-         location: locations,
+         restaurant: restaurants,
       },
    });
 
    const onSubmit = onSubmitForm((value) => {
-      const location = locations.find((item) =>
-         item.name?.toLowerCase() === value.location?.toLowerCase()
+      const restaurant = restaurants.find((item) =>
+         item.name?.toLowerCase() === value.restaurant?.toLowerCase()
       );
 
       reserveSetInfo({
          ...value,
-         locationId: location?.id,
+         restaurantId: restaurant?.id,
       });
 
       nextStep();
@@ -70,8 +70,8 @@ export const ReservationStepInfo = ({
          >
             <FormItem>
                <Select
-                  name='location'
-                  value={location || undefined}
+                  name='restaurant'
+                  value={restaurant || undefined}
                   onValueChange={onValueChange}
                >
                   <SelectTrigger
@@ -82,7 +82,7 @@ export const ReservationStepInfo = ({
                      <SelectValue placeholder='Seleccione una localidad' />
                   </SelectTrigger>
                   <SelectContent>
-                     {locations.map((item) => (
+                     {restaurants.map((item) => (
                         <SelectItem
                            key={item.id}
                            value={item.name}

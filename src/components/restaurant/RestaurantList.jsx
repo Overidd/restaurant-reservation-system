@@ -39,10 +39,13 @@ export const RestaurantItem = ({
 }) => {
 
    return (
-      <Card key={restaurant.id} className={cn(
-         'overflow-hidden gap-8',
-         'transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 cursor-pointer'
-      )}>
+      <Card
+         key={restaurant.id}
+         className={cn(
+            'overflow-hidden gap-8',
+            'transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 cursor-pointer'
+         )}
+      >
          <div className='relative rounded-lg overflow-hidden'>
             <img
                src={restaurant.image || '/default-image.jpg'}
@@ -52,7 +55,11 @@ export const RestaurantItem = ({
                className='w-full h-48 object-cover'
             />
             <div className='absolute top-2 right-2'>
-               <Badge>
+               <Badge
+                  className={cn(
+                     !restaurant.status && 'bg-red-400'
+                  )}
+               >
                   {restaurant.status
                      ? 'Activa'
                      : 'Inactiva'
@@ -64,14 +71,6 @@ export const RestaurantItem = ({
          <CardHeader>
             <CardTitle className='flex items-center justify-between'>
                <span className='truncate'>{restaurant.name}</span>
-               <Button
-                  variant='ghost'
-                  size='icon'
-                  className='h-8 w-8'
-                  onClick={() => openModalEdit(restaurant)}
-               >
-                  <Edit className='h-4 w-4' />
-               </Button>
             </CardTitle>
          </CardHeader>
 
@@ -118,15 +117,6 @@ export const RestaurantItem = ({
             <Separator />
 
             <div className='flex items-center justify-between'>
-               <div className='text-xs text-muted-foreground'>
-                  <p>
-                     Creado: {restaurant.createdAt.split(',')[0]}
-                  </p>
-                  <p>
-                     Actualizado: {restaurant.updatedAt.split(',')[0]}
-                  </p>
-               </div>
-
                {restaurant.linkMap && (
                   <Button
                      variant='outline'
@@ -143,7 +133,16 @@ export const RestaurantItem = ({
                      </a>
                   </Button>
                )}
+               <Button
+                  variant='ghost'
+                  size='icon'
+                  className='h-8 w-8'
+                  onClick={() => openModalEdit(restaurant)}
+               >
+                  <Edit className='h-4 w-4' />
+               </Button>
             </div>
+
          </CardContent>
       </Card>
    )

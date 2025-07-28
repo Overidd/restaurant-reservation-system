@@ -23,18 +23,20 @@ export const TableList = ({
       renderResource: (resource, style) => {
          switch (resource.type) {
             case typeResource.TABLE:
-               return <div key={resource.id} style={style}>
-                  <Table
-                     onClick={() => onChangeTable(resource)}
-                     color={resource.status}
-                     size={resource?.size}
-                     chairs={resource?.chairs}
-                     name={resource?.name}
-                     rotation={resource?.rotation}
+               return <div
+                  key={resource.id}
+                  style={style}
+               >
+                  <TableListAction
+                     onChangeTable={onChangeTable}
+                     resource={resource}
                   />
                </div>
             case typeResource.OBJECT:
-               return <div key={resource.id} style={style}>
+               return <div
+                  key={resource.id}
+                  style={style}
+               >
                   <Object
                      object={resource}
                   />
@@ -69,3 +71,34 @@ TableList.propTypes = {
    rows: PropTypes.number,
    columns: PropTypes.number
 };
+
+
+const TableListAction = ({
+   onChangeTable,
+   resource
+}) => {
+   return (
+      <Table
+         onClick={() => onChangeTable(resource)}
+         color={resource.status}
+         size={resource?.size}
+         chairs={resource?.chairs}
+         name={resource?.name}
+         rotation={resource?.rotation}
+      />
+      // <Tooltip>
+      //    <TooltipTrigger asChild>
+      //    </TooltipTrigger>
+      //    <TooltipContent
+      //       className={'w-fit p-0 !bg-transparent'}
+      //       showArrow={false}
+      //    >
+      //       <Button
+      //          variant={'crystal'}
+      //       >
+      //          Ver detalle
+      //       </Button>
+      //    </TooltipContent>
+      // </Tooltip>
+   )
+}

@@ -37,6 +37,14 @@ const schema = {
          (value) => value > 0,
          'El número de comensales debe ser mayor a 0',
       ],
+      hour: [
+         (value) => !!value,
+         'La hora es obligatoria',
+      ],
+      restaurant: [
+         (value) => !!value,
+         'El restaurante es obligatorio',
+      ],
    },
 };
 
@@ -69,6 +77,7 @@ export const FromReservation = ({
       isLoadRestaurants,
       loadRestaurants,
       isLoading: isLoadingRestaurants,
+      errorMessage: restaurantsErrorMessage
    } = useGetAllRestauranFetching()
 
    const {
@@ -99,6 +108,7 @@ export const FromReservation = ({
    } = useGetTablesFromStateFetching(typeStatusTable.AVAILABLE)
 
    useToastErrorHandler([
+      { message: restaurantsErrorMessage, priority: 0 },
       { message: userErrorMessage, priority: 1 },
       { message: hoursErrorMessage, priority: 2 },
       { message: tablesErrorMessage, priority: 3 },
@@ -131,7 +141,9 @@ export const FromReservation = ({
          emailValid,
          phoneValid,
          dinersValid,
-         nameValid
+         nameValid,
+         restaurantValid,
+         hourValid
       },
       onValueChange,
       onSubmitForm,
@@ -142,7 +154,11 @@ export const FromReservation = ({
       validations: schema.valid,
       initialState: mergeInitialValues({
          initial: schema.initial,
-         newInitial: initialValues,
+         newInitial: {
+            ...initialValues,
+            hour: '',
+            restaurant: '',
+         },
       }),
       changeValueCallback: ({ name, value }) => {
          if (name === 'restaurant') {
@@ -178,6 +194,21 @@ export const FromReservation = ({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
                hour: value
+            });
+
+            setSelectedTables([])
+            return;
+         }
+
+         if (name === 'diners') {
+            const idRestaurant = getIdRestaurantByName(restaurant);
+            if (!idRestaurant) return;
+
+            loadTables({
+               idRestaurant: idRestaurant,
+               dateStr: DateParser.toString(date),
+               hour: hour,
+               diners: value
             });
 
             setSelectedTables([])
@@ -220,7 +251,8 @@ export const FromReservation = ({
       loadTables({
          idRestaurant: initialValues?.idRestaurant,
          dateStr: DateParser.toString(date),
-         hour: initialValues?.hour
+         hour: initialValues?.hour,
+         diners: initialValues?.diners
       });
    }, [isEdit])
 
@@ -228,6 +260,7 @@ export const FromReservation = ({
       if (!isEdit || !hours || hours?.length <= 0) return;
       onInitialValues({
          restaurant: getRestaurantById(initialValues?.idRestaurant)?.name,
+         hour: initialValues?.hour
       })
    }, [isEdit, hours])
 
@@ -250,10 +283,10 @@ export const FromReservation = ({
             idRestaurant: getIdRestaurantByName(restaurant),
             dateStr: DateParser.toString(date),
             hour: data.hour,
-            idUser: user?.id || null,
-            name: user?.name || data.name,
-            email: user?.email || data.email,
-            phone: user?.phone || data.phone || null,
+            idUser: user?.id ?? initialValues?.idUser,
+            name: user?.name ?? data.name,
+            email: user?.email ?? data.email,
+            phone: user?.phone ?? data.phone ?? null,
             diners: Number(data.diners),
             ...(isEdit && { idReservation: initialValues?.id })
          },
@@ -302,14 +335,14 @@ export const FromReservation = ({
                onChange={onValueChange}
                isError={!!emailValid}
                variant='crystal'
-               icon={initialValues?.user ? null : renderEmailIcon}
-               disabled={initialValues?.user}
+               icon={initialValues?.idUser ? null : renderEmailIcon}
+               disabled={!!initialValues?.idUser}
                iconPosition='right'
                activeEventIcon
             />
 
             {
-               !initialValues?.user && (
+               !initialValues?.idUser && (
                   user
                      ? <UserCard user={user} />
                      : <span className='text-sm text-muted-foreground'>Buscar por email</span>
@@ -415,6 +448,7 @@ export const FromReservation = ({
                      variant='crystal'
                      isLoading={isLoadingRestaurants}
                      disabled={!isLoadRestaurants}
+                     isError={!!restaurantValid}
                   >
                      <SelectValue
                         placeholder='Seleccione un restaurante'
@@ -469,6 +503,7 @@ export const FromReservation = ({
                   <SelectTrigger
                      className='w-full'
                      variant='crystal'
+                     isError={!!hourValid}
                      isLoading={isLoadingHours}
                      disabled={!isLoadHours}
                   >
@@ -519,7 +554,7 @@ export const FromReservation = ({
                            size={item.size || 'lg'}
                            type={item.type || 'button'}
                            variant={item.variant || 'default'}
-                           disabled={item.disabledBySelected && selectedTables.length === 0}
+                           disabled={item.disabled || item.disabledBySelected && selectedTables.length === 0}
                         >
                            {item.label}
                         </Button>

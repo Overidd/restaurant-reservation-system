@@ -16,15 +16,15 @@ export const ReservationStepDate = ({ className }) => {
    const { reserveSetDate } = useReserve();
    const { nextStep } = useStepFormContext();
 
-   const onValueChange = (currentData) => {
-      if (currentData instanceof Date) {
-         reserveSetDate(currentData);
+   const onValueChange = ({ value }) => {
+      if (value instanceof Date) {
+         reserveSetDate(value);
          nextStep();
          return;
       }
 
       const newDate = new Date();
-      newDate.setDate(currentData);
+      newDate.setDate(value);
 
       reserveSetDate(newDate);
       nextStep();
@@ -51,6 +51,7 @@ export const ReservationStepDate = ({ className }) => {
 
          <div className={'mx-auto w-fit'}>
             <CalendarButton
+               name={'date'}
                onValueChange={onValueChange}
             />
          </div>

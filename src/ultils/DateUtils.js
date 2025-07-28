@@ -88,4 +88,13 @@ export class DateFormat {
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
    }
+
+   static weekYearMonthDay(dateStr) {
+      return new Date(dateStr).toLocaleDateString('es-ES', {
+         weekday: 'short',
+         year: 'numeric',
+         month: 'short',
+         day: 'numeric',
+      })
+   }
 }

@@ -1,4 +1,5 @@
 import { cn } from '@/ultils/cn';
+import { CalendarClock } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { UserCard } from '../card';
 
@@ -115,6 +116,7 @@ export const Table = ({
    isHighlighted = false,
    hasConflict = false,
    isCursorPreview = false,
+   isBlockedTemp = false,
    ...props
 }) => {
    const tableConfig = tableSizes[size]
@@ -196,6 +198,22 @@ export const Table = ({
                      )}
                   />
                )}
+               {
+                  isBlockedTemp && (
+                     <span
+                        className={cn(
+                           'absolute bottom-1 left-1 text-center',
+                           'text-white font-semibold pointer-events-none',
+                           'leading-tight',
+                        )}
+                        style={{
+                           fontSize: tableConfig?.fontSize,
+                        }}
+                     >
+                        <CalendarClock />
+                     </span>
+                  )
+               }
             </div>
          </div>
       </button>

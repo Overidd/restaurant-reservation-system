@@ -136,12 +136,16 @@ export const useResource = () => {
          throw new Error('Error al actualizar la mesa');
       };
 
+      if (data.isBlocked === true && [typeStatusTable.CONFIRMED, typeStatusTable.PENDING].includes(data.status)) {
+         throw new Error('La mesa debe estar disponible para bloquearla');
+      }
+
       const isConflict = document.querySelector(`[data-conflict="true"]`);
 
       if (isConflict) {
          throw new Error('Error. hay un conflicto en la posicion de la mesa');
       };
-      
+
       setLoading((prev) => ({ ...prev, updateTable: true }));
 
       const res = await dasboardServiceProvider.updateTable(data);

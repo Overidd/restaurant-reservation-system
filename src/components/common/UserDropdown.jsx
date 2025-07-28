@@ -11,33 +11,33 @@ export const UserDropdown = () => {
    const { openModal } = useModalUser()
 
    return (
-      <Card2 className="relative">
+      <Card2 className='relative'>
          <button
-            className="flex items-center dark:text-gray-400"
+            className='flex items-center dark:text-gray-400'
          >
-            <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
+            <span className='mr-3 overflow-hidden rounded-full h-11 w-11'>
                <img
                   src={photoURL || '/icon/iconUser.png'}
-                  alt="User"
+                  alt='User'
                />
             </span>
 
             <div className='text-left'>
-               <span className="block font-medium text-theme-sm">
+               <span className='block font-medium text-theme-sm'>
                   {name}
                </span>
-               <span className="mt-0.5 block text-theme-xs">
+               <span className='mt-0.5 block text-theme-xs'>
                   {email}
                </span>
             </div>
 
          </button>
 
-         <ul className="flex flex-col gap-1 pt-4 pb-3">
+         <ul className='flex flex-col gap-1 pt-4 pb-3'>
             <li>
                <DropdownItem
                   onClick={() => openModal('profile')}
-                  className="flex items-center gap-3 px-3 py-2 font-medium"
+                  className='flex items-center gap-3 px-3 py-2 font-medium'
                >
                   <CircleUser />
                   Editar Perfil
@@ -46,21 +46,31 @@ export const UserDropdown = () => {
 
             <li>
                <DropdownItem
-                  onClick={() => openModal('reservations')}
-                  className="flex items-center gap-3 px-3 py-2 font-medium"
+                  onClick={() => openModal('reservationsActive')}
+                  className='flex items-center gap-3 px-3 py-2 font-medium'
                >
                   <CalendarCheck />
-                  Tus reservas
+                  Tus reservas Activas
+               </DropdownItem>
+            </li>
+
+            <li>
+               <DropdownItem
+                  onClick={() => openModal('reservationsaCancel')}
+                  className='flex items-center gap-3 px-3 py-2 font-medium'
+               >
+                  <CalendarCheck />
+                  Tus reservas Canceladas
                </DropdownItem>
             </li>
 
             <li>
                <DropdownItem
                   // onItemClick={closeDropdown}
-                  // tag="a"
-                  // href="/profile"
+                  // tag='a'
+                  // href='/profile'
                   // onClick={() => openModal('support')}
-                  className="flex items-center gap-3 px-3 py-2 font-medium"
+                  className='flex items-center gap-3 px-3 py-2 font-medium'
                >
                   <CircleAlert />
                   Soporte
@@ -71,9 +81,9 @@ export const UserDropdown = () => {
                <li>
                   <DropdownItem
                      // onItemClick={closeDropdown}
-                     tag="a"
-                     href="/dashboard"
-                     className="flex items-center gap-3 px-3 py-2 font-medium"
+                     tag='a'
+                     href='/dashboard'
+                     className='flex items-center gap-3 px-3 py-2 font-medium'
                   >
                      <LayoutDashboard />
                      Ir al panel
@@ -83,8 +93,8 @@ export const UserDropdown = () => {
          </ul>
 
          <Link
-            to="/signin"
-            className="flex items-center gap-3 px-3 py-2 mt-3 font-medium"
+            to='/signin'
+            className='flex items-center gap-3 px-3 py-2 mt-3 font-medium transition-all hover:-translate-x-1'
             onClick={logout}
          >
             <LogOut className='rotate-180' />

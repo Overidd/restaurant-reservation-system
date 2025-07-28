@@ -242,9 +242,12 @@ export class FirebaseReserveService {
       };
    }
 
-   async getAllocation() {
-      const locations = await getDocs(collection(FirebaseDB, 'restaurants'));
-      return locations.docs.map(doc => ({
+   async getAllRestaurants() {
+      const restaurants = await getDocs(query(
+         collection(FirebaseDB, 'restaurants'),
+         where('status', '==', true)
+      ));
+      return restaurants.docs.map(doc => ({
          id: doc.id,
          ...doc.data()
       }));
@@ -367,7 +370,9 @@ export class FirebaseReserveService {
       }
    }
 
-   async getAllReservations() {
+   async getAllReservationsByUser({
+      loadFilters = [] // all, canceled
+   }) {
       try {
          const auth = getAuth();
          const user = auth.currentUser;
@@ -376,10 +381,12 @@ export class FirebaseReserveService {
             throw new Error('Usuario no autenticado');
          }
 
+         const q = [where('idUser', '==', user.uid)]
+         if (loadFilters.length > 0) q.push(where('status', 'in', loadFilters))
+
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
-            where('idUser', '==', user.uid),
-            // orderBy('timestamp', 'desc')
+            ...q
          ));
 
          let restaurants = await getDocs(collection(FirebaseDB, 'restaurants'));

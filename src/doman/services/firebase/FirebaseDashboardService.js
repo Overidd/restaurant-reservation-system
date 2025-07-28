@@ -46,9 +46,14 @@ export class FirebaseDashboardService {
       }
    }
 
-   async getRestaurants() {
+   async getRestaurantsActive() {
       try {
-         const restaurants = await getDocs(collection(FirebaseDB, 'restaurants'));
+         const restaurantRef = collection(FirebaseDB, 'restaurants');
+         const restaurants = await getDocs(query(
+            restaurantRef,
+            where('status', '==', true),
+            query(orderBy('createdAt', 'desc'))
+         ));
 
          const resul = restaurants.docs.map(doc => {
             const data = doc.data();
@@ -69,7 +74,38 @@ export class FirebaseDashboardService {
       } catch (error) {
          return {
             ok: false,
-            errorMessage: error.message || 'Error al obtener los restaurantes'
+            errorMessage: error || 'Error al obtener los restaurantes'
+         }
+      }
+   }
+
+   async getRestaurants() {
+      try {
+         const restaurantRef = collection(FirebaseDB, 'restaurants');
+         const restaurants = await getDocs(query(
+            restaurantRef,
+         ));
+
+         const resul = restaurants.docs.map(doc => {
+            const data = doc.data();
+            return {
+               id: doc.id,
+               ...data,
+               idLocation: data.idLocation?.id ?? null,
+               createdAt: data.createdAt?.toDate().toISOString() ?? null,
+               updatedAt: data.updatedAt?.toDate().toISOString() ?? null
+            }
+         });
+
+         return {
+            ok: true,
+            restaurants: resul
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error || 'Error al obtener los restaurantes'
          }
       }
    }
@@ -78,6 +114,7 @@ export class FirebaseDashboardService {
       idRestaurant,
       name,
       description,
+      address,
       image,
       rows,
       columns,
@@ -111,6 +148,7 @@ export class FirebaseDashboardService {
             longitud: longitud ?? data.longitud,
             linkMap: linkMap ?? data.linkMap,
             hours: hours ?? data.hours,
+            address: address ?? data.address ?? '',
             updatedAt: serverTimestamp()
          }
 
@@ -154,6 +192,7 @@ export class FirebaseDashboardService {
       image,
       rows,
       columns,
+      address,
       status,
       latitud,
       longitud,
@@ -172,6 +211,7 @@ export class FirebaseDashboardService {
             longitud,
             linkMap,
             hours,
+            address: address ?? data.address ?? '',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
          }
@@ -208,17 +248,24 @@ export class FirebaseDashboardService {
             throw new Error('No se proporciono la fecha');
          }
 
-         const tables = await getDocs(query(
-            collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
-         ));
-
-         const reservations = await getDocs(query(
-            collection(FirebaseDB, 'reservations'),
-            where('idRestaurant', '==', idRestaurant),
-            where('dateStr', '==', dateStr),
-            where('status', 'in', ['pending', 'confirmed']),
-            where('hour', '==', hour),
-         ));
+         const [tables, reservations, blockTempTables] = await Promise.all([
+            getDocs(query(
+               collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
+            )),
+            getDocs(query(
+               collection(FirebaseDB, 'reservations'),
+               where('idRestaurant', '==', idRestaurant),
+               where('dateStr', '==', dateStr),
+               where('status', 'in', ['pending', 'confirmed']),
+               where('hour', '==', hour),
+            )),
+            getDocs(query(
+               collection(FirebaseDB, 'blockTempTable'),
+               where('idRestaurant', '==', idRestaurant),
+               where('hour', '==', hour),
+               where('dateStr', '==', dateStr),
+            ))
+         ]);
 
          const tableInfoMap = new Map();
 
@@ -251,13 +298,18 @@ export class FirebaseDashboardService {
          const resul = tables.docs.map((doc) => {
             const data = doc.data();
             const reservation = tableInfoMap.get(String(doc.id));
+            const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
 
             return {
                id: doc.id,
                ...data,
                type: typeResource.TABLE,
                idRestaurant: data.idRestaurant?.id ?? null,
-               status: reservation?.status ?? typeStatusTable.AVAILABLE,
+               status: data.isBlocked
+                  ? typeStatusTable.BLOCKED
+                  : blockTempTablesSet.has(doc.id)
+                     ? typeStatusTable.BLOCKED
+                     : reservation?.status ?? typeStatusTable.AVAILABLE,
                chairs: Number(data.chairs),
                hasReservar: reservation ? true : false,
                reservation: reservation?.reservation ?? null,
@@ -266,15 +318,6 @@ export class FirebaseDashboardService {
                updatedAt: data.updatedAt?.toDate?.().toISOString?.() ?? null
             };
          });
-
-         // status: reservation?.status ?? typeStatusTable.AVAILABLE, // Pendiente, Confirmada
-         //       chairs: Number(data.chairs),
-         //       createdAt: data.createdAt?.toDate?.().toISOString?.() ?? null,
-         //       hasReservar: reservation ? true : false,
-         //       user: reservation?.user ?? null,
-         //       timestamp: reservation?.timestamp ?? null,
-         //       idReservation: reservation?.idReservation ?? null,
-         //       relatedTables: reservation?.relatedTables ?? [],
 
          return {
             ok: true,
@@ -617,6 +660,75 @@ export class FirebaseDashboardService {
          return {
             ok: false,
             errorMessage: error.message || 'Error al cancelar la reserva'
+         }
+      }
+   }
+
+   async blockTempTable({
+      idRestaurant,
+      idTable,
+      hour,
+      dateStr
+   }) {
+      try {
+         const data = {
+            idTable,
+            idRestaurant,
+            hour,
+            dateStr,
+            status: typeStatusTable.BLOCKED,
+            updatedAt: serverTimestamp()
+         }
+
+         await addDoc(collection(FirebaseDB, 'blockTempTable'), data)
+
+         return {
+            ok: true
+         }
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al bloquear la mesa temporal'
+         }
+      }
+   }
+
+   async unblockTempTable({
+      idTable,
+      idRestaurant,
+      hour,
+      dateStr
+   }) {
+      try {
+         const table = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant, 'tables', idTable));
+
+         if (!table.exists()) {
+            throw new Error('La mesa no existe');
+         }
+
+         const q = query(collection(FirebaseDB, 'blockTempTable'), where('idTable', '==', idTable),
+            where('idRestaurant', '==', idRestaurant),
+            where('hour', '==', hour),
+            where('dateStr', '==', dateStr)
+         );
+
+         const querySnapshot = await getDocs(q);
+         await updateDoc(doc(FirebaseDB, 'restaurants', idRestaurant, 'tables', idTable), {
+            isBlocked: false
+         });
+
+         const promises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+         await Promise.all(promises);
+
+
+         return {
+            ok: true
+         }
+
+      } catch (error) {
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al desbloquear la mesa temporal'
          }
       }
    }
@@ -1304,6 +1416,7 @@ export class FirebaseDashboardService {
             table: {
                id: tableRef.id,
                ...data,
+               status: isBlocked ? typeStatusTable.BLOCKED : tableData.status ?? typeStatusTable.AVAILABLE,
                createdAt: tableData.createdAt?.toDate()?.toISOString() ?? null,
                updatedAt: DateFormat.toYYYYMMDD(new Date()),
             }

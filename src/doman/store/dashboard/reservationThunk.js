@@ -166,3 +166,48 @@ export const updateReservationThunks = (data) => {
       return res
    }
 }
+
+/**
+ * 
+ * @param {{ idTable: string, idRestaurant: string, hour:string, dateStr:string, status: string}} data 
+ * @returns 
+ */
+export const blockTempTableThunks = (data) => {
+   return async (dispatch) => {
+      if ([typeStatusTable.CONFIRMED, typeStatusTable.PENDING].includes(data.status)) {
+         throw new Error('La mesa debe estar disponible para bloquearla');
+      }
+
+      const res = await dasboardServiceProvider.blockTempTable(data);
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         throw res.errorMessage
+      }
+
+      dispatch(changeStatusTableAction({
+         idTables: [data.idTable ?? data.id],
+         status: typeStatusTable.BLOCKED,
+      }));
+   }
+}
+
+/**
+ * 
+ * @param {{ idTable: string, idRestaurant: string, hour:string, dateStr:string}} data 
+ * @returns 
+ */
+export const unblockTempTableThunks = (data) => {
+   return async (dispatch) => {
+      const res = await dasboardServiceProvider.unblockTempTable(data);
+      if (!res.ok) {
+         dispatch(messageErrorAction(res.errorMessage));
+         throw res.errorMessage
+      }
+
+      dispatch(changeStatusTableAction({
+         idTables: [data.idTable ?? data.id],
+         status: typeStatusTable.AVAILABLE,
+      }));
+   }
+}
+

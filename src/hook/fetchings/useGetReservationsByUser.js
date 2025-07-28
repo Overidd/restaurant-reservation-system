@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { serviceProvider } from '@/doman/services';
 
@@ -9,33 +9,59 @@ export const useGetReservationsByUser = () => {
       errorMessage: null
    })
 
-   useEffect(() => {
-      const reservationsAsync = async () => {
+   const loadReservationsActive = async () => {
+      setUser({
+         reservations: [],
+         isLoading: true,
+         errorMessage: null
+      })
+
+      const { ok, errorMessage, reservations } = await serviceProvider.getAllReservationsByUser({
+         loadFilters: ['pending', 'released', 'confirmed']
+      });
+
+      if (ok) {
          setUser({
-            reservations: [],
-            isLoading: true,
+            reservations: reservations || [],
+            isLoading: false,
             errorMessage: null
          })
-
-         const { ok, errorMessage, reservations } = await serviceProvider.getAllReservations();
-
-         if (ok) {
-            setUser({
-               reservations: reservations || [],
-               isLoading: false,
-               errorMessage: null
-            })
-            return;
-         }
-
-         setUser({
-            reservations: [],
-            isLoading: false,
-            errorMessage: errorMessage
-         })
+         return;
       }
-      reservationsAsync();
-   }, [])
+
+      setUser({
+         reservations: [],
+         isLoading: false,
+         errorMessage: errorMessage
+      })
+   }
+
+   const loadReservationsCancel = async () => {
+      setUser({
+         reservations: [],
+         isLoading: true,
+         errorMessage: null
+      })
+
+      const { ok, errorMessage, reservations } = await serviceProvider.getAllReservationsByUser({
+         loadFilters: ['canceled']
+      });
+
+      if (ok) {
+         setUser({
+            reservations: reservations || [],
+            isLoading: false,
+            errorMessage: null
+         })
+         return;
+      }
+
+      setUser({
+         reservations: [],
+         isLoading: false,
+         errorMessage: errorMessage
+      })
+   }
 
    const changeReservation = (reservation) => {
       setUser({
@@ -52,6 +78,8 @@ export const useGetReservationsByUser = () => {
       errorMessage: state.errorMessage,
 
       // Funciones
-      changeReservation
+      changeReservation,
+      loadReservationsActive,
+      loadReservationsCancel
    }
 }

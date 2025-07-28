@@ -1,6 +1,6 @@
 import { cn } from '@/ultils/cn';
-import PropTypes from 'prop-types';
 import { ChevronRight } from 'lucide-react';
+import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { Button } from '.';
 
@@ -10,7 +10,11 @@ const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();
 const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-export const DayPicker = ({ className, onChange }) => {
+export const DayPicker = ({
+   className,
+   onChange,
+   name,
+}) => {
    const scrollRef = useRef(null);
    const btnRight = useRef(null);
 
@@ -58,20 +62,20 @@ export const DayPicker = ({ className, onChange }) => {
                return (
                   <div
                      key={day}
-                     className="space-y-2 text-center min-w-[60px]"
+                     className='space-y-2 text-center min-w-[60px]'
                   >
-                     <span className="font-bold block capitalize text-md text-muted-foreground">
+                     <span className='font-bold block capitalize text-md text-muted-foreground'>
                         {weekdayName}
                      </span>
                      <Button
-                        type="button"
-                        size="lg"
-                        className="text-lg px-3"
-                        onClick={() => onChange(fullDate)}
+                        type='button'
+                        size='lg'
+                        className='text-lg px-3'
+                        onClick={() => onChange({ name, value: fullDate })}
                      >
                         {day}
                      </Button>
-                     <span className="font-bold block capitalize text-sm text-muted-foreground">
+                     <span className='font-bold block capitalize text-sm text-muted-foreground'>
                         {monthName}
                      </span>
                   </div>
@@ -80,10 +84,10 @@ export const DayPicker = ({ className, onChange }) => {
          </div>
 
          <Button
-            type="button"
+            type='button'
             ref={btnRight}
             onClick={handleScrollRight}
-            className="block ml-auto"
+            className='block ml-auto'
          >
             <ChevronRight />
          </Button>

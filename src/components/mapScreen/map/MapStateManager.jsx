@@ -43,6 +43,7 @@ export const MapStateManager = () => {
             rows={restaurant.rows}
             columns={restaurant.columns}
             resources={resources}
+            filter={{ restaurant, dateStr, hour }}
             selectedResource={selectedResource}
             onOpenReserveTable={onOpenReserveTable}
          />

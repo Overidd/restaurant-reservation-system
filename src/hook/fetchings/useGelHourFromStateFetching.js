@@ -23,24 +23,25 @@ export const useGelHourFromStateFetching = (typeState = typeStatusTable.AVAILABL
          errorMessage: null,
       }));
 
-      try {
-         const { availableHours } = await serviceProvider.getAvailableHours({ dateStr, idRestaurant });
+      const { availableHours, ok, messageError } = await serviceProvider.getAvailableHours({ dateStr, idRestaurant });
 
-         setState(prev => ({
-            ...prev,
-            hours: availableHours,
-            isLoading: false,
-            errorMessage: null,
-         }));
-
-      } catch (error) {
+      if (!ok) {
          setState(prev => ({
             ...prev,
             hours: [],
             isLoading: false,
-            errorMessage: error.message || 'No hay horas disponibles',
+            errorMessage: messageError || 'No hay horas disponibles',
          }));
+         return;
       }
+
+      setState(prev => ({
+         ...prev,
+         hours: availableHours || [],
+         isLoading: false,
+         errorMessage: null,
+      }));
+
    }
 
    const clearHours = () => setState(prev => ({

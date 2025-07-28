@@ -61,6 +61,7 @@ export const stateFilterRestaurantSlice = createSlice({
          if (payload.name === 'restaurant') {
             const data = state.restaurants.find((r) => r.name === payload.value);
             state.filter.restaurant = data || {};
+            state.filter.hour = state.filter.restaurant.hours[0].name || {};
             state.hours = state.filter.restaurant.hours;
             return;
          }

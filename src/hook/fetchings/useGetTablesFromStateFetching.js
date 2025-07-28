@@ -12,7 +12,8 @@ export const useGetTablesFromStateFetching = (typeState = typeStatusTable.AVAILA
    const loadTables = async ({
       idRestaurant,
       dateStr,
-      hour
+      hour,
+      diners
    }) => {
 
       if (!idRestaurant || !dateStr || !hour) return;
@@ -23,7 +24,12 @@ export const useGetTablesFromStateFetching = (typeState = typeStatusTable.AVAILA
          errorMessage: null,
       }));
 
-      const tables = await serviceProvider.getTables({ dateStr, idRestaurant, hour });
+      const tables = await serviceProvider.getTables({
+         dateStr,
+         idRestaurant,
+         hour,
+         diners
+      });
 
       if (!tables || !tables.length) {
          setState(prev => ({

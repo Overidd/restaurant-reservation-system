@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom';
 
 import { LocationsList, MapaLoactions } from '@/components/location';
-import { useLoadRestaurant } from '@/hook/restaurant';
+import { useLoadRestaurantActive } from '@/hook/location';
 
 export const LocationScreen = () => {
   const {
-    restaurants,
-    isLoading
-  } = useLoadRestaurant()
+    isLoading,
+    restaurants
+  } = useLoadRestaurantActive();
 
   return (
     <div className='max-w-6xl w-[90%] mx-auto space-y-10'>

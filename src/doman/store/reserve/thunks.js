@@ -16,15 +16,15 @@ import {
 
 export const startGetAvailableHours = (date) => {
    return async (dispatch, getState) => {
-      const { info: { locationId } } = getState().reserveReducer.from;
+      const { info: { restaurantId } } = getState().reserveReducer.from;
 
-      if (!locationId) throw new Error('No se ha seleccionado una localidad');
+      if (!restaurantId) throw new Error('No se ha seleccionado una localidad');
 
       dispatch(reserveLoadingAction(typeLoading.HOUR));
 
       const { ok, availableHours, messageError } = await serviceProvider.getAvailableHours({
          dateStr: date,
-         idRestaurant: locationId
+         idRestaurant: restaurantId
       });
       if (!ok) {
          dispatch(reserveMessageErrorAction(messageError));
@@ -37,25 +37,25 @@ export const startGetAvailableHours = (date) => {
 
 export const startGetTables = () => {
    return async (dispatch, getState) => {
-      const { info: { locationId, diners }, date, hour: { name } } = getState().reserveReducer.from;
+      const { info: { restaurantId, diners }, date, hour: { name } } = getState().reserveReducer.from;
 
       try {
          dispatch(reserveLoadingAction(typeLoading.TABLES));
 
          const tables = await serviceProvider.getTables({
             dateStr: date,
-            idRestaurant: locationId,
+            idRestaurant: restaurantId,
             diners: diners,
             hour: name,
          });
 
 
          const object = await serviceProvider.getObject({
-            idRestaurant: locationId,
+            idRestaurant: restaurantId,
          });
 
          const restaurant = await serviceProvider.getRestaurant({
-            idRestaurant: locationId
+            idRestaurant: restaurantId
          });
 
          dispatch(reserveSetTablesAction(tables));

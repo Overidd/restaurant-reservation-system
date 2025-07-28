@@ -1,4 +1,5 @@
 import { cn, typeResource } from '@/ultils';
+import { Plus } from 'lucide-react';
 import { Button } from '../../UI/common';
 
 export const ObjectEmpty = ({
@@ -37,8 +38,7 @@ export const ObjectEmpty = ({
             className={'w-full h-full'}
             onClick={handleOpenCreateObj} //
          >
-            {idTemp}
-            {/* <Plus /> */}
+            <Plus />
          </Button>
       </div>
    )

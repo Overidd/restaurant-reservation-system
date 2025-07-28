@@ -34,7 +34,7 @@ export const loadHoursThunks = () => {
 export const loadDataFiltersThunks = () => {
    return async (dispatch) => {
       const [resRestaurants] = await Promise.all([
-         dasboardServiceProvider.getRestaurants(),
+         dasboardServiceProvider.getRestaurantsActive(),
          // dasboardServiceProvider.getAllHours(),
       ]);
 

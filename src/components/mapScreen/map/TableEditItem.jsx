@@ -1,4 +1,5 @@
 import { Table } from '@/components/UI/table';
+import { typeStatusTable } from '@/ultils';
 import { Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '../../UI/common';
@@ -69,6 +70,10 @@ export const TableEditItem = ({
                rotation={table?.rotation}
                isHighlighted={highlighted}
                isCursorPreview={isCursorPreview}
+               isBlockedTemp={
+                  !table?.isBlocked &&
+                  table?.status === typeStatusTable.BLOCKED
+               }
             />
          </PopoverTrigger>
 

@@ -11,6 +11,8 @@ export const TableItem = ({
    onConfirmReservation,
    onReleasedReservation,
    onOpenReserveTable,
+   onBlockTempTable,
+   onUnblockTempTable,
    highlighted = false,
 }) => {
    const [open, setOpen] = useState(false);
@@ -63,20 +65,6 @@ export const TableItem = ({
                <>
                   <Tooltip>
                      <TooltipTrigger asChild>
-                        <Button>
-                           <Lock />
-                        </Button>
-                     </TooltipTrigger>
-                     <TooltipContent
-                        side="right"
-                        className="text-inherit rounded"
-                     >
-                        Bloquear
-                     </TooltipContent>
-                  </Tooltip>
-
-                  <Tooltip>
-                     <TooltipTrigger asChild>
                         <Button
                            onClick={() => onOpenReserveTable(table)}
                         >
@@ -88,6 +76,19 @@ export const TableItem = ({
                         className="text-inherit rounded"
                      >
                         Reservar
+                     </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button onClick={() => onBlockTempTable(table)}>
+                           <LockOpen />
+                        </Button>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side="right"
+                        className="text-inherit rounded"
+                     >
+                        Bloqueo temporal
                      </TooltipContent>
                   </Tooltip>
                </>
@@ -114,8 +115,8 @@ export const TableItem = ({
             return (
                <Tooltip>
                   <TooltipTrigger asChild>
-                     <Button>
-                        <LockOpen />
+                     <Button onClick={() => onUnblockTempTable(table)}>
+                        <Lock />
                      </Button>
                   </TooltipTrigger>
                   <TooltipContent
@@ -144,6 +145,10 @@ export const TableItem = ({
                      color={table?.status}
                      size={table?.size}
                      chairs={table?.chairs}
+                     isBlockedTemp={
+                        !table?.isBlocked &&
+                        table?.status === typeStatusTable.BLOCKED
+                     }
                      // width={table?.width} // 2, 3
                      // height={table?.height}
                      // positionY={table?.positionY}
@@ -160,6 +165,7 @@ export const TableItem = ({
                   className={'z-10'}
                >
                   <InfoTableTooltip
+                     isBlocked={table.isBlocked}
                      hasReservar={table.hasReservar}
                      timestamp={table.reservation?.timestamp}
                      code={table.reservation?.code}
@@ -191,12 +197,26 @@ const InfoTableTooltip = ({
    email,
    code,
    timestamp,
-   hasReservar
+   hasReservar,
+   isBlocked = false
 }) => {
+   if (!isBlocked && status === typeStatusTable.BLOCKED) {
+      return (
+         <div className='text-xs text-muted-foreground text-center px-2 py-1'>
+            Bloqueada temporal
+         </div>
+      );
+   }
+
+   if (isBlocked) return (
+      <div className='text-xs text-muted-foreground text-center px-2 py-1'>
+         Bloqueada permanentemente
+      </div>
+   );
 
    if (!hasReservar) return (
       <div className='text-xs text-muted-foreground text-center px-2 py-1'>
-         Mesa disponible
+         Disponible
       </div>
    );
 

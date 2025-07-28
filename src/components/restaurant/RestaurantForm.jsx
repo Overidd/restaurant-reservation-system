@@ -8,6 +8,7 @@ const schema = {
       name: '',
       image: '',
       description: '',
+      address: '',
       rows: 0,
       columns: 0,
       status: true,
@@ -49,6 +50,10 @@ const schema = {
          (value) => value.length >= 1,
          'La menos un horario debe estar activo',
       ],
+      address: [
+         (value) => value.length >= 3,
+         'La url del mapa no es valida',
+      ],
    },
 }
 
@@ -72,7 +77,8 @@ export const RestaurantForm = ({
          latitud,
          longitud,
          linkMap,
-         hours
+         hours,
+         address
       },
       formValidation: {
          nameValid,
@@ -83,7 +89,8 @@ export const RestaurantForm = ({
          latitudValid,
          longitudValid,
          linkMapValid,
-         hoursValid
+         hoursValid,
+         addressValid
       }
    } = useForm({
       activeValidation: true,
@@ -98,7 +105,7 @@ export const RestaurantForm = ({
       onSubmit({
          form: {
             ...value,
-            idRestaurant: (selectedRestaurant?.id && selectedRestaurant.id ),
+            idRestaurant: (selectedRestaurant?.id && selectedRestaurant.id),
          },
          reset: onResetForm,
       });
@@ -140,21 +147,35 @@ export const RestaurantForm = ({
                />
             </FormItem>
          </FromGroup>
-
-         <FormItem>
-            <FormLabel htmlFor='description'>
-               Descripción de la Tienda
-            </FormLabel>
-            <Input
-               id='description'
-               name='description'
-               value={description}
-               isError={!!descriptionValid}
-               onChange={onValueChange}
-               required
-            // placeholder='Tienda'
-            />
-         </FormItem>
+         <FromGroup>
+            <FormItem>
+               <FormLabel htmlFor='description'>
+                  Descripción de la Tienda
+               </FormLabel>
+               <Input
+                  id='description'
+                  name='description'
+                  value={description}
+                  isError={!!descriptionValid}
+                  onChange={onValueChange}
+                  required
+               // placeholder='Tienda'
+               />
+            </FormItem>
+            <FormItem>
+               <FormLabel htmlFor='address'>
+                  Direccion
+               </FormLabel>
+               <Input
+                  id='address'
+                  name='address'
+                  value={address}
+                  isError={!!addressValid}
+                  onChange={onValueChange}
+                  required
+               />
+            </FormItem>
+         </FromGroup>
 
          <FromGroup className='grid grid-cols-2 gap-4'>
             <FormItem>

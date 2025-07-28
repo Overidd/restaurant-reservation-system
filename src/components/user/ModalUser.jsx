@@ -1,8 +1,8 @@
 import { ModalAsyncProvider } from '@/doman/context/dialogAsync'
 import { useModalUser } from '@/hook/modals'
 import { cn } from '@/ultils'
-import { CalendarCheck, CircleUser } from 'lucide-react'
-import { HistoryReservationUser, ProfileUser } from '.'
+import { CalendarCheck, CalendarX2, CircleUser } from 'lucide-react'
+import { HistoryReservationActive, HistoryReservationCancel, ProfileUser } from '.'
 import { Card2 } from '../UI/card'
 import { Modal, Tabs, TabsContent, TabsList, TabsTrigger } from '../UI/common'
 
@@ -25,14 +25,14 @@ export const ModalUser = () => {
       >
          <Card2
             className={cn(
-               'md:w-[35rem] h-fit md:h-[28rem] overflow-hidden'
+               'md:w-[38rem] h-fit md:h-[28rem] overflow-hidden'
             )}
          >
             <Tabs
                defaultValue={paramsRef}
                className='h-full'
             >
-               <TabsList className='grid w-full grid-cols-2'>
+               <TabsList className='grid w-full md:grid-cols-3'>
                   <TabsTrigger
                      value='profile'
                      className='flex items-center gap-2'
@@ -41,11 +41,18 @@ export const ModalUser = () => {
                      Editar Perfil
                   </TabsTrigger>
                   <TabsTrigger
-                     value='reservations'
+                     value='reservationsActive'
                      className='flex items-center gap-2'
                   >
                      <CalendarCheck className='h-4 w-4' />
-                     Tus Reservas
+                     Reservas activas
+                  </TabsTrigger>
+                  <TabsTrigger
+                     value='reservationsaCancel'
+                     className='flex items-center gap-2'
+                  >
+                     <CalendarX2 className='h-4 w-4' />
+                     Reservas canceladas
                   </TabsTrigger>
                </TabsList>
                <ModalAsyncProvider>
@@ -56,10 +63,16 @@ export const ModalUser = () => {
                      <ProfileUser />
                   </TabsContent>
                   <TabsContent
-                     value='reservations'
+                     value='reservationsActive'
                      className='h-full'
                   >
-                     <HistoryReservationUser />
+                     <HistoryReservationActive />
+                  </TabsContent>
+                  <TabsContent
+                     value='reservationsaCancel'
+                     className='h-full'
+                  >
+                     <HistoryReservationCancel />
                   </TabsContent>
                </ModalAsyncProvider>
             </Tabs>

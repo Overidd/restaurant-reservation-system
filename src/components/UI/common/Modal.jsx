@@ -180,7 +180,7 @@ export const Modal = ({
          <div
             ref={modalRef}
             className={cn(
-               'w-[90%] md:w-auto',
+               'w-[90%] md:w-auto max-h-dvh overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0',
                getModalClasses()
             )}
          // onClick={(e) => e.stopPropagation()}

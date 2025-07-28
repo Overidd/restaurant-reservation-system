@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { ChevronLeft, Clock } from 'lucide-react';
 
 import {
+   useModalAuth,
    useModalReserve,
    useReserve,
    useReserveTimer,
@@ -13,7 +14,9 @@ import { cn } from '@/ultils/cn';
 import { Badge, Button, ColorStatus } from '../UI/common';
 import { TableList } from '../UI/table';
 
+import { useUser } from '@/hook/auth';
 import { useGenerateResources } from '@/hook/dashboard';
+import { ReservationToast } from '@/toasts';
 import { ReservationLoadding } from '.';
 
 
@@ -37,6 +40,8 @@ const dataInfo = [
 ]
 
 export const ReservationSelecTable = () => {
+   const { isAuthenticated } = useUser()
+
    const {
       from,
       tables,
@@ -48,6 +53,11 @@ export const ReservationSelecTable = () => {
       selectedTables,
       reserveSelectTable,
       reserveResetStateTables,
+      isSelectedTable,
+      reservePendingAuth,
+      reservePending,
+      reserveConfirm,
+      setReserveSelectTable,
    } = useReserve()
 
    const {
@@ -64,8 +74,12 @@ export const ReservationSelecTable = () => {
    } = useStepFormContext();
 
    const {
-      closeModal
+      closeModal: closeModalReserve
    } = useModalReserve()
+
+   const {
+      openModal: openModalAuth
+   } = useModalAuth()
 
    const onChangePrevStep = () => {
       prevStep()
@@ -73,8 +87,28 @@ export const ReservationSelecTable = () => {
    }
 
    const handleCloseModal = () => {
-      closeModal()
+      closeModalReserve()
       reserveResetStateTables()
+      setReserveSelectTable({})
+   }
+
+   const handleReserve = async () => {
+      if (!isAuthenticated) {
+         reservePendingAuth();
+         openModalAuth('login');
+         return;
+      }
+
+      reservePending()
+
+      ReservationToast(reserveConfirm(), {
+         onSuccess: () => {
+            window.requestAnimationFrame(() => {
+               closeModalReserve();
+               setReserveSelectTable({})
+            })
+         }
+      });
    }
 
    const onChangeTable = (table) => {
@@ -102,12 +136,15 @@ export const ReservationSelecTable = () => {
             )}>
                <div className='space-x-4'>
                   <Button
+                     size={'sm'}
                      className={'align-middle'}
                      onClick={onChangePrevStep}
                   >
                      <ChevronLeft />
                   </Button>
                   <Button
+                     size={'sm'}
+                     variant={'destructive'}
                      className={'align-middle'}
                      onClick={handleCloseModal}
                   >
@@ -125,7 +162,13 @@ export const ReservationSelecTable = () => {
                   </Badge>
                </h4>
 
-               {/* <TiemLimit /> */}
+               <Button
+                  size={'sm'}
+                  disabled={!isSelectedTable}
+                  onClick={handleReserve}
+               >
+                  Reservar
+               </Button>
             </header>
 
             <TableList
@@ -136,7 +179,6 @@ export const ReservationSelecTable = () => {
                onChangeTable={onChangeTable}
                className={'h-[20rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
             />
-
          </div >
       </ReservationLoadding>
    )

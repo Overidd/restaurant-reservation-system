@@ -11,6 +11,7 @@ export const MapState = ({
    rows,
    columns,
    resources,
+   filter,
    selectedResource,
    onOpenReserveTable,
 }) => {
@@ -22,6 +23,8 @@ export const MapState = ({
       cancelFullReservation,
       confirmReservation,
       releasedReservation,
+      blockTempTable,
+      unblockTempTable
    } = useReservation()
 
    const handleCancelReserve = async (table) => {
@@ -62,6 +65,28 @@ export const MapState = ({
       );
    }
 
+   const handleBlockTempTable = async (table) => {
+      AdminTableToasts.blockTempTable(
+         blockTempTable({
+            idTable: table.id,
+            idRestaurant: filter.restaurant.id,
+            hour: filter.hour,
+            dateStr: filter.dateStr,
+            status: table.status
+         })
+      );
+   }
+   const handleUnblockTempTable = async (table) => {
+      AdminTableToasts.unblockTempTable(
+         unblockTempTable({
+            idTable: table.id,
+            idRestaurant: filter.restaurant.id,
+            hour: filter.hour,
+            dateStr: filter.dateStr,
+         })
+      );
+   }
+
    const paintedBoard = usePaintedGrid({
       rows: rows,
       columns: columns,
@@ -76,6 +101,8 @@ export const MapState = ({
                      onCancelReserve={handleCancelReserve}
                      onConfirmReservation={handleConfirmReservation}
                      onReleasedReservation={handleReleaseReservation}
+                     onBlockTempTable={handleBlockTempTable}
+                     onUnblockTempTable={handleUnblockTempTable}
                      onOpenReserveTable={onOpenReserveTable}
                      highlighted={
                         highlightedTableIds.includes(resource.id) ||

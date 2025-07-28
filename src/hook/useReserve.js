@@ -92,6 +92,10 @@ export const useReserve = () => {
       return !isSelected && ![typeStatusTable.BUSY, typeStatusTable.NOTAVAILABLE].includes(table.status);
    };
 
+   const setReserveSelectTable = (table) => {
+      dispatch(reserveSelectTableAction(table));
+   }
+
    const reserveReset = () => {
       dispatch(reserveResetAction());
    };
@@ -120,9 +124,7 @@ export const useReserve = () => {
       return currentSelectedTable ?? {}
    }
 
-   const existSelectedTable = () => {
-      return selectedTables.length > 0;
-   }
+   const isSelectedTable = selectedTables.length > 0
 
    return {
       // Estado
@@ -138,6 +140,7 @@ export const useReserve = () => {
       isPending,
       isTableExceeded,
       isTableExceededDiners,
+      isSelectedTable,
 
       // Metodos de consulta api
       serviceGetAvailableHours,
@@ -151,11 +154,11 @@ export const useReserve = () => {
       reserveSelectTable,
       reserveReset,
       getCurrentSelectedTable,
-      existSelectedTable,
       reserveConfirm,
       reservePendingAuth,
       reservePending,
       reserveResetStateTables,
       reserveResetSelectTables,
+      setReserveSelectTable,
    };
 };

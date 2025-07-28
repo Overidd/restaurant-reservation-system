@@ -27,7 +27,7 @@ export const reserveSlice = createSlice({
       isOpenModal: false,
       from: {
          info: {
-            locationId: null,
+            restaurantId: null,
             reason: null,
             diners: null,
          },
@@ -156,7 +156,7 @@ export const reserveSlice = createSlice({
          state.isOpenModal = false;
          state.from = {
             info: {
-               locationId: null,
+               restaurantId: null,
                reason: null,
                diners: null,
             },
@@ -184,7 +184,7 @@ export const reserveSlice = createSlice({
       reserveResetInfoAction: (state) => {
          state.from = {
             info: {
-               locationId: null,
+               restaurantId: null,
                reason: null,
                diners: null,
             },

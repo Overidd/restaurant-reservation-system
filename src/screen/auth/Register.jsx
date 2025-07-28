@@ -49,7 +49,11 @@ const messageState = {
 }
 
 export const RegisterScreen = () => {
-  const { register, loginGoogle, isLoading } = useAuthStore(messageState)
+  const {
+    register,
+    loginGoogle,
+    isLoading
+  } = useAuthStore(messageState)
 
   const {
     onSubmitForm,

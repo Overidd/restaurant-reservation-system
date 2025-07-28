@@ -1,6 +1,6 @@
 
 import { cn, typeStatusTable } from '@/ultils';
-import { Calendar, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, LockKeyhole } from 'lucide-react';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '../common';
 import { NumberSkeleton } from '../skeleton';
 
@@ -139,36 +139,36 @@ const typeStats = [
       title: 'Mesas Disponibles',
       status: typeStatusTable.AVAILABLE,
       icon: CheckCircle,
-      color: 'bg-green-500',
-      textColor: 'text-green-600',
-      bgColor: 'bg-green-50',
+      color: 'bg-table-avaible',
+      textColor: 'text-table-avaible',
+      bgColor: 'bg-table-avaible/1',
       description: 'Listas para reservar',
    },
    {
       title: 'Mesas Confirmadas',
       status: typeStatusTable.CONFIRMED,
       icon: Calendar,
-      color: 'bg-blue-500',
-      textColor: 'text-blue-600',
-      bgColor: 'bg-blue-50',
+      color: 'bg-table-confirmed',
+      textColor: 'text-table-confirmed',
+      bgColor: 'bg-table-confirmed/10',
       description: 'Reservas confirmadas',
    },
    {
       title: 'Reservas Pendientes',
       status: typeStatusTable.PENDING,
       icon: Clock,
-      color: 'bg-yellow-500',
-      textColor: 'text-yellow-600',
-      bgColor: 'bg-yellow-50',
+      color: 'bg-table-pending',
+      textColor: 'text-table-pending',
+      bgColor: 'bg-table-pending/10',
       description: 'En proceso de reserva',
    },
    {
       title: 'Mesas Bloqueadas',
       status: typeStatusTable.BLOCKED,
-      icon: XCircle,
-      color: 'bg-red-500',
-      textColor: 'text-red-600',
-      bgColor: 'bg-red-50',
+      icon: LockKeyhole,
+      color: 'bg-table-blocked',
+      textColor: 'text-table-blocked',
+      bgColor: 'bg-table-blocked/10',
       description: 'No disponibles',
    },
 ]

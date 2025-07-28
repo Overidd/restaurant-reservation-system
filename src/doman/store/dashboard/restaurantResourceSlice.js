@@ -122,7 +122,8 @@ export const restaurantResourceSlice = createSlice({
                      status: typeStatusTable.AVAILABLE,
                      hasReservar: false,
                      user: null,
-                     reservation: null
+                     reservation: null,
+                     isBlocked: false
                   };
                }
                return t;
@@ -167,6 +168,21 @@ export const restaurantResourceSlice = createSlice({
             });
             return
          }
+
+         if (payload.status === typeStatusTable.BLOCKED) {
+            state.tables = state.tables.map((t) => {
+               if (payload.idTables.includes(t.id)) {
+                  return {
+                     ...t,
+                     status: typeStatusTable.BLOCKED,
+                     // isBlocked: true
+                  };
+               }
+               return t;
+            });
+            return
+         }
+
       },
    },
 });

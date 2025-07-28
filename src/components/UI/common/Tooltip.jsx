@@ -1,5 +1,5 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { cn } from '@/ultils/cn'
+import { cn } from '@/ultils/cn';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 export const TooltipProvider = ({
   delayDuration = 0,
@@ -28,6 +28,7 @@ export const TooltipContent = ({
   className,
   sideOffset = 0,
   children,
+  showArrow = true,
   ...props
 }) => {
   return (
@@ -41,8 +42,8 @@ export const TooltipContent = ({
         )}
         {...props}>
         {children}
-        <TooltipPrimitive.Arrow
-          className='bg-background fill-background z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]' />
+        {showArrow && <TooltipPrimitive.Arrow
+          className='bg-background fill-background z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]' />}
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>)
   );

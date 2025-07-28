@@ -25,7 +25,6 @@ export const MapEdit = ({
 
    const handleDeleteTable = useMemo(() => async (table) => {
       setSelectResource(table.id);
-      // handleSelectTable(table.id);
       const confirmed = await showAsyncModal(({ onConfirm, onCancel }) => (
          <DialigDeleteTable
             onCancel={onCancel}

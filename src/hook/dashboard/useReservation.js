@@ -1,4 +1,4 @@
-import { cancelATablesReservationThunks, cancelFullReservationThunks, confirmReservationThunks, releasedReservationThunks, reserveTableThunks, updateReservationThunks } from '@/doman/store/dashboard';
+import { blockTempTableThunks, cancelATablesReservationThunks, cancelFullReservationThunks, confirmReservationThunks, releasedReservationThunks, reserveTableThunks, unblockTempTableThunks, updateReservationThunks } from '@/doman/store/dashboard';
 import { useDispatch } from 'react-redux';
 
 export const useReservation = () => {
@@ -28,12 +28,24 @@ export const useReservation = () => {
       return dispatch(updateReservationThunks(data));
    }
 
+   const blockTempTable = (data) => {
+      if (!data) return;
+      return dispatch(blockTempTableThunks(data))
+   }
+
+   const unblockTempTable = (data) => {
+      if (!data) return;
+      return dispatch(unblockTempTableThunks(data))
+   }
+
    return {
       cancelFullReservation,
       cancelATablesReservation,
       confirmReservation,
       releasedReservation,
       updateReservation,
-      reserveTable
+      reserveTable,
+      blockTempTable,
+      unblockTempTable
    }
 }

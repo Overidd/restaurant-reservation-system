@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 
-import { ShoppingCart, Table, User } from 'lucide-react';
+import { Calendar, ShoppingCart, User } from 'lucide-react';
 
 import { cn } from '@/ultils';
 
@@ -51,13 +51,13 @@ export const Navbar = ({ className }) => {
          )}
       >
          {/* <Link to={'/'}> */}
-            <figure className='w-[3rem] h-[3rem]'>
-               <img
-                  className='w-full h-full'
-                  src='/logo-while.png'
-                  alt='Logo de la empresa'
-               />
-            </figure>
+         <figure className='w-[3rem] h-[3rem]'>
+            <img
+               className='w-full h-full'
+               src='/logo-while.png'
+               alt='Logo de la empresa'
+            />
+         </figure>
          {/* </Link> */}
 
          <NavbarListResponsive
@@ -84,8 +84,8 @@ export const Navbar = ({ className }) => {
                <Button
                   size={'lg'}
                >
-                  Ordenar
-                  <Table />
+                  Reservar
+                  <Calendar />
                </Button>
             </LinkCustom>
          </ul>

@@ -9,7 +9,7 @@ export const useStateFilterRestaurant = ({
    tempRestaurant = {},
    isEdit = false,
 } = {}) => {
-   
+
    const state = useSelector((state) => state.stateFilterRestaurantReducer)
    const dispatch = useDispatch();
    const changeFilterRef = useRef(false)

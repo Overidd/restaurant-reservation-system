@@ -191,4 +191,26 @@ export class AdminTableToasts {
          .catch((err) => onError?.(err))
          .finally(() => onFinally?.());
    }
+
+   static async blockTempTable(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Bloqueando mesa...',
+         success: 'Mesa bloqueada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al bloquear mesa.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
+
+   static async unblockTempTable(promise, { onSuccess, onError, onFinally } = {}) {
+      return toast.promise(promise, {
+         loading: 'Desbloqueando mesa...',
+         success: 'Mesa desbloqueada correctamente.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al desbloquear mesa.',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
 }

@@ -7,6 +7,7 @@ import { Button, SlideOver } from '../../UI/common';
 import { DialigDeleteTable } from '@/components/UI/dialog';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
+import { useEffect } from 'react';
 import {
    Checkbox,
    Form,
@@ -61,6 +62,7 @@ export const EditTableSlide = ({
       onSubmitForm,
       onValueChange,
       isFormValid,
+      onInitialFrom,
       formState: {
          name,
          description,
@@ -114,6 +116,19 @@ export const EditTableSlide = ({
       )
    })
 
+   useEffect(() => {
+      if (selectedResource?.id) {
+         onInitialFrom({
+            ...schema.initial,
+            name: selectedResource?.name,
+            image: selectedResource?.image,
+            description: selectedResource?.description,
+            isBlocked: selectedResource?.isBlocked
+         })
+      }
+   }, [selectedResource?.id])
+
+
    return (
       <SlideOver
          isOpen={isOpen}
@@ -138,11 +153,10 @@ export const EditTableSlide = ({
                      checked={isBlocked}
                      onChange={onValueChange}
                   />
-
                   <FormLabel
                      htmlFor={'isBlocked'}
                   >
-                     Bloquear mesa
+                     Bloqueo permanentemente
                   </FormLabel>
                </FormItem>
 
