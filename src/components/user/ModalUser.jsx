@@ -32,27 +32,33 @@ export const ModalUser = () => {
                defaultValue={paramsRef}
                className='h-full'
             >
-               <TabsList className='grid w-full md:grid-cols-3'>
+               <TabsList className='grid w-full grid-cols-3'>
                   <TabsTrigger
                      value='profile'
                      className='flex items-center gap-2'
                   >
                      <CircleUser className='h-4 w-4' />
-                     Editar Perfil
+                     <span className='hidden md:inline-block'>
+                        Editar Perfil
+                     </span>
                   </TabsTrigger>
                   <TabsTrigger
                      value='reservationsActive'
                      className='flex items-center gap-2'
                   >
                      <CalendarCheck className='h-4 w-4' />
-                     Reservas activas
+                     <span className='hidden md:inline-block'>
+                        Reservas activas
+                     </span>
                   </TabsTrigger>
                   <TabsTrigger
                      value='reservationsaCancel'
                      className='flex items-center gap-2'
                   >
                      <CalendarX2 className='h-4 w-4' />
-                     Reservas canceladas
+                     <span className='hidden md:inline-block'>
+                        Reservas canceladas
+                     </span>
                   </TabsTrigger>
                </TabsList>
                <ModalAsyncProvider>

@@ -1,5 +1,5 @@
 import { cn } from '@/ultils/cn';
-import { CalendarClock } from 'lucide-react';
+import { CalendarClock, ImageUpscale } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { UserCard } from '../card';
 
@@ -31,6 +31,8 @@ const tableSizes = {
       chairHeight: 'clamp(8px, 40%, 24px)',
       rounded: 'rounded-lg',
       maxChairs: 4,
+      iconWidth: 'clamp(14px, 40%, 24px)',
+      iconHeight: 'clamp(14px, 40%, 24px)',
       fontSize: 'clamp(10px, 2.5vw, 12px)',
    },
    medium: {
@@ -40,6 +42,8 @@ const tableSizes = {
       chairHeight: 'clamp(16px, 30%, 32px)',
       rounded: 'rounded-xl',
       maxChairs: 6,
+      iconWidth: 'clamp(16px, 28%, 32px)',
+      iconHeight: 'clamp(16px, 30%, 32px)',
       fontSize: 'clamp(12px, 3vw, 14px)',
    },
    big: {
@@ -49,6 +53,8 @@ const tableSizes = {
       chairHeight: 'clamp(20px, 25%, 40px)',
       rounded: 'rounded-2xl',
       maxChairs: 8,
+      iconWidth: 'clamp(20px, 20%, 40px)',
+      iconHeight: 'clamp(20px, 25%, 40px)',
       fontSize: 'clamp(14px, 3.5vw, 16px)',
    },
 }
@@ -117,6 +123,7 @@ export const Table = ({
    hasConflict = false,
    isCursorPreview = false,
    isBlockedTemp = false,
+   onPreview = null,
    ...props
 }) => {
    const tableConfig = tableSizes[size]
@@ -127,10 +134,10 @@ export const Table = ({
          tabIndex={0}
          onClick={onClick}
          className={cn(
-            'relative w-full h-full min-w-[60px] min-h-[60px]',
+            'relative w-full h-full min-w-[60px] min-h-[60px] ',
             'transition-all duration-300 hover:scale-105 cursor-pointer',
             isHighlighted && 'transition-shadow rounded-2xl shadow-card bg-background',
-            isCursorPreview && 'opacity-60 pointer-events-none',
+            isCursorPreview && 'opacity-60',
             hasConflict && 'bg-red-500/30',
             className,
          )}
@@ -143,7 +150,7 @@ export const Table = ({
          <div
             className={cn(
                'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-               'shadow-none pointer-events-none',
+               'shadow-none',
                tableConfig?.rounded,
             )}
             style={{
@@ -156,7 +163,7 @@ export const Table = ({
                   key={`chair-${index}`}
                   className={cn(
                      'absolute rounded-md transition-all duration-300',
-                     'pointer-events-none bg-amber-950',
+                     'bg-amber-950 pointer-events-none',
                      chairColors[color],
                   )}
                   style={{
@@ -169,7 +176,7 @@ export const Table = ({
 
             <div className={cn(
                'transition-all duration-300',
-               'pointer-events-none shadow-lg',
+               'shadow-lg',
                'relative h-full w-full',
                colors[color],
                tableConfig?.rounded
@@ -214,6 +221,24 @@ export const Table = ({
                      </span>
                   )
                }
+               {onPreview && (
+                  <div
+                     role='button'
+                     tabIndex={0}
+                     onKeyDown={(e) => e.key === 'Enter' && onPreview && onPreview()}
+                     onClick={onPreview}
+                     className={cn(
+                        'absolute bottom-2 left-2 cursor-sw-resize',
+                     )}
+                  >
+                     <ImageUpscale
+                        style={{
+                           width: tableConfig?.iconWidth,
+                           height: tableConfig?.iconHeight,
+                        }}
+                     />
+                  </div>
+               )}
             </div>
          </div>
       </button>

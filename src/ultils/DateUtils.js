@@ -90,11 +90,15 @@ export class DateFormat {
    }
 
    static weekYearMonthDay(dateStr) {
-      return new Date(dateStr).toLocaleDateString('es-ES', {
-         weekday: 'short',
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+
+      return date.toLocaleDateString('es-ES', {
+         weekday: 'long',
          year: 'numeric',
-         month: 'short',
+         month: 'long',
          day: 'numeric',
-      })
+      });
    }
+
 }

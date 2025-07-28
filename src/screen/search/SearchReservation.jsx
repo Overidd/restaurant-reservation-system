@@ -3,6 +3,7 @@ import { Card2 } from '@/components/UI/card'
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/UI/common'
 import { Input } from '@/components/UI/from'
 import { useGetReserveFetchin } from '@/hook/fetchings'
+import { DateFormat } from '@/ultils'
 import { Calendar, CheckCircle, Clock, LoaderCircle, MapPin, MessageSquare, Search, Users, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
@@ -18,16 +19,6 @@ export const SearchReservationScreen = () => {
       const { errorMessage, reservation } = await searchReserveByCode(searchCode)
       errorMessage && setSearchState('not-found')
       reservation && setSearchState('found')
-   }
-
-   const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      return date.toLocaleDateString('es-ES', {
-         weekday: 'long',
-         year: 'numeric',
-         month: 'long',
-         day: 'numeric',
-      })
    }
 
    return (
@@ -161,7 +152,7 @@ export const SearchReservationScreen = () => {
                                  Fecha:
                               </span>
                               <span>
-                                 {formatDate(reservation.date)}
+                                 {DateFormat.weekYearMonthDay(reservation.dateStr)}
                               </span>
                            </div>
                            <div className='flex items-center gap-2'>

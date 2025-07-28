@@ -93,7 +93,6 @@ export const UserDropdown = () => {
          </ul>
 
          <Link
-            to='/signin'
             className='flex items-center gap-3 px-3 py-2 mt-3 font-medium transition-all hover:-translate-x-1'
             onClick={logout}
          >

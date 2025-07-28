@@ -57,8 +57,7 @@ const AppRoutes = () => {
                   </Route>
                </Route>
 
-               <Route path='search-reservation' element={<SearchReservationScreen />}
-               >
+               <Route path='search-reservation' element={<SearchReservationScreen />}>
                   <Route path='reserve' element={<ReservationScreen />} />
                   <Route element={<PublicOnlyRoute />}>
                      <Route element={<AuthLayout />}>

@@ -15,16 +15,22 @@ import {
 import { LinkCustom } from '../UI/from';
 import { NoAuthenticated } from '../user';
 
-import { useOnAuthReserve } from '@/hook';
+import { useModalAsync, useOnAuthReserve } from '@/hook';
 import { useAutoCheckAuth, useIfAuthenticated, useUser } from '@/hook/auth';
 import { ReservationToast } from '@/toasts';
 import { listMenuData, NavbarListResponsive } from '.';
+import { DialogEnterPhone } from '../UI/dialog';
 
 
 export const Navbar = ({ className }) => {
    useAutoCheckAuth()
 
    const {
+      showAsyncModal
+   } = useModalAsync();
+
+   const {
+      isRegisterPhone,
       isAuthenticated
    } = useUser()
 
@@ -33,9 +39,25 @@ export const Navbar = ({ className }) => {
       isPendingAuth,
    } = useOnAuthReserve()
 
-   const handleReserve = () => {
+   const handleReserve = async () => {
       if (!isPendingAuth) return;
-      ReservationToast(reserveConfirm());
+
+      if (!isRegisterPhone) {
+         const res = await showAsyncModal(({
+            onConfirm,
+            onCancel
+         }) => (
+            <DialogEnterPhone
+               onCancel={onCancel}
+               onConfirm={onConfirm}
+            />
+         ));
+         if (!res) return;
+      }
+
+      ReservationToast(
+         reserveConfirm()
+      );
    };
 
    useIfAuthenticated(isAuthenticated, handleReserve);

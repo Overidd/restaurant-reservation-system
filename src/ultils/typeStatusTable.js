@@ -38,6 +38,8 @@ export const translateStatus = (status) => {
          return 'Completado'
       case typeStatusTable.NOSHOW:
          return 'No presentado'
+      case typeStatusTable.NOTAVAILABLE:
+         return 'No disponible'
       default:
          return 'Desconocido'
    }

@@ -21,11 +21,51 @@ import {
    SelectValue
 } from '../UI/from';
 
+const reasonData = [
+   {
+      id: 1,
+      name: 'Cumpleaños',
+   },
+   {
+      id: 2,
+      name: 'Fiesta',
+   },
+   {
+      id: 3,
+      name: 'Aniversario',
+   },
+   {
+      id: 4,
+      name: 'Otros',
+   }
+]
 
+const schema = {
+   info: {
+      valid: {
+         location: [
+            (value, state, additionalData) => additionalData.location.some((item) => item.name === value),
+            'Selecione una ubicación',
+            true
+         ],
+         reason: [
+            (value) => reasonData.some(item => item.name === value),
+            'Selecione un motivo',
+         ],
+         diners: [
+            (value) => value > 0,
+            'Selecione la cantidad de comensales',
+         ]
+      },
+      initial: {
+         location: '',
+         reason: '',
+         diners: 2
+      }
+   }
+}
 export const ReservationStepInfo = ({
-   schema,
    className,
-   reasonData = []
 }) => {
    const { restaurants } = useGetAllRestaurants();
    const { nextStep } = useStepFormContext();

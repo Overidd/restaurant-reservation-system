@@ -3,3 +3,5 @@ export * from './DialigConfirmReserve';
 export * from './DialigDelete';
 export * from './DialigDeleteObject';
 export * from './DialigDeleteTable';
+export * from './DialogEnterPhone';
+

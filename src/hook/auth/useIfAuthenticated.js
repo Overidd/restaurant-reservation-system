@@ -6,5 +6,5 @@ export const useIfAuthenticated = (isAuthenticated, callback) => {
       if (isAuthenticated) {
          callback();
       }
-   }, [isAuthenticated, callback]);
+   }, [isAuthenticated]);
 };

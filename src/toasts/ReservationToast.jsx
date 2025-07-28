@@ -21,7 +21,7 @@ export const ReservationToast = (promise, { onSuccess, onError, onFinally } = {}
       .then((data) => {
          toast((t) => {
             onSuccess && onSuccess(data);
-            return <ReservaSuccess t={t} code={data?.code || '---'} />
+            return <ReservaSuccess t={t} code={data?.code || '---'} {...data} />
          }, {
             duration: Infinity,
          });

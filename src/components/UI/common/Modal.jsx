@@ -156,7 +156,7 @@ export const Modal = ({
    }
 
    const getOverlayClasses = () => {
-      const baseClasses = 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg flex transition-opacity duration-300'
+      const baseClasses = 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }
@@ -169,19 +169,19 @@ export const Modal = ({
          tabIndex={-1}
          className={getOverlayClasses()}
          onClick={handleBackdropClick}
+         style={{ zIndex: 50 }}
          onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === 'Escape') {
                handleBackdropClick(e);
             }
          }}
-         style={{ zIndex: 50 }}
       >
 
          <div
             ref={modalRef}
             className={cn(
-               'w-[90%] md:w-auto max-h-dvh overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0',
-               getModalClasses()
+               'w-[90%] md:w-auto max-h-full overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0',
+               getModalClasses(),
             )}
          // onClick={(e) => e.stopPropagation()}
          >

@@ -42,6 +42,7 @@ export const Button = ({
    variant,
    children,
    onClick,
+   onTouchStart,
    size = 'default',
    iconLoading = LoaderCircle,
    isLoading = false,
@@ -52,6 +53,7 @@ export const Button = ({
 
    return (
       <button
+         onTouchStart={onTouchStart}
          className={cn(buttonVariants({
             variant,
             size,

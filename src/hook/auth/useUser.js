@@ -11,6 +11,8 @@ export const useUser = () => {
 
    const isAuthenticated = useMemo(() => state.status === authStateEmun.authenticated, [state.status])
 
+   const isRegisterPhone = useMemo(() => !!state.user.phone, [state.user.phone])
+
    return {
       id: state.user.id,
       name: state.user.name,
@@ -19,6 +21,7 @@ export const useUser = () => {
       role: state.user.role,
       address: state.user.address,
       phone: state.user.phone,
+      isRegisterPhone,
       isRoleAdmin,
       isAuthenticated
    }

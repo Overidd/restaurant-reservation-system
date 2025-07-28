@@ -5,7 +5,6 @@ import { cn } from '@/ultils/cn';
 import {
    ReservationFooter,
    ReservationHeader,
-   ReservationInfoTable,
    ReservationSelecTable,
    ReservationStepDate,
    ReservationStepHour,
@@ -22,53 +21,13 @@ import {
    StepFormFooter,
    StepFormHeader
 } from '@/components/UI/stepForm';
-
-const reasonData = [
-   {
-      id: 1,
-      name: 'Cumpleaños',
-   },
-   {
-      id: 2,
-      name: 'Fiesta',
-   },
-   {
-      id: 3,
-      name: 'Aniversario',
-   },
-   {
-      id: 4,
-      name: 'Otros',
-   }
-]
-
-const schema = {
-   info: {
-      valid: {
-         location: [
-            (value, state, additionalData) => additionalData.location.some((item) => item.name === value),
-            'Selecione una ubicación',
-            true
-         ],
-         reason: [
-            (value) => reasonData.some(item => item.name === value),
-            'Selecione un motivo',
-         ],
-         diners: [
-            (value) => value > 0,
-            'Selecione la cantidad de comensales',
-         ]
-      },
-      initial: {
-         location: '',
-         reason: '',
-         diners: 2
-      }
-   }
-}
+import { ModalAsyncProvider } from '@/doman/context/dialogAsync';
 
 export const ReservationScreen = () => {
-   const { isOpenModal, closeModal } = useModalReserve()
+   const {
+      isOpenModal,
+      closeModal
+   } = useModalReserve()
 
    return (
       <Modal
@@ -76,24 +35,23 @@ export const ReservationScreen = () => {
          onClose={closeModal}
          direction='left'
          preventBackdropClose={true}
-         overlayClassName='overflow-y-auto md:overflow-hidden'
          className={cn(
-            'overflow-visible',
-            'md:-ml-3 m-0 p-0',
+            'w-full h-full md:w-[50rem] md:2xl:w-[60rem]',
+            'md:-ml-3',
          )}
       >
          <Card2
             className={cn(
-               'w-dvw md:w-[50rem] md:2xl:w-[60rem] h-dvh',
+               'w-full h-full',
                'rounded-none md:rounded-r-2xl',
             )}
          >
             <StepFormProvider
                classNameStepForm={'flex-1 h-full w-full'}
                className={cn(
-                  'transition-all',
-                  'w-full h-full',
+                  'transition-all overflow-hidden',
                   'flex flex-col gap-3',
+                  'w-full h-full',
                )}
             >
                <StepFormHeader>
@@ -109,10 +67,7 @@ export const ReservationScreen = () => {
                </StepFormHeader>
 
                <StepForm name='info'>
-                  <ReservationStepInfo
-                     schema={schema.info}
-                     reasonData={reasonData}
-                  />
+                  <ReservationStepInfo />
                </StepForm>
 
                <StepForm name='date'>
@@ -124,7 +79,9 @@ export const ReservationScreen = () => {
                </StepForm>
 
                <StepForm name='table'>
-                  <ReservationSelecTable />
+                  <ModalAsyncProvider>
+                     <ReservationSelecTable />
+                  </ModalAsyncProvider>
                </StepForm>
 
                <StepFormFooter>
@@ -144,12 +101,7 @@ export const ReservationScreen = () => {
             </StepFormProvider>
 
          </Card2>
-         <ReservationInfoTable
-            className={cn(
-               'w-dvw md:w-[20rem] md:h-[25rem]',
-               'md:absolute md:top-3 md:-right-[74%]',
-            )}
-         />
       </Modal>
+
    )
 }

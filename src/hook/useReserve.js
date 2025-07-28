@@ -86,13 +86,12 @@ export const useReserve = () => {
       if (isPending) return;
 
       const isSelected = selectedTables.some(t => t.id === table.id);
-      dispatch(reserveSelectTableAction(table));
       dispatch(reserveToggleTableAction(table));
 
       return !isSelected && ![typeStatusTable.BUSY, typeStatusTable.NOTAVAILABLE].includes(table.status);
    };
 
-   const setReserveSelectTable = (table) => {
+   const reserveSelectCurrent = (table) => {
       dispatch(reserveSelectTableAction(table));
    }
 
@@ -159,6 +158,6 @@ export const useReserve = () => {
       reservePending,
       reserveResetStateTables,
       reserveResetSelectTables,
-      setReserveSelectTable,
+      reserveSelectCurrent,
    };
 };

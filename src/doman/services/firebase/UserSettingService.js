@@ -86,13 +86,12 @@ export class UserSettingService {
          const dataUser = user.data();
 
          const userRef = doc(FirebaseDB, 'users', idUser);
-
+         
          const data = {
-            ...dataUser,
-            name: name,
-            phone: phone,
-            address: address,
-            photoURL: photoURL ?? '',
+            name: name ?? dataUser.name,
+            phone: phone ?? dataUser.phone,
+            address: address ?? dataUser.address,
+            photoURL: photoURL ?? dataUser.photoURL ?? null,
             updatedAt: serverTimestamp()
          }
 

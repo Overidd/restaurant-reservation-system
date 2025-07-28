@@ -15,6 +15,8 @@ export const HistorialReservationItem = ({
       setIsExpanded(!isExpanded)
    }
 
+   console.log(reservation.dateStr);
+
    return (
       <Card
          className={cn(

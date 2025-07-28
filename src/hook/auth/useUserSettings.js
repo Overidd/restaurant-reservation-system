@@ -12,6 +12,18 @@ export const useUserSettings = () => {
       updateReservation: false,
    });
 
+   const updatePhone = async (data) => {
+      if (!data) return;
+
+      setLoading(prev => ({ ...prev, updateProfile: true }));
+
+      const { user } = await userSettingProvider.updateProfile(data);
+
+      setLoading(prev => ({ ...prev, updateProfile: false }));
+      dispatch(updateProfileAction(user));
+
+   };
+
    const updateReservation = async (data) => {
       if (!data) return;
 
@@ -62,5 +74,6 @@ export const useUserSettings = () => {
       updateProfile,
       cancelReservation,
       updateReservation,
+      updatePhone
    };
 };

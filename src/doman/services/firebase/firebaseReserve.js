@@ -290,7 +290,7 @@ export class FirebaseReserveService {
          ));
 
          if (!querySnapshot.empty) {
-            throw new Error('Ya realizaste una reserva en esa hora');
+            throw new Error('Ya realizaste una reserva en hora la ' + hour);
          }
 
          // Buscar todas las reservas confirmadas para ese restaurante, fecha y hora
@@ -322,7 +322,7 @@ export class FirebaseReserveService {
             }
          }
 
-         let newCode = 'RESERVE-';
+         let newCode = 'RESERVA-';
 
          do {
             newCode += Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -367,6 +367,8 @@ export class FirebaseReserveService {
          return {
             ok: true,
             code: newCode,
+            hour,
+            dateStr
          };
 
       } catch (error) {
@@ -374,7 +376,7 @@ export class FirebaseReserveService {
          const code = error.code || 'default';
          return {
             ok: false,
-            errorMessage: firebaseErrorMessages[code] || error || 'Error desconocido',
+            errorMessage: firebaseErrorMessages[code] || String(error.message) || 'Error desconocido',
          };
       }
    }

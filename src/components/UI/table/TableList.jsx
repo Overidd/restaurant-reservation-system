@@ -9,12 +9,11 @@ export const TableList = ({
    rows,
    columns,
    className,
-   onChangeTable,
+   onSelectTables,
+   onCurrentTable,
    isLoading = false,
    resources = []
 }) => {
-
-   // if (!Array.isArray(tables)) return null;
 
    const paintedBoard = usePaintedGrid({
       rows: rows,
@@ -28,8 +27,9 @@ export const TableList = ({
                   style={style}
                >
                   <TableListAction
-                     onChangeTable={onChangeTable}
                      resource={resource}
+                     onSelectTables={onSelectTables}
+                     onCurrentTable={onCurrentTable}
                   />
                </div>
             case typeResource.OBJECT:
@@ -74,31 +74,23 @@ TableList.propTypes = {
 
 
 const TableListAction = ({
-   onChangeTable,
-   resource
+   onSelectTables,
+   onCurrentTable,
+   resource,
 }) => {
+
    return (
       <Table
-         onClick={() => onChangeTable(resource)}
+         onClick={() => onSelectTables(resource)}
+         onPreview={(e) => {
+            e.stopPropagation();
+            onCurrentTable(resource);
+         }}
          color={resource.status}
          size={resource?.size}
          chairs={resource?.chairs}
          name={resource?.name}
          rotation={resource?.rotation}
       />
-      // <Tooltip>
-      //    <TooltipTrigger asChild>
-      //    </TooltipTrigger>
-      //    <TooltipContent
-      //       className={'w-fit p-0 !bg-transparent'}
-      //       showArrow={false}
-      //    >
-      //       <Button
-      //          variant={'crystal'}
-      //       >
-      //          Ver detalle
-      //       </Button>
-      //    </TooltipContent>
-      // </Tooltip>
    )
 }

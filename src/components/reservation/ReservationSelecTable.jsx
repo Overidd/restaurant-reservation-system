@@ -1,8 +1,9 @@
 import toast from 'react-hot-toast';
 
-import { ChevronLeft, Clock } from 'lucide-react';
+import { Calendar, ChevronLeft, Clock } from 'lucide-react';
 
 import {
+   useModalAsync,
    useModalAuth,
    useModalReserve,
    useReserve,
@@ -17,7 +18,9 @@ import { TableList } from '../UI/table';
 import { useUser } from '@/hook/auth';
 import { useGenerateResources } from '@/hook/dashboard';
 import { ReservationToast } from '@/toasts';
-import { ReservationLoadding } from '.';
+import { useState } from 'react';
+import { ReservationInfoTable, ReservationLoadding } from '.';
+import { DialogEnterPhone } from '../UI/dialog';
 
 
 const dataInfo = [
@@ -40,7 +43,7 @@ const dataInfo = [
 ]
 
 export const ReservationSelecTable = () => {
-   const { isAuthenticated } = useUser()
+   const [isOpenPreview, setIsOpenPreview] = useState(false);
 
    const {
       from,
@@ -50,15 +53,23 @@ export const ReservationSelecTable = () => {
       isTableExceeded,
       isTableExceededDiners,
       restaurant,
-      selectedTables,
+      reserveSelectCurrent,
       reserveSelectTable,
       reserveResetStateTables,
       isSelectedTable,
       reservePendingAuth,
       reservePending,
       reserveConfirm,
-      setReserveSelectTable,
    } = useReserve()
+
+   const {
+      isRegisterPhone,
+      isAuthenticated
+   } = useUser()
+
+   const {
+      showAsyncModal
+   } = useModalAsync();
 
    const {
       resources
@@ -89,7 +100,7 @@ export const ReservationSelecTable = () => {
    const handleCloseModal = () => {
       closeModalReserve()
       reserveResetStateTables()
-      setReserveSelectTable({})
+      reserveSelectCurrent({})
    }
 
    const handleReserve = async () => {
@@ -99,19 +110,43 @@ export const ReservationSelecTable = () => {
          return;
       }
 
+      if (!isRegisterPhone) {
+         const res = await showAsyncModal(({
+            onConfirm,
+            onCancel
+         }) => (
+            <DialogEnterPhone
+               onCancel={onCancel}
+               onConfirm={onConfirm}
+            />
+         ));
+         if (!res) return;
+      }
+
       reservePending()
 
-      ReservationToast(reserveConfirm(), {
+      ReservationToast(
+         reserveConfirm(), {
          onSuccess: () => {
             window.requestAnimationFrame(() => {
                closeModalReserve();
-               setReserveSelectTable({})
+               reserveSelectCurrent({})
             })
          }
       });
    }
 
-   const onChangeTable = (table) => {
+   const handleCurrentTable = (table) => {
+      if (!table) return
+      reserveSelectCurrent(table)
+      setIsOpenPreview(true)
+   }
+
+   const handleClosePreview = () => {
+      setIsOpenPreview(false)
+   }
+
+   const handleSelectTables = (table) => {
       const wasSelected = reserveSelectTable(table);
 
       if (wasSelected && isTableExceededDiners) {
@@ -129,10 +164,11 @@ export const ReservationSelecTable = () => {
          className={'h-full flex flex-col justify-center items-center'}
       >
          <div className={cn(
-            'h-full w-full flex flex-col 2xl:gap-4 gap-2',
+            'h-full w-full flex-col justify-between 2xl:gap-4 gap-2 animate__animated animate__faster hidden',
+            !isOpenPreview && 'flex animate-in fade-in zoom-in-90 ease-in-out '
          )}>
             <header className={cn(
-               'flex w-[90%] mx-auto flex-col md:flex-row gap-4 md:gap-0 justify-between items-center',
+               'grid grid-cols-2 md:grid-cols-4',
             )}>
                <div className='space-x-4'>
                   <Button
@@ -144,7 +180,6 @@ export const ReservationSelecTable = () => {
                   </Button>
                   <Button
                      size={'sm'}
-                     variant={'destructive'}
                      className={'align-middle'}
                      onClick={handleCloseModal}
                   >
@@ -156,18 +191,18 @@ export const ReservationSelecTable = () => {
                   data={dataInfo}
                />
 
-               <h4 className='text-muted-foreground font-bold'>
-                  <Badge className={'bg-gray-700'}>
-                     {from.hour.tablesAvailable} Mesas Disponibles
-                  </Badge>
-               </h4>
+               <Badge className={'bg-gray-700 font-bold hidden md:flex h-fit place-self-center'}>
+                  {from.hour.tablesAvailable} Mesas Disponibles
+               </Badge>
 
                <Button
                   size={'sm'}
                   disabled={!isSelectedTable}
                   onClick={handleReserve}
+                  className={'w-fit ml-auto hidden md:flex'}
                >
                   Reservar
+                  <Calendar />
                </Button>
             </header>
 
@@ -175,17 +210,51 @@ export const ReservationSelecTable = () => {
                resources={resources}
                rows={restaurant.rows}
                columns={restaurant.columns}
-               selectedTables={selectedTables}
-               onChangeTable={onChangeTable}
-               className={'h-[20rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
+               onSelectTables={handleSelectTables}
+               onCurrentTable={handleCurrentTable}
+               className={'h-[22rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
             />
-         </div >
-      </ReservationLoadding>
+
+            <div className='flex justify-between md:hidden'>
+               <Badge className={'bg-gray-700 font-bold h-fit place-self-center'}>
+                  {from.hour.tablesAvailable} Mesas Disponibles
+               </Badge>
+
+               <Button
+                  size={'sm'}
+                  disabled={!isSelectedTable}
+                  onClick={handleReserve}
+                  className={'w-fit ml-auto'}
+               >
+                  Reservar
+                  <Calendar />
+               </Button>
+            </div>
+         </div>
+         <div className={cn(
+            'h-full w-full flex-col 2xl:gap-4 gap-2 animate__animated animate__faster hidden',
+            isOpenPreview && 'flex animate-in fade-in zoom-in-90 ease-in-out'
+         )}>
+            <header className={cn(
+               'w-full mx-auto mb-2',
+            )}>
+               <Button
+                  size={'sm'}
+                  className={'align-middle'}
+                  onClick={handleClosePreview}
+               >
+                  <ChevronLeft />
+               </Button>
+            </header>
+
+            <ReservationInfoTable />
+         </div>
+      </ReservationLoadding >
    )
 }
 
 
-const TiemLimit = () => {
+export const TiemLimit = () => {
    const { formattedMinutes, formattedSeconds } = useReserveTimer()
    return (
       <div className="space-x-2 text-primary-foreground font-mono">
