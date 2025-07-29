@@ -19,15 +19,16 @@ import {
    CalendarScreen,
    DashboardScreen,
    MapScreen,
-   RestaurantScreen
+   RestaurantScreen,
+   UserDetailScreen
 } from '@/screen/dashboard';
-import { UserDetailScreen } from '@/screen/dashboard/UserDetails';
 import { LocationScreen } from '@/screen/location';
 import { ProductScreen } from '@/screen/product';
 import { ReservationScreen } from '@/screen/reservation';
 
 import { SearchReservationScreen } from '@/screen/search';
 import {
+   ProtectedRoute,
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
@@ -72,24 +73,24 @@ const AppRoutes = () => {
             </Route>
          </Route>
 
-         {/* <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
+         <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
             <Route path='/dashboard' element={<DashboardLayout />} >
-               <Route path='tables' element={<TablesScreen />} />
+               <Route index element={<DashboardScreen />} />
+               <Route path='tables' element={<MapScreen />} />
                <Route path='calendar' element={<CalendarScreen />} />
-               <Route path='statistic' element={<StatisticScreen />} />
-
-               <Route index element={<Navigate to='tables' />} />
+               <Route path='details' element={<UserDetailScreen />} />
+               <Route path='store' element={<RestaurantScreen />} />
+               {/* <Route index element={<Navigate to='tables' />} /> */}
             </Route>
-         </Route> */}
+         </Route>
 
-         <Route path='/dashboard' element={<DashboardLayout />} >
+         {/* <Route path='/dashboard' element={<DashboardLayout />} >
             <Route index element={<DashboardScreen />} />
             <Route path='tables' element={<MapScreen />} />
             <Route path='calendar' element={<CalendarScreen />} />
             <Route path='details' element={<UserDetailScreen />} />
             <Route path='store' element={<RestaurantScreen />} />
-            {/* <Route index element={<Navigate to='tables' />} /> */}
-         </Route>
+         </Route> */}
          {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
    );
