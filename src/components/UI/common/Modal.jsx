@@ -9,6 +9,7 @@ export const Modal = ({
    onClose,
    children,
    direction = 'center', //  'top' | 'bottom' | 'left' | 'right' | 'center'
+   showBtnClose = true,
    preventBackdropClose = false,
    className = '',
    overlayClassName = '',
@@ -185,14 +186,18 @@ export const Modal = ({
             )}
          // onClick={(e) => e.stopPropagation()}
          >
-            <Button
-               className='absolute top-4 right-4'
-               // variant={'outline'}
-               onClick={onClose}
-               size={'icon'}
-            >
-               <X className='h-4 w-4' />
-            </Button>
+            {showBtnClose &&
+               <Button
+                  className='absolute top-1 right-1 z-10 text-primary-foreground/90 hover:bg-transparent hover:text-primary-foreground'
+                  onClick={handleBackdropClick}
+                  variant={'ghost'}
+               >
+                  <X
+                     className='h-5 w-5'
+                     strokeWidth={3}
+                  />
+               </Button>
+            }
             {children}
          </div>
       </div>,

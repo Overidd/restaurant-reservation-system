@@ -350,6 +350,7 @@ export class FirebaseReserveService {
             end: timestamp,
             timestamp: timestamp,
             createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
             name: displayName || 'No Name',
             email: email || 'No Email',
          };

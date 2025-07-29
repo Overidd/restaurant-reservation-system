@@ -21,8 +21,8 @@ export const useLoadDashboard = () => {
             rate: state.growthRateClients.growthRate,
             title: 'Clientes Activos',
             icon: Users,
-            color: 'text-muted-foreground',
-            textColor: 'text-muted-foreground',
+            backgroundColor: 'var(--muted-foreground)',
+            color: 'var(--muted-foreground)',
             description: 'Nuevos clientes',
             className: 'md:col-span-2',
          },
@@ -32,8 +32,8 @@ export const useLoadDashboard = () => {
             rate: calculateRate(state.metrics.total, 100),
             title: 'Total Reservas',
             icon: CalendarDays,
-            color: 'text-muted-foreground',
-            textColor: 'text-muted-foreground',
+            backgroundColor: 'var(--muted-foreground)',
+            color: 'var(--muted-foreground)',
             description: 'Desde el mes pasado',
          },
          {
@@ -42,8 +42,8 @@ export const useLoadDashboard = () => {
             rate: calculateRate(state.metrics.pending, state.metrics.total),
             title: 'Pendientes',
             icon: CalendarClock,
-            color: 'text-table-pending',
-            textColor: 'text-table-pending',
+            backgroundColor: 'var(--table-pending)',
+            color: 'var(--table-pending)',
             description: 'Del total',
          },
          {
@@ -52,8 +52,8 @@ export const useLoadDashboard = () => {
             rate: calculateRate(state.metrics.confirmed, state.metrics.total),
             title: 'Confirmadas',
             icon: CheckCircle,
-            color: 'text-table-confirmed',
-            textColor: 'text-table-confirmed',
+            backgroundColor: 'var(--table-confirmed)',
+            color: 'var(--table-confirmed)',
             description: 'Del total',
          },
          {
@@ -63,8 +63,8 @@ export const useLoadDashboard = () => {
                metrics.total),
             title: 'Completados',
             icon: CheckCircle,
-            color: 'text-table-released',
-            textColor: 'text-table-released',
+            backgroundColor: 'var(--table-released)',
+            color: 'var(--table-released)',
             description: 'Del total',
          },
          {
@@ -73,8 +73,8 @@ export const useLoadDashboard = () => {
             rate: calculateRate(state.metrics.canceled, state.metrics.total),
             title: 'Canceladas',
             icon: XCircle,
-            color: 'text-red-600',
-            textColor: 'text-red-600',
+            backgroundColor: 'var(--destructive)',
+            color: 'var(--destructive)',
             description: 'Del total',
          },
          {
@@ -83,12 +83,25 @@ export const useLoadDashboard = () => {
             rate: calculateRate(state.metrics.noShow, state.metrics.total),
             title: 'No Presentado',
             icon: Clock,
-            color: 'text-orange-600',
-            textColor: 'text-orange-600',
+            backgroundColor: 'var(--chart-4)',
+            color: 'var(--chart-4)',
             description: 'Del total',
          },
       ]
    }, [state.metrics]);
+
+   const topClientAnalysis = useMemo(() => {
+      return state.topClientAnalysis.map((client) => {
+         const total = client.confirmed + client.canceled + client.noShow
+         const rateSuccess = ((client.confirmed / total) * 100).toFixed(1)
+
+         return {
+            ...client,
+            rate: isNaN(rateSuccess) ? '0.0' : rateSuccess,
+            total
+         }
+      })
+   }, [state.topClientAnalysis]);
 
    return {
       isLoading: state.isLoading,
@@ -101,7 +114,7 @@ export const useLoadDashboard = () => {
       trends: state.trends,
       topClients: state.topClients,
       problematicClients: state.problematicClients,
-      topClientAnalysis: state.topClientAnalysis,
+      topClientAnalysis: topClientAnalysis,
       clientReservations: state.clientReservations,
    }
 }

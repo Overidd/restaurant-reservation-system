@@ -844,6 +844,7 @@ export class FirebaseDashboardService {
             .sort((a, b) => b.total - a.total)
             .slice(0, 5);
 
+
          const problematicClients = Array.from(clientsMap.values())
             .filter(c => c.noShow > 0)
             .sort((a, b) => b.noShow - a.noShow)

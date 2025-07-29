@@ -1,7 +1,8 @@
 import { StatsSummary } from '@/components/common'
 import { ProblematicClients, TopClients, TopReservationAnalysis, TrendsChart } from '@/components/dashboard'
 import { Button } from '@/components/UI/common'
-import { useLoadDashboard } from '@/hook/dashboard'
+import { useDownloadPdf, useLoadDashboard } from '@/hook/dashboard'
+import { FileText, LoaderCircle } from 'lucide-react'
 
 export const DashboardScreen = () => {
    const {
@@ -13,22 +14,29 @@ export const DashboardScreen = () => {
       isLoading
    } = useLoadDashboard()
 
+   const {
+      loading,
+      downloadDashboardPdf,
+   } = useDownloadPdf()
+
    return (
       <div className='min-h-screen p-4 md:p-6 lg:p-8 mx-auto max-w-7xl space-y-6'>
          <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-end'>
-            {/* <p className='text-muted-foreground'>
-               Panel principal de estadísticas
-            </p> */}
-            <div className='flex gap-2'>
-               <Button
-                  variant='outline'
-               >
-                  Exportar Datos
-               </Button>
-               <Button>
-                  Generar Reporte
-               </Button>
-            </div>
+            <Button
+               disabled={loading.downloadDashboard}
+               onClick={() => downloadDashboardPdf({
+                  metrics,
+                  topClients,
+                  problematicClients,
+                  topClientAnalysis,
+               })}
+            >
+               Generar Reporte
+               {loading.downloadDashboard
+                  ? <LoaderCircle className='animate-spin' />
+                  : <FileText />
+               }
+            </Button>
          </div>
 
          <StatsSummary

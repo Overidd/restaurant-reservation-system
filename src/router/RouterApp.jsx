@@ -21,7 +21,7 @@ import {
    MapScreen,
    RestaurantScreen
 } from '@/screen/dashboard';
-import { ClientDetails } from '@/screen/dashboard/userDetails';
+import { UserDetailScreen } from '@/screen/dashboard/UserDetails';
 import { LocationScreen } from '@/screen/location';
 import { ProductScreen } from '@/screen/product';
 import { ReservationScreen } from '@/screen/reservation';
@@ -86,7 +86,7 @@ const AppRoutes = () => {
             <Route index element={<DashboardScreen />} />
             <Route path='tables' element={<MapScreen />} />
             <Route path='calendar' element={<CalendarScreen />} />
-            <Route path='details' element={<ClientDetails />} />
+            <Route path='details' element={<UserDetailScreen />} />
             <Route path='store' element={<RestaurantScreen />} />
             {/* <Route index element={<Navigate to='tables' />} /> */}
          </Route>

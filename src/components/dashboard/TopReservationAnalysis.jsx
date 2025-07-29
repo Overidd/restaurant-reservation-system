@@ -16,7 +16,7 @@ export const TopReservationAnalysis = ({
                Análisis de Reservas por Cliente
             </CardTitle> */}
             <CardDescription>
-               Desglose detallado de confirmadas, canceladas y no-show por cliente
+               Análisis de Reservas por Cliente
             </CardDescription>
          </CardHeader>
          <CardContent>
@@ -45,64 +45,57 @@ export const TopReservationAnalysis = ({
                   </TableRow>
                </TableHeader>
                <TableBody>
-                  {topClientAnalysis.map((client) => {
-                     const total = client.confirmed + client.canceled + client.noShow
-                     const rateSuccess = ((client.confirmed / total) * 100).toFixed(1)
-
-                     return (
-                        <TableRow key={client.name}>
-                           <TableCell className='font-medium'>
-                              {client.name}
-                           </TableCell>
-                           <TableCell className='text-center'>
-                              <Badge
-                                 state={'canceled'}
-                              >
-                                 {client.canceled}
-                              </Badge>
-                           </TableCell>
-                           <TableCell className='text-center'>
-                              <Badge
-                                 state={'confirmed'}
-                              >
-                                 {client.confirmed}
-                              </Badge>
-                           </TableCell>
-                           <TableCell className='text-center'>
-                              <Badge
-                                 state={'noShow'}
-                              >
-                                 {client.noShow}
-                              </Badge>
-                           </TableCell>
-                           <TableCell className='text-center'>
-                              <Badge
-                                 state={'released'}
-                              >
-                                 {client.released}
-                              </Badge>
-                           </TableCell>
-                           <TableCell className='text-center font-semibold'>
-                              {total}
-                           </TableCell>
-                           <TableCell className='text-center'>
-                              <span
-                                 className={`font-semibold ${Number.parseFloat(rateSuccess) >= 80
-                                    ? 'text-green-600'
-                                    : Number.parseFloat(rateSuccess) >= 60
-                                       ? 'text-orange-600'
-                                       : 'text-red-600'
-                                    }`}
-                              >
-                                 {isNaN(rateSuccess)
-                                    ? '0.0'
-                                    : rateSuccess
-                                 }%
-                              </span>
-                           </TableCell>
-                        </TableRow>
-                     )
-                  })}
+                  {topClientAnalysis.map((client) => (
+                     <TableRow key={client.name}>
+                        <TableCell className='font-medium'>
+                           {client.name}
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <Badge
+                              state={'canceled'}
+                           >
+                              {client.canceled}
+                           </Badge>
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <Badge
+                              state={'confirmed'}
+                           >
+                              {client.confirmed}
+                           </Badge>
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <Badge
+                              state={'noShow'}
+                           >
+                              {client.noShow}
+                           </Badge>
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <Badge
+                              state={'released'}
+                           >
+                              {client.released}
+                           </Badge>
+                        </TableCell>
+                        <TableCell className='text-center font-semibold'>
+                           {client.total}
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <span
+                              className={`font-semibold ${Number.parseFloat(client.rate) >= 80
+                                 ? 'text-green-600'
+                                 : Number.parseFloat(client.rate) >= 60
+                                    ? 'text-orange-600'
+                                    : 'text-red-600'
+                                 }`}
+                           >
+                              {client.rate} %
+                           </span>
+                        </TableCell>
+                     </TableRow>
+                  )
+                  )}
                </TableBody>
             </Table>
          </CardContent>

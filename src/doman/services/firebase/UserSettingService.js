@@ -1,4 +1,4 @@
-import { typeStatusTable } from '@/ultils';
+import { DateParser, typeStatusTable } from '@/ultils';
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore/lite';
 import { FirebaseDB } from './config';
 
@@ -52,14 +52,16 @@ export class UserSettingService {
          }
 
          const reservation = reservations.docs[0];
-         console.log(reservation.data());
+
+
+
          return {
             ok: true,
             reservation: {
                ...reservation.data(),
                id: reservation.id,
-               createdAt: reservation.data().createdAt.toDate().toISOString(),
-               updatedAt: reservation.data()?.updatedAt?.toDate()?.toISOString() ?? null
+               createdAt: DateParser.toString(reservation.data().createdAt.toDate()),
+               updatedAt: reservation?.data()?.updatedAt?.toDate() ? DateParser.toString(reservation.data().updatedAt.toDate()) : null
             }
          }
       } catch (error) {
@@ -86,7 +88,7 @@ export class UserSettingService {
          const dataUser = user.data();
 
          const userRef = doc(FirebaseDB, 'users', idUser);
-         
+
          const data = {
             name: name ?? dataUser.name,
             phone: phone ?? dataUser.phone,

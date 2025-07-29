@@ -1,4 +1,5 @@
 export * from './useDimensionMap';
+export * from './useDownloadPdf';
 export * from './useEditTables';
 export * from './useGenerateResources';
 export * from './useLoadDashboard';

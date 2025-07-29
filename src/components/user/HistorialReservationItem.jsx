@@ -88,20 +88,20 @@ export const HistorialReservationItem = ({
 
                {/* Botones de acción */}
                {!isCanceled && (
-                  <div className='flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 '>
+                  <div className='flex flex-row gap-2 sm:gap-3 pt-2 '>
                      <Button
                         onClick={() => onSelectReserve(reservation)}
                         variant='default'
-                        size="sm"
-                        className="flex-1 sm:flex-none sm:min-w-[100px] text-sm"
+                        size='sm'
+                        className='flex-1 sm:flex-none sm:min-w-[100px] text-sm'
                      >
                         Editar
                      </Button>
                      <Button
                         onClick={() => onCancelReservation(reservation)}
-                        variant="destructive"
-                        size="sm"
-                        className="flex-1 sm:flex-none sm:min-w-[100px] text-sm"
+                        variant='destructive'
+                        size='sm'
+                        className='flex-1 sm:flex-none sm:min-w-[100px] text-sm'
                      >
                         Cancelar
                      </Button>

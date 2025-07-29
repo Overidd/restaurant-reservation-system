@@ -1,4 +1,5 @@
 import { getAllUsersThunk, getByIdUserReservationThunk, setSelectedUser } from '@/doman/store/dashboard';
+import { DateParser } from '@/ultils';
 import { Users } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,8 +40,19 @@ export const useLoadUsers = () => {
       ]
    }, [state.users]);
 
+   const users = useMemo(() => {
+      return state.users.map((user) => {
+         const rate = ((user.metrics?.released || 0) / (user.metrics?.total || 0) * 100).toFixed(1)
+         return {
+            ...user,
+            updatedAt: DateParser.toString(new Date(user.updatedAt)),
+            rate: isNaN(rate) ? '0.0' : rate
+         };
+      })
+   }, [state.users])
+
    return {
-      users: state.users,
+      users: users,
       metrics: metrics,
       reservations: state.reservations,
       selectedUser: state.selectedUser,

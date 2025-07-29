@@ -241,7 +241,6 @@ export const CardStatsResume2 = ({
    title,
    icon,
    color,
-   textColor,
    description,
    count,
    rate,
@@ -259,10 +258,13 @@ export const CardStatsResume2 = ({
             <CardTitle className='text-sm font-medium'>
                {title}
             </CardTitle>
-            <Icon className={`h-4 w-4 ${color}`} />
+            <Icon
+               className={`h-4 w-4 `}
+               style={{ color }}
+            />
          </CardHeader>
          <CardContent>
-            <div className={`text-2xl font-bold ${textColor}`}>
+            <div className={`text-2xl font-bold`} style={{ color }}>
                {!isLoading
                   ? count
                   : <NumberSkeleton

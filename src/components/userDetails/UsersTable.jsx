@@ -123,72 +123,66 @@ export const UsersTable = ({
                      ))
 
                      }
-                     {!isLoading && filteredClientes.map((user) => {
-                        const rateSuccess = ((user.metrics?.released || 0) / (user.metrics?.total || 0) * 100).toFixed(1)
-                        return (
-                           <TableRow key={user.id}>
-                              <TableCell
-                                 className='text-sm text-muted-foreground'
+                     {!isLoading && filteredClientes.map((user) => (
+                        <TableRow key={user.id}>
+                           <TableCell
+                              className='text-sm text-muted-foreground'
+                           >
+                              {user?.updatedAt}
+                           </TableCell>
+                           <TableCell>
+                              <div className='flex items-center gap-3'>
+                                 <UserCard
+                                    mustShow={['name', 'email']}
+                                    user={{
+                                       name: user.name,
+                                       email: user.email,
+                                       photoURL: user?.photoURL
+                                    }}
+                                 />
+                              </div>
+                           </TableCell>
+                           <TableCell
+                           >
+                              <div className='flex items-center gap-1 text-sm'>
+                                 <Phone className='h-3 w-3' />
+                                 {user.phone}
+                              </div>
+                           </TableCell>
+                           <TableCell>
+                              <div className='text-center'>
+                                 <div className='font-semibold'>
+                                    {user.metrics.total}
+                                 </div>
+                                 <div className='text-xs text-muted-foreground'>
+                                    reservas
+                                 </div>
+                              </div>
+                           </TableCell>
+                           <TableCell>
+                              <div
+                                 className={`text-center font-semibold ${Number.parseFloat(user.rate) >= 90
+                                    ? 'text-green-600'
+                                    : Number.parseFloat(user.rate) >= 80
+                                       ? 'text-yellow-600'
+                                       : 'text-red-600'
+                                    }`}
                               >
-                                 {user?.updatedAt ?? new Date().toLocaleDateString()}
-                              </TableCell>
-                              <TableCell>
-                                 <div className='flex items-center gap-3'>
-                                    <UserCard
-                                       mustShow={['name', 'email']}
-                                       user={{
-                                          name: user.name,
-                                          email: user.email,
-                                          photoURL: user?.photoURL
-                                       }}
-                                    />
-                                 </div>
-                              </TableCell>
-                              <TableCell
+                                 {user.rate} %
+                              </div>
+                           </TableCell>
+                           <TableCell>
+                              <Button
+                                 variant='outline'
+                                 size='sm'
+                                 onClick={() => onSelectUser(user)}
                               >
-                                 <div className='flex items-center gap-1 text-sm'>
-                                    <Phone className='h-3 w-3' />
-                                    {user.phone}
-                                 </div>
-                              </TableCell>
-                              <TableCell>
-                                 <div className='text-center'>
-                                    <div className='font-semibold'>
-                                       {user.metrics.total}
-                                    </div>
-                                    <div className='text-xs text-muted-foreground'>
-                                       reservas
-                                    </div>
-                                 </div>
-                              </TableCell>
-                              <TableCell>
-                                 <div
-                                    className={`text-center font-semibold ${Number.parseFloat(rateSuccess) >= 90
-                                       ? 'text-green-600'
-                                       : Number.parseFloat(rateSuccess) >= 80
-                                          ? 'text-yellow-600'
-                                          : 'text-red-600'
-                                       }`}
-                                 >
-                                    {
-                                       rateSuccess === 'NaN'
-                                          ? '0%'
-                                          : rateSuccess + '%'
-                                    }
-                                 </div>
-                              </TableCell>
-                              <TableCell>
-                                 <Button
-                                    variant='outline'
-                                    size='sm'
-                                    onClick={() => onSelectUser(user)}
-                                 >
-                                    Ver Detalles
-                                 </Button>
-                              </TableCell>
-                           </TableRow>
-                        )
-                     })}
+                                 Ver Detalles
+                              </Button>
+                           </TableCell>
+                        </TableRow>
+                     )
+                     )}
                   </TableBody>
                </Table>
 

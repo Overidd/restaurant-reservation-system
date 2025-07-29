@@ -33,6 +33,7 @@ export const ReservationScreen = () => {
       <Modal
          isOpen={isOpenModal}
          onClose={closeModal}
+         showBtnClose={false}
          direction='left'
          preventBackdropClose={true}
          className={cn(
