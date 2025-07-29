@@ -29,7 +29,7 @@ export const useLoadDashboard = () => {
          {
             id: 'total',
             count: state.metrics.total,
-            rate: calculateRate(state.metrics.total, state.growthRateClients.totalClients),
+            rate: calculateRate(state.metrics.total, 100),
             title: 'Total Reservas',
             icon: CalendarDays,
             color: 'text-muted-foreground',
@@ -57,11 +57,11 @@ export const useLoadDashboard = () => {
             description: 'Del total',
          },
          {
-            id: 'Liberados',
+            id: 'Completados',
             count: state.metrics.released,
             rate: calculateRate(state.metrics.released, state.
                metrics.total),
-            title: 'Liberados',
+            title: 'Completados',
             icon: CheckCircle,
             color: 'text-table-released',
             textColor: 'text-table-released',
@@ -89,7 +89,6 @@ export const useLoadDashboard = () => {
          },
       ]
    }, [state.metrics]);
-
 
    return {
       isLoading: state.isLoading,

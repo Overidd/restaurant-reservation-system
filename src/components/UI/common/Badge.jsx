@@ -43,6 +43,7 @@ export const Badge = ({
          canceled: 'bg-table-canceled text-white',
          noShow: 'bg-table-noshow text-white',
          notAvailable: 'bg-table-notAvailable text-white',
+         released: 'bg-table-released text-white',
       }
 
       return cn(badgeVariants({ variant, className }), stateClasses[state])

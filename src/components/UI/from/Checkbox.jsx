@@ -1,6 +1,6 @@
-import { cn } from '@/ultils'
-import { Check } from 'lucide-react'
-import { useState } from 'react'
+import { cn } from '@/ultils';
+import { Check } from 'lucide-react';
+import { useState } from 'react';
 
 //  {
 //   id?: string
@@ -10,7 +10,7 @@ import { useState } from 'react'
 //   disabled?: boolean
 //   label?: string
 //   className?: string
-//   size?: 'sm" | "md" | "lg'
+//   size?: 'sm' | 'md' | 'lg'
 // }
 
 export const Checkbox = ({
@@ -65,7 +65,7 @@ export const Checkbox = ({
    return (
       <div
          id={id}
-         role="checkbox"
+         role='checkbox'
          aria-checked={checkedValue}
          aria-disabled={disabled}
          tabIndex={disabled ? -1 : 0}
@@ -82,7 +82,7 @@ export const Checkbox = ({
          onKeyDown={handleKeyDown}
       >
          {checkedValue && (
-            <Check size={iconSizes[size]} className="transition-opacity duration-150" />
+            <Check size={iconSizes[size]} className='transition-opacity duration-150' />
          )}
       </div>
    );

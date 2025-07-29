@@ -38,7 +38,7 @@ export const TopClients = ({
                      <TableRow key={cliente.name}>
                         <TableCell className='font-medium'>
                            <div className='flex items-center gap-2'>
-                              <Badge variant={index === 0 ? 'default' : 'secondary'}>
+                              <Badge variant={'default'}>
                                  #{index + 1}
                               </Badge>
                               {cliente.name}

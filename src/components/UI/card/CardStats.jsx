@@ -270,8 +270,8 @@ export const CardStatsResume2 = ({
                   />
                }
             </div>
-            <p className='text-xs text-muted-foreground'>
-               {rate && (
+            <div className='text-xs text-muted-foreground'>
+               {!isNaN(rate) && (
                   !isLoading
                      ? `${rate}%`
                      : <NumberSkeleton
@@ -280,9 +280,12 @@ export const CardStatsResume2 = ({
                )
                }
                <span className='ml-1'>
-                  {description && description}
+                  {!isLoading &&
+                     description &&
+                     description
+                  }
                </span>
-            </p>
+            </div>
          </CardContent>
       </Card>
    )

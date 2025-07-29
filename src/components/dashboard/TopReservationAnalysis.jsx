@@ -5,7 +5,6 @@ export const TopReservationAnalysis = ({
    className,
    topClientAnalysis = []
 }) => {
-
    return (
       <Card
          className={cn(
@@ -26,13 +25,16 @@ export const TopReservationAnalysis = ({
                   <TableRow>
                      <TableHead>Cliente</TableHead>
                      <TableHead className='text-center'>
-                        Confirmadas
-                     </TableHead>
-                     <TableHead className='text-center'>
                         Canceladas
                      </TableHead>
                      <TableHead className='text-center'>
+                        Confirmadas
+                     </TableHead>
+                     <TableHead className='text-center'>
                         No presentado
+                     </TableHead>
+                     <TableHead className='text-center'>
+                        Completadas
                      </TableHead>
                      <TableHead className='text-center'>
                         Total
@@ -49,13 +51,8 @@ export const TopReservationAnalysis = ({
 
                      return (
                         <TableRow key={client.name}>
-                           <TableCell className='font-medium'>{client.name}</TableCell>
-                           <TableCell className='text-center'>
-                              <Badge
-                                 state={'confirmed'}
-                              >
-                                 {client.confirmed}
-                              </Badge>
+                           <TableCell className='font-medium'>
+                              {client.name}
                            </TableCell>
                            <TableCell className='text-center'>
                               <Badge
@@ -66,9 +63,23 @@ export const TopReservationAnalysis = ({
                            </TableCell>
                            <TableCell className='text-center'>
                               <Badge
+                                 state={'confirmed'}
+                              >
+                                 {client.confirmed}
+                              </Badge>
+                           </TableCell>
+                           <TableCell className='text-center'>
+                              <Badge
                                  state={'noShow'}
                               >
                                  {client.noShow}
+                              </Badge>
+                           </TableCell>
+                           <TableCell className='text-center'>
+                              <Badge
+                                 state={'released'}
+                              >
+                                 {client.released}
                               </Badge>
                            </TableCell>
                            <TableCell className='text-center font-semibold'>
@@ -83,7 +94,10 @@ export const TopReservationAnalysis = ({
                                        : 'text-red-600'
                                     }`}
                               >
-                                 {rateSuccess}%
+                                 {isNaN(rateSuccess)
+                                    ? '0.0'
+                                    : rateSuccess
+                                 }%
                               </span>
                            </TableCell>
                         </TableRow>

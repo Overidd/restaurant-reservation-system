@@ -29,7 +29,9 @@ export const DialigCancelReserve = ({
          } else {
             updated = [...prev, item.id];
          }
-         setHighlightedTableIds(updated);
+         window.requestAnimationFrame(() => {
+            setHighlightedTableIds(updated);
+         })
          return updated;
       });
    };
@@ -45,9 +47,10 @@ export const DialigCancelReserve = ({
    const hasSelectes = () => {
       if (localHighlightedId.length === table.reservation.relatedTables.length) {
          onConfirm({
-            user: table.user,
+            idUser: table.user.idUser,
             tables: relatedTables.filter(t => localHighlightedId.includes(t.id)),
             idReservation: table.reservation.idReservation,
+            idRestaurant: table.idRestaurant,
             isNoShow: isCheckedNoShowRef.current,
          });
          return;
@@ -89,7 +92,7 @@ export const DialigCancelReserve = ({
 
    return (
       <Card2 className={cn(
-         'p-4 flex flex-col gap-4',
+         '!p-5 flex flex-col gap-4',
          'w-72'
       )}>
          <CardHeader className={'gap-2'}>
@@ -112,9 +115,9 @@ export const DialigCancelReserve = ({
                relatedTables.map((item) => (
                   <Toggle
                      key={item.id}
-                     variant={'crystal'}
+                     variant={'ghost'}
+                     className='hover:bg-transparent'
                      onClick={() => toggleSelected(item)}
-                     className={localHighlightedId.includes(item.id) ? 'ring-2 ring-amber-400' : ''}
                      disabled={isProcessing}
                   >
                      <Dice1 />
@@ -126,15 +129,17 @@ export const DialigCancelReserve = ({
 
          <CardFooter className={'gap-4 justify-center  flex-wrap '}>
             <Label
-               className={'space-x-2 text-background/70 basis-full'}
+               htmlFor={'noShow'}
+               className={'text-background/70 basis-full flex flex-row gap-2 items-center'}
             >
                <Checkbox
+                  id={'noShow'}
                   disabled={!isActiveCheck || isProcessing}
                   onChange={handleCheckNoShow}
                   className='inline-block align-middle'
                />
-               <span className='inline-block align-middle'>
-                  Marcar como no-show
+               <span className='inline-block align-middle text-sm truncate-text-nowarp'>
+                  Marcar como no presentado
                </span>
             </Label>
 
@@ -144,14 +149,6 @@ export const DialigCancelReserve = ({
                size={'sm'}
             >
                Confirmar
-            </Button>
-            <Button
-               onClick={onCancel}
-               size={'sm'}
-               variant='destructive'
-               disabled={isProcessing}
-            >
-               Eliminar
             </Button>
          </CardFooter>
       </Card2>

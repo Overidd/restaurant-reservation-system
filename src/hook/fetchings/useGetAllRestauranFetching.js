@@ -27,7 +27,7 @@ export const useGetAllRestauranFetching = () => {
          errorMessage: null
       })
 
-      const { ok, errorMessage, restaurants } = await dasboardServiceProvider.getRestaurants();
+      const { ok, errorMessage, restaurants } = await dasboardServiceProvider.getRestaurantsActive();
 
       if (!ok) {
          setState({

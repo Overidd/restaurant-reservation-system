@@ -296,7 +296,7 @@ export class FirebaseDashboardService {
          });
 
          const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
-         
+
          const resul = tables.docs.map((doc) => {
             const data = doc.data();
             const reservation = tableInfoMap.get(String(doc.id));
@@ -460,7 +460,7 @@ export class FirebaseDashboardService {
       }
    }
 
-   async registerClientnoShow({ idReservation, user: { name, email, idUser } }) {
+   async registerClientnoShow({ idReservation, idRestaurant, idUser }) {
       try {
          if (!idReservation) {
             throw new Error('No se proporciono el id de la reserva');
@@ -469,16 +469,22 @@ export class FirebaseDashboardService {
          if (!idUser) {
             throw new Error('No se proporciono el id del usuario');
          }
+         const noShow = await getDocs(query(
+            collection(FirebaseDB, 'noShow'),
+            where('reservation', '==', idReservation),
+            where('idRestaurant', '==', idRestaurant),
+            where('idUser', '==', idUser),
+         ))
 
-         const reservationNoShowRef = doc(FirebaseDB, 'reservations', idReservation);
+         if (noShow.docs.length > 0) {
+            throw new Error('El usuario ya se encuentra registrado como no show');
+         }
 
-         await updateDoc(reservationNoShowRef, {
-            name: name,
-            email: email,
-            idReservation: idReservation,
-            idUser: idUser ?? null,
-            updatedAt: serverTimestamp()
-         });
+         await addDoc(collection(FirebaseDB, 'noShow'), {
+            reservation: idReservation,
+            idRestaurant,
+            idUser,
+         })
 
          return {
             ok: true

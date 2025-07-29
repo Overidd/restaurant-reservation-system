@@ -3,6 +3,7 @@ import { cn } from '@/ultils/cn';
 export const Label = ({
    className,
    children,
+   htmlFor,
    size = 'base',
    ...props
 }) => {
@@ -16,6 +17,7 @@ export const Label = ({
 
    return (
       <label
+         htmlFor={htmlFor}
          data-slot='label'
          className={cn(
             'text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 block',

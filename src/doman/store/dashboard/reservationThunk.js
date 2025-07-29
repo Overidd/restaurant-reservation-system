@@ -11,11 +11,18 @@ import { changeStatusTableAction, clearTablesRelationAction, messageErrorAction 
  */
 export const cancelFullReservationThunks = (data) => {
    return async (dispatch) => {
-      const res = await dasboardServiceProvider.cancelFullReservation(data);
 
       if (data.isNoShow) {
-         await dasboardServiceProvider.registerClientnoShow(data);
+         const { ok, errorMessage } = await dasboardServiceProvider.registerClientnoShow(data);
+
+         if (!ok) {
+            dispatch(messageErrorAction(errorMessage));
+            throw errorMessage
+         }
       }
+
+      const res = await dasboardServiceProvider.cancelFullReservation(data);
+
 
       if (!res.ok) {
          dispatch(messageErrorAction(res.errorMessage));

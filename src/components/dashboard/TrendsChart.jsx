@@ -26,7 +26,7 @@ export const TrendsChart = ({
                      color: 'hsl(var(--chart-1))',
                   },
                   released: {
-                     label: 'Liberadas',
+                     label: 'Completados',
                      color: 'hsl(var(--chart-2))',
                   },
                   noShow: {
