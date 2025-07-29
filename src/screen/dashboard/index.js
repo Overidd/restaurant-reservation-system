@@ -1,7 +1,7 @@
-export * from './Calendar';
+export * from './CalendarScreen';
 export * from './CreateReservationsModal';
-export * from './Dashboard';
-export * from './Map';
-export * from './Restaurant';
-export * from './UserDetails';
+export * from './DashboardScreen';
+export * from './MapScreen';
+export * from './RestaurantScreen';
+export * from './UserDetailScreen';
 

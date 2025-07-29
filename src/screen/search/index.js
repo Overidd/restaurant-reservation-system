@@ -1,1 +1,2 @@
-export * from './SearchReservation';
+export * from './SearchReservationScreen';
+
