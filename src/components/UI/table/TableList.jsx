@@ -1,4 +1,4 @@
-import { usePaintedGrid } from '@/hook';
+import { usePaintedGrid } from '@/hook/common';
 import { typeResource } from '@/ultils';
 import { cn } from '@/ultils/cn';
 import PropTypes from 'prop-types';

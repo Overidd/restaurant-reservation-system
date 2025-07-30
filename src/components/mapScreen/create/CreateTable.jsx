@@ -1,5 +1,5 @@
 import { tableTypeData } from '@/data';
-import { useForm } from '@/hook';
+import { useForm } from '@/hook/common';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { Validations } from '@/ultils';

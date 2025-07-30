@@ -26,3 +26,5 @@ export const LocationScreen = () => {
     </div>
   )
 }
+
+export default LocationScreen;

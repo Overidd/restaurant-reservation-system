@@ -1,3 +1,3 @@
-export * from './Login';
-export * from './Register';
-export * from './Recover';
+export * from './LoginScreen';
+export * from './RecoverScreen';
+export * from './RegisterScreen';

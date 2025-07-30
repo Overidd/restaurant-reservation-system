@@ -1,12 +1,10 @@
 import { Outlet } from 'react-router-dom';
 
-import {
-  useModalAuth,
-} from '@/hook';
 import { cn } from '@/ultils';
 
 import { Card2 } from '@/components/UI/card';
 import { Modal } from '@/components/UI/common';
+import { useModalAuth } from '@/hook/auth';
 
 export const AuthLayout = () => {
   const {

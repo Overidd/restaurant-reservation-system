@@ -1,5 +1,5 @@
 import { DialigDeleteObject, DialigDeleteTable } from '@/components/UI/dialog';
-import { useModalAsync } from '@/hook';
+import { useModalAsync } from '@/hook/common';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { cn, typeResource } from '@/ultils';

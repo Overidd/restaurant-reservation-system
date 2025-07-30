@@ -6,107 +6,97 @@ import {
    Routes
 } from 'react-router-dom';
 
+import { LoadingScreen } from '@/components/common';
 import {
    AppLayout,
    AuthLayout,
    DashboardLayout
 } from '@/layout';
-import {
-   LoginScreen,
-   RegisterScreen
-} from '@/screen/auth';
-import {
-   CalendarScreen,
-   DashboardScreen,
-   MapScreen,
-   RestaurantScreen,
-   UserDetailScreen
-} from '@/screen/dashboard';
-import { LocationScreen } from '@/screen/location';
-import { ProductScreen } from '@/screen/product';
-import { ReservationScreen } from '@/screen/reservation';
-
-import { HomeScreen } from '@/screen/home';
-import { SearchReservationScreen } from '@/screen/search';
+import { Suspense } from 'react';
 import {
    ProtectedRoute,
    PublicOnlyRoute,
    PublicRoute,
 } from '.';
 
-
+import {
+   CalendarScreen,
+   DashboardScreen,
+   HomeScreen,
+   LocationScreen,
+   LoginScreen,
+   MapScreen,
+   ProductScreen,
+   RegisterScreen,
+   ReservationScreen,
+   RestaurantScreen,
+   SearchReservationScreen,
+   UserDetailScreen,
+} from './lazyRoutes';
 
 const AppRoutes = () => {
    return (
-      <Routes>
-         <Route element={<PublicRoute />}>
-            <Route path='/' element={<AppLayout />}>
-
-               <Route path='home' element={<HomeScreen />}>
-                  <Route path='reserve' element={<ReservationScreen />} />
-                  <Route element={<PublicOnlyRoute />}>
-                     <Route element={<AuthLayout />}>
-                        <Route path='login' element={<LoginScreen />} />
-                        <Route path='register' element={<RegisterScreen />} />
+      <Suspense fallback={<LoadingScreen />}>
+         <Routes>
+            <Route element={<PublicRoute />}>
+               <Route path='/' element={<AppLayout />}>
+                  <Route path='home' element={<HomeScreen />}>
+                     <Route path='reserve' element={<ReservationScreen />} />
+                     <Route element={<PublicOnlyRoute />}>
+                        <Route element={<AuthLayout />}>
+                           <Route path='login' element={<LoginScreen />} />
+                           <Route path='register' element={<RegisterScreen />} />
+                        </Route>
                      </Route>
                   </Route>
-               </Route>
 
-               <Route path='product' element={<ProductScreen />}>
-                  <Route path='reserve' element={<ReservationScreen />} />
-                  <Route element={<PublicOnlyRoute />}>
-                     <Route element={<AuthLayout />}>
-                        <Route path='login' element={<LoginScreen />} />
-                        <Route path='register' element={<RegisterScreen />} />
+                  <Route path='product' element={<ProductScreen />}>
+                     <Route path='reserve' element={<ReservationScreen />} />
+                     <Route element={<PublicOnlyRoute />}>
+                        <Route element={<AuthLayout />}>
+                           <Route path='login' element={<LoginScreen />} />
+                           <Route path='register' element={<RegisterScreen />} />
+                        </Route>
                      </Route>
                   </Route>
-               </Route>
 
-               <Route path='location' element={<LocationScreen />}>
-                  <Route path='reserve' element={<ReservationScreen />} />
-                  <Route element={<PublicOnlyRoute />}>
-                     <Route element={<AuthLayout />}>
-                        <Route path='login' element={<LoginScreen />} />
-                        <Route path='register' element={<RegisterScreen />} />
+                  <Route path='location' element={<LocationScreen />}>
+                     <Route path='reserve' element={<ReservationScreen />} />
+                     <Route element={<PublicOnlyRoute />}>
+                        <Route element={<AuthLayout />}>
+                           <Route path='login' element={<LoginScreen />} />
+                           <Route path='register' element={<RegisterScreen />} />
+                        </Route>
                      </Route>
                   </Route>
-               </Route>
 
-               <Route path='search-reservation' element={<SearchReservationScreen />}>
-                  <Route path='reserve' element={<ReservationScreen />} />
-                  <Route element={<PublicOnlyRoute />}>
-                     <Route element={<AuthLayout />}>
-                        <Route path='login' element={<LoginScreen />} />
-                        <Route path='register' element={<RegisterScreen />} />
+                  <Route path='search-reservation' element={<SearchReservationScreen />}>
+                     <Route path='reserve' element={<ReservationScreen />} />
+                     <Route element={<PublicOnlyRoute />}>
+                        <Route element={<AuthLayout />}>
+                           <Route path='login' element={<LoginScreen />} />
+                           <Route path='register' element={<RegisterScreen />} />
+                        </Route>
                      </Route>
                   </Route>
-               </Route>
 
-               <Route index element={<Navigate to='home' />} />
-               <Route path='*' element={<Navigate to='/home' />} />
+                  <Route index element={<Navigate to='home' />} />
+                  <Route path='*' element={<Navigate to='/home' />} />
+               </Route>
             </Route>
-         </Route>
 
-         <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/home' />}>
-            <Route path='/dashboard' element={<DashboardLayout />} >
-               <Route index element={<DashboardScreen />} />
-               <Route path='tables' element={<MapScreen />} />
-               <Route path='calendar' element={<CalendarScreen />} />
-               <Route path='details' element={<UserDetailScreen />} />
-               <Route path='store' element={<RestaurantScreen />} />
-               {/* <Route index element={<Navigate to='tables' />} /> */}
+            <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/home' />}>
+               <Route path='/dashboard' element={<DashboardLayout />} >
+                  <Route index element={<DashboardScreen />} />
+                  <Route path='tables' element={<MapScreen />} />
+                  <Route path='calendar' element={<CalendarScreen />} />
+                  <Route path='details' element={<UserDetailScreen />} />
+                  <Route path='store' element={<RestaurantScreen />} />
+                  {/* <Route index element={<Navigate to='tables' />} /> */}
+               </Route>
             </Route>
-         </Route>
-
-         {/* <Route path='/dashboard' element={<DashboardLayout />} >
-            <Route index element={<DashboardScreen />} />
-            <Route path='tables' element={<MapScreen />} />
-            <Route path='calendar' element={<CalendarScreen />} />
-            <Route path='details' element={<UserDetailScreen />} />
-            <Route path='store' element={<RestaurantScreen />} />
-         </Route> */}
-         {/* <Route path='*' element={<Navigate to='/' />} /> */}
-      </Routes>
+         </Routes>
+      </Suspense>
    );
 };
 

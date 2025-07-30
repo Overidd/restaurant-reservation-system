@@ -6,6 +6,7 @@ export * from './useLoadDashboard';
 export * from './useLoadDataCalendar';
 export * from './useLoadFilterRestaurant';
 export * from './useLoadRestaurantResource';
+export * from './useModalTableEdit';
 export * from './usePaginatedUsers';
 export * from './useReservation';
 export * from './useResource';

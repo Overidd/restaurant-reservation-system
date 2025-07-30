@@ -1,4 +1,4 @@
-import { useForm } from '@/hook';
+import { useForm } from '@/hook/common';
 import { useCreateObjectContext } from '@/hook/context';
 import { useResource } from '@/hook/dashboard';
 import { useModalCreateItemObject, useModalEditItemObject } from '@/hook/modals';

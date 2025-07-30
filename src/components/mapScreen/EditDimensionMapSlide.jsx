@@ -1,4 +1,4 @@
-import { useForm } from '@/hook';
+import { useForm } from '@/hook/common';
 import { useDimensionMap } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { BetweenHorizontalStart, BetweenVerticalStart } from 'lucide-react';

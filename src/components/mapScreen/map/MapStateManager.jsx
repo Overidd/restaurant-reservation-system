@@ -1,6 +1,6 @@
-import { useModalTableReserve } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
 import { useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
+import { useModalTableReserve } from '@/hook/map';
 import { MapState, ModalTableReserve } from '..';
 
 export const MapStateManager = () => {

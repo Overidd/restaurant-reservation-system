@@ -1,4 +1,4 @@
-import { useModalAsync } from '@/hook';
+import { useModalAsync } from '@/hook/common';
 import { useRestaurant } from '@/hook/restaurant';
 import { AdminTableToasts } from '@/toasts';
 import { Card2 } from '../UI/card';

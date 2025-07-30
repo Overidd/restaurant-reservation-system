@@ -1,4 +1,4 @@
-import { useForm } from '@/hook';
+import { useForm } from '@/hook/common';
 import { useCreateCategoryContext } from '@/hook/context';
 import { AdminTableToasts } from '@/toasts';
 import { cn } from '@/ultils';

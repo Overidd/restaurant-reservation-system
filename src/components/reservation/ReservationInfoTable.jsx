@@ -1,4 +1,4 @@
-import { useReserve } from '@/hook';
+import { useReserve } from '@/hook/reservation';
 import { cn } from '@/ultils';
 import { Users, Utensils } from 'lucide-react';
 import { Badge, Card, CardContent, CardImage } from '../UI/common';

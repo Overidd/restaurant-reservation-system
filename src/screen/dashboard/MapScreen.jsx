@@ -44,3 +44,5 @@ export const MapScreen = () => {
       </main>
    )
 }
+
+export default MapScreen;

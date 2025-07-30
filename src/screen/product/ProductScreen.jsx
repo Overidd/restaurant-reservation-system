@@ -35,3 +35,5 @@ export const ProductScreen = () => {
     </div>
   )
 }
+
+export default ProductScreen;

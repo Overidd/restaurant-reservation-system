@@ -2,21 +2,15 @@ import toast from 'react-hot-toast';
 
 import { Calendar, ChevronLeft, Clock } from 'lucide-react';
 
-import {
-   useModalAsync,
-   useModalAuth,
-   useModalReserve,
-   useReserve,
-   useReserveTimer,
-   useStepFormContext,
-} from '@/hook';
 import { cn } from '@/ultils/cn';
 
 import { Badge, Button, ColorStatus } from '../UI/common';
 import { TableList } from '../UI/table';
 
-import { useUser } from '@/hook/auth';
+import { useModalAuth, useUser } from '@/hook/auth';
+import { useModalAsync } from '@/hook/common';
 import { useGenerateResources } from '@/hook/dashboard';
+import { useModalReserve, useReserve, useReserveTimer, useStepFormContext } from '@/hook/reservation';
 import { ReservationToast } from '@/toasts';
 import { useState } from 'react';
 import { ReservationInfoTable, ReservationLoadding } from '.';

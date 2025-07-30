@@ -1,10 +1,10 @@
 import { tablesSizeData } from '@/data';
-import { useForm } from '@/hook';
 import { cn } from '@/ultils';
 import { useState } from 'react';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
 
+import { useForm } from '@/hook/common';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { BetweenHorizontalStart, BetweenVerticalStart, MoveHorizontal, MoveVertical, RotateCwSquare } from 'lucide-react';

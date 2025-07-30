@@ -112,11 +112,11 @@ export const CardProduct = ({
                />
 
                <div className='absolute top-3 left-3 flex flex-col gap-1'>
-                  {isNew && <Badge className='bg-green-500 text-xs'>
-                     Nuevo
-                  </Badge>}
                   {isPopular && <Badge className='text-xs'>
                      Popular
+                  </Badge>}
+                  {isNew && <Badge className='bg-sidebar-background text-xs'>
+                     Nuevo
                   </Badge>}
                   {isOnSale && <Badge className='text-xs bg-destructive'>
                      -{discount}%
@@ -150,7 +150,7 @@ export const CardProduct = ({
                   )}
                </div>
 
-               <h3 className='font-semibold text-lg mb-2 transition-colors line-clamp-1'>
+               <h3 className='font-semibold text-base mb-2 transition-colors line-clamp-1'>
                   {name}
                </h3>
 

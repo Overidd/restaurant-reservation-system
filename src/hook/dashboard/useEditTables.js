@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { toggleIsEditAction } from '@/doman/store/dashboard';
+import { useModalTableEditProperty } from '../map/useModalTableEditProperty';
 import { useSlideOverObjectCreate } from '../slideover';
-import { useModalTableEdit } from '../useModalTableEdit';
-import { useModalTableEditProperty } from '../useModalTableEditProperty';
 import { useDimensionMap } from './useDimensionMap';
+import { useModalTableEdit } from './useModalTableEdit';
 import { useResource } from './useResource';
 import { useStateFilterRestaurant } from './useStateFilterRestaurant';
 

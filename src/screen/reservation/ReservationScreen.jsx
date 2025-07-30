@@ -1,5 +1,4 @@
 import { StepFormProvider, StepFromContextProvider } from '@/doman/context/stepFrom';
-import { useModalReserve } from '@/hook';
 import { cn } from '@/ultils/cn';
 
 import {
@@ -22,6 +21,7 @@ import {
    StepFormHeader
 } from '@/components/UI/stepForm';
 import { ModalAsyncProvider } from '@/doman/context/dialogAsync';
+import { useModalReserve } from '@/hook/reservation';
 
 export const ReservationScreen = () => {
    const {
@@ -106,3 +106,5 @@ export const ReservationScreen = () => {
 
    )
 }
+
+export default ReservationScreen;

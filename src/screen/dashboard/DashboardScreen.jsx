@@ -64,3 +64,4 @@ export const DashboardScreen = () => {
       </div>
    )
 }
+export default DashboardScreen;

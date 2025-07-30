@@ -238,3 +238,5 @@ export const SearchReservationScreen = () => {
       </div>
    )
 }
+
+export default SearchReservationScreen;

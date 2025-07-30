@@ -2,7 +2,7 @@ import { FromReservation } from '@/components/common';
 import { Card2 } from '@/components/UI/card';
 import { Button, Modal } from '@/components/UI/common';
 import { FormItem } from '@/components/UI/from';
-import { useReservation } from '@/hook';
+import { useReservation } from '@/hook/dashboard';
 import { useModalReservationsCreate } from '@/hook/modals';
 import { ReservationToast } from '@/toasts';
 import { cn } from '@/ultils';

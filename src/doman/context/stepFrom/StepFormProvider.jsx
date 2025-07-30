@@ -6,7 +6,6 @@ import {
 
 import PropTypes from 'prop-types';
 
-import { useStepForm } from '@/hook';
 
 import {
    AnimatedStep,
@@ -15,6 +14,7 @@ import {
    StepFormHeader,
 } from '@/components/UI/stepForm';
 
+import { useStepForm } from '@/hook/reservation';
 import { StepFromContext } from './StepFromContext';
 
 

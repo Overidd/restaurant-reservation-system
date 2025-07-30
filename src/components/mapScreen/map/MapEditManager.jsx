@@ -1,8 +1,8 @@
 import { CreateCategoryProvider } from '@/doman/context/object/CreateCategoryProvider';
 import { CreateObjectProvider } from '@/doman/context/object/CreateObjectProvider';
-import { useModalTableEdit, useModalTableEditProperty } from '@/hook';
 import { useMapManagerContext } from '@/hook/context';
-import { useRestaurantUi } from '@/hook/dashboard';
+import { useModalTableEdit, useRestaurantUi } from '@/hook/dashboard';
+import { useModalTableEditProperty } from '@/hook/map';
 import { useSlideOverObjectCreate } from '@/hook/slideover';
 import { CreateResourceSlide, EditDimensionMapSlide, EditTablePropertySlide, EditTableSlide, MapEdit, ModalManagerObjects } from '..';
 

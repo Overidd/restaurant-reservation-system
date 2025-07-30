@@ -1,6 +1,6 @@
 import { DialigCancelReserve } from '@/components/UI/dialog';
 import { Object } from '@/components/UI/resource';
-import { useModalAsync, usePaintedGrid } from '@/hook';
+import { useModalAsync, usePaintedGrid } from '@/hook/common';
 import { useReservation } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { typeResource } from '@/ultils';

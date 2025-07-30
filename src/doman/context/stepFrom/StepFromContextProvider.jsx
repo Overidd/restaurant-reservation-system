@@ -1,4 +1,4 @@
-import { useReserve, useStepFormContext } from '@/hook';
+import { useReserve, useStepFormContext } from '@/hook/reservation';
 
 export const StepFromContextProvider = ({ children }) => {
    const ctx = useStepFormContext();

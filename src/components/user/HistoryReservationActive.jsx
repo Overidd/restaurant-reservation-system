@@ -1,5 +1,5 @@
-import { useModalAsync } from '@/hook';
 import { useUserSettings } from '@/hook/auth';
+import { useModalAsync } from '@/hook/common';
 import { useGetReservationsByUser } from '@/hook/fetchings';
 import { UserSettingToasts } from '@/toasts';
 import { CalendarCheck, Loader2 } from 'lucide-react';

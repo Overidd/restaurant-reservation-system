@@ -1,5 +1,5 @@
-import { useForm } from '@/hook';
 import { useUser, useUserSettings } from '@/hook/auth';
+import { useForm } from '@/hook/common';
 import { UserToasts } from '@/toasts/UserToasts';
 import { Validations } from '@/ultils';
 import { User } from 'lucide-react';

@@ -15,13 +15,12 @@ import {
 import { LinkCustom } from '../UI/from';
 import { NoAuthenticated } from '../user';
 
-import { useModalAsync, useOnAuthReserve } from '@/hook';
 import { useAutoCheckAuth, useIfAuthenticated, useUser } from '@/hook/auth';
+import { useModalAsync, useOnAuthReserve } from '@/hook/common';
 import { ReservationToast } from '@/toasts';
 import { Link } from 'react-router-dom';
 import { listMenuData, NavbarListResponsive } from '.';
 import { DialogEnterPhone } from '../UI/dialog';
-
 
 export const Navbar = ({ className }) => {
    useAutoCheckAuth()

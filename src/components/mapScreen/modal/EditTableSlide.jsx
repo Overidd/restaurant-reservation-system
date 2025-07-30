@@ -1,10 +1,10 @@
-import { useForm, useModalAsync } from '@/hook';
 import { cn } from '@/ultils';
 import { Pen, Trash } from 'lucide-react';
 import { Card2 } from '../../UI/card';
 import { Button, SlideOver } from '../../UI/common';
 
 import { DialigDeleteTable } from '@/components/UI/dialog';
+import { useForm, useModalAsync } from '@/hook/common';
 import { useResource } from '@/hook/dashboard';
 import { AdminTableToasts } from '@/toasts';
 import { useEffect } from 'react';

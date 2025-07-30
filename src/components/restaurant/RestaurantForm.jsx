@@ -1,4 +1,4 @@
-import { useForm } from '@/hook';
+import { useForm } from '@/hook/common';
 import { Validations } from '@/ultils';
 import { SelectHours } from '../UI/common/SelectHours';
 import { Checkbox, Form, FormItem, FormLabel, FromGroup, Input } from '../UI/from';

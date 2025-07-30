@@ -1,5 +1,5 @@
-import { useForm } from '@/hook';
 import { useUser, useUserSettings } from '@/hook/auth';
+import { useForm } from '@/hook/common';
 import { cn, Validations } from '@/ultils';
 import { LoaderCircle, Phone } from 'lucide-react';
 import { useEffect } from 'react';

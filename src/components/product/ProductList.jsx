@@ -1,6 +1,6 @@
 
 import { categoryData, productsData } from '@/data';
-import { useProductFilter } from '@/hook';
+import { useProductFilter } from '@/hook/product';
 import { Grid3X3, List, Search } from 'lucide-react';
 import { useEffect } from 'react';
 import { CardProduct } from '../UI/card';

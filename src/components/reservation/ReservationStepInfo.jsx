@@ -1,14 +1,11 @@
 import { Suspense } from 'react';
 
-import {
-   useForm,
-   useGetAllRestaurants,
-   useReserve,
-   useStepFormContext,
-} from '@/hook';
+
 import { validateObject } from '@/ultils';
 import { cn } from '@/ultils/cn';
 
+import { useForm } from '@/hook/common';
+import { useGetAllRestaurants, useReserve, useStepFormContext } from '@/hook/reservation';
 import { Button } from '../UI/common';
 import {
    Form,

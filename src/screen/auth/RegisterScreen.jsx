@@ -3,10 +3,6 @@ import {
   Mail
 } from 'lucide-react'
 
-import {
-  useForm
-} from '@/hook'
-
 import { Button } from '@/components/UI/common'
 import {
   Form,
@@ -17,6 +13,7 @@ import {
   LinkCustom
 } from '@/components/UI/from'
 import { useAuthStore } from '@/hook/auth'
+import { useForm } from '@/hook/common'
 import { UserToasts } from '@/toasts/UserToasts'
 
 const initValidation = {
@@ -231,3 +228,5 @@ export const RegisterScreen = () => {
     </>
   )
 }
+
+export default RegisterScreen;
