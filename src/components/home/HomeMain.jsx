@@ -18,7 +18,6 @@ export const HomeMain = () => {
 
       <section className='grid md:grid-cols-2 gap-5 w-full'>
         <p className='place-content-center text-balance'>
-
           La Canga se ha convertido en un verdadero ícono culinario de la región San Martín. Nuestra pasión por la cocina y el orgullo por nuestras raíces amazónicas nos han llevado a conquistar el corazón – y el paladar – de miles de familias sanmartinenses.
         </p>
         {authenticFlavorsData.map((item) => (

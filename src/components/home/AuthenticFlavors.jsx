@@ -15,9 +15,11 @@ export const AuthenticFlavors = ({
 
    return (
       <div
+         data-aos='fade-up'
+         data-aos-offset='300'
+         data-aos-easing='ease-in-sine'
          className={cn(
             'flex gap-2 items-center relative',
-            'relative transition-all duration-300 hover:scale-[1.02]',
             isRight ? 'flex-row-reverse' : 'flex-row',
             className
          )}
@@ -39,6 +41,7 @@ export const AuthenticFlavors = ({
          <figure
             className={cn(
                'rounded-2xl overflow-hidden w-full md:h-80 md:w-64',
+               'transition-transform will-change-transform duration-300 hover:scale-[1.02]',
             )}
          >
             <img
@@ -68,6 +71,6 @@ export const AuthenticFlavors = ({
                </Button>
             </Link>
          </div>
-      </div>
+      </div >
    )
 }

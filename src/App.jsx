@@ -1,7 +1,10 @@
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { store } from './doman/store';
 import { RouterApp } from './router';
+AOS.init();
 
 const App = () => {
    return (

@@ -10,10 +10,15 @@ export const CardTestimonial = ({
    stars = 5
 }) => {
    return (
-      <div className={cn(
-         'max-w-sm mx-auto bg-card rounded-2xl p-3 space-y-2',
-         className
-      )}>
+      <div
+         data-aos='fade-left'
+         data-aos-anchor='#example-anchor'
+         data-aos-offset='500'
+         data-aos-duration='500'
+         className={cn(
+            'max-w-sm mx-auto bg-card rounded-2xl p-3 space-y-2',
+            className
+         )}>
          <div className='flex justify-center space-x-1'>
             {[...Array(5)].map((_, i) => (
                <Star key={i} className={cn(

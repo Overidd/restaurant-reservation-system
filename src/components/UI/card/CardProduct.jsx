@@ -39,11 +39,12 @@ export const CardProduct = ({
 
    if (variant === 'compact') {
       return (
-         <Card className={cn(
-            'group overflow-hidden hover:shadow-md transition-all duration-300',
-            'flex',
-            className
-         )}>
+         <Card
+            className={cn(
+               'group overflow-hidden hover:shadow-md transition-all duration-300',
+               'flex',
+               className
+            )}>
             <div className='relative w-24 h-24 flex-shrink-0'>
                <img
                   src={image || '/default-image.jpg'}

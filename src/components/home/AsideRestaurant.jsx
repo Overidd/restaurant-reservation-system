@@ -6,11 +6,14 @@ export const AsideRestaurant = ({
 }) => {
 
    return (
-      <div className={cn(
-         'flex flex-col justify-center md:grid grid-cols-[1fr_auto] grid-rows-4 gap-5 h-[30rem]',
-         className
-      )}>
-         <Card className='row-span-3 group shadow-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-0 relative'>
+      <div
+         className={cn(
+            'flex flex-col justify-center md:grid grid-cols-[1fr_auto] grid-rows-4 gap-5 h-[30rem]',
+            className
+         )}>
+         <Card
+            className='row-span-3 group shadow-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-0 relative'
+         >
             <CardContent className='p-0 '>
                <div className='relative aspect-[4/3] overflow-hidden'>
                   <img
