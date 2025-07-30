@@ -1,10 +1,20 @@
+import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
 import { Button } from '../UI/common';
 import { LinkCustom } from '../UI/from';
 
-export const NoAuthenticated = () => {
+export const NoAuthenticated = ({
+   className,
+   onClick,
+}) => {
    return (
-      <Card2 className='flex flex-col gap-4'>
+      <Card2
+         onClick={onClick}
+         className={cn(
+            'flex flex-col gap-4',
+            className
+         )}
+      >
          <LinkCustom to={'login'}>
             <Button
                size={"lg"}

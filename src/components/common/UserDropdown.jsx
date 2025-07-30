@@ -1,12 +1,16 @@
 import { useAuthStore, useUser } from '@/hook/auth';
 import { useModalUser } from '@/hook/modals';
 import { UserToasts } from '@/toasts/UserToasts';
+import { cn } from '@/ultils';
 import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
 import { Link } from 'react-router';
 import { Card2 } from '../UI/card';
 import { DropdownItem } from '../UI/dropdown';
 
-export const UserDropdown = () => {
+export const UserDropdown = ({
+   className,
+   onClick,
+}) => {
    const {
       logoutPermanently
    } = useAuthStore();
@@ -27,7 +31,13 @@ export const UserDropdown = () => {
    }
 
    return (
-      <Card2 className='relative'>
+      <Card2
+         onClick={onClick}
+         className={cn(
+            'relative',
+            className
+         )}
+      >
          <button
             className='flex items-center dark:text-gray-400'
          >

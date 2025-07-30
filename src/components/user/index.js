@@ -6,4 +6,5 @@ export * from './HistoryReservationCancel';
 export * from './ModalUser';
 export * from './NoAuthenticated';
 export * from './ProfileUser';
+export * from './UserMenuPopover';
 

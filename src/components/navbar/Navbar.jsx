@@ -1,19 +1,15 @@
 
 import PropTypes from 'prop-types';
 
-import { Calendar, ShoppingCart, User } from 'lucide-react';
+import { Calendar, ShoppingCart } from 'lucide-react';
 
 import { cn } from '@/ultils';
 
-import { UserDropdown } from '../common';
 import {
-   Button,
-   Popover,
-   PopoverContent,
-   PopoverTrigger
+   Button
 } from '../UI/common';
 import { LinkCustom } from '../UI/from';
-import { NoAuthenticated } from '../user';
+import { UserMenuPopover } from '../user';
 
 import { useAutoCheckAuth, useIfAuthenticated, useUser } from '@/hook/auth';
 import { useModalAsync, useOnAuthReserve } from '@/hook/common';
@@ -88,19 +84,9 @@ export const Navbar = ({ className }) => {
 
          <ul className='ml-auto flex gap-3 items-center select-none'>
             <ShoppingCart className='w-7 h-7 text-primary-foreground' />
-
-            <Popover>
-               <PopoverTrigger>
-                  <User className='w-7 h-7 text-primary-foreground cursor-pointer' />
-               </PopoverTrigger>
-               <PopoverContent className={'mt-8 bg-transparent'}>
-                  {
-                     isAuthenticated
-                        ? <UserDropdown />
-                        : <NoAuthenticated />
-                  }
-               </PopoverContent>
-            </Popover>
+            <UserMenuPopover
+               isAuthenticated={isAuthenticated}
+            />
 
             <LinkCustom to={'reserve'}>
                <Button
