@@ -180,7 +180,7 @@ export const Modal = ({
          >
             {showBtnClose &&
                <Button
-                  className='absolute top-1 right-1 z-10 text-primary-foreground/90 hover:bg-transparent hover:text-primary-foreground'
+                  className='absolute -top-1 -right-1 md:top-1 md:right-1 z-10 text-primary-foreground/90 hover:bg-transparent hover:text-primary-foreground'
                   onClick={handleBackdropClick}
                   variant={'ghost'}
                >
