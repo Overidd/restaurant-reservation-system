@@ -4,7 +4,7 @@ export const authenticFlavorsData = [
       path: '#',
       image: '/home/tilapia-hoja.png',
       name: 'Tilapia a la hoja',
-      description: 'Nuestro plato unico - Tilapia a la hoja',
+      description: 'Nuestro plato unico',
       className: 'md:col-start-2 md:w-[100%] ml-auto',
       align: 'right',
       imageBackground: '',

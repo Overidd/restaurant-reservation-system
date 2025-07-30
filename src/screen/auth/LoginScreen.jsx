@@ -54,6 +54,10 @@ export const LoginScreen = () => {
       },
    });
 
+   const handleLoginGoogle = () => {
+      UserToasts.login(loginGoogle())
+   }
+
    const onSubmit = onSubmitForm((value) => {
       UserToasts.login(login(value))
    });
@@ -136,7 +140,7 @@ export const LoginScreen = () => {
                   size={'icon'}
                   variant={'crystal'}
                   className={'mx-auto'}
-                  onClick={loginGoogle}
+                  onClick={handleLoginGoogle}
                >
                   <img
                      src="/icon/icon-google.svg"

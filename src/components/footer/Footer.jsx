@@ -8,12 +8,12 @@ export const Footer = ({ className }) => {
       <footer
          className={cn(
             'bg-[#945125] text-white',
-            'w-full mt-10 py-10',
+            'w-full py-10',
+            className,
          )}
       >
          <div className={cn(
             'px-4 grid grid-cols-1 md:grid-cols-3 gap-8',
-            className
          )}>
 
             {/* Logo y descripción */}

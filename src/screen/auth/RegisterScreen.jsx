@@ -76,6 +76,10 @@ export const RegisterScreen = () => {
     },
   });
 
+  const handleLoginGoogle = () => {
+    UserToasts.login(loginGoogle())
+  }
+
   const onSubmit = onSubmitForm((value) => {
     UserToasts.register(register(value))
   });
@@ -215,7 +219,7 @@ export const RegisterScreen = () => {
             type='button'
             size={'icon'}
             variant={'crystal'}
-            onClick={loginGoogle}
+            onClick={handleLoginGoogle}
             className={'mx-auto'}
           >
             <img
