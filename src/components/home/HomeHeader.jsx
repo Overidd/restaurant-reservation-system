@@ -35,7 +35,7 @@ export const HomeHeader = () => {
             'w-full h-dvh'
          )}
          style={{
-            backgroundImage: 'url(/home/header-image.png)',
+            backgroundImage: 'url(/home/header-image.webp)',
          }}
       >
          <section className='space-y-4'>

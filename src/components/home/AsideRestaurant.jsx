@@ -24,8 +24,12 @@ export const AsideRestaurant = ({
                   />
                   <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
                   <div className='absolute top-[40%] left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                     <h3 className='text-xl font-semibold mb-2'>Ambiente Acogedor</h3>
-                     <p className='text-sm'>Disfruta de nuestro espacio diseñado para tu comodidad</p>
+                     <h3 className='text-base md:text-xl font-semibold mb-2'>
+                        Ambiente Acogedor
+                     </h3>
+                     <p className='text-sm'>
+                        Disfruta de nuestro espacio diseñado para tu comodidad
+                     </p>
                   </div>
                </div>
             </CardContent>
