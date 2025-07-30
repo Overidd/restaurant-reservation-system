@@ -41,7 +41,7 @@ export const AuthenticFlavors = ({
          <figure
             className={cn(
                'rounded-2xl overflow-hidden w-full md:h-80 md:w-64',
-               'transition-transform will-change-transform duration-300 hover:scale-[1.02]',
+               'transition-transform will-change-transform duration-300 hover:scale-[1.02] hover:shadow-xl',
             )}
          >
             <img
@@ -56,7 +56,7 @@ export const AuthenticFlavors = ({
          <div className={cn(
             'md:w-[17rem]'
          )}>
-            <h5 className='font-bold text-lg uppercase tracking-tighter'>
+            <h5 className='font-extrabold text-lg uppercase tracking-tighter'>
                {name}
             </h5>
             <p className='text-balance'>

@@ -7,6 +7,7 @@ export const AsideRestaurant = ({
 
    return (
       <div
+         data-aos='fade-up-right'
          className={cn(
             'flex flex-col justify-center md:grid grid-cols-[1fr_auto] grid-rows-4 gap-5 h-[30rem]',
             className

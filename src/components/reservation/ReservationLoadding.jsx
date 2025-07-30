@@ -8,6 +8,13 @@ export const ReservationLoadding = ({
 }) => {
 
    if (isLodding) return (
+      // <div className={`w-fit mx-auto ${className}`}>
+      //    <LoaderCircle
+      //       className='animate-spin'
+      //       size={50}
+      //       strokeWidth={3}
+      //    />
+      // </div>
       <div className={`flex items-center justify-center ${className}`}>
          <div className='text-center'>
             <div className='relative mb-8'>

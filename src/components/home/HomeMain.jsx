@@ -9,7 +9,7 @@ import { Title } from '../UI/text';
 export const HomeMain = () => {
   return (
     <main className={cn(
-      'max-w-6xl w-[90%] mx-auto space-y-24'
+      'max-w-6xl w-[90%] mx-auto mt-20 space-y-24'
     )}>
       <Title
         className={'mb-5'}

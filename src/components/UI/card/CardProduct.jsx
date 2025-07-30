@@ -40,6 +40,7 @@ export const CardProduct = ({
    if (variant === 'compact') {
       return (
          <Card
+            data-aos="zoom-in-up"
             className={cn(
                'group overflow-hidden hover:shadow-md transition-all duration-300',
                'flex',
@@ -98,6 +99,7 @@ export const CardProduct = ({
 
    return (
       <Card
+         data-aos='zoom-in-up'
          className={cn(
             'group overflow-hidden hover:shadow-md transition-all duration-300 transform hover:-translate-y-1',
             className,
