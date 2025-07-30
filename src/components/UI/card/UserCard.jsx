@@ -2,7 +2,12 @@ import { cn } from '@/ultils';
 import { User } from 'lucide-react';
 
 export const UserCard = ({
-   user: { name, lastName, photoURL, email },
+   user: {
+      name = 'Name',
+      lastName,
+      photoURL,
+      email
+   },
    className,
    mustShow = ['name', 'lastName'],
    size = 'md' // 'sm' | 'md' | 'lg'

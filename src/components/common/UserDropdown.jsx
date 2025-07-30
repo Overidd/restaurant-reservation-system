@@ -1,14 +1,30 @@
 import { useAuthStore, useUser } from '@/hook/auth';
 import { useModalUser } from '@/hook/modals';
+import { UserToasts } from '@/toasts/UserToasts';
 import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
 import { Link } from 'react-router';
 import { Card2 } from '../UI/card';
 import { DropdownItem } from '../UI/dropdown';
 
 export const UserDropdown = () => {
-   const { logout } = useAuthStore();
-   const { photoURL, name, email, isRoleAdmin } = useUser()
-   const { openModal } = useModalUser()
+   const {
+      logoutPermanently
+   } = useAuthStore();
+
+   const {
+      photoURL,
+      name,
+      email,
+      isRoleAdmin
+   } = useUser()
+
+   const {
+      openModal
+   } = useModalUser()
+
+   const handleLogout = () => {
+      UserToasts.logout(logoutPermanently())
+   }
 
    return (
       <Card2 className='relative'>
@@ -94,7 +110,7 @@ export const UserDropdown = () => {
 
          <Link
             className='flex items-center gap-3 px-3 py-2 mt-3 font-medium transition-all hover:-translate-x-1'
-            onClick={logout}
+            onClick={handleLogout}
          >
             <LogOut className='rotate-180' />
             Cerrar Sesión

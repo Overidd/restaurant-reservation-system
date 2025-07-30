@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {
    Carousel,
    CarouselContent,
@@ -6,15 +5,26 @@ import {
    CarouselNext,
    CarouselPrevious,
 } from '@/components/UI/slider/Carousel';
+import PropTypes from 'prop-types';
 
-export function CustomCarousel({ className, component, data = [] }) {
+export const CustomCarousel = ({
+   className,
+   classNameItem,
+   component,
+   data = []
+}) => {
    const ItemComponent = component;
    return (
-      <Carousel className={`w-full ${className}`}>
+      <Carousel
+         className={`w-full ${className}`}
+      >
          <CarouselContent>
             {
                data.map((value, index) => (
-                  <CarouselItem key={value?.id ?? new Date().getTime() + index} className={'m-0'}>
+                  <CarouselItem
+                     key={value?.id ?? new Date().getTime() + index}
+                     className={`m-0 ${classNameItem}`}
+                  >
                      <ItemComponent {...value} />
                   </CarouselItem>
                ))

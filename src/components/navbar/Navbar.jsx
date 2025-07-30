@@ -18,6 +18,7 @@ import { NoAuthenticated } from '../user';
 import { useModalAsync, useOnAuthReserve } from '@/hook';
 import { useAutoCheckAuth, useIfAuthenticated, useUser } from '@/hook/auth';
 import { ReservationToast } from '@/toasts';
+import { Link } from 'react-router-dom';
 import { listMenuData, NavbarListResponsive } from '.';
 import { DialogEnterPhone } from '../UI/dialog';
 
@@ -68,19 +69,19 @@ export const Navbar = ({ className }) => {
             `bg-sidebar-background gradient-radial-primary`,
             'shadow-primary rounded-2xl md:backdrop-blur-lg p-4',
             'flex items-center gap-2 md:gap-4',
-            'sticky top-4 z-50',
+            'fixed top-4 left-0 right-0 mx-auto z-50',
             className,
          )}
       >
-         {/* <Link to={'/'}> */}
-         <figure className='w-[3rem] h-[3rem]'>
-            <img
-               className='w-full h-full'
-               src='/logo-while.png'
-               alt='Logo de la empresa'
-            />
-         </figure>
-         {/* </Link> */}
+         <Link to={'/home'}>
+            <figure className='w-[3rem] h-[3rem]'>
+               <img
+                  className='w-full h-full'
+                  src='/logo-while.png'
+                  alt='Logo de la empresa'
+               />
+            </figure>
+         </Link>
 
          <NavbarListResponsive
             data={listMenuData}

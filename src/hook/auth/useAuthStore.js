@@ -1,7 +1,7 @@
 
-import toast from 'react-hot-toast';
 import {
-   useDispatch
+   useDispatch,
+   useSelector
 } from 'react-redux';
 
 import {
@@ -14,21 +14,16 @@ import {
    startLogout
 } from '@/doman/store/auth';
 
-export const useAuthStore = (messageState) => {
+export const useAuthStore = () => {
    const dispatch = useDispatch()
+   const isLoading = useSelector((state) => state.authReducer.isLoading)
 
    /**
     * 
     * @param {{email: string, password: string}} dataLoginUser 
     */
    const login = async (dataLoginUser) => {
-      await toast.promise(
-         dispatch(startLogin(dataLoginUser)),
-         {
-            ...messageState,
-            error: (err) => err.message || messageState.error
-         }
-      )
+      return dispatch(startLogin(dataLoginUser))
    }
 
    const loginIntial = (user) => {
@@ -44,14 +39,7 @@ export const useAuthStore = (messageState) => {
    }
 
    const logoutPermanently = async () => {
-      await toast.promise(
-         dispatch(startLogout()),
-         {
-            loading: 'Cerrando sesión',
-            success: 'Sesión cerrada',
-            error: (err) => err.message
-         }
-      )
+      return dispatch(startLogout())
    }
 
    /**
@@ -59,13 +47,7 @@ export const useAuthStore = (messageState) => {
     * @param {{name: string, email: string, password: string}} dataRegister 
     */
    const register = async (dataRegister) => {
-      await toast.promise(
-         dispatch(startCreateUser(dataRegister)),
-         {
-            ...messageState,
-            error: (err) => err.message || messageState.error
-         }
-      )
+      return dispatch(startCreateUser(dataRegister))
    }
 
    /**
@@ -75,8 +57,10 @@ export const useAuthStore = (messageState) => {
    const checkingCredentials = (state = authStateEmun.checking) => {
       dispatch(checkingCredentialAction(state))
    }
-   
+
    return {
+      isLoading,
+
       login,
       loginGoogle,
       register,

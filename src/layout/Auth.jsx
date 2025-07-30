@@ -9,7 +9,10 @@ import { Card2 } from '@/components/UI/card';
 import { Modal } from '@/components/UI/common';
 
 export const AuthLayout = () => {
-  const { isOpenModal, closeModal } = useModalAuth()
+  const {
+    isOpenModal,
+    closeModal
+  } = useModalAuth()
 
   return (
     <Modal

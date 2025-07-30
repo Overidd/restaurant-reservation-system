@@ -26,6 +26,7 @@ import { LocationScreen } from '@/screen/location';
 import { ProductScreen } from '@/screen/product';
 import { ReservationScreen } from '@/screen/reservation';
 
+import { HomeScreen } from '@/screen/home';
 import { SearchReservationScreen } from '@/screen/search';
 import {
    ProtectedRoute,
@@ -33,11 +34,24 @@ import {
    PublicRoute,
 } from '.';
 
+
+
 const AppRoutes = () => {
    return (
       <Routes>
          <Route element={<PublicRoute />}>
             <Route path='/' element={<AppLayout />}>
+
+               <Route path='home' element={<HomeScreen />}>
+                  <Route path='reserve' element={<ReservationScreen />} />
+                  <Route element={<PublicOnlyRoute />}>
+                     <Route element={<AuthLayout />}>
+                        <Route path='login' element={<LoginScreen />} />
+                        <Route path='register' element={<RegisterScreen />} />
+                     </Route>
+                  </Route>
+               </Route>
+
                <Route path='product' element={<ProductScreen />}>
                   <Route path='reserve' element={<ReservationScreen />} />
                   <Route element={<PublicOnlyRoute />}>
@@ -68,12 +82,12 @@ const AppRoutes = () => {
                   </Route>
                </Route>
 
-               <Route index element={<Navigate to='product' />} />
-               <Route path='*' element={<Navigate to='/product' />} />
+               <Route index element={<Navigate to='home' />} />
+               <Route path='*' element={<Navigate to='/home' />} />
             </Route>
          </Route>
 
-         <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/product' />}>
+         <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/home' />}>
             <Route path='/dashboard' element={<DashboardLayout />} >
                <Route index element={<DashboardScreen />} />
                <Route path='tables' element={<MapScreen />} />

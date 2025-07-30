@@ -23,7 +23,7 @@ export const SearchReservationScreen = () => {
 
    return (
       <div
-         className='min-h-screen p-4 sm:p-6 lg:p-8 md:w-4xl mx-auto'
+         className='mt-40 min-h-screen p-4 sm:p-6 lg:p-8 md:w-4xl mx-auto'
          style={{ backgroundColor: '#faf3e6' }}
       >
          <div className='text-center mb-8'>
@@ -43,7 +43,7 @@ export const SearchReservationScreen = () => {
                <Input
                   type='text'
                   variant={'default'}
-                  placeholder='Ej: RESERVE-G77GAX'
+                  placeholder='RESERVA-OOOOO'
                   value={searchCode}
                   disabled={searchState === 'searching'}
                   onChange={(e) => setSearchCode(e.target.value)}

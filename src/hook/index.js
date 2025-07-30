@@ -11,6 +11,7 @@ export * from './useModalTableEditProperty';
 export * from './useModalTableReserve';
 export * from './useOnAuthReserve';
 export * from './usePaintedGrid';
+export * from './useProductFilter';
 export * from './useReservation';
 export * from './useReserve';
 export * from './useReserveTimer';

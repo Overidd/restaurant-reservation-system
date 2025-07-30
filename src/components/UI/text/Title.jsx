@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 export const Title = ({ className, primary, secondary }) => {
    return (
       <h2 className={`text-center w-fit ${className}`}>
-         <span className="block text-red-500 text-base font-extrabold tracking-wide uppercase font-oswald">
+         <span className='block text-3xl text-primary font-extrabold tracking-wide uppercase font-oswald'>
             {primary}
          </span>
-         <span className="block text-5xl font-extrabold font-playfair uppercase">
+         <span className='block text-4xl font-bold uppercase'>
             {secondary}
          </span>
       </h2>

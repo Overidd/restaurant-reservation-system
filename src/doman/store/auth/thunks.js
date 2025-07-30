@@ -5,6 +5,7 @@ import { checkingCredentialAction, loaddingAction, loginAction, logoutAction } f
 export const startGoogleAuth = () => {
    return async (dispatch) => {
       dispatch(checkingCredentialAction());
+      dispatch(loaddingAction());
 
       const res = await authService.googleAuth();
 
@@ -44,7 +45,6 @@ export const startCreateUser = (dataRegister) => {
  * @returns 
  */
 export const startLogin = (dataLoginUser) => {
-
    return async (dispatch) => {
       dispatch(checkingCredentialAction());
       dispatch(loaddingAction());

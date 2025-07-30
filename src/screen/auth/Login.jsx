@@ -14,6 +14,7 @@ import {
    LinkCustom
 } from '@/components/UI/from';
 import { useAuthStore } from '@/hook/auth';
+import { UserToasts } from '@/toasts/UserToasts';
 
 const initValidation = {
    email: [
@@ -26,14 +27,12 @@ const initValidation = {
    ]
 };
 
-const messageState = {
-   loading: 'Cargando...',
-   success: 'Login exitoso',
-   error: 'Ocurrió un error',
-}
-
 export const LoginScreen = () => {
-   const { login, loginGoogle, isLoading } = useAuthStore(messageState)
+   const {
+      login,
+      loginGoogle,
+      isLoading,
+   } = useAuthStore()
 
    const {
       onSubmitForm,
@@ -56,7 +55,7 @@ export const LoginScreen = () => {
    });
 
    const onSubmit = onSubmitForm((value) => {
-      login(value)
+      UserToasts.login(login(value))
    });
 
    return (

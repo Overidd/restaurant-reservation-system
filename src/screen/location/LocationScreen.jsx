@@ -10,7 +10,7 @@ export const LocationScreen = () => {
   } = useLoadRestaurantActive();
 
   return (
-    <div className='max-w-6xl w-[90%] mx-auto space-y-10'>
+    <div className='mt-40 max-w-6xl w-[90%] mx-auto space-y-10'>
 
       <MapaLoactions
         className={'w-full h-[30rem]'}

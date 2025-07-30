@@ -17,6 +17,7 @@ import {
   LinkCustom
 } from '@/components/UI/from'
 import { useAuthStore } from '@/hook/auth'
+import { UserToasts } from '@/toasts/UserToasts'
 
 const initValidation = {
   name: [
@@ -42,18 +43,12 @@ const initValidation = {
   ],
 }
 
-const messageState = {
-  loading: 'Cargando...',
-  success: 'Registro exitoso',
-  error: 'Ocurrió un error',
-}
-
 export const RegisterScreen = () => {
   const {
     register,
     loginGoogle,
     isLoading
-  } = useAuthStore(messageState)
+  } = useAuthStore()
 
   const {
     onSubmitForm,
@@ -85,7 +80,7 @@ export const RegisterScreen = () => {
   });
 
   const onSubmit = onSubmitForm((value) => {
-    register(value);
+    UserToasts.register(register(value))
   });
 
   return (

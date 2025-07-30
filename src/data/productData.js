@@ -19,41 +19,63 @@ export const publicityData = [
    }
 ]
 
-export const categoryData = [
+export const featuredProductsData = [
    {
       id: 1,
-      name: 'Combos',
-      isActive: true,
+      name: 'Tilapia a la Hoja',
+      description:
+         'Deliciosa tilapia fresca envuelta en hoja de plátano con especias tradicionales y acompañamientos típicos',
+      price: 25.99,
+      originalPrice: 29.99,
+      image: '/product/tilapia-hoja.webp',
+      category: 'regionales',
+      rating: 4.8,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
    },
    {
       id: 2,
-      name: 'Brasas',
-      isActive: false,
+      name: 'Lomo saltado',
+      description: 'Prueba nuestro Lomo Saltado: tiernas tiras de lomo salteadas al wok con cebolla, tomate y ají amarillo, bañadas en una salsa agridulce irresistible. Acompañado de papas fritas y arroz, es el plato perfecto para disfrutar de la cocina peruana.',
+      price: 32.5,
+      image: '/product/lomo-saltado.webp',
+      category: 'regionales',
+      rating: 4.9,
+      reviewCount: 89,
+      preparationTime: '20-25 min',
+      servings: 3,
+      isPopular: true,
+   },
+   {
+      id: 23,
+      name: 'Parrilla para dos',
+      description: 'Selección de carnes a la parrilla con chorizo, pollo, res y cerdo, acompañada de papas y plátano',
+      price: 32.5,
+      image: '/product/parolla-para-dos.webp',
+      category: 'combos',
+      rating: 4.9,
+      reviewCount: 89,
+      preparationTime: '20-25 min',
+      servings: 3,
+      isPopular: true,
    },
    {
       id: 3,
-      name: 'Piqueos',
-      isActive: false,
+      name: 'Brasa Familiar',
+      description: '1 Pollo a la brasa, papas fritas familiares, ensalada fresca y 1.5L de bebida',
+      price: 8.99,
+      image: '/product/brasa-familiar.webp',
+      category: 'combos',
+      rating: 4.7,
+      reviewCount: 67,
+      preparationTime: '5 min',
+      servings: 1,
+      isPopular: true,
+      // isNew: true,
    },
-   {
-      id: 4,
-      name: 'Clasicos',
-      isActive: false,
-   }
-   // 
-   ,
-   {
-      id: 5,
-      name: 'Piqueos',
-      isActive: false,
-   },
-   {
-      id: 6,
-      name: 'Clasicos',
-      isActive: false,
-   }
 ]
-
 
 export const productData = [
    {
@@ -110,5 +132,110 @@ export const productData = [
       price: 20,
       discount: 0,
    }
-   
+]
+
+export const categoryData = [
+   {
+      id: 2,
+      name: 'brasas',
+      isActive: false,
+   },
+   {
+      id: 1,
+      name: 'parrillas',
+      isActive: true,
+   },
+]
+
+export const productsData = [
+   {
+      id: 1,
+      name: '1/4 Brasa + Guarnición + Ensalada',
+      description: 'Para la familia',
+      price: 20,
+      originalPrice: 22,
+      image: '/product/brasa1-4.webp',
+      category: 'brasas',
+      rating: 4.8,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
+      isOnSale: true,
+   },
+   {
+      id: 2,
+      name: '1/4 + 2 guar + ensalada',
+      description: 'Para la familia',
+      price: 22.50,
+      originalPrice: 22.50,
+      image: '/product/brasa1-4.webp',
+      category: 'brasas',
+      rating: 4.8,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
+      isNew: true,
+   },
+   {
+      id: 3,
+      name: '1/8 + 2 Guar + Ensalada',
+      description: 'Para la familia',
+      price: 17.50,
+      originalPrice: 17.50,
+      image: '/product/brasa1-8.webp',
+      category: 'brasas',
+      rating: 4.7,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
+      isOnSale: true,
+   },
+   {
+      id: 4,
+      name: '1 Pollo a la Brasa + 2 Guarniciones + Ensalada',
+      description: 'Para la familia',
+      price: 69.50,
+      originalPrice: 69.50,
+      image: '/product/brasa1-2.webp',
+      category: 'brasas',
+      rating: 4.6,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
+      isOnSale: true,
+   },
+
+   {
+      id: 5,
+      name: '1/2 Brasa + Guarnición + Ensalada',
+      description: 'Para la familia',
+      price: 39.50,
+      originalPrice: 42,
+      image: '/product/LaCangaNov20220693_1100x.webp',
+      category: 'brasas',
+      rating: 4.7,
+      reviewCount: 124,
+      preparationTime: '25-30 min',
+      servings: 2,
+      isPopular: true,
+      isNew: true,
+   },
+
+   {
+      id: 6,
+      name: 'Brochetas de pollo',
+      description: 'Selección de carnes a la parrilla con chorizo, pollo, res y cerdo, acompañada de papas y plátano',
+      price: 23,
+      image: 'product/LaCangaNov20220520web_1100x.webp',
+      category: 'parrillas',
+      rating: 4.9,
+      reviewCount: 23,
+      preparationTime: '20-25 min',
+      servings: 3,
+      isPopular: true,
+   },
 ]

@@ -1,8 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
 import {
-  categoryData,
-  productData,
   publicityData
 } from '@/data';
 
@@ -10,8 +8,7 @@ import {
   PromoCarousel
 } from '@/components/common';
 import {
-  CategoryNav,
-  ProductList
+  ProductsGrid
 } from '@/components/product';
 import {
   Title
@@ -20,7 +17,7 @@ import {
 
 export const ProductScreen = () => {
   return (
-    <div className='max-w-6xl w-[90%] mx-auto space-y-10'>
+    <div className='mt-40 max-w-6xl w-[90%] mx-auto space-y-10'>
       <header className='space-y-10'>
         <PromoCarousel
           className={'w-full mx-auto select-none'}
@@ -29,21 +26,10 @@ export const ProductScreen = () => {
         <Title
           className={'mx-auto'}
           primary="Tus favoritos en un solo lugar"
-          secondary="La Canga"
         />
       </header>
 
-      <main className='space-y-10'>
-        <section className='flex flex-row items-center justify-between gap-4'>
-          <CategoryNav
-            className='w-full md:w-fit md:max-w-2xl'
-            data={categoryData}
-          />
-          {/* <ProductSearch /> */}
-        </section>
-
-        <ProductList data={productData} />
-      </main>
+      <ProductsGrid />
 
       <Outlet />
     </div>
