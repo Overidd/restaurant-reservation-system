@@ -4,7 +4,7 @@ import { CustomCarousel } from '../UI/slider';
 export const PromoCarousel = ({ className, data = [] }) => {
   return (
       <CustomCarousel
-        className={`rounded-3xl overflow-hidden max-h-[24rem] ${className}`}
+        className={`rounded-3xl overflow-hidden h-[24rem] ${className}`}
         component={PromoItem}
         data={data}
       />
