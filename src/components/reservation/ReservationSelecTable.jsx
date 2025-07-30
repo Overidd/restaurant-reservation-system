@@ -130,6 +130,10 @@ export const ReservationSelecTable = () => {
             window.requestAnimationFrame(() => {
                closeModalReserve();
                reserveSelectCurrent({})
+            })
+         },
+         onFinally: () => {
+            window.requestAnimationFrame(() => {
                setIsReserving(false)
             })
          }
@@ -212,7 +216,7 @@ export const ReservationSelecTable = () => {
                columns={restaurant.columns}
                onSelectTables={handleSelectTables}
                onCurrentTable={handleCurrentTable}
-               className={'h-[22rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
+               className={'h-[24rem] md:h-full md:flex-1 md:w-[90%] 2xl:w-full overflow-hidden mx-auto select-none'}
             />
 
             <div className='flex justify-between md:hidden'>

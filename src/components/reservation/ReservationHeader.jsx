@@ -13,20 +13,35 @@ const translation = {
 }
 
 const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => {
-   const dataArray = [];
+   const steps = [];
    if (info && typeof info === 'object') {
+      const excludedKeys = ['Motivo', 'restaurantId', 'location'];
       const infoItems = Object.entries(info)
-         .map(([key, value]) => ({
-            value: value,
-            name: [translation[key] ?? key],
-            icon: null,
-         }))
-         .filter(({ name }) => !['Motivo', 'restaurantId', 'restaurant', 'location'].includes(name[0]));
-      dataArray.push(infoItems);
+         .map(([key, value]) => {
+            let label = translation[key] ?? key;
+
+            if (key === 'restaurant') {
+               label = ''
+            };
+
+            if (key === 'diners') {
+               label = Number(value) > 1 ? 'Personas' : 'Persona';
+            }
+
+            return {
+               value,
+               name: [label],
+               icon: null,
+            };
+         })
+         .filter(Boolean)
+         .filter(({ name }) => !excludedKeys.includes(name[0]));
+
+      steps.push(infoItems);
    }
 
    if (typeof date === 'string') {
-      dataArray.push([
+      steps.push([
          {
             value: date,
             name: [translation['date'] ?? 'date'],
@@ -36,7 +51,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
    }
 
    if (hour !== undefined && hour !== null) {
-      dataArray.push([
+      steps.push([
          {
             value: hour,
             name: [translation['hour'] ?? 'hour'],
@@ -44,9 +59,9 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
          },
       ]);
    }
-   return dataArray.slice(0, currentStepIndex).flat();
-}
 
+   return steps.slice(0, currentStepIndex).flat();
+};
 
 export const ReservationHeader = ({ className, date, hour: { name }, info, currentStepIndex }) => {
 
@@ -79,7 +94,7 @@ export const ReservationHeader = ({ className, date, hour: { name }, info, curre
                         icon && icon
                      }
                      {
-                        !icon && <span>{name}</span>
+                        !icon && <span>{name && name}</span>
                      }
                   </p>
                ))
