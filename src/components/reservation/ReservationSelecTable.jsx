@@ -38,6 +38,7 @@ const dataInfo = [
 
 export const ReservationSelecTable = () => {
    const [isOpenPreview, setIsOpenPreview] = useState(false);
+   const [isReserving, setIsReserving] = useState(false)
 
    const {
       from,
@@ -98,12 +99,15 @@ export const ReservationSelecTable = () => {
    }
 
    const handleReserve = async () => {
+      if (isReserving) return;
+
       if (!isAuthenticated) {
          reservePendingAuth();
          openModalAuth('login');
          return;
       }
 
+      setIsReserving(true)
       if (!isRegisterPhone) {
          const res = await showAsyncModal(({
             onConfirm,
@@ -114,6 +118,7 @@ export const ReservationSelecTable = () => {
                onConfirm={onConfirm}
             />
          ));
+         setIsReserving(false)
          if (!res) return;
       }
 
@@ -125,6 +130,7 @@ export const ReservationSelecTable = () => {
             window.requestAnimationFrame(() => {
                closeModalReserve();
                reserveSelectCurrent({})
+               setIsReserving(false)
             })
          }
       });
@@ -191,7 +197,7 @@ export const ReservationSelecTable = () => {
 
                <Button
                   size={'sm'}
-                  disabled={!isSelectedTable}
+                  disabled={!isSelectedTable || isReserving}
                   onClick={handleReserve}
                   className={'w-fit ml-auto hidden md:flex'}
                >
@@ -216,7 +222,7 @@ export const ReservationSelecTable = () => {
 
                <Button
                   size={'sm'}
-                  disabled={!isSelectedTable}
+                  disabled={!isSelectedTable || isReserving}
                   onClick={handleReserve}
                   className={'w-fit ml-auto'}
                >

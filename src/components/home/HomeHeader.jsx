@@ -1,6 +1,7 @@
 import { cn } from '@/ultils';
 import { CardTestimonial } from '../UI/card';
 import { Button } from '../UI/common';
+import { LinkCustom } from '../UI/from';
 
 const testimonialData = [
    {
@@ -45,13 +46,14 @@ export const HomeHeader = () => {
             <p className='text-secondary-foreground font-semibold'>
                Realiza tu reserva
             </p>
-
-            <Button
-               className='text-secondary-foreground font-semibold'
-               variant={'outline'}
-            >
-               Reservar
-            </Button>
+            <LinkCustom to={'reserve'}>
+               <Button
+                  className='text-secondary-foreground font-semibold'
+                  variant={'outline'}
+               >
+                  Reservar
+               </Button>
+            </LinkCustom>
          </section>
 
          <section

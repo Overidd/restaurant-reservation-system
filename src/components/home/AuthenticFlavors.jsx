@@ -62,7 +62,7 @@ export const AuthenticFlavors = ({
             <p className='text-balance'>
                {description}
             </p>
-            <Link className='block mt-5' to={path}>
+            <Link className='block mt-5' to={'/product'}>
                <Button
                   className='font-semibold border-primary text-primary hover:bg-transparent hover:text-primary'
                   variant={'outline'}
