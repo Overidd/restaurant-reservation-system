@@ -46,10 +46,12 @@ export const HomeMain = () => {
 export const FeaturedProducts = () => {
 
   return (
-    <CustomCarousel
-      classNameItem={'md:basis-1/3'}
-      component={CardProduct}
-      data={featuredProductsData}
-    />
+    <section className='overflow-hidden'>
+      <CustomCarousel
+        classNameItem={'md:basis-1/3'}
+        component={CardProduct}
+        data={featuredProductsData}
+      />
+    </section>
   )
 }

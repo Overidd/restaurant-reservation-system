@@ -52,7 +52,7 @@ export function ProductsGrid() {
                ))}
             </div>
 
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-4 justify-between w-full md:w-fit'>
                <Select
                   value={sortBy}
                   onValueChange={({ value }) => handleSort(value)}
