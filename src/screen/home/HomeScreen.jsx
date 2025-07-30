@@ -4,13 +4,13 @@ import { Outlet } from 'react-router-dom';
 
 export const HomeScreen = () => {
    return (
-      <>
+      <div className='overflow-hidden'>
          <HomeHeader />
 
          <HomeMain />
 
          <Outlet />
-      </>
+      </div>
    )
 }
 export default HomeScreen;

@@ -345,3 +345,162 @@ input[type=number] {
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
+
+.flame {
+  position: relative;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform-origin: bottom center;
+}
+
+.flame-1 {
+  animation: flicker1 1.5s ease-in-out infinite alternate;
+}
+
+.flame-2 {
+  animation: flicker2 1.8s ease-in-out infinite alternate;
+}
+
+.flame-3 {
+  animation: flicker3 1.3s ease-in-out infinite alternate;
+}
+
+.flame-4 {
+  animation: flicker4 1.6s ease-in-out infinite alternate;
+}
+
+.spark-1 {
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  animation: sparkle1 2s ease-in-out infinite;
+}
+
+.spark-2 {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  animation: sparkle2 2.5s ease-in-out infinite;
+}
+
+.spark-3 {
+  position: absolute;
+  top: -25px;
+  left: 10px;
+  animation: sparkle3 1.8s ease-in-out infinite;
+}
+
+.loading-bar {
+  animation: loadingProgress 3s ease-in-out infinite;
+}
+
+@keyframes flicker1 {
+  0% {
+    transform: scaleY(1) scaleX(1) rotate(-2deg);
+  }
+
+  50% {
+    transform: scaleY(1.1) scaleX(0.9) rotate(1deg);
+  }
+
+  100% {
+    transform: scaleY(0.9) scaleX(1.1) rotate(-1deg);
+  }
+}
+
+@keyframes flicker2 {
+  0% {
+    transform: scaleY(1) scaleX(1) rotate(1deg);
+  }
+
+  50% {
+    transform: scaleY(1.2) scaleX(0.8) rotate(-2deg);
+  }
+
+  100% {
+    transform: scaleY(0.8) scaleX(1.2) rotate(2deg);
+  }
+}
+
+@keyframes flicker3 {
+  0% {
+    transform: scaleY(1) scaleX(1) rotate(-1deg);
+  }
+
+  50% {
+    transform: scaleY(0.9) scaleX(1.1) rotate(2deg);
+  }
+
+  100% {
+    transform: scaleY(1.1) scaleX(0.9) rotate(-2deg);
+  }
+}
+
+@keyframes flicker4 {
+  0% {
+    transform: scaleY(1) scaleX(1) rotate(2deg);
+  }
+
+  50% {
+    transform: scaleY(1.1) scaleX(0.9) rotate(-1deg);
+  }
+
+  100% {
+    transform: scaleY(0.9) scaleX(1.1) rotate(1deg);
+  }
+}
+
+@keyframes sparkle1 {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+}
+
+@keyframes sparkle2 {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-25px) scale(1.2);
+  }
+}
+
+@keyframes sparkle3 {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-15px) scale(0.8);
+  }
+}
+
+@keyframes loadingProgress {
+  0% {
+    width: 0%;
+  }
+
+  50% {
+    width: 70%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}

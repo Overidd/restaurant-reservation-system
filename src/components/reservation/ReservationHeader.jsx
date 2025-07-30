@@ -21,7 +21,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
             name: [translation[key] ?? key],
             icon: null,
          }))
-         .filter(({ name }) => !['Motivo', 'restaurantId', 'restaurant'].includes(name[0]));
+         .filter(({ name }) => !['Motivo', 'restaurantId', 'restaurant', 'location'].includes(name[0]));
       dataArray.push(infoItems);
    }
 
@@ -49,6 +49,7 @@ const buildStepArray = ({ info, date, hour, translation, currentStepIndex }) => 
 
 
 export const ReservationHeader = ({ className, date, hour: { name }, info, currentStepIndex }) => {
+
    if (!currentStepIndex) return null;
    const stepsHeader = buildStepArray({ info, date, hour: name, translation, currentStepIndex });
 

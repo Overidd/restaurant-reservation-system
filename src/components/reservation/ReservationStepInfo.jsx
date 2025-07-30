@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
 
-import { validateObject } from '@/ultils';
 import { cn } from '@/ultils/cn';
 
 import { useForm } from '@/hook/common';
@@ -38,32 +37,33 @@ const reasonData = [
 ]
 
 const schema = {
-   info: {
-      valid: {
-         location: [
-            (value, state, additionalData) => additionalData.location.some((item) => item.name === value),
-            'Selecione una ubicación',
-            true
-         ],
-         reason: [
-            (value) => reasonData.some(item => item.name === value),
-            'Selecione un motivo',
-         ],
-         diners: [
-            (value) => value > 0,
-            'Selecione la cantidad de comensales',
-         ]
-      },
-      initial: {
-         location: '',
-         reason: '',
-         diners: 2
-      }
+   valid: {
+      restaurant: [
+         (value, state, additionalData) => additionalData.restaurant.some((item) => item.name === value),
+         'Selecione una ubicación',
+         true
+      ],
+
+      reason: [
+         (value) => reasonData.some(item => item.name === value),
+         'Selecione un motivo',
+      ],
+
+      diners: [
+         (value) => value > 0,
+         'Selecione la cantidad de comensales',
+      ]
+   },
+   initial: {
+      restaurant: '',
+      reason: '',
+      diners: 2
    }
 }
 export const ReservationStepInfo = ({
    className,
 }) => {
+
    const { restaurants } = useGetAllRestaurants();
    const { nextStep } = useStepFormContext();
    const { reserveSetInfo, from } = useReserve();
@@ -72,10 +72,21 @@ export const ReservationStepInfo = ({
       onSubmitForm,
       onValueChange,
       isFormValid,
-      formState: { restaurant, reason, diners },
-      formValidation: { locationValid, reasonValid, dinersValid },
+      formState: {
+         restaurant,
+         reason,
+         diners
+      },
+      formValidation: {
+         restaurantValid,
+         reasonValid,
+         dinersValid
+      },
    } = useForm({
-      initialState: validateObject(from.info) ? from.info : schema.initial,
+      initialState: {
+         ...schema.initial,
+         ...from.info,
+      },
       validations: schema.valid,
       activeValidation: true,
       additionalData: {
@@ -112,7 +123,7 @@ export const ReservationStepInfo = ({
                   onValueChange={onValueChange}
                >
                   <SelectTrigger
-                     isError={!!locationValid}
+                     isError={!!restaurantValid}
                      variant='crystal'
                      className='w-full'
                   >
