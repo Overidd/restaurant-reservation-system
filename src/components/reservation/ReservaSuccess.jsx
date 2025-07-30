@@ -32,13 +32,13 @@ export const ReservaSuccess = ({ t, code, hour, dateStr }) => {
             <p className='space-x-2'>
                <Calendar className='align-middle inline-block' />
                <span className='font-semibold align-middle'>
-                  25/06/2023
+                  {dateStr}
                </span>
             </p>
             <p className='space-x-2'>
                <Clock className='align-middle inline-block' />
                <span className='font-semibold align-middle'>
-                  54
+                  {hour}
                </span>
             </p>
             <div className='px-4 py-3 border-2 border-dashed rounded-lg flex items-center justify-between gap-2 w-full'>

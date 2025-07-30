@@ -278,6 +278,12 @@ export class FirebaseReserveService {
             throw new Error('Usuario no autenticado');
          }
 
+         const userSnap = await getDoc(doc(FirebaseDB, 'users', user.uid));
+
+         if (!userSnap.exists()) {
+            throw new Error('El usuario no existe');
+         }
+
          // TODO faltaria validar si la mesa fue bloqueada
 
          const querySnapshot = await getDocs(query(
@@ -294,6 +300,7 @@ export class FirebaseReserveService {
          }
 
          // Buscar todas las reservas confirmadas para ese restaurante, fecha y hora
+
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
             where('idRestaurant', '==', idRestaurant),
@@ -351,8 +358,9 @@ export class FirebaseReserveService {
             timestamp: timestamp,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
-            name: displayName || 'No Name',
-            email: email || 'No Email',
+            name: userSnap.data().name || displayName || 'No Name',
+            phone: userSnap.data().phone || 'No Phone',
+            email: userSnap.data().email || 'No Email',
          };
 
          await setDoc(reservationRef, reservationData);
@@ -368,8 +376,8 @@ export class FirebaseReserveService {
          return {
             ok: true,
             code: newCode,
-            hour,
-            dateStr
+            hour: hour,
+            dateStr: dateStr
          };
 
       } catch (error) {
