@@ -1,52 +1,14 @@
 import { cn } from '@/ultils';
 import {
    AlignLeft,
-   CalendarCheck,
    ChevronDown,
-   Dice1,
-   LayoutDashboard,
    Menu,
-   ReceiptText,
-   Store,
-   Users,
    X,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
+import { navItemsData } from '.';
 
-const navItems = [
-   {
-      icon: <LayoutDashboard className='h-5 w-5' />,
-      name: 'Dashboard',
-      path: '/dashboard',
-   },
-   {
-      icon: <ReceiptText className='h-5 w-5' />,
-      name: 'Reservas',
-      subItems: [
-         {
-            name: 'Calendario',
-            path: '/dashboard/calendar',
-            icon: <CalendarCheck className='h-4 w-4' />,
-         },
-         {
-            name: 'Mesas',
-            path: '/dashboard/tables',
-            icon: <Dice1 className='h-4 w-4' />,
-         },
-      ],
-   },
-   {
-      name: 'Detalle',
-      icon: <Users className='h-5 w-5' />,
-      path: '/dashboard/details',
-   },
-   {
-      name: 'Tienda',
-      icon: <Store className='h-5 w-5' />,
-      path: '/dashboard/store',
-   },
-]
 
 function useSidebar() {
    const [isExpanded, setIsExpanded] = useState(true)
@@ -160,6 +122,7 @@ export function Sidebar() {
    const sidebarWidth = isExpanded || isHovered || isMobileOpen ? 'w-64' : 'w-20'
    const showLabels = isExpanded || isHovered || isMobileOpen
 
+
    return (
       <div
          className='h-full relative'
@@ -183,13 +146,13 @@ export function Sidebar() {
             }
          </button>
 
-         {isMobileOpen && isMobile && (
+         {/* {isMobileOpen && isMobile && (
             <div
                role='presentation'
                className='fixed inset-0 z-40 md:hidden transition-opacity duration-300'
                onClick={closeMobileSidebar}
             />
-         )}
+         )} */}
 
          <aside
             id='sidebar'
@@ -226,13 +189,15 @@ export function Sidebar() {
             </div>
 
             <nav className='flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-2'>
-               {navItems.map((item, index) => {
+               {navItemsData.map((item, index) => {
                   const isOpen = openSubmenu === index
                   const hasActiveSubItem = item.subItems?.some((subItem) => isActive(subItem.path))
                   const isItemActive = item.path ? isActive(item.path) : hasActiveSubItem
 
                   return (
-                     <div key={item.name}>
+                     <div
+                        key={item.name}
+                     >
                         {item.subItems ? (
                            <div>
                               <button
@@ -243,10 +208,14 @@ export function Sidebar() {
                                     !showLabels && 'justify-center',
                                  )}
                               >
-                                 <span className='flex-shrink-0'>{item.icon}</span>
+                                 <span className='flex-shrink-0'>
+                                    {item.icon}
+                                 </span>
                                  {showLabels && (
                                     <>
-                                       <span className='flex-1 font-medium'>{item.name}</span>
+                                       <span className='flex-1 font-medium'>
+                                          {item.name}
+                                       </span>
                                        <ChevronDown
                                           className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')}
                                        />
@@ -257,12 +226,12 @@ export function Sidebar() {
                               {/* Submenu */}
                               {item.subItems && showLabels && (
                                  <div
-                                    ref={(el) => {
-                                       subMenuRefs.current[index] = el
-                                    }}
                                     className='overflow-hidden transition-all duration-300 ease-in-out'
                                     style={{
                                        height: isOpen ? `${subMenuHeight[index] || 0}px` : '0px',
+                                    }}
+                                    ref={(el) => {
+                                       subMenuRefs.current[index] = el
                                     }}
                                  >
                                     <div className='mt-1 ml-8 space-y-1'>
@@ -277,8 +246,12 @@ export function Sidebar() {
                                                 isActive(subItem.path) && 'bg-sidebar-primary text-sidebar-primary-foreground',
                                              )}
                                           >
-                                             <span className='flex-shrink-0'>{subItem.icon}</span>
-                                             <span>{subItem.name}</span>
+                                             <span className='flex-shrink-0'>
+                                                {subItem.icon}
+                                             </span>
+                                             <span>
+                                                {subItem.name}
+                                             </span>
                                           </Link>
                                        ))}
                                     </div>
@@ -286,7 +259,7 @@ export function Sidebar() {
                               )}
                            </div>
                         ) : (
-                           // Regular menu item
+
                            <Link
                               to={item.path}
                               onClick={handleLinkClick}
@@ -297,8 +270,12 @@ export function Sidebar() {
                                  isItemActive && 'bg-sidebar-primary text-sidebar-primary-foreground',
                               )}
                            >
-                              <span className='flex-shrink-0'>{item.icon}</span>
-                              {showLabels && <span className='font-medium'>{item.name}</span>}
+                              <span className='flex-shrink-0'>
+                                 {item.icon}
+                              </span>
+                              {showLabels && <span className='font-medium'>
+                                 {item.name}
+                              </span>}
                            </Link>
                         )}
                      </div>

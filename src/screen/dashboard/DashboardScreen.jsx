@@ -21,23 +21,22 @@ export const DashboardScreen = () => {
 
    return (
       <div className='min-h-screen p-4 md:p-6 lg:p-8 mx-auto max-w-7xl space-y-6'>
-         <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-end'>
-            <Button
-               disabled={loading.downloadDashboard}
-               onClick={() => downloadDashboardPdf({
-                  metrics,
-                  topClients,
-                  problematicClients,
-                  topClientAnalysis,
-               })}
-            >
-               Generar Reporte
-               {loading.downloadDashboard
-                  ? <LoaderCircle className='animate-spin' />
-                  : <FileText />
-               }
-            </Button>
-         </div>
+         <Button
+            className={'w-fit flex ml-auto'}
+            disabled={loading.downloadDashboard}
+            onClick={() => downloadDashboardPdf({
+               metrics,
+               topClients,
+               problematicClients,
+               topClientAnalysis,
+            })}
+         >
+            Generar Reporte
+            {loading.downloadDashboard
+               ? <LoaderCircle className='animate-spin' />
+               : <FileText />
+            }
+         </Button>
 
          <StatsSummary
             className={'grid gap-4 md:grid-cols-4'}
