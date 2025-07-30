@@ -108,7 +108,11 @@ export function ProductsGrid() {
          <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' : 'space-y-4'
          }>
             {filteredProducts.map((product) => (
-               <CardProduct key={product.id} {...product} variant={viewMode === 'list' ? 'compact' : 'default'} />
+               <CardProduct
+                  variant={viewMode === 'list' ? 'compact' : 'default'}
+                  key={product.id}
+                  {...product}
+               />
             ))}
          </div>
 

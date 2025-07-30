@@ -106,16 +106,16 @@ export const CardProduct = ({
          )}
          style={{
             // transition: 'box-shadow 300ms, transform 300ms',
-            
+
          }}
-         // onMouseEnter={e => {
-         //    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(0,0,0,0.10)';
-         //    e.currentTarget.style.transform = 'translateY(-4px)';
-         // }}
-         // onMouseLeave={e => {
-         //    e.currentTarget.style.boxShadow = '';
-         //    e.currentTarget.style.transform = '';
-         // }}
+      // onMouseEnter={e => {
+      //    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(0,0,0,0.10)';
+      //    e.currentTarget.style.transform = 'translateY(-4px)';
+      // }}
+      // onMouseLeave={e => {
+      //    e.currentTarget.style.boxShadow = '';
+      //    e.currentTarget.style.transform = '';
+      // }}
       >
          <div className='relative'>
             <div className='relative aspect-[4/3] rounded-2xl overflow-hidden'>
@@ -132,7 +132,7 @@ export const CardProduct = ({
                   {isNew && <Badge className='bg-sidebar-background text-xs'>
                      Nuevo
                   </Badge>}
-                  {isOnSale && <Badge className='text-xs bg-destructive'>
+                  {isOnSale && discount > 0 && <Badge className='text-xs bg-destructive'>
                      -{discount}%
                   </Badge>}
                </div>
@@ -159,7 +159,9 @@ export const CardProduct = ({
                   {rating > 0 && (
                      <div className='flex items-center gap-1'>
                         <Star className='w-3 h-3 -yellow-400 text-yellow-400' />
-                        <span className='text-xs font-medium'>{rating}</span>
+                        <span className='text-xs font-medium'>
+                           {rating}
+                        </span>
                      </div>
                   )}
                </div>
@@ -196,7 +198,7 @@ export const CardProduct = ({
                      <span className='text-xl font-bold text-primary'>
                         S/ {price}
                      </span>
-                     {originalPrice && <span className='text-sm text-gray-500 line-through'>
+                     {originalPrice && originalPrice !== price && <span className='text-sm text-gray-500 line-through'>
                         S/ {originalPrice}
                      </span>}
                   </div>
