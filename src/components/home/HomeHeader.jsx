@@ -32,7 +32,7 @@ export const HomeHeader = () => {
       <header
          className={cn(
             'flex flex-row justify-center items-center gap-40',
-            'w-full h-dvh'
+            'w-full h-screen'
          )}
          style={{
             backgroundImage: 'url(/home/header-image.webp)',

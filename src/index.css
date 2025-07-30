@@ -331,6 +331,17 @@ input[type=number] {
   animation: animate-bounce 2s ease-in-out infinite;
 }
 
+/** Card Style  */
+.card-transition {
+  transition: all 0.3s ease-in-out;
+  transform: translateY(0px);
+
+  &:hover {
+    /* box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.10); */
+    transform: translateY(-4px) !important;
+  }
+}
+
 /** ANIMACIONES  */
 @keyframes animate-bounce {
 

@@ -13,8 +13,8 @@ const Layout = () => {
         <Navbar className='mt-4 mx-auto w-[90%] max-w-6xl' />
       </ModalAsyncProvider>
       <Outlet />
-      <Footer className='mt-auto mx-auto max-w-6xl' />
       <ModalUser />
+      <Footer className='mx-auto max-w-6xl' />
     </div>
   )
 }

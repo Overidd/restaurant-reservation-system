@@ -13,8 +13,9 @@ export const startGoogleAuth = () => {
          dispatch(logoutAction({ errorMessage: res.errorMessage }));
          return;
       }
-
       dispatch(loginAction(res.user));
+
+      return res.user
    };
 };
 

@@ -31,7 +31,7 @@ export const useAuthStore = () => {
    }
 
    const loginGoogle = () => {
-      dispatch(startGoogleAuth())
+      return dispatch(startGoogleAuth())
    }
 
    const logout = () => {

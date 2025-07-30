@@ -101,9 +101,21 @@ export const CardProduct = ({
       <Card
          data-aos='zoom-in-up'
          className={cn(
-            'group overflow-hidden hover:shadow-md transition-all duration-300 transform hover:-translate-y-1',
+            'group overflow-hidden card-transition',
             className,
          )}
+         style={{
+            // transition: 'box-shadow 300ms, transform 300ms',
+            
+         }}
+         // onMouseEnter={e => {
+         //    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(0,0,0,0.10)';
+         //    e.currentTarget.style.transform = 'translateY(-4px)';
+         // }}
+         // onMouseLeave={e => {
+         //    e.currentTarget.style.boxShadow = '';
+         //    e.currentTarget.style.transform = '';
+         // }}
       >
          <div className='relative'>
             <div className='relative aspect-[4/3] rounded-2xl overflow-hidden'>
