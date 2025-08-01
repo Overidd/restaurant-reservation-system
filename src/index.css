@@ -203,13 +203,16 @@
 /** Style Input  */
 .input-style-class {
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
   appearance: none;
   background-repeat: no-repeat;
   background-position: right 16px center;
   background-size: 16px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0.09), transparent 80%);
+
+  /* &:focus{
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.3), 0 0 0 2px var(--primary);
+  } */
 }
 
 .style-class {
