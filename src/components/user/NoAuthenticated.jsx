@@ -11,7 +11,7 @@ export const NoAuthenticated = ({
       <Card2
          onClick={onClick}
          className={cn(
-            'flex flex-col gap-4',
+            'flex flex-col gap-4 w-44 md:w-auto',
             className
          )}
       >

@@ -8,6 +8,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { navItemsData } from '.';
+import { Button } from '../UI/common';
 
 
 function useSidebar() {
@@ -167,18 +168,18 @@ export function Sidebar() {
                sidebarWidth,
             )}
          >
-            <button
+            <Button
                onClick={toggleSidebar}
+               size='icon'
+               variant='ghost'
                className={cn(
-                  'hidden md:flex absolute -right-3 top-6 z-10',
-                  'rounded-full p-1.5 shadow-md transition-all duration-200',
-                  'focus:outline-none focus:ring-2',
-                  ' backdrop-blur-lg',
+                  'hidden md:flex absolute -right-3 top-6 z-10 rounded-full',
                   'bg-sidebar-background text-sidebar-foreground',
+                  ' backdrop-blur-lg',
                )}
             >
                <AlignLeft className='h-4 w-4' />
-            </button>
+            </Button>
 
             <div className={cn('p-4')}>
                {showLabels ? (
@@ -200,12 +201,14 @@ export function Sidebar() {
                      >
                         {item.subItems ? (
                            <div>
-                              <button
+                              <Button
+                                 variant={'ghost'}
                                  onClick={() => handleSubmenuToggle(index)}
                                  className={cn(
-                                    'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
-                                    'text-left focus:outline-none focus:ring-2',
-                                    !showLabels && 'justify-center',
+                                    'w-full flex items-center transition-all duration-200',
+                                    'text-left',
+                                    isItemActive && 'bg-accent',
+                                    !isItemActive && 'hover:bg-transparent',
                                  )}
                               >
                                  <span className='flex-shrink-0'>
@@ -221,7 +224,7 @@ export function Sidebar() {
                                        />
                                     </>
                                  )}
-                              </button>
+                              </Button>
 
                               {/* Submenu */}
                               {item.subItems && showLabels && (
@@ -240,18 +243,22 @@ export function Sidebar() {
                                              key={subItem.name}
                                              to={subItem.path}
                                              onClick={handleLinkClick}
-                                             className={cn(
-                                                'flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200',
-                                                'text-sm focus:outline-none focus:ring-2',
-                                                isActive(subItem.path) && 'bg-sidebar-primary text-sidebar-primary-foreground',
-                                             )}
                                           >
-                                             <span className='flex-shrink-0'>
-                                                {subItem.icon}
-                                             </span>
-                                             <span>
-                                                {subItem.name}
-                                             </span>
+                                             <Button
+                                                variant={'ghost'}
+                                                className={cn(
+                                                   'w-full text-left justify-start',
+                                                   isActive(subItem.path) && 'bg-accent',
+                                                   !isActive(subItem.path) && 'hover:bg-transparent',
+                                                )}
+                                             >
+                                                <span className='flex-shrink-0'>
+                                                   {subItem.icon}
+                                                </span>
+                                                <span>
+                                                   {subItem.name}
+                                                </span>
+                                             </Button>
                                           </Link>
                                        ))}
                                     </div>
@@ -259,23 +266,25 @@ export function Sidebar() {
                               )}
                            </div>
                         ) : (
-
                            <Link
                               to={item.path}
                               onClick={handleLinkClick}
-                              className={cn(
-                                 'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
-                                 'focus:outline-none focus:ring-2',
-                                 !showLabels && 'justify-center',
-                                 isItemActive && 'bg-sidebar-primary text-sidebar-primary-foreground',
-                              )}
                            >
-                              <span className='flex-shrink-0'>
-                                 {item.icon}
-                              </span>
-                              {showLabels && <span className='font-medium'>
-                                 {item.name}
-                              </span>}
+                              <Button
+                                 variant={'ghost'}
+                                 className={cn(
+                                    'w-full text-left justify-start',
+                                    isItemActive && 'bg-accent',
+                                    !isItemActive && 'hover:bg-transparent',
+                                 )}
+                              >
+                                 <span className='flex-shrink-0'>
+                                    {item.icon}
+                                 </span>
+                                 {showLabels && <span className='font-medium'>
+                                    {item.name}
+                                 </span>}
+                              </Button>
                            </Link>
                         )}
                      </div>

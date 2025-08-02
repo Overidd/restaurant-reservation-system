@@ -54,6 +54,7 @@ export const MapEditManager = () => {
       closeModalEdit();
       openModalCreateObject();
       setSelectedResource(data);
+      closeModalEditProperty();
       toggleIsTempResourceChange(true);
    }
 

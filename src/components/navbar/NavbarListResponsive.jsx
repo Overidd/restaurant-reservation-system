@@ -44,12 +44,12 @@ export const NavbarListResponsive = ({ data }) => {
          )}
 
          <Button
-            className='md:hidden'
+            className='md:hidden text-accent-foreground'
             variant='ghost'
             size='icon'
             onClick={() => setIsMenuOpen(!isMenuOpen)}
          >
-            {!isMenuOpen && <Menu className='h-6 w-6' />}
+            {!isMenuOpen && <Menu className='h-12 w-12' />}
          </Button>
       </>
    );

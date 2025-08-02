@@ -149,7 +149,7 @@ export const Modal = ({
    }
 
    const getOverlayClasses = () => {
-      const baseClasses = 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
+      const baseClasses = 'fixed inset-0 w-screen h-screen bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }
