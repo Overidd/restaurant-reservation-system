@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { closeModalAuthAction, openModalAuthAction } from '@/doman/store';
 
-const authRouter = ['/login', '/register']
+const authRouter = ['/login', '/register', '/recover'];
 
 export const useModalAuth = () => {
    const dispatch = useDispatch();

@@ -29,7 +29,7 @@ export const NavbarListResponsive = ({ data }) => {
             <Card2
                onClick={() => setIsMenuOpen(false)}
                className={cn(
-                  'fixed top-0 left-0 z-50 w-dvw h-dvh md:hidden',
+                  'fixed top-0 left-0 z-50 w-screen h-screen md:hidden',
                   'bg-sidebar-background rounded-none'
                )}
             >

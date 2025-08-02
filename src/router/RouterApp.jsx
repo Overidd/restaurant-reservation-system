@@ -27,6 +27,7 @@ import {
    LoginScreen,
    MapScreen,
    ProductScreen,
+   RecoverScreen,
    RegisterScreen,
    ReservationScreen,
    RestaurantScreen,
@@ -46,6 +47,7 @@ const AppRoutes = () => {
                         <Route element={<AuthLayout />}>
                            <Route path='login' element={<LoginScreen />} />
                            <Route path='register' element={<RegisterScreen />} />
+                           <Route path='recover' element={<RecoverScreen />} />
                         </Route>
                      </Route>
                   </Route>
@@ -56,6 +58,7 @@ const AppRoutes = () => {
                         <Route element={<AuthLayout />}>
                            <Route path='login' element={<LoginScreen />} />
                            <Route path='register' element={<RegisterScreen />} />
+                           <Route path='recover' element={<RecoverScreen />} />
                         </Route>
                      </Route>
                   </Route>
@@ -66,6 +69,7 @@ const AppRoutes = () => {
                         <Route element={<AuthLayout />}>
                            <Route path='login' element={<LoginScreen />} />
                            <Route path='register' element={<RegisterScreen />} />
+                           <Route path='recover' element={<RecoverScreen />} />
                         </Route>
                      </Route>
                   </Route>
@@ -76,6 +80,7 @@ const AppRoutes = () => {
                         <Route element={<AuthLayout />}>
                            <Route path='login' element={<LoginScreen />} />
                            <Route path='register' element={<RegisterScreen />} />
+                           <Route path='recover' element={<RecoverScreen />} />
                         </Route>
                      </Route>
                   </Route>

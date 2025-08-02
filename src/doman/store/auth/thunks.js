@@ -85,3 +85,18 @@ export const startChecking = () => {
       dispatch(loginAction(user));
    }
 }
+
+export const startRecoverPassword = (email) => {
+   return async (dispatch) => {
+      dispatch(loaddingAction(true));
+
+      const res = await authService.recoverPassword(email);
+
+      if (!res.ok) {
+         dispatch(logoutAction({ errorMessage: res.errorMessage }));
+         throw new Error(res.errorMessage);
+      }
+
+      dispatch(loaddingAction(false));
+   }
+}

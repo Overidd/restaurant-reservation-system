@@ -11,7 +11,8 @@ import {
    startCreateUser,
    startGoogleAuth,
    startLogin,
-   startLogout
+   startLogout,
+   startRecoverPassword
 } from '@/doman/store/auth';
 
 export const useAuthStore = () => {
@@ -58,6 +59,10 @@ export const useAuthStore = () => {
       dispatch(checkingCredentialAction(state))
    }
 
+   const recoverPassword = (email) => {
+      return dispatch(startRecoverPassword(email))
+   }
+
    return {
       isLoading,
 
@@ -68,5 +73,6 @@ export const useAuthStore = () => {
       checkingCredentials,
       loginIntial,
       logoutPermanently,
+      recoverPassword
    }
 }

@@ -86,7 +86,7 @@ export const RegisterScreen = () => {
 
   return (
     <>
-      <h2 className='text-primary-foreground/90 text-3xl font-bold text-center'>
+      <h2 className='text-primary-foreground/90 text-xl font-bold text-center'>
         Registro
       </h2>
 
@@ -210,7 +210,7 @@ export const RegisterScreen = () => {
           <div className='flex flex-row gap-2 items-center justify-baseline'>
             <div className='bg-gradient-to-l from-white/50 to-transparent h-px flex-1' />
             <span className='w-fit text-sm'>
-              O continuar con
+              {/* O continuar con */}
             </span>
             <div className='bg-gradient-to-r from-white/50 to-transparent h-px flex-1' />
           </div>

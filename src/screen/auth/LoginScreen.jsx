@@ -64,7 +64,7 @@ export const LoginScreen = () => {
 
    return (
       <>
-         <h2 className='text-primary-foreground/90 text-3xl font-bold text-center'>
+         <h2 className='text-primary-foreground/90 text-xl font-bold text-center'>
             Login
          </h2>
 
@@ -113,24 +113,31 @@ export const LoginScreen = () => {
 
             <LinkCustom
                className={'text-right'}
-               to={'register'}
+               to={'recover'}
             >
-               No tienes una cuenta
+               ¿Olvidaste tu contraseña?
             </LinkCustom>
 
             <FormItem>
                <Button
                   type='submit'
                   disabled={isLoading}
-                  className={'py-5'}
+                  size='lg'
                >
                   Iniciar sesion
                </Button>
 
+               <LinkCustom
+                  className={'text-center'}
+                  to={'register'}
+               >
+                  Crear cuenta
+               </LinkCustom>
+
                <div className='flex flex-row gap-2 items-center justify-baseline'>
                   <div className='bg-gradient-to-l from-white/50 to-transparent h-px flex-1' />
                   <span className='w-fit text-sm'>
-                     O continuar con
+                     {/* O continuar con */}
                   </span>
                   <div className='bg-gradient-to-r from-white/50 to-transparent h-px flex-1' />
                </div>

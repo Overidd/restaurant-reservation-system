@@ -2,6 +2,7 @@ import {
    createUserWithEmailAndPassword,
    GoogleAuthProvider,
    onAuthStateChanged,
+   sendPasswordResetEmail,
    signInWithEmailAndPassword,
    signInWithPopup,
    updateProfile
@@ -159,6 +160,21 @@ export class FirebaseAuthService {
          return {
             ok: false,
             errorMessage: firebaseErrorMessages[code] || 'Ocurrió un error al iniciar sesión.',
+         };
+      }
+   }
+
+   async recoverPassword(email) {
+      try {
+         await sendPasswordResetEmail(FirebaseAuth, email);
+         return {
+            ok: true
+         };
+      } catch (error) {
+         console.log(error);
+         return {
+            ok: false,
+            errorMessage: error.message || 'Error al iniciar sesión'
          };
       }
    }

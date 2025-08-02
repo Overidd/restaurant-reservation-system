@@ -49,8 +49,8 @@ export const authSlice = createSlice({
          state.status = authStateEmun.checking
       },
 
-      loaddingAction: (state) => {
-         state.isLoading = true
+      loaddingAction: (state, { payload }) => {
+         state.isLoading = payload ?? true;
       },
 
       updateProfileAction: (state, { payload }) => {

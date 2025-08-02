@@ -33,7 +33,7 @@ export const useStepForm = ({ stepNames }) => {
          setDirection('backward');
          setCurrentStepIndex((prev) => prev - 1);
       }
-   }, [currentStepIndex,]);
+   }, [currentStepIndex]);
 
    const goToStep = useCallback((index) => {
       if (index >= 0 && index < stepNames.length) {

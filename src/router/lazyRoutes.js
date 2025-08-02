@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 export const LoginScreen = lazy(() => import('@/screen/auth/LoginScreen'))
 export const RegisterScreen = lazy(() => import('@/screen/auth/RegisterScreen'))
+export const RecoverScreen = lazy(() => import('@/screen/auth/RecoverScreen'))
 
 export const HomeScreen = lazy(() => import('@/screen/home/HomeScreen'))
 export const ProductScreen = lazy(() => import('@/screen/product/ProductScreen'))

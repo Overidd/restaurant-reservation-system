@@ -29,7 +29,7 @@ import { forwardRef, useState } from 'react';
 //             'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 //             'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
 //             inputVariants({ variant, className }),
-//             isError && "!border-destructive/50",
+//             isError && '!border-destructive/50',
 //          )}
 //          {...props}
 //       />
@@ -44,12 +44,12 @@ import { forwardRef, useState } from 'react';
 export const Input = forwardRef(({
    className,
    variant,
-   isError,
    icon,
    placeholder,
    name,
    value,
    id,
+   isError = false,
    autoFocus = false,
    activeEventIcon = false,
    iconPosition = 'left',
@@ -66,7 +66,6 @@ export const Input = forwardRef(({
          variant: {
             crystal: 'input-style-class py-5 px-4',
          },
-
          size: {
             sm: 'h-7 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 py-4 text-sm',
             base: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 py-5 text-sm',
@@ -84,7 +83,7 @@ export const Input = forwardRef(({
    const togglePassword = () => setShowPassword(prev => !prev);
    // activeEventIcon
    return (
-      <div className="relative w-full flex items-center">
+      <div className='relative w-full flex items-center'>
          {icon && iconPosition === 'left' && (
             <div className={cn(
                'absolute z-10 left-3 text-muted-foreground',
@@ -96,7 +95,7 @@ export const Input = forwardRef(({
          <input
             autoFocus={autoFocus}
             type={inputType}
-            data-slot="input"
+            data-slot='input'
             placeholder={placeholder}
             ref={ref}
             name={name}
@@ -115,7 +114,6 @@ export const Input = forwardRef(({
             {...props}
          />
 
-         {/* Icono normal a la derecha si no es tipo password */}
          {icon && iconPosition === 'right' && !isPassword && (
             <div className={cn(
                'absolute right-3 text-muted-foreground',
@@ -125,12 +123,11 @@ export const Input = forwardRef(({
             </div>
          )}
 
-         {/* Icono por defecto para password */}
          {isPassword && (
             <button
-               type="button"
+               type='button'
                onClick={togglePassword}
-               className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors"
+               className='absolute right-3 text-muted-foreground hover:text-foreground transition-colors'
                tabIndex={-1}
             >
                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

@@ -100,7 +100,6 @@ export const ReservationScreen = () => {
                   </StepFromContextProvider>
                </StepFormFooter>
             </StepFormProvider>
-
          </Card2>
       </Modal>
 

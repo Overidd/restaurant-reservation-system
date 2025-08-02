@@ -68,7 +68,10 @@ export const Modal = ({
       return () => {
          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
          if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
-         document.body.style.overflow = 'unset'
+
+         if (isVisible) {
+            document.body.style.overflow = 'unset'
+         }
       }
    }, [isOpen, isVisible])
 
@@ -149,7 +152,7 @@ export const Modal = ({
    }
 
    const getOverlayClasses = () => {
-      const baseClasses = 'fixed inset-0 w-screen h-screen bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
+      const baseClasses = 'fixed inset-0 bg-backdrop-modal bg-opacity-50 backdrop-blur-lg transition-opacity duration-300'
       const opacityClasses = isAnimating ? 'opacity-100' : 'opacity-0'
       return `${baseClasses} ${opacityClasses} ${overlayClassName}`
    }

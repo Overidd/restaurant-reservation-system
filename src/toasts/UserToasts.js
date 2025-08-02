@@ -56,4 +56,15 @@ export class UserToasts {
          .catch((err) => onError?.(err))
          .finally(() => onFinally?.());
    }
+
+   static recoverPassword = (promise, { onSuccess, onError, onFinally } = {}) => {
+      toast.promise(promise, {
+         loading: 'Everificando correo...',
+         success: 'Se envió un correo para recuperar contraseña.',
+         error: (err) => isObjetError(err) ? err?.message : err || 'Error al recuperar contraseña',
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
+   }
 };
