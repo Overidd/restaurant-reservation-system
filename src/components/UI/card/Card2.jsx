@@ -9,7 +9,7 @@ export const Card2 = ({
    onClick = null
 }) => {
    return (
-      <div
+      <section
          style={style}
          onClick={onClick}
          tabIndex={0}
@@ -24,7 +24,7 @@ export const Card2 = ({
          )}
       >
          {children}
-      </div>
+      </section>
    )
 }
 

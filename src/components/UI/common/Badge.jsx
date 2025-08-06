@@ -13,6 +13,7 @@ export const Badge = ({
       {
          variants: {
             variant: {
+               cristal: 'style-class',
                primary:
                   "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
                secondary:

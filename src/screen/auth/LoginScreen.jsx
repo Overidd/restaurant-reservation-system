@@ -112,7 +112,7 @@ export const LoginScreen = () => {
             </FormItem>
 
             <LinkCustom
-               className={'text-right'}
+               className={'text-right text-accent-foreground/70'}
                to={'recover'}
             >
                ¿Olvidaste tu contraseña?

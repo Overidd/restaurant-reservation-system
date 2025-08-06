@@ -7,7 +7,8 @@ const testimonialData = [
    {
       id: 1,
       text: 'Las recetas aquí no sólo son deliciosas',
-      className: 'relative right-20 animate-bounce-card',
+      className: 'relative right-20',
+      animation: 'fade-up',
       stars: 5,
       user: {
          name: 'Fernando',
@@ -19,6 +20,7 @@ const testimonialData = [
       id: 2,
       text: 'He descubierto platillos deliciosos',
       className: 'relative bottom-32 right-5 ',
+      animation: 'fade-left',
       stars: 5,
       user: {
          name: 'Sofia',
@@ -33,11 +35,8 @@ export const HomeHeader = () => {
       <header
          className={cn(
             'flex flex-row justify-center items-center gap-40',
-            'w-full h-screen'
+            'w-full h-screen bg-[url(/home/header-image-mobil.jpg)] md:bg-[url(/home/header-image.webp)]'
          )}
-         style={{
-            backgroundImage: 'url(/home/header-image.webp)',
-         }}
       >
          <section className='space-y-4'>
             <h1 className='text-secondary-foreground text-5xl font-bold uppercase'>
@@ -72,9 +71,7 @@ export const HomeHeader = () => {
                   <CardTestimonial
                      className={item.className}
                      key={item.id}
-                     text={item.text}
-                     stars={item.stars}
-                     user={item.user}
+                     {...item}
                   />
                ))}
             </div>

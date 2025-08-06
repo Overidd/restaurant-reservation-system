@@ -147,26 +147,53 @@ export const restaurantResourceSlice = createSlice({
 
          if (payload.status === typeStatusTable.PENDING) {
             const { reservation, idTables } = payload;
-            state.tables = state.tables.map((t) => {
-               if (payload.idTables.includes(t.id)) {
+
+            const tablesToUnlink = state.tables
+               .filter((table) => {
+                  const hasReservation = !!table.reservation;
+                  const isRelated = table.reservation?.relatedTables?.some((r) => idTables.includes(r.id));
+                  const isNotSelected = !idTables.includes(table.id);
+                  return hasReservation && isRelated && isNotSelected;
+               });
+
+               if (tablesToUnlink.length > 0) {
+               const tablesToUnlinkSet = new Set(tablesToUnlink.map((t) => t.id));
+               state.tables = state.tables.map((table) => {
+                  if (tablesToUnlinkSet.has(table.id)) {
+                     return {
+                        ...table,
+                        hasReservar: false,
+                        status: typeStatusTable.AVAILABLE,
+                        user: null,
+                        reservation: null
+                     };
+                  }
+                  return table;
+               });
+            }
+
+            state.tables = state.tables.map((table) => {
+               if (idTables.includes(table.id)) {
                   return {
-                     ...t,
+                     ...table,
                      hasReservar: true,
                      status: typeStatusTable.PENDING,
-                     user: reservation?.user ?? null,
-                     reservation: {
-                        ...reservation.reservation,
-                        relatedTables: idTables.map(id => ({
-                           id,
-                           name: state.tables.find(t => t.id === id)?.name ?? 'Sin nombre'
-                        }))
+                     user: {
+                        name: reservation.name,
+                        email: reservation.email,
+                        idUser: reservation.idUser
                      },
                      createdAt: reservation.createdAt,
+                     reservation: {
+                        ...reservation,
+                        relatedTables: reservation.tables
+                     },
                   };
                }
-               return t;
+               return table;
             });
-            return
+
+            return;
          }
 
          if (payload.status === typeStatusTable.BLOCKED) {

@@ -19,7 +19,7 @@ export const AuthLayout = () => {
       onClose={closeModal}
     >
       <Card2
-        className={cn('space-y-2')}
+        className={cn('space-y-2 p-10')}
       >
         {/* <figure className='w-[5rem] h-[5rem] mx-auto'>
           <img

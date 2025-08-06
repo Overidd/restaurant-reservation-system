@@ -176,7 +176,7 @@ export const Table = ({
 
             <div className={cn(
                'transition-all duration-300',
-               'shadow-lg',
+               'shadow-lg overflow-hidden',
                'relative h-full w-full',
                colors[color],
                tableConfig?.rounded
@@ -200,7 +200,7 @@ export const Table = ({
                      user={user}
                      mustShow={['name']}
                      className={cn(
-                        'pointer-events-none overflow-hidden',
+                        'pointer-events-none overflow-hidden w-full',
                         'absolute left-1 bottom-1 text-primary-foreground',
                      )}
                   />

@@ -160,7 +160,6 @@ export const useForm = ({
       changeValueCallbackRef.current = changeValueCallback;
    }, [changeValueCallback]);
 
-   // Nuevo: Mapa de disabled por campo
    // const [disabledMap, setDisabledMap] = useState({});
 
    const onInitialFrom = (newInitialState) => {
@@ -224,7 +223,6 @@ export const useForm = ({
    const validateForm = useCallback(() => {
       const errors = {};
       for (const key of Object.keys(state.values)) {
-         // Pasa el mapa de disabled
          const [valid, msg] = validateField(key, state.values, state.validations, state.additionalData, disabledMap);
          errors[`${key}Valid`] = valid ? null : msg;
       }
@@ -262,7 +260,6 @@ export const useForm = ({
 
          const { isValid } = validateForm();
          if (activeValidation && !isValid) {
-            // También puedes forzar un dispatch si quieres actualizar el estado de errores visualmente
             // dispatch({ type: TYPEACTION.VALIDATE_ALL });
             return;
          }
@@ -276,8 +273,8 @@ export const useForm = ({
    }, [state.errors]);
 
    return {
-      ...state.values,
-      ...state.errors,
+      // ...state.values,
+      // ...state.errors,
       formState: state.values,
       formValidation: state.errors,
       validateForm,

@@ -19,8 +19,6 @@ export const DashboardScreen = () => {
       downloadDashboardPdf,
    } = useDownloadPdf()
 
-   console.log(topClients);
-
    return (
       <div className='min-h-screen p-4 md:p-6 lg:p-8 mx-auto max-w-7xl space-y-6'>
          <Button

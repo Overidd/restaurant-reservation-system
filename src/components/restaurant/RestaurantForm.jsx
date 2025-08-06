@@ -134,7 +134,7 @@ export const RestaurantForm = ({
 
             <FormItem>
                <FormLabel htmlFor='image'>
-                  Imagen de la Tienda
+                  Link Imagen
                </FormLabel>
                <Input
                   id='image'
@@ -232,7 +232,7 @@ export const RestaurantForm = ({
                <Input
                   id='longitud'
                   type='number'
-                  step='any'
+                  name='longitud'
                   value={longitud}
                   isError={!!longitudValid}
                   onChange={onValueChange}

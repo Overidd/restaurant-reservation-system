@@ -51,7 +51,11 @@ export const MapState = ({
       AdminTableToasts.confirmReserve(
          confirmReservation({
             tablesReservation: table.reservation.relatedTables,
-            idReservation: table.reservation.idReservation
+            idReservation: table.reservation.id,
+            dateStr: table.reservation.dateStr,
+            idRestaurant: table.reservation.idRestaurant,
+            hour: table.reservation.hour,
+            idUser: table.user.idUser,
          })
       );
    }
@@ -60,7 +64,11 @@ export const MapState = ({
       AdminTableToasts.releaseReserve(
          releasedReservation({
             tablesReservation: table.reservation.relatedTables,
-            idReservation: table.reservation.idReservation
+            idReservation: table.reservation.id,
+            dateStr: table.reservation.dateStr,
+            idRestaurant: table.reservation.idRestaurant,
+            hour: table.reservation.hour,
+            idUser: table.user.idUser,
          })
       );
    }
@@ -72,7 +80,8 @@ export const MapState = ({
             idRestaurant: filter.restaurant.id,
             hour: filter.hour,
             dateStr: filter.dateStr,
-            status: table.status
+            status: table.status,
+            idUser: table.user.idUser
          })
       );
    }

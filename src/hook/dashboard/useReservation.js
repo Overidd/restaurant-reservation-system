@@ -1,44 +1,62 @@
-import { blockTempTableThunks, cancelATablesReservationThunks, cancelFullReservationThunks, confirmReservationThunks, releasedReservationThunks, reserveTableThunks, unblockTempTableThunks, updateReservationThunks } from '@/doman/store/dashboard';
+import { useState } from 'react';
+import {
+   blockTempTableThunks,
+   cancelATablesReservationThunks,
+   cancelFullReservationThunks,
+   confirmReservationThunks,
+   releasedReservationThunks,
+   reserveTableThunks,
+   unblockTempTableThunks,
+   updateReservationThunks
+} from '@/doman/store/dashboard';
 import { useDispatch } from 'react-redux';
 
 export const useReservation = () => {
    const dispatch = useDispatch();
+   const [isLoading, setIsLoading] = useState(false);
 
-   const cancelFullReservation = async (data) => {
-      return dispatch(cancelFullReservationThunks(data));
-   }
+   const withLoading = async (fn) => {
+      try {
+         setIsLoading(true);
+         return await fn();
+      } catch (error) {
+         console.log('');
+         throw error;
+      }
+      finally {
+         setIsLoading(false);
+      }
+   };
 
-   const cancelATablesReservation = async (data) => {
-      return dispatch(cancelATablesReservationThunks(data));
-   }
+   const cancelFullReservation = async (data) =>
+      withLoading(() => dispatch(cancelFullReservationThunks(data)));
 
-   const confirmReservation = async (data) => {
-      return dispatch(confirmReservationThunks(data));
-   }
-   const releasedReservation = async (data) => {
-      return dispatch(releasedReservationThunks(data));
-   }
+   const cancelATablesReservation = async (data) =>
+      withLoading(() => dispatch(cancelATablesReservationThunks(data)));
 
-   const reserveTable = async (data) => {
-      return dispatch(reserveTableThunks(data));
-   }
+   const confirmReservation = async (data) =>
+      withLoading(() => dispatch(confirmReservationThunks(data)));
 
-   const updateReservation = async (data) => {
-      if (!data) return;
-      return dispatch(updateReservationThunks(data));
-   }
+   const releasedReservation = async (data) =>
+      withLoading(() => dispatch(releasedReservationThunks(data)));
+
+   const reserveTable = async (data) =>
+      withLoading(() => dispatch(reserveTableThunks(data)));
+
+   const updateReservation = async (data) => withLoading(() => dispatch(updateReservationThunks(data)));
 
    const blockTempTable = (data) => {
       if (!data) return;
-      return dispatch(blockTempTableThunks(data))
-   }
+      return dispatch(blockTempTableThunks(data));
+   };
 
    const unblockTempTable = (data) => {
       if (!data) return;
-      return dispatch(unblockTempTableThunks(data))
-   }
+      return dispatch(unblockTempTableThunks(data));
+   };
 
    return {
+      isLoading,
       cancelFullReservation,
       cancelATablesReservation,
       confirmReservation,
@@ -47,5 +65,5 @@ export const useReservation = () => {
       reserveTable,
       blockTempTable,
       unblockTempTable
-   }
-}
+   };
+};

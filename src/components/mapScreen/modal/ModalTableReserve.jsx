@@ -125,8 +125,8 @@ export const ModalTableReserve = ({
          return;
       }
 
-      ReservationToast({
-         promise: reserveTable({
+      ReservationToast(
+         reserveTable({
             tables: [currentTable],
             idRestaurant: currentRestaurant.id,
             dateStr: currentDate,
@@ -136,7 +136,7 @@ export const ModalTableReserve = ({
             email: user.email || value.email,
             phone: user.phone || value.phone || null,
             diners: Number(value.diners),
-         }),
+         }), {
          onSuccess: () => onClose(),
       });
    });

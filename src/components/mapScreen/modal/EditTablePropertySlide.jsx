@@ -57,6 +57,7 @@ export const EditTablePropertySlide = ({
    restaurant = {},
    selectedResource = {},
 }) => {
+
    const [currentTableSize, setCurrentTableSize] = useState(
       tablesSizeData.find((item) => item.value === selectedResource?.size) ||
       tablesSizeData[0]);
@@ -93,7 +94,9 @@ export const EditTablePropertySlide = ({
          positionY: selectedResource?.positionY,
          rotation: selectedResource?.rotation,
          size: selectedResource?.size,
-         chairs: selectedResource?.chairs
+         chairs: selectedResource?.chairs,
+         width: selectedResource?.width,
+         height: selectedResource?.height
       },
       changeValueCallback: ({ name, value }) => {
          if (!name || !value) return;

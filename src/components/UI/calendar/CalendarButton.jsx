@@ -35,7 +35,10 @@ export const CalendarButton = ({
                size={size}
                disabled={disabled}
             >
-               {date ? date.toLocaleDateString() : 'Seleccione una fecha'}
+               {date
+                  ? typeof date === 'string' ? new Date(date).toLocaleDateString() : date.toLocaleDateString()
+                  : 'Seleccione una fecha'
+               }
                <ChevronDownIcon />
             </Button>
          </PopoverTrigger>

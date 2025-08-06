@@ -32,13 +32,6 @@ export const DialigConfirmReserve = ({
             >
                Confirmar
             </Button>
-            <Button
-               onClick={onCancel}
-               size={'sm'}
-               variant='destructive'
-            >
-               Eliminar
-            </Button>
          </CardFooter>
       </Card2>
    )

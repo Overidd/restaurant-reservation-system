@@ -38,6 +38,7 @@ export const dashboardSlice = createSlice({
       setMessageErrorDashboardAction: (state, { payload }) => {
          state.messageError = payload;
       },
+
       loadingDashboardAction: (state, { payload }) => {
          state.isLoading = payload ?? true;
       },

@@ -16,7 +16,7 @@ import {
 
 export const startGetAvailableHours = (date) => {
    return async (dispatch, getState) => {
-      const { info: { restaurantId } } = getState().reserveReducer.from;
+      const { info: { restaurantId, diners } } = getState().reserveReducer.from;
 
       if (!restaurantId) throw new Error('No se ha seleccionado una localidad');
 
@@ -24,7 +24,8 @@ export const startGetAvailableHours = (date) => {
 
       const { ok, availableHours, messageError } = await serviceProvider.getAvailableHours({
          dateStr: date,
-         idRestaurant: restaurantId
+         idRestaurant: restaurantId,
+         diners
       });
       if (!ok) {
          dispatch(reserveMessageErrorAction(messageError));

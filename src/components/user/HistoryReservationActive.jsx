@@ -1,12 +1,11 @@
 import { useUserSettings } from '@/hook/auth';
 import { useModalAsync } from '@/hook/common';
 import { useGetReservationsByUser } from '@/hook/fetchings';
-import { UserSettingToasts } from '@/toasts';
+import { AdminTableToasts } from '@/toasts';
 import { CalendarCheck, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { EditReservationModal, HistorialReservationItem } from '.';
 import { AlertCancelReservation, Card, CardContent, CardHeader, CardTitle } from '../UI/common';
-
 
 export const HistoryReservationActive = () => {
    const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -42,7 +41,7 @@ export const HistoryReservationActive = () => {
       ))
       if (!confirmed) return
 
-      UserSettingToasts.cancelReservation(
+      AdminTableToasts.cancelFullReservation(
          cancelReservation(reservation.id), {
          onSuccess: changeReservation
       });
@@ -51,7 +50,6 @@ export const HistoryReservationActive = () => {
    useEffect(() => {
       loadReservationsActive()
    }, [])
-
 
    return (
       <>
@@ -64,17 +62,15 @@ export const HistoryReservationActive = () => {
             </CardHeader>
             <CardContent>
                {reservations.length === 0 ? (
-                  isLoading ? (
-                     <div className='flex items-center justify-center h-40'>
+                  isLoading
+                     ? <div className='flex items-center justify-center h-40'>
                         <Loader2 className='h-6 w-6 animate-spin' />
                      </div>
-                  ) : (
+                     :
                      <div className='text-center py-8'>
                         <CalendarCheck className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
                         <p className='text-muted-foreground'>No tienes reservas registradas</p>
                      </div>
-                  )
-
                ) : (
                   <div className='space-y-4'>
                      {reservations.map((reservation) => (

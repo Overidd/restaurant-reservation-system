@@ -16,7 +16,6 @@ export const ModalUser = () => {
    if (!isOpen) return null
 
    return (
-
       <Modal
          isOpen={isOpen}
          onClose={closeModal}

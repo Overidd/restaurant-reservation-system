@@ -1,17 +1,7 @@
-import { cn } from '@/ultils';
-import { Check } from 'lucide-react';
-import { useState } from 'react';
+import { cn } from '@/ultils'
+import { Check, Minus } from 'lucide-react'
+import { useState } from 'react'
 
-//  {
-//   id?: string
-//   checked?: boolean
-//   defaultChecked?: boolean
-//   onChange?: (checked: boolean) => void
-//   disabled?: boolean
-//   label?: string
-//   className?: string
-//   size?: 'sm' | 'md' | 'lg'
-// }
 
 export const Checkbox = ({
    id,
@@ -22,68 +12,86 @@ export const Checkbox = ({
    disabled = false,
    className = '',
    size = 'md',
+   indeterminate = false,
+   required = false,
+   'aria-label': ariaLabel,
+   'aria-describedby': ariaDescribedBy,
+   ...props
 }) => {
-   const [internalChecked, setInternalChecked] = useState(defaultChecked);
+   const [internalChecked, setInternalChecked] = useState(defaultChecked)
 
-   // Determinar si es controlado o no controlado
-   const isControlled = checked !== undefined;
-   const checkedValue = isControlled ? checked : internalChecked;
+   const isControlled = checked !== undefined
+   const checkedValue = isControlled ? checked : internalChecked
 
-   const handleChange = () => {
-      if (disabled) return;
+   const handleChange = (event) => {
+      if (disabled) return
 
-      const newChecked = !checkedValue;
+      const newChecked = event.target.checked
 
       if (!isControlled) {
-         setInternalChecked(newChecked);
+         setInternalChecked(newChecked)
       }
 
-      onChange?.({ name: name, value: newChecked });
-   };
+      onChange?.({ name, value: newChecked })
+   }
 
-   const handleKeyDown = (e) => {
-      if (e.key === ' ' || e.key === 'Enter') {
-         e.preventDefault();
-         handleChange();
+   const handleKeyDown = (event) => {
+      if (event.key === ' ') {
+         event.preventDefault()
+         if (!disabled) {
+            const syntheticEvent = {
+               target: { checked: !checkedValue },
+            }
+            handleChange(syntheticEvent)
+         }
       }
-   };
+   }
 
-   // Tamaños del checkbox
    const sizeClasses = {
       sm: 'w-4 h-4',
       md: 'w-5 h-5',
       lg: 'w-6 h-6',
-   };
+   }
 
-   // Tamaños del icono
    const iconSizes = {
       sm: 12,
       md: 16,
       lg: 20,
-   };
+   }
 
    return (
       <div
-         id={id}
-         role='checkbox'
-         aria-checked={checkedValue}
-         aria-disabled={disabled}
-         tabIndex={disabled ? -1 : 0}
          className={cn(
             sizeClasses[size],
-            'border-2 rounded flex items-center justify-center cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-            checkedValue
+            'border-2 rounded flex items-center justify-center transition-all duration-200 relative',
+            'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+            checkedValue || indeterminate
                ? 'bg-primary border-primary text-primary-foreground'
-               : 'bg-background border-input hover:border-accent',
-            disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm',
-            className
+               : 'bg-background border-input hover:border-muted-foreground',
+            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-sm',
+            className,
          )}
-         onClick={handleChange}
-         onKeyDown={handleKeyDown}
       >
-         {checkedValue && (
+         <input
+            id={id}
+            name={name}
+            type='checkbox'
+            checked={checkedValue}
+            disabled={disabled}
+            required={required}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            aria-label={ariaLabel}
+            aria-describedby={ariaDescribedBy}
+            aria-checked={indeterminate ? 'mixed' : checkedValue}
+            className='w-[120%] h-[120%] absolute opacity-0'
+            {...props}
+         />
+         {indeterminate ? (
+            <Minus size={iconSizes[size]} className='transition-opacity duration-150' />
+         ) : checkedValue ? (
             <Check size={iconSizes[size]} className='transition-opacity duration-150' />
-         )}
+         ) : null}
       </div>
-   );
-};
+   )
+}

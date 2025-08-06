@@ -277,8 +277,12 @@ export class FirebaseDashboardService {
                reservation: {
                   code: data?.code ?? null,
                   idReservation: doc.id,
+                  id: doc.id ?? null,
                   timestamp: data?.timestamp ?? null,
                   relatedTables: data?.tables ?? [],
+                  hour: data?.hour ?? null,
+                  dateStr: data?.dateStr ?? null,
+                  idRestaurant: data?.idRestaurant ?? null,
                },
                user: {
                   name: data.name ?? null,
@@ -533,6 +537,8 @@ export class FirebaseDashboardService {
             where('status', 'in', ['confirmed', 'pending'])
          ));
 
+         const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
+
          // Verificamos si alguna mesa ya está reservada
          const reservedTables = new Set();
          const existingCodes = new Set();
@@ -564,6 +570,7 @@ export class FirebaseDashboardService {
          const timestamp = DateParser.fromDateAndTime(dateStr, hour).getTime() + this.MINUTES_TOLERANCE;
 
          const reservationData = {
+            id: reservationRef.id,
             idUser: idUser ?? null,
             idRestaurant,
             diners: diners ?? 1,
@@ -581,6 +588,7 @@ export class FirebaseDashboardService {
             email: email || null,
             phone: phone || null,
             createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
          };
 
          await setDoc(reservationRef, reservationData);
@@ -591,6 +599,9 @@ export class FirebaseDashboardService {
             reservation: {
                code: newCode,
                idReservation: reservationRef.id,
+               idRestaurant,
+               dateStr,
+               hour,
                timestamp: timestamp,
                relatedTables: tables.map(t => ({ id: t.id, name: t.name }))
             },
@@ -601,9 +612,10 @@ export class FirebaseDashboardService {
             },
             reservationData: {
                ...reservationData,
-               createdAt: null
-            }
-
+               restaurantName: restaurant.data().name,
+               createdAt: new Date().toISOString().split('T')[0],
+               updatedAt: new Date().toISOString().split('T')[0],
+            },
          }
 
       } catch (error) {
@@ -637,6 +649,7 @@ export class FirebaseDashboardService {
          const reservationRef = doc(FirebaseDB, 'reservations', idReservation);
 
          const data = {
+            id: idReservation,
             idUser: idUser ?? null,
             idRestaurant,
             diners: diners ?? 1,
@@ -654,12 +667,15 @@ export class FirebaseDashboardService {
 
          await updateDoc(reservationRef, data);
 
+         const reservation = await getDoc(reservationRef);
+
          return {
             ok: true,
             reservationData: {
-               ...data,
-               id: idReservation,
-               updatedAt: null
+               id: reservation.id,
+               ...reservation.data(),
+               createdAt: reservation.data().createdAt.toDate().toISOString().split('T')[0],
+               updatedAt: new Date().toISOString().split('T')[0]
             }
          }
 
@@ -912,65 +928,75 @@ export class FirebaseDashboardService {
 
    async getAllUsers() {
       try {
-         const usersSnap = await getDocs(collection(FirebaseDB, 'users'));
-         const users = await Promise.all(usersSnap.docs.map(async doc => {
-            const idUser = doc.id;
-            const reservations = await this.getReservationForUser(idUser);
-            return {
-               id: idUser,
-               ...doc.data(),
-               ...reservations,
-               createdAt: doc.data().createdAt?.toDate()?.toISOString() ?? null,
-               updatedAt: doc.data().updatedAt?.toDate()?.toISOString() ?? null,
-            };
+         const [usersSnap, restaurantSnap] = await Promise.all([
+            getDocs(collection(FirebaseDB, 'users')),
+            getDocs(collection(FirebaseDB, 'restaurants')),
+         ]);
+
+         const restaurants = restaurantSnap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
          }));
+
+         const users = await Promise.all(
+            usersSnap.docs.map(async doc => {
+               const idUser = doc.id;
+               const userData = doc.data();
+
+               const { reservations, metrics } = await this.getReservationForUser(idUser, restaurants);
+
+               return {
+                  id: idUser,
+                  ...userData,
+                  metrics,
+                  reservations,
+                  createdAt: doc.data().createdAt?.toDate()?.toISOString() ?? null,
+                  updatedAt: doc.data().updatedAt?.toDate()?.toISOString() ?? null,
+               };
+            })
+         );
 
          return {
             ok: true,
             users
          };
       } catch (error) {
-         console.log(error);
+         console.error(error);
          return {
             ok: false,
-            errorMessage: error.message || 'Error al obtener los usuarios'
+            errorMessage: error.message || 'Error al obtener los usuarios',
          };
       }
    }
 
-   async getReservationForUser(idUser) {
+   async getReservationForUser(idUser, restaurants) {
       const reservationsSnap = await getDocs(query(
          collection(FirebaseDB, 'reservations'),
          where('idUser', '==', idUser),
          orderBy('createdAt', 'desc')
       ));
 
-      const reservations = reservationsSnap.docs.map(doc => ({
-         id: doc.id,
-         ...doc.data(),
-         createdAt: doc.data().createdAt?.toDate()?.toISOString() ?? null,
-         updatedAt: doc.data().updatedAt?.toDate()?.toISOString() ?? null,
-      }));
+      const reservations = reservationsSnap.docs.map(doc => {
+         const data = doc.data();
+         return {
+            id: doc.id,
+            ...data,
+            restaurantName: restaurants.find(r => r.id === data.idRestaurant)?.name || null,
+            createdAt: doc.data().createdAt?.toDate()?.toISOString() ?? null,
+            updatedAt: doc.data().updatedAt?.toDate()?.toISOString() ?? null,
+         };
+      });
 
-      const total = reservations.length;
-      const confirmed = reservations.filter(reservation => reservation.status === typeStatusTable.CONFIRMED).length;
-      const pending = reservations.filter(reservation => reservation.status === typeStatusTable.PENDING).length;
-      const canceled = reservations.filter(reservation => reservation.status === typeStatusTable.CANCELED).length;
-      const released = reservations.filter(reservation => reservation.status === typeStatusTable.RELEASED).length;
+      const metrics = {
+         total: reservations.length,
+         confirmed: reservations.filter(r => r.status === typeStatusTable.CONFIRMED).length,
+         pending: reservations.filter(r => r.status === typeStatusTable.PENDING).length,
+         canceled: reservations.filter(r => r.status === typeStatusTable.CANCELED).length,
+         released: reservations.filter(r => r.status === typeStatusTable.RELEASED).length,
+      };
 
-      return {
-         ok: true,
-         metrics: {
-            total,
-            confirmed,
-            pending,
-            canceled,
-            released,
-         },
-         reservations
-      }
+      return { reservations, metrics };
    }
-
 
    async getByIdUserReservations({ idUser }) {
       try {
@@ -1553,6 +1579,7 @@ export class FirebaseDashboardService {
 
          const tableRef = doc(tablesRef);
          const data = {
+            id: tableRef.id,
             type,
             image,
             size,

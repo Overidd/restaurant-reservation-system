@@ -42,13 +42,23 @@ export const UserCard = ({
          text: 'text-base',
          icon: 'w-5 h-5',
       },
+      xl: {
+         container: 'w-12 h-12',
+         text: 'text-lg',
+         icon: 'w-6 h-6',
+      },
+      ['2xl']: {
+         container: 'w-14 h-14',
+         text: 'text-xl',
+         icon: 'w-7 h-7',
+      },
    }
 
    const config = sizeConfig[size]
    return (
 
       <div className={cn(
-         'flex items-center gap-1 text-card-foreground',
+         'flex items-center gap-2 text-card-foreground',
          className
       )}>
          <div
@@ -91,7 +101,7 @@ export const UserCard = ({
                   {mustShow.includes('lastName') && lastName}
                </strong>
                {email && mustShow.includes('email') &&
-                  <span className='text-xs block truncate'>
+                  <span className='text-sm block truncate'>
                      {email}
                   </span>}
             </p>

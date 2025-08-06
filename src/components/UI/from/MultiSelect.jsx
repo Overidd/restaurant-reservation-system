@@ -118,6 +118,7 @@ export const MultiSelect = ({
             <div className='flex-1 flex flex-wrap items-center gap-1'>
                {selected.map((option) => (
                   <Button
+                     type='button'
                      key={option.id}
                      variant='crystal'
                      onClick={(e) => {

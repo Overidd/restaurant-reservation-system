@@ -97,7 +97,7 @@ const AppRoutes = () => {
                   <Route path='calendar' element={<CalendarScreen />} />
                   <Route path='details' element={<UserDetailScreen />} />
                   <Route path='store' element={<RestaurantScreen />} />
-                  {/* <Route index element={<Navigate to='tables' />} /> */}
+                  <Route index element={<Navigate to='/dashboard' />} />
                </Route>
             </Route>
          </Routes>

@@ -29,7 +29,7 @@ export const translateStatus = (status) => {
       case typeStatusTable.BLOCKED:
          return 'Bloqueado'
       case typeStatusTable.RELEASED:
-         return 'Liberado'
+         return 'Completado'
       case typeStatusTable.CANCELED:
          return 'Cancelado'
       case typeStatusTable.ACTIVE:

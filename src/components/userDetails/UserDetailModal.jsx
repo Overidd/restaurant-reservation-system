@@ -1,15 +1,115 @@
-import { cn } from '@/ultils';
-import { Calendar, CheckCircle, Mail, MapPin, Phone, XCircle } from 'lucide-react';
-import { Card2, UserCard } from '../UI/card';
-import { Badge, Card, CardContent, Modal, Tabs, TabsContent, TabsList, TabsTrigger } from '../UI/common';
+import { cn, Validations } from '@/ultils';
+import { Modal } from '../UI/common';
+import { useState } from 'react';
+import { useForm } from '@/hook/common';
+import { useReservationActions, useReservationFilter, useUserDetail } from '@/hook/dashboard';
+import { UserToasts } from '@/toasts/UserToasts';
+import {
+   UserDetailHeader,
+   UserDetailForm,
+   UserDetailInfo,
+   UserDetailMetrics,
+   UserDetailTabs,
+} from '.';
+import { Card2 } from '../UI/card';
+import { EditReservationModal } from '../common';
+
+const initValidation = {
+   name: [
+      (value) => value && value?.length >= 3,
+      'El nombre debe tener al menos 3 caracteres',
+   ],
+   email: [
+      (value) => Validations.email(value),
+      'El email debe tener al menos 3 caracteres',
+   ],
+   phone: [
+      (value) => Validations.phone(value),
+      'El telefono debe tener al menos 3 caracteres',
+   ],
+   address: [
+      (value) => value && value?.length >= 3,
+      'La direccion debe tener al menos 3 caracteres',
+   ]
+};
 
 export const UserDetailModal = ({
    isOpen,
    onClose,
-   client,
+   selectUser,
    className
 }) => {
-   const rateSuccess = ((client.metrics.released / client.totalReservas) * 100).toFixed(1)
+   const [isEditing, setIsEditing] = useState(false);
+   const [isEditReservation, setIsEditReservation] = useState(false);
+   const [currentReservation, setCurrentReservation] = useState({})
+
+   const {
+      isLoading,
+      releaseReservationWithToast,
+      confirmReservationWithToast,
+      cancelReservationWithToastSimple,
+   } = useReservationActions();
+
+   const {
+      updateProfile,
+      loading,
+   } = useUserDetail();
+
+   const {
+      filteredReservations,
+      handleStatusFilter,
+      selectedStatus
+   } = useReservationFilter(selectUser.reservations);
+
+   const {
+      onSubmitForm,
+      onValueChange,
+      onInitialFrom,
+      formState: {
+         name,
+         email,
+         phone,
+         address
+      },
+      formValidation: {
+         nameValid,
+         emailValid,
+         phoneValid,
+         addressValid
+      },
+   } = useForm({
+      validations: initValidation,
+      activeValidation: true,
+      initialState: {
+         name: selectUser.name,
+         email: selectUser.email,
+         phone: selectUser.phone,
+         address: selectUser.address,
+      },
+   });
+
+   const handleEditReservetion = (reservation) => {
+      setIsEditReservation(true);
+      setCurrentReservation(reservation);
+   };
+
+   const onSubmit = onSubmitForm((value) => {
+      UserToasts.updateProfile(
+         updateProfile({
+            ...value,
+            idUser: selectUser.id
+         }), {
+         onSuccess: () => {
+            setIsEditing(false);
+            onInitialFrom({
+               name: selectUser.name,
+               email: selectUser.email,
+               phone: selectUser.phone,
+               address: selectUser.address,
+            });
+         }
+      });
+   });
 
    return (
       <Modal
@@ -17,182 +117,54 @@ export const UserDetailModal = ({
          onClose={onClose}
          className=''
       >
-         <Card2
-            className={cn(
-               'space-y-6',
-               className
-            )}
-         >
-            <div className='flex flex-col items-start gap-4'>
-               <UserCard
-                  className={'text-background'}
-                  mustShow={['name', 'lastName', 'email']}
-                  user={{
-                     name: client.name,
-                     email: client.email,
-                     photoURL: client.photoURL,
-                     lastName: client?.lastName,
-                  }}
-               />
-               <div className='flex-1 space-y-2'>
-                  <h3 className='text-xl font-semibold'>
-                     {client.name}
-                  </h3>
-                  <div className='grid grid-cols-2 gap-4 text-sm text-background'>
-                     <div className='flex items-center gap-2'>
-                        <Mail className='h-3 w-3' />
-                        {client.email}
-                     </div>
-                     <div className='flex items-center gap-2'>
-                        <Phone className='h-3 w-3' />
-                        {client?.phone}
-                     </div>
-                     <div className='flex items-center gap-2'>
-                        <Calendar className='h-3 w-3' />
-                        Cliente desde: {client?.createdAt}
-                     </div>
-                     <div className='flex items-center gap-2'>
-                        <MapPin className='h-3 w-3' />
-                        {client?.address}
-                     </div>
-                  </div>
-               </div>
+         <Card2 className={cn('space-y-6', className)}>
+            <UserDetailHeader
+               isEditing={isEditing}
+               loading={loading}
+               selectUser={selectUser}
+               setIsEditing={setIsEditing}
+            />
+            <div className='flex-1 space-y-4 flex flex-col items-start gap-4 p-0'>
+               {isEditing ? (
+                  <UserDetailForm
+                     name={name}
+                     email={email}
+                     phone={phone}
+                     address={address}
+                     nameValid={nameValid}
+                     emailValid={emailValid}
+                     phoneValid={phoneValid}
+                     addressValid={addressValid}
+                     onValueChange={onValueChange}
+                     onSubmit={onSubmit}
+                  />
+               ) : (
+                  <UserDetailInfo selectUser={selectUser} />
+               )}
             </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-               <Card className={'border-transparent shadow input-style-class bg-transparent text-background'}>
-                  <CardContent className='p-4'>
-                     <div className='text-2xl font-bold'>
-                        {client.metrics.total}
-                     </div>
-                     <p className='text-xs'>
-                        Total Reservas
-                     </p>
-                  </CardContent>
-               </Card>
-               <Card className={'border-transparent shadow input-style-class bg-transparent text-background'}>
-                  <CardContent className='p-4'>
-                     <div className='text-2xl font-bold text-green-600'>
-                        {
-                           rateSuccess === 'NaN'
-                              ? '0%'
-                              : rateSuccess + '%'
-                        }
-                     </div>
-                     <p className='text-xs'>
-                        Tasa de Éxito
-                     </p>
-                  </CardContent>
-               </Card>
-            </div>
-
-            {/* Tabs con información detallada */}
-            <Tabs
-               defaultValue='historical'
-               className='w-full'
-            >
-               <TabsList className='grid w-full grid-cols-2 gap-4'>
-                  <TabsTrigger
-                     // className='style-class'
-                     value='historical'
-                  >
-                     Historial
-                  </TabsTrigger>
-                  <TabsTrigger
-                     value='resumen'
-                  >
-                     Resumen
-                  </TabsTrigger>
-               </TabsList>
-
-               <TabsContent
-                  value='historical'
-                  className='space-y-4'
-               >
-                  <div className='space-y-3'>
-                     {client.reservations.map((reserve) => (
-                        <Card
-                           key={reserve.id}
-                           className={'border-transparent shadow style-class bg-transparent text-background'}
-                        >
-                           <CardContent
-                              className='grid grid-cols-3 gap-4 text-sm p-4'
-                           >
-                              <div className='md:col-span-2 flex gap-2'>
-                                 <Calendar className='h-4 w-4' />
-                                 <span className='font-medium'>
-                                    {reserve.dateStr} - {reserve.hour}
-                                 </span>
-                              </div>
-                              <Badge
-                                 className={'place-self-end'}
-                                 state={reserve.status}
-                              />
-                              <div>
-                                 <span className='font-medium'>
-                                    Personas:
-                                 </span> {reserve.diners}
-                              </div>
-                              <div>
-                                 <span className='font-medium'>
-                                    Mesa:
-                                 </span>
-                                 {reserve.tables.map((table) =>
-                                    `${table.name} `)
-                                    .join(', ')
-                                 }
-                              </div>
-                              <div className='md:col-start-1 md:col-end-3 '>
-                                 <span className='font-medium'>
-                                    ID:
-                                 </span> {reserve.id}
-                              </div>
-                              {reserve.note && (
-                                 <div className='mt-2 text-sm'>
-                                    <span className='font-medium'>
-                                       Nota:
-                                    </span> {reserve?.note}
-                                 </div>
-                              )}
-                           </CardContent>
-                        </Card>
-                     ))}
-                  </div>
-               </TabsContent>
-
-               <TabsContent value='resumen' className='space-y-4'>
-                  <Card className={'style-class text-background'}>
-                     <CardContent
-                        className='grid grid-cols-3 gap-4'
-                     >
-                        <div className='flex items-center gap-2'>
-                           <CheckCircle className='h-4 w-4 text-table-confirmed' />
-                           <span className='text-sm'>
-                              Confirmadas: {client.metrics.confirmed}
-                           </span>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                           <CheckCircle className='h-4 w-4 text-table-released' />
-                           <span className='text-sm'>
-                              Liberadas: {client.metrics.released}
-                           </span>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                           <XCircle className='h-4 w-4 text-table-canceled' />
-                           <span className='text-sm'>
-                              Canceladas: {client.metrics.canceled}
-                           </span>
-                        </div>
-                        {/* <div className='flex items-center gap-2'>
-                           <Clock className='h-4 w-4 text-orange-600' />
-                           <span className='text-sm'>No Shows: {client.noShows}</span>
-                        </div> */}
-                     </CardContent>
-                  </Card>
-               </TabsContent>
-            </Tabs>
-
+            <UserDetailMetrics selectUser={selectUser} />
+            <UserDetailTabs
+               isLoading={isLoading}
+               selectUser={selectUser}
+               selectedStatus={selectedStatus}
+               handleStatusFilter={handleStatusFilter}
+               filteredReservations={filteredReservations}
+               handleEditReservetion={handleEditReservetion}
+               handleCancelReservation={cancelReservationWithToastSimple}
+               handleConfirmReservation={confirmReservationWithToast}
+               handleReleasedReservation={releaseReservationWithToast}
+            />
          </Card2>
+         {isEditReservation &&
+            <EditReservationModal
+               className={'w-xl'}
+               activaBtns={['update']}
+               isOpen={isEditReservation}
+               onClose={() => setIsEditReservation(false)}
+               reservation={currentReservation}
+            />
+         }
       </Modal>
-   )
+   );
 }
+

@@ -2,8 +2,8 @@ import { useReservation } from '@/hook/dashboard';
 import { ReservationToast } from '@/toasts';
 import { cn } from '@/ultils';
 import { Card2 } from '../UI/card';
-import { Button, Modal } from '../UI/common';
-import { FormItem, Label } from '../UI/from';
+import { Modal } from '../UI/common';
+import { Label } from '../UI/from';
 import { FromReservation } from '../common';
 
 export const CreateReservationModal = ({
@@ -20,8 +20,8 @@ export const CreateReservationModal = ({
       formState,
       resetForm,
    }) => {
-      ReservationToast({
-         promise: reserveTable(formState),
+      ReservationToast(
+         reserveTable(formState), {
          onSuccess: () => {
             window.requestAnimationFrame(() => resetForm());
          },
@@ -46,18 +46,17 @@ export const CreateReservationModal = ({
                initialValues={{
                   date,
                }}
-            >
-               <FormItem>
-                  <Button
-                     size='lg'
-                     type='submit'
-                     className='mt-2 flex items-center gap-2'
-                  // disabled={isLoadingReservation}
-                  >
-                     Reservar
-                  </Button>
-               </FormItem>
-            </FromReservation>
+               btns={[
+                  {
+                     name: 'reserve',
+                     label: 'Reservar',
+                     variant: 'default',
+                     disabled: false,
+                     type: 'submit',
+                     size: 'lg',
+                  },
+               ]}
+            />
          </Card2>
       </Modal>
    )

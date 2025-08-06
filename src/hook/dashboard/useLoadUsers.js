@@ -1,5 +1,5 @@
-import { getAllUsersThunk, getByIdUserReservationThunk, setSelectedUser } from '@/doman/store/dashboard';
-import { DateParser } from '@/ultils';
+import { getAllUsersThunk, getByIdUserReservationThunk, setSelectedUserAction } from '@/doman/store/dashboard';
+import { DateParser, typeStatusTable } from '@/ultils';
 import { Users } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +25,33 @@ export const useLoadUsers = () => {
       dispatch(getByIdUserReservationThunk(idUser));
    }
 
+   const calculateRate = (user) => {
+      const rate = ((user.metrics?.released || 0) / (user.metrics?.total || 0) * 100).toFixed(1)
+
+      let rateSuccess = ((user.metrics?.released / user.totalReservas) * 100).toFixed(1)
+      rateSuccess = isNaN(rateSuccess) ? 0 : rateSuccess;
+
+      return {
+         rate: isNaN(rate) ? '0.0' : rate,
+         rateSuccess,
+      }
+   };
+
+   const reCalculateMetrics = (user) => {
+      const reservations = user.reservations;
+      const metrics = {
+         total: reservations.length,
+         confirmed: reservations.filter(r => r.status === typeStatusTable.CONFIRMED).length,
+         pending: reservations.filter(r => r.status === typeStatusTable.PENDING).length,
+         canceled: reservations.filter(r => r.status === typeStatusTable.CANCELED).length,
+         released: reservations.filter(r => r.status === typeStatusTable.RELEASED).length,
+      };
+
+      return {
+         metrics
+      }
+   }
+
    const metrics = useMemo(() => {
       return [
          {
@@ -42,26 +69,48 @@ export const useLoadUsers = () => {
 
    const users = useMemo(() => {
       return state.users.map((user) => {
-         const rate = ((user.metrics?.released || 0) / (user.metrics?.total || 0) * 100).toFixed(1)
+         const { metrics } = reCalculateMetrics(user);
+         const { rate, rateSuccess } = calculateRate({
+            ...user,
+            metrics
+         });
+
          return {
             ...user,
+            metrics,
             updatedAt: DateParser.toString(new Date(user.updatedAt)),
-            rate: isNaN(rate) ? '0.0' : rate
+            rate: rate,
+            rateSuccess
          };
       })
    }, [state.users])
+
+   const selectedUser = useMemo(() => {
+      if (!state.selectedUser) return {};
+      const { rate, rateSuccess } = calculateRate(state.selectedUser);
+      return {
+         ...state.selectedUser,
+         rate: rate,
+         rateSuccess
+      }
+   }, [state.selectedUser]);
+
+   const setSelectedUser = (user) => {
+      dispatch(setSelectedUserAction(user));
+   }
 
    return {
       users: users,
       metrics: metrics,
       reservations: state.reservations,
-      selectedUser: state.selectedUser,
+      selectedUser: selectedUser,
       loadings: {
          users: state.loadings.users,
          reservations: state.loadings.reservations
       },
 
       // FUNCTIONS
-      getByIdUserReservations
+      getByIdUserReservations,
+      setSelectedUser,
    }
 }

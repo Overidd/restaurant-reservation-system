@@ -1,5 +1,5 @@
-import { loadByStateReservationsThunks } from '@/doman/store/dashboard';
-import { typeStatusTable } from '@/ultils';
+import { loadByStateReservationsThunks, setSelectedReservationAction } from '@/doman/store/dashboard';
+import { DateFormat, DateParser, typeStatusTable } from '@/ultils';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,9 +10,8 @@ export const useLoadDataCalendar = () => {
 
    useEffect(() => {
       if (state.isRequest) return;
-      dispatch(loadByStateReservationsThunks([typeStatusTable.PENDING]));
+      dispatch(loadByStateReservationsThunks([typeStatusTable.PENDING, typeStatusTable.CONFIRMED, typeStatusTable.RELEASED]));
    }, [state.isRequest]);
-
 
    const reservations = useMemo(() => {
       return state.reservations.map((reservation) => ({
@@ -23,8 +22,19 @@ export const useLoadDataCalendar = () => {
       }))
    }, [state.reservations]);
 
+   const setSelectedReservation = (reservation) => {
+      dispatch(setSelectedReservationAction({
+         ...reservation,
+         start: DateFormat.toYYYYMMDD(new Date(reservation.start)),
+         end: DateFormat.toYYYYMMDD(new Date(reservation.end)),
+      }));
+   }
+
    return {
       reservations: reservations,
-      isLoading: state.isLoading
+      isLoading: state.isLoading,
+      selectedReservation: state.selectedReservation,
+
+      setSelectedReservation
    }
 }

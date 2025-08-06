@@ -26,10 +26,9 @@ export class FirebaseUserService {
             ok: true,
             uid: res.docs[0].id,
             id: res.docs[0].id,
-            email: user.email,
-            name: user.name,
-            photoURL: user.photoURL,
-            role: user.role
+            ...user,
+            createdAt: user.createdAt?.toDate()?.toISOString(),
+            updatedAt: user.updatedAt?.toDate()?.toISOString(),
          }
 
       } catch (error) {

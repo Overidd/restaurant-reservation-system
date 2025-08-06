@@ -9,9 +9,9 @@ export const useLoadDashboard = () => {
    const dispatch = useDispatch();
 
    useEffect(() => {
-      if (state.isRequest) return;
+      // if (state.isRequest) return;
       dispatch(dashboardDataThunk());
-   }, [state.isRequest]);
+   }, []);
 
    const metrics = useMemo(() => {
       return [
@@ -92,7 +92,7 @@ export const useLoadDashboard = () => {
 
    const topClientAnalysis = useMemo(() => {
       return state.topClientAnalysis.map((client) => {
-         const total = client.confirmed + client.canceled + client.noShow
+         const total = client.confirmed + client.canceled + client.noShow + client.pending
          const rateSuccess = ((client.confirmed / total) * 100).toFixed(1)
 
          return {

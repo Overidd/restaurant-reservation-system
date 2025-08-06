@@ -52,6 +52,8 @@ export const DialigCancelReserve = ({
             idReservation: table.reservation.idReservation,
             idRestaurant: table.idRestaurant,
             isNoShow: isCheckedNoShowRef.current,
+            hour: table.reservation.hour,
+            dateStr: table.reservation.dateStr
          });
          return;
       }

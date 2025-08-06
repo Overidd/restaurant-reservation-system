@@ -68,7 +68,7 @@ export const CardDescription = ({ className, ...props }) => {
    return (
       <div
          data-slot='card-description'
-         className={cn('text-muted-foreground/70 text-sm', className)}
+         className={cn('text-accent-foreground/70 text-sm', className)}
          {...props}
       />
    )

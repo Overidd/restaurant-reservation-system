@@ -28,6 +28,9 @@ export const TopReservationAnalysis = ({
                         Canceladas
                      </TableHead>
                      <TableHead className='text-center'>
+                        Pendientes
+                     </TableHead>
+                     <TableHead className='text-center'>
                         Confirmadas
                      </TableHead>
                      <TableHead className='text-center'>
@@ -49,6 +52,13 @@ export const TopReservationAnalysis = ({
                      <TableRow key={client.name}>
                         <TableCell className='font-medium'>
                            {client.name}
+                        </TableCell>
+                        <TableCell className='text-center'>
+                           <Badge
+                              state={'pending'}
+                           >
+                              {client.pending}
+                           </Badge>
                         </TableCell>
                         <TableCell className='text-center'>
                            <Badge

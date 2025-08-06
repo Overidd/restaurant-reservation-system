@@ -19,6 +19,24 @@ export const startGoogleAuth = () => {
    };
 };
 
+/**
+ * 
+ * @param {{email: string, password: string}} dataLoginUser 
+ * @returns 
+ */
+export const startLogin = (dataLoginUser) => {
+   return async (dispatch) => {
+      dispatch(checkingCredentialAction());
+      dispatch(loaddingAction());
+
+      const res = await authService.login(dataLoginUser);
+      if (!res.ok) {
+         dispatch(logoutAction({ errorMessage: res.errorMessage }));
+         throw new Error(res.errorMessage);
+      }
+      dispatch(loginAction(res.user));
+   }
+}
 
 /**
  * @param {{email: string, password: string, name: string, lastName: string}} dataRegister 
@@ -36,25 +54,6 @@ export const startCreateUser = (dataRegister) => {
          throw new Error(res.errorMessage);
       }
 
-      dispatch(loginAction(res.user));
-   }
-}
-
-/**
- * 
- * @param {{email: string, password: string}} dataLoginUser 
- * @returns 
- */
-export const startLogin = (dataLoginUser) => {
-   return async (dispatch) => {
-      dispatch(checkingCredentialAction());
-      dispatch(loaddingAction());
-
-      const res = await authService.login(dataLoginUser);
-      if (!res.ok) {
-         dispatch(logoutAction({ errorMessage: res.errorMessage }));
-         throw new Error(res.errorMessage);
-      }
       dispatch(loginAction(res.user));
    }
 }

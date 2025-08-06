@@ -72,16 +72,16 @@
   --foreground: #6d5f5c;
   --card: #fcf8f0;
   --card-foreground: #4e403cc4;
-  --card-primary: #ffffff9a;
+  --card-primary: ##FAF3E6;
   --popover: #FAF3E6;
   --popover-foreground: #4e403cc4;
   --primary: #E0822D;
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: #e38d40;
-  --secondary-foreground: #fff;
+  --secondary-foreground: #FAF3E6;
   --muted: #FAF3E6;
   /** Color apagado*/
-  --muted-foreground: #818181;
+  --muted-foreground: #929190;
   --accent: #060606ce;
   --accent-foreground: #FAF3E6;
   --destructive: #D0534B;
@@ -114,7 +114,7 @@
   --table-released: #4a977b;
   --table-selected: #5485CE;
   --table-blocked: #ccc;
-  --table-pending: #eca668;
+  --table-pending: #E0822D;
   --table-confirmed: #3B82F6;
   --table-notAvailable: #ccc;
   --backdrop-modal: rgba(0, 0, 0, 0.25);
@@ -226,7 +226,6 @@
   background: linear-gradient(to right, rgba(255, 255, 255, 0.09), transparent 80%);
 }
 
-
 /** Style item menu  */
 .item-menu {
   position: relative;
@@ -292,8 +291,6 @@ input[type=number] {
 }
 
 
-
-
 /** ESTILOS DE CALENDARIO */
 /* calendar.css */
 .rbc-calendar {
@@ -336,12 +333,12 @@ input[type=number] {
 
 /** Card Style  */
 .card-transition {
-  transition: all 0.3s ease-in-out;
   transform: translateY(0px);
+  transition: all 0.3s ease-in-out;
 
   &:hover {
-    /* box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.10); */
-    transform: translateY(-4px) !important;
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.10);
+    /* transform: translateY(-4px) !important; */
   }
 }
 
@@ -516,5 +513,158 @@ input[type=number] {
 
   100% {
     width: 100%;
+  }
+}
+
+/* Animacion de estrellas  */
+
+@layer utilities {
+
+  .animate-star-dance {
+    animation: star-dance 3s ease-in-out infinite;
+  }
+
+  .animate-star-float {
+    animation: star-float 2.5s ease-in-out infinite;
+  }
+
+  .animate-star-bounce {
+    animation: star-bounce 2s ease-in-out infinite;
+  }
+
+  .animate-star-wiggle {
+    animation: star-wiggle 2.8s ease-in-out infinite;
+  }
+
+  .animate-star-spin-glow {
+    animation: star-spin-glow 4s linear infinite;
+  }
+
+  @keyframes star-dance {
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+      /* filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.6)); */
+    }
+
+    25% {
+      transform: translateY(-8px) rotate(5deg) scale(1.1);
+      /* filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)); */
+    }
+
+    50% {
+      transform: translateY(-4px) rotate(-3deg) scale(1.05);
+      /* filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)); */
+    }
+
+    75% {
+      transform: translateY(-6px) rotate(2deg) scale(1.08);
+      /* filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.7)); */
+    }
+  }
+
+  @keyframes star-float {
+
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+      /* filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5)); */
+    }
+
+    33% {
+      transform: translateY(-6px) translateX(2px) scale(1.05);
+      /* filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.7)); */
+    }
+
+    66% {
+      transform: translateY(-3px) translateX(-2px) scale(1.03);
+      /* filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8)); */
+    }
+  }
+
+  @keyframes star-bounce {
+
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+      /* filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.6)); */
+    }
+
+    50% {
+      transform: translateY(-12px) scale(1.15);
+      /* filter: drop-shadow(0 0 15px rgba(251, 191, 36, 1)); */
+    }
+  }
+
+  @keyframes star-wiggle {
+
+    0%,
+    100% {
+      transform: rotate(0deg) translateX(0px) scale(1);
+      /* filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6)); */
+    }
+
+    25% {
+      transform: rotate(3deg) translateX(2px) scale(1.02);
+      /* filter: drop-shadow(0 0 7px rgba(251, 191, 36, 0.7)); */
+    }
+
+    50% {
+      transform: rotate(-2deg) translateX(-1px) scale(1.05);
+      /* filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8)); */
+    }
+
+    75% {
+      transform: rotate(1deg) translateX(1px) scale(1.03);
+      /* filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.75)); */
+    }
+  }
+
+  @keyframes star-spin-glow {
+    0% {
+      transform: rotate(0deg) scale(1);
+      /* filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6)); */
+    }
+
+    25% {
+      transform: rotate(90deg) scale(1.08);
+      /* filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)); */
+    }
+
+    50% {
+      transform: rotate(180deg) scale(1.12);
+      /* filter: drop-shadow(0 0 12px rgba(251, 191, 36, 1)); */
+    }
+
+    75% {
+      transform: rotate(270deg) scale(1.08);
+      /* filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)); */
+    }
+
+    100% {
+      transform: rotate(360deg) scale(1);
+      /* filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6)); */
+    }
+  }
+
+  .animate-delay-100 {
+    animation-delay: 0.1s;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 0.5s;
   }
 }

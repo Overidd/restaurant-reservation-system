@@ -4,7 +4,7 @@ import { UserToasts } from '@/toasts/UserToasts';
 import { cn } from '@/ultils';
 import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
 import { Link } from 'react-router';
-import { Card2 } from '../UI/card';
+import { Card2, UserCard } from '../UI/card';
 import { DropdownItem } from '../UI/dropdown';
 
 export const UserDropdown = ({
@@ -38,26 +38,16 @@ export const UserDropdown = ({
             className
          )}
       >
-         <button
-            className='flex items-center dark:text-gray-400'
-         >
-            <span className='mr-3 overflow-hidden rounded-full h-11 w-11'>
-               <img
-                  src={photoURL || '/icon/iconUser.png'}
-                  alt='User'
-               />
-            </span>
-
-            <div className='text-left'>
-               <span className='block font-medium text-theme-sm'>
-                  {name}
-               </span>
-               <span className='mt-0.5 block text-theme-xs'>
-                  {email}
-               </span>
-            </div>
-
-         </button>
+         <UserCard
+            size='lg'
+            className={'text-accent-foreground'}
+            user={{
+               photoURL,
+               name,
+               email
+            }}
+            mustShow={['name', 'email']}
+         />
 
          <ul className='flex flex-col gap-1 pt-4 pb-3'>
             <li>

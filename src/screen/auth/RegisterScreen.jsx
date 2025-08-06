@@ -193,7 +193,7 @@ export const RegisterScreen = () => {
         </FormItem>
 
         <LinkCustom
-          className={'text-right'}
+          className={'text-right text-accent-foreground/70'}
           to={'login'}
         >
           ¿Ya tienes una cuenta?

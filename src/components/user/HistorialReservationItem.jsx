@@ -6,16 +6,15 @@ import { Badge, Button, Card, CardContent } from '../UI/common';
 export const HistorialReservationItem = ({
    reservation,
    onCancelReservation,
-   onSelectReserve
+   onSelectReserve,
 }) => {
-   const [isExpanded, setIsExpanded] = useState(false)
-   const isCanceled = reservation.status === typeStatusTable.CANCELED
+   const [isExpanded, setIsExpanded] = useState(false);
+   const isPending = reservation.status === typeStatusTable.PENDING;
+   const isCanceled = reservation.status === typeStatusTable.CANCELED;
 
    const toggleExpanded = () => {
       setIsExpanded(!isExpanded)
    }
-
-   console.log(reservation.dateStr);
 
    return (
       <Card
@@ -30,12 +29,13 @@ export const HistorialReservationItem = ({
                <h3 className='text-sm font-semibold md:text-md'>
                   {reservation.restaurantName}
                </h3>
-               <span className='text-sm font-mono font-semibold text-nowrap'>
+               
+               <span className='ml-auto text-sm font-mono font-semibold text-nowrap'>
                   {reservation.code}
                </span>
 
                <Badge
-                  className={'text-[9px] md:text-xs'}
+                  className={'text-[9px] md:text-xs ml-auto'}
                   state={reservation.status}
                />
 
@@ -59,7 +59,7 @@ export const HistorialReservationItem = ({
                )}
             >
                {/* Información de la reserva */}
-               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4'>
+               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 text-accent-foreground/85'>
                   <div className='flex items-center gap-2 text-sm'>
                      <Calendar className='h-4 w-4 text-primary flex-shrink-0' />
                      <time className='font-medium'>
@@ -87,7 +87,7 @@ export const HistorialReservationItem = ({
                </div> */}
 
                {/* Botones de acción */}
-               {!isCanceled && (
+               {isPending && (
                   <div className='flex flex-row gap-2 sm:gap-3 pt-2 '>
                      <Button
                         onClick={() => onSelectReserve(reservation)}

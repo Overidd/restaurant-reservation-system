@@ -263,7 +263,7 @@ export const CardStatsResume2 = ({
                style={{ color }}
             />
          </CardHeader>
-         <CardContent>
+         <CardContent className={'mt-auto'}>
             <div className={`text-2xl font-bold`} style={{ color }}>
                {!isLoading
                   ? count
@@ -273,14 +273,6 @@ export const CardStatsResume2 = ({
                }
             </div>
             <div className='text-xs text-muted-foreground'>
-               {!isNaN(rate) && (
-                  !isLoading
-                     ? `${rate}%`
-                     : <NumberSkeleton
-                        size='sm'
-                     />
-               )
-               }
                <span className='ml-1'>
                   {!isLoading &&
                      description &&

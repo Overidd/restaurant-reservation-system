@@ -1,8 +1,7 @@
 import { serviceProvider } from '@/doman/services';
-import { typeStatusTable } from '@/ultils';
 import { useState } from 'react';
 
-export const useGelHourFromStateFetching = (typeState = typeStatusTable.AVAILABLE) => {
+export const useGelHourFromStateFetching = () => {
 
    const [state, setState] = useState({
       hours: [],
@@ -13,6 +12,7 @@ export const useGelHourFromStateFetching = (typeState = typeStatusTable.AVAILABL
    const loadHours = async ({
       idRestaurant,
       dateStr,
+      diners
    }) => {
 
       if (!idRestaurant || !dateStr) return;
@@ -23,7 +23,7 @@ export const useGelHourFromStateFetching = (typeState = typeStatusTable.AVAILABL
          errorMessage: null,
       }));
 
-      const { availableHours, ok, messageError } = await serviceProvider.getAvailableHours({ dateStr, idRestaurant });
+      const { availableHours, ok, messageError } = await serviceProvider.getAvailableHours({ dateStr, idRestaurant, diners, isValidateHourCurrent: false });
 
       if (!ok) {
          setState(prev => ({

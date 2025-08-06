@@ -2,6 +2,7 @@ import { cn } from '@/ultils';
 import {
    AlignLeft,
    ChevronDown,
+   LogOut,
    Menu,
    X,
 } from 'lucide-react';
@@ -9,6 +10,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { navItemsData } from '.';
 import { Button } from '../UI/common';
+import { useAuthStore, useUser } from '@/hook/auth';
+import { UserToasts } from '@/toasts/UserToasts';
+import { UserCard } from '../UI/card';
 
 
 function useSidebar() {
@@ -66,6 +70,12 @@ export function Sidebar() {
       closeMobileSidebar
    } = useSidebar()
 
+   const user = useUser()
+
+   const {
+      logoutPermanently
+   } = useAuthStore();
+
    const location = useLocation()
    const [openSubmenu, setOpenSubmenu] = useState(null)
    const [subMenuHeight, setSubMenuHeight] = useState({})
@@ -119,6 +129,11 @@ export function Sidebar() {
       document.addEventListener('mousedown', handleClickOutside)
       return () => document.removeEventListener('mousedown', handleClickOutside)
    }, [isMobileOpen, isMobile, closeMobileSidebar])
+
+
+   const handleLogout = () => {
+      UserToasts.logout(logoutPermanently())
+   }
 
    const sidebarWidth = isExpanded || isHovered || isMobileOpen ? 'w-64' : 'w-20'
    const showLabels = isExpanded || isHovered || isMobileOpen
@@ -181,12 +196,15 @@ export function Sidebar() {
                <AlignLeft className='h-4 w-4' />
             </Button>
 
+
             <div className={cn('p-4')}>
-               {showLabels ? (
-                  <img className='h-16 w-auto' src='/logo-while.png' alt='Logo' />
-               ) : (
-                  <img className='h-10 mx-auto' src='/logo-while.png' alt='Logo' />
-               )}
+               <Link to={'/dashboard'}>
+                  {showLabels ? (
+                     <img className='h-16 w-auto' src='/logo-while.png' alt='Logo' />
+                  ) : (
+                     <img className='h-10 mx-auto' src='/logo-while.png' alt='Logo' />
+                  )}
+               </Link>
             </div>
 
             <nav className='flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-2'>
@@ -206,7 +224,7 @@ export function Sidebar() {
                                  onClick={() => handleSubmenuToggle(index)}
                                  className={cn(
                                     'w-full flex items-center transition-all duration-200',
-                                    'text-left',
+                                    'text-left overflow-hidden',
                                     isItemActive && 'bg-accent',
                                     !isItemActive && 'hover:bg-transparent',
                                  )}
@@ -292,21 +310,27 @@ export function Sidebar() {
                })}
             </nav>
 
-            {/* Footer */}
-            {/* {showLabels && (
-               <div
-                  className='p-4 border-t'
-                  style={{
-                     borderColor: 'var(--sidebar-border)',
-                     color: 'var(--sidebar-foreground)',
-                  }}
-               >
-                  <div className='text-xs opacity-70 text-center'>© 2024 Tu Empresa</div>
-               </div>
-            )} */}
+            <footer className='pb-4 flex items-center justify-between'>
+               <UserCard
+                  className={cn(
+                     'text-accent-foreground ml-4 w-[75%]',
+                     !showLabels && 'mx-auto w-fit',
+                  )}
+                  user={user}
+                  mustShow={showLabels ? ['name', 'email'] : []}
+               />
+
+               {showLabels &&
+                  <Link
+                     className='gap-3 px-3 py-2 font-medium transition-all hover:-translate-x-1'
+                     onClick={handleLogout}
+                  >
+                     <LogOut className='rotate-180 ml-auto' />
+                  </Link>
+               }
+            </footer>
          </aside>
 
-         {/* Main content spacer for desktop */}
          <div className={cn('hidden md:block transition-all duration-300', sidebarWidth)} />
       </div>
    )

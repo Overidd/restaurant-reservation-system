@@ -8,7 +8,6 @@ import { Button } from '../UI/common'
 export const ReservaSuccess = ({ t, code, hour, dateStr }) => {
    const [copied, setCopied] = useState(false)
 
-
    const copyToClipboard = async () => {
       try {
          await navigator.clipboard.writeText(code)
@@ -16,12 +15,11 @@ export const ReservaSuccess = ({ t, code, hour, dateStr }) => {
          toast.success('Código copiado al portapapeles', {
             duration: 2000,
             position: 'bottom-center',
-         })
+         }) +
 
-         // Reset copied state after 2 seconds
-         setTimeout(() => setCopied(false), 2000)
-      } catch (err) {
-         toast.error('Error al copiar el código')
+            setTimeout(() => setCopied(false), 2000)
+      } catch (error) {
+         toast.error('Error al copiar el código', error)
       }
    }
 
@@ -48,15 +46,10 @@ export const ReservaSuccess = ({ t, code, hour, dateStr }) => {
                   disabled={copied}
                   variant={'outline'}
                >
-                  {copied ? (
-                     <>
-                        <Check size={14} />
-                     </>
-                  ) : (
-                     <>
-                        <Copy size={14} />
-                     </>
-                  )}
+                  {copied
+                     ? <Check size={14} />
+                     : <Copy size={14} />
+                  }
                </Button>
 
             </div>

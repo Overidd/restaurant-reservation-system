@@ -40,20 +40,19 @@ export const CardProduct = ({
    if (variant === 'compact') {
       return (
          <Card
-            data-aos="zoom-in-up"
+            data-aos='zoom-in-up'
             className={cn(
                'group overflow-hidden hover:shadow-md transition-all duration-300',
-               'flex',
+               'flex flex-row items-center card-transition',
                className
             )}>
-            <div className='relative w-24 h-24 flex-shrink-0'>
+            <figure className='relative w-24 h-24 flex-shrink-0 rounded-2xl overflow-hidden'>
                <img
-                  src={image || '/default-image.jpg'}
                   alt={name}
-                  className='object-cover'
-                  sizes='96px'
+                  src={image || '/default-image.jpg'}
+                  className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
                />
-            </div>
+            </figure>
             <CardContent className='flex-1 p-4'>
                <div className='flex justify-between items-start mb-2'>
                   <h3 className='font-semibold text-sm line-clamp-1'>
@@ -104,18 +103,6 @@ export const CardProduct = ({
             'group overflow-hidden card-transition',
             className,
          )}
-         style={{
-            // transition: 'box-shadow 300ms, transform 300ms',
-
-         }}
-      // onMouseEnter={e => {
-      //    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(0,0,0,0.10)';
-      //    e.currentTarget.style.transform = 'translateY(-4px)';
-      // }}
-      // onMouseLeave={e => {
-      //    e.currentTarget.style.boxShadow = '';
-      //    e.currentTarget.style.transform = '';
-      // }}
       >
          <div className='relative'>
             <div className='relative aspect-[4/3] rounded-2xl overflow-hidden'>

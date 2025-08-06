@@ -1,4 +1,3 @@
-
 import { useUserSearch } from '@/hook/auth';
 import { useForm, useToastErrorHandler } from '@/hook/common';
 import { useGelHourFromStateFetching, useGetAllRestauranFetching, useGetTablesFromStateFetching, useGetUserFetchin } from '@/hook/fetchings';
@@ -60,12 +59,14 @@ const mergeInitialValues = ({ initial, newInitial }) => {
 }
 
 export const FromReservation = ({
+   formId,
    isOpen,
    onSubmit,
    className,
    children,
    initialValues,
    btns = [],
+   isReadOnly = false,
    isEdit = false,
 }) => {
    const [selectedTables, setSelectedTables] = useState(initialValues?.tables || []);
@@ -96,7 +97,7 @@ export const FromReservation = ({
       isLoadHours,
       errorMessage: hoursErrorMessage,
       isLoading: isLoadingHours
-   } = useGelHourFromStateFetching(typeStatusTable.AVAILABLE)
+   } = useGelHourFromStateFetching()
 
    const {
       tables,
@@ -166,7 +167,8 @@ export const FromReservation = ({
             if (!idRestaurant) return;
             loadHours({
                idRestaurant: idRestaurant,
-               dateStr: DateParser.toString(date)
+               dateStr: DateParser.toString(date),
+               diners: diners
             });
 
             setSelectedTables([])
@@ -179,7 +181,8 @@ export const FromReservation = ({
 
             loadHours({
                idRestaurant: idRestaurant,
-               dateStr: DateParser.toString(value)
+               dateStr: DateParser.toString(value),
+               diners: diners
             });
 
             setSelectedTables([])
@@ -193,7 +196,8 @@ export const FromReservation = ({
             loadTables({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
-               hour: value
+               hour: value,
+               diners: diners
             });
 
             setSelectedTables([])
@@ -208,7 +212,7 @@ export const FromReservation = ({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
                hour: hour,
-               diners: value
+               diners: value,
             });
 
             setSelectedTables([])
@@ -245,7 +249,8 @@ export const FromReservation = ({
 
       loadHours({
          idRestaurant: initialValues?.idRestaurant,
-         dateStr: DateParser.toString(date)
+         dateStr: DateParser.toString(date),
+         diners: initialValues?.diners
       });
 
       loadTables({
@@ -283,10 +288,10 @@ export const FromReservation = ({
             idRestaurant: getIdRestaurantByName(restaurant),
             dateStr: DateParser.toString(date),
             hour: data.hour,
-            idUser: user?.id ?? initialValues?.idUser,
-            name: user?.name ?? data.name,
-            email: user?.email ?? data.email,
-            phone: user?.phone ?? data.phone ?? null,
+            idUser: user?.id || initialValues?.idUser,
+            name: data.name || user?.name,
+            email: data.email || user?.email,
+            phone: data.phone || user?.phone,
             diners: Number(data.diners),
             ...(isEdit && { idReservation: initialValues?.id })
          },
@@ -312,6 +317,7 @@ export const FromReservation = ({
 
    return (
       <Form
+         id={formId}
          onSubmit={onSubmitReservation}
          className={cn(
             className,
@@ -323,6 +329,7 @@ export const FromReservation = ({
          >
             Información del cliente
          </FormLabel>
+
          <FormItem>
             <FormLabel htmlFor='email'>
                Email
@@ -336,7 +343,7 @@ export const FromReservation = ({
                isError={!!emailValid}
                variant='crystal'
                icon={initialValues?.idUser ? null : renderEmailIcon}
-               disabled={!!initialValues?.idUser}
+               disabled={!!initialValues?.idUser || isReadOnly}
                iconPosition='right'
                activeEventIcon
             />
@@ -344,13 +351,16 @@ export const FromReservation = ({
             {
                !initialValues?.idUser && (
                   user
-                     ? <UserCard user={user} />
+                     ? <UserCard
+                        className={'text-accent-foreground'}
+                        user={user}
+                     />
                      : <span className='text-sm text-muted-foreground'>Buscar por email</span>
                )
             }
          </FormItem>
 
-         <FromGroup className={'grid grid-cols-2 gap-4'}>
+         <FromGroup className={'grid md:grid-cols-2 gap-4'}>
             <FormItem>
                <FormLabel htmlFor='name'>
                   Nombre
@@ -363,7 +373,7 @@ export const FromReservation = ({
                   onChange={onValueChange}
                   isError={!!nameValid}
                   variant='crystal'
-                  disabled={isBlockedFields}
+                  disabled={isBlockedFields || isReadOnly}
                />
 
             </FormItem>
@@ -376,11 +386,11 @@ export const FromReservation = ({
                   id='phone'
                   name='phone'
                   type='text'
-                  value={user?.phone || phone}
+                  value={phone || user?.phone || ''}
                   onChange={onValueChange}
                   isError={!!phoneValid}
                   variant='crystal'
-                  disabled={isBlockedFields && initialValues?.user}
+                  disabled={(isBlockedFields && initialValues?.user) || isReadOnly}
                />
             </FormItem>
 
@@ -395,7 +405,7 @@ export const FromReservation = ({
 
          {/* Informacion de la reserva */}
 
-         <FromGroup className={'md:grid grid-cols-2 gap-4'}>
+         <FromGroup className={'md:grid md:grid-cols-2 gap-4'}>
             <FormItem>
                <FormLabel
                   htmlFor='diners'
@@ -407,6 +417,7 @@ export const FromReservation = ({
                   name={'diners'}
                   value={String(diners) || undefined}
                   onValueChange={onValueChange}
+                  disabled={isReadOnly}
                >
                   <SelectTrigger
                      isError={!!dinersValid}
@@ -442,12 +453,13 @@ export const FromReservation = ({
                   name={'restaurant'}
                   value={restaurant}
                   onValueChange={onValueChange}
+                  disabled={isReadOnly}
                >
                   <SelectTrigger
-                     className='w-full'
                      variant='crystal'
+                     className='w-full truncate-text-nowarp'
                      isLoading={isLoadingRestaurants}
-                     disabled={!isLoadRestaurants}
+                     disabled={!isLoadRestaurants || isReadOnly}
                      isError={!!restaurantValid}
                   >
                      <SelectValue
@@ -457,6 +469,7 @@ export const FromReservation = ({
                   <SelectContent>
                      {restaurants.map((item) => (
                         <SelectItem
+                           className={'truncate-text-nowarp'}
                            key={item.id}
                            value={item.name}
                         >
@@ -468,7 +481,7 @@ export const FromReservation = ({
             </FormItem>
          </FromGroup>
 
-         <FromGroup className={'md:grid grid-cols-2 gap-4'}>
+         <FromGroup className={'md:grid md:grid-cols-2 gap-4'}>
             <FormItem>
                <FormLabel
                   htmlFor='diners'
@@ -484,7 +497,7 @@ export const FromReservation = ({
                   onValueChange={onValueChange}
                   variant='crystal'
                   btnClassName={'w-full'}
-               // disabled={isBlockedFields}
+                  disabled={isReadOnly}
                />
             </FormItem>
 
@@ -499,13 +512,14 @@ export const FromReservation = ({
                   name={'hour'}
                   value={hour}
                   onValueChange={onValueChange}
+                  disabled={isReadOnly}
                >
                   <SelectTrigger
                      className='w-full'
                      variant='crystal'
                      isError={!!hourValid}
                      isLoading={isLoadingHours}
-                     disabled={!isLoadHours}
+                     disabled={!isLoadHours || isReadOnly}
                   >
                      <SelectValue
                         placeholder='Seleccione una hora'
@@ -536,7 +550,7 @@ export const FromReservation = ({
                options={tables}
                selected={selectedTables}
                onChange={setSelectedTables}
-               disabled={!isLoadTables}
+               disabled={isLoadingTables || isReadOnly}
                isLoading={isLoadingTables}
                placeholder='Seleccione mesas'
                className='w-full'
@@ -545,7 +559,7 @@ export const FromReservation = ({
 
          {
             btns.length > 0 && (
-               <FormItem className='flex flex-row gap-4'>
+               <FormItem className='flex flex-row gap-4 items-center'>
                   {
                      btns.map((item, index) => (
                         <Button
@@ -554,34 +568,17 @@ export const FromReservation = ({
                            size={item.size || 'lg'}
                            type={item.type || 'button'}
                            variant={item.variant || 'default'}
-                           disabled={item.disabled || item.disabledBySelected && selectedTables.length === 0}
+                           onClick={item.type !== 'submit' ? item.onClick : null}
+                           disabled={item.disabled || item.disabledBySelected && selectedTables.length === 0 || isReadOnly}
                         >
                            {item.label}
                         </Button>
                      ))
                   }
+                  {children}
                </FormItem>
             )
          }
-         {children}
       </Form>
    )
 }
-
-{/* <FormItem>
-   <Button
-      size='lg'
-      type='submit'
-      className='mt-2 flex items-center gap-2'
-      disabled={isLoadingReservation}
-   >
-      {
-         isLoadingReservation
-            ? <LoaderCircle className='animate-spin' />
-            : <CalendarPlus />
-      }
-      <span>
-         Reservar
-      </span>
-   </Button>
-</FormItem> */}

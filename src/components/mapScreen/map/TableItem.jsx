@@ -106,7 +106,7 @@ export const TableItem = ({
                      side="right"
                      className="text-inherit rounded"
                   >
-                     Liberar reserva
+                     Completar reserva
                   </TooltipContent>
                </Tooltip>
             );

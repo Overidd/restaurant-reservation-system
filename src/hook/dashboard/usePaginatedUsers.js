@@ -18,10 +18,11 @@ export const usePaginatedUsers = ({ users, itemsPerPage = 10 }) => {
 
    const { data, totalPages, totalItems } = useMemo(() => {
       const filtered = users.filter(
-         (user) =>
-            user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user?.phone && user.phone.includes(searchTerm)
+         (user) => {
+            return user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               user?.phone && user.phone && String(user.phone).includes(searchTerm)
+         }
       )
 
       const totalPages = Math.ceil(filtered.length / itemsPerPage)

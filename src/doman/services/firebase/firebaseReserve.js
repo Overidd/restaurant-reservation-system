@@ -49,87 +49,113 @@ export class FirebaseReserveService {
    }
 
    /**
-    * 
-    * @param {{ dateStr: string, idRestaurant: string }} param0 date -> 2025-06-28 
+    * @param {{ dateStr: string, idRestaurant: string, diners: number,isValidateHourCurrent: boolean }} param0 
     */
-   async getAvailableHours({ dateStr, idRestaurant }) {
+   async getAvailableHours({ dateStr, idRestaurant, diners, isValidateHourCurrent = true }) {
       try {
-         const restaurant = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
-
-         const tables = await getDocs(query(
-            collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
-            where('isBlocked', '==', false),
-         ))
-
-         let allowedHours = restaurant.data().hours.map((item) => ({
-            ...item,
-            tablesAvailable: tables.size
-         })) ?? [];
-
-         const now = new Date();
-
          if (!this.isValidReservationDate(dateStr)) {
             throw new Error('No se pueden reservar fechas pasadas');
          }
+         const restaurantSnap = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
+         const restaurantData = restaurantSnap.data();
 
-         if (dateStr === DateParser.toString()) {
+         if (!restaurantData) throw new Error('Restaurante no encontrado');
+
+         const tablesSnap = await getDocs(query(
+            collection(FirebaseDB, `restaurants/${idRestaurant}/tables`),
+            where('isBlocked', '==', false)
+         ));
+         const allTables = tablesSnap.docs.map(doc => doc.data());
+         const totalTables = allTables.length;
+
+         let allowedHours = restaurantData.hours?.map(hour => ({
+            ...hour,
+            tablesAvailable: totalTables
+         })) ?? [];
+
+         if (dateStr === DateParser.toString() && isValidateHourCurrent === true) {
+            const now = new Date();
             const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
             allowedHours = allowedHours.filter(({ name }) => {
                const [h, m] = name.split(':').map(Number);
-               const totalMinutes = h * 60 + m;
-               return totalMinutes > currentMinutes;
+               return h * 60 + m > currentMinutes;
             });
          }
 
-         // 3. Obtener horas bloqueadas manualmente
-         const unavailableSnap = await getDocs(query(
-            collection(FirebaseDB, 'unavailableSlots'),
-            where('idRestaurant', '==', idRestaurant),
-            where('dateStr', '==', dateStr)
-         ));
-
-         // 5. Obtener todas las reservas confirmadas para esa fecha
-         const reservationSnap = await getDocs(query(
-            collection(FirebaseDB, 'reservations'),
-            where('idRestaurant', '==', idRestaurant),
-            where('status', 'in', ['confirmed', 'pending']),
-            where('dateStr', '==', dateStr)
-         ));
+         const [unavailableSnap, reservationSnap] = await Promise.all([
+            getDocs(query(
+               collection(FirebaseDB, 'unavailableSlots'),
+               where('idRestaurant', '==', idRestaurant),
+               where('dateStr', '==', dateStr)
+            )),
+            getDocs(query(
+               collection(FirebaseDB, 'reservations'),
+               where('idRestaurant', '==', idRestaurant),
+               where('status', 'in', ['confirmed', 'pending']),
+               where('dateStr', '==', dateStr)
+            ))
+         ]);
 
          const unavailableHours = new Set(unavailableSnap.docs.map(doc => doc.data().hour));
 
-         const hourCounts = new Map();
-         reservationSnap.docs.forEach((doc) => {
-            const data = doc.data();
-            data.tables.forEach(() => {
-               hourCounts.set(data.hour, (hourCounts.get(data.hour) || 0) + 1);
-            })
+         const tableAvailabilityMap = new Map();
+         const hourReservationCount = new Map();
+
+         allowedHours.forEach(({ name }) => {
+            tableAvailabilityMap.set(name, [...allTables]);
          });
 
-         // 7. Filtrar las horas disponibles
-         const availableHours = allowedHours.filter(({ name, tablesAvailable }) => {
-            const reservedCount = hourCounts.get(name) || 0;
-            const isBlocked = unavailableHours.has(name);
-            return reservedCount < tablesAvailable && !isBlocked;
+         reservationSnap.docs.forEach((doc) => {
+            const { hour, tables } = doc.data();
+
+            if (tableAvailabilityMap.has(hour)) {
+               const currentTables = tableAvailabilityMap.get(hour);
+
+               const updatedTables = currentTables.filter(table =>
+                  !tables.some(reserved => reserved.id === table.id)
+               );
+
+               // TODO: OJO
+               const validTables = updatedTables.filter(table => Number(diners) <= Number(table.chairs));
+
+               tableAvailabilityMap.set(hour, validTables);
+            }
+
+            hourReservationCount.set(hour, (hourReservationCount.get(hour) || 0) + 1);
          });
+
+         const availableHours = allowedHours
+            .filter(({ name, tablesAvailable }) => {
+               const isBlocked = unavailableHours.has(name);
+               const reservedCount = hourReservationCount.get(name) || 0;
+               const tablesRemaining = tableAvailabilityMap.get(name)?.length || 0;
+               return !isBlocked && reservedCount < tablesAvailable && tablesRemaining > 0;
+            })
+            .map((hour) => {
+               const reservedCount = hourReservationCount.get(hour.name) || 0;
+
+               const remainingTables = tableAvailabilityMap.get(hour.name)?.length === totalTables ? tableAvailabilityMap.get(hour.name).filter(table => Number(diners) < Number(table.chairs)).length : tableAvailabilityMap.get(hour.name)?.length;
+
+               return {
+                  ...hour,
+                  tablesAvailable: (totalTables - remainingTables) - reservedCount
+               };
+            })
+            .sort((a, b) => a.name.localeCompare(b.name));
 
          return {
             ok: true,
-            availableHours: availableHours.map((item) => ({
-               ...item,
-               tablesAvailable: item.tablesAvailable - (hourCounts.get(item.name) || 0)
-            })).sort((a, b) => a.name - b.name),
-         }
+            availableHours
+         };
 
       } catch (error) {
-         console.log(error);
          return {
             ok: false,
             messageError: error.message || 'Error al obtener las horas disponibles'
-         }
+         };
       }
    }
-
 
    /**
     * 
@@ -343,6 +369,7 @@ export class FirebaseReserveService {
          const timestamp = DateParser.fromDateAndTime(dateStr, hour).getTime() + this.MINUTES_tolerance;
 
          const reservationData = {
+            ion: reservationRef.id,
             idUser: uid,
             idRestaurant,
             diners,
@@ -423,7 +450,8 @@ export class FirebaseReserveService {
                   createdAt: doc.data().createdAt.toDate().toISOString(),
                   restaurantName: restaurant ? restaurant.name : 'Restaurante desconocido',
                }
-            })
+            }).sort((a, b) => new Date(a.dateStr) - new Date(b.dateStr))
+               .sort((a) => a.status === typeStatusTable.PENDING ? -1 : 1)
          }
          // restaurantName
 
