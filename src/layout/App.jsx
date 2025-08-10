@@ -1,6 +1,6 @@
 
 import { Navbar } from '@/components/navbar';
-import { ModalUser } from '@/components/user';
+import { UserModal } from '@/components/user';
 import { ModalAsyncProvider } from '@/doman/context/dialogAsync';
 import { Outlet } from 'react-router-dom';
 import { Footer } from '../components/footer';
@@ -13,7 +13,7 @@ const Layout = () => {
         <Navbar className='mt-4 mx-auto w-[90%] max-w-6xl' />
       </ModalAsyncProvider>
       <Outlet />
-      <ModalUser />
+      <UserModal />
       <Footer className='mx-auto max-w-6xl' />
     </div>
   )

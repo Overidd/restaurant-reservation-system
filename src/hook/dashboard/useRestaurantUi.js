@@ -1,8 +1,8 @@
-import { setSelectedResourceAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction } from '@/doman/store/dashboard';
+import { setSelectedResourceAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction } from '@/doman/store/mapPage';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const useRestaurantUi = () => {
-   const state = useSelector((state) => state.restaurantUiReducer)
+   const state = useSelector((state) => state.mapUiReducer)
    const dispatch = useDispatch();
 
    const setSelectedResource = (table) => {

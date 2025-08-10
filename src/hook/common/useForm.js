@@ -91,7 +91,7 @@ const formReducer = (state, action) => {
                ...state.values,
                ...action.initialState
             }
-            
+
          };
       }
 
@@ -129,6 +129,17 @@ const formReducer = (state, action) => {
          return state;
    }
 };
+
+export const mergeInitialValues = ({ initial, newInitial }) => {
+   if (!newInitial) return initial;
+   const initialValues = Object.entries(initial).map(([key, value]) => {
+      const newValue = newInitial[key] ?? value;
+      return [key, newValue];
+   })
+   return {
+      ...Object.fromEntries(initialValues)
+   }
+}
 
 // , isEstablishInitial = false
 export const useForm = ({

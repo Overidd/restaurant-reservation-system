@@ -1,24 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { authSlice } from './auth';
-import { calendarSlice, dashboardSlice, restaurantResourceSlice, restaurantSlice, restaurantUiSlice, stateFilterRestaurantSlice, usersSlice } from './dashboard';
-import { reserveSlice } from './reserve';
-import { reserveTimeSlice } from './reserve/reserveTimeSlice';
+import { reservationSlice } from './reservation';
 import { UISlice } from './UISlice';
+import { calendarSlice } from './calendarPage';
+import { dashboardSlice } from './dashboardPage';
+import { usersSlice } from './userDetailsPage';
+import { restaurantSlice } from './restaurantPage';
+import { filterMapSlice, mapResourceSlice, mapUiSlice } from './mapPage';
 
 export const store = configureStore({
    reducer: {
       authReducer: authSlice.reducer,
-      reserveReducer: reserveSlice.reducer,
-      reserveTimeReducer: reserveTimeSlice.reducer,
+      reserveReducer: reservationSlice.reducer,
       UIReducer: UISlice.reducer,
-      restaurantUiReducer: restaurantUiSlice.reducer,
-      stateFilterRestaurantReducer: stateFilterRestaurantSlice.reducer,
-      restaurantResourceReducer: restaurantResourceSlice.reducer,
+      mapUiReducer: mapUiSlice.reducer,
+      filterMapReducer: filterMapSlice.reducer,
+      mapResource: mapResourceSlice.reducer,
       calendarReducer: calendarSlice.reducer,
       dashboardReducer: dashboardSlice.reducer,
       usersReducer: usersSlice.reducer,
       restaurantReducer: restaurantSlice.reducer,
-      // tableAdminReducer: tableAdminSlice.reducer
    },
 })

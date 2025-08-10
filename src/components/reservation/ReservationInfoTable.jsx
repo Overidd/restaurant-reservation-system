@@ -1,10 +1,10 @@
-import { useReserve } from '@/hook/reservation';
+import { useReservationFromStep } from '@/hook/reservationFromStep';
 import { cn } from '@/ultils';
 import { Users, Utensils } from 'lucide-react';
 import { Badge, Card, CardContent, CardImage } from '../UI/common';
 
 export const ReservationInfoTable = ({ className }) => {
-   const { getCurrentSelectedTable } = useReserve()
+   const { getCurrentSelectedTable } = useReservationFromStep()
 
    const {
       description,

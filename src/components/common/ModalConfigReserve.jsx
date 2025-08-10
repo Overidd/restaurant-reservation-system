@@ -1,4 +1,4 @@
-import { useModalConfirmReserve } from '@/hook/reservation';
+import { useModalConfirmReserve } from '@/hook/reservationFromStep';
 import { Card2 } from '../UI/card';
 import { Modal } from '../UI/common';
 // import { useLocation, useNavigate } from 'react-router-dom';

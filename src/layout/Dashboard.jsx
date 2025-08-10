@@ -2,9 +2,8 @@ import { Outlet } from 'react-router-dom';
 
 import { SidebarProvider } from '@/doman/context/sidebar';
 
-import { ActionSpeedDial } from '@/components/common';
+import { ActionSpeedDial, CreateReservationsModal } from '@/components/common';
 import { Sidebar } from '@/components/sidebar';
-import { CreateReservationsModal } from '@/screen/dashboard';
 
 const Layout = () => {
    return (

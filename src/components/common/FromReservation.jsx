@@ -1,19 +1,34 @@
-import { useUserSearch } from '@/hook/auth';
-import { useForm, useToastErrorHandler } from '@/hook/common';
 import { useGelHourFromStateFetching, useGetAllRestauranFetching, useGetTablesFromStateFetching, useGetUserFetchin } from '@/hook/fetchings';
-import { cn, DateParser, typeStatusTable } from '@/ultils';
+import { cn, DateParser, typeStatusTable, Validations } from '@/ultils';
 import { LoaderCircle, UserSearch } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { mergeInitialValues, useForm, useToastErrorHandler } from '@/hook/common';
+import { memo, useEffect, useRef, useState } from 'react';
 import { CalendarButton } from '../UI/calendar';
+import { useUserSearch } from '@/hook/auth';
 import { UserCard } from '../UI/card';
 import { Button } from '../UI/common';
-import { Form, FormItem, FormLabel, FromGroup, Input, MultiSelect, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../UI/from';
+import {
+   Form,
+   FormItem,
+   FormLabel,
+   FromGroup,
+   Input,
+   MultiSelect,
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue
+} from '../UI/from';
+import toast from 'react-hot-toast';
+import { reasonData } from '@/data';
 
 const schema = {
    initial: {
       email: '',
       phone: '',
       name: '',
+      reason: '',
       restaurant: '',
       diners: 2,
       date: new Date(),
@@ -21,7 +36,7 @@ const schema = {
    },
    valid: {
       email: [
-         (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+         (value) => Validations.email(value),
          'Ingrese un email válido',
       ],
       name: [
@@ -29,12 +44,16 @@ const schema = {
          'El nombre es obligatorio',
       ],
       phone: [
-         (value) => /^9\d{8}$/.test(value),
+         (value) => Validations.phone(value),
          'Ingrese un teléfono válido de 9 dígitos que comience con 9',
       ],
       diners: [
          (value) => value > 0,
          'El número de comensales debe ser mayor a 0',
+      ],
+      reason: [
+         (value) => !!value,
+         'El motivo es obligatorio',
       ],
       hour: [
          (value) => !!value,
@@ -47,18 +66,7 @@ const schema = {
    },
 };
 
-const mergeInitialValues = ({ initial, newInitial }) => {
-   if (!newInitial) return initial;
-   const initialValues = Object.entries(initial).map(([key, value]) => {
-      const newValue = newInitial[key] ?? value;
-      return [key, newValue];
-   })
-   return {
-      ...Object.fromEntries(initialValues)
-   }
-}
-
-export const FromReservation = ({
+export const FromReservation = memo(({
    formId,
    isOpen,
    onSubmit,
@@ -70,6 +78,12 @@ export const FromReservation = ({
    isEdit = false,
 }) => {
    const [selectedTables, setSelectedTables] = useState(initialValues?.tables || []);
+
+   const chairsInitialValueRef = useRef(
+      initialValues?.tables
+         ? initialValues?.tables.map(t => Number(t.chairs)).reduce((a, b) => a + b, 0)
+         : 0
+   );
 
    const {
       restaurants,
@@ -97,13 +111,14 @@ export const FromReservation = ({
       isLoadHours,
       errorMessage: hoursErrorMessage,
       isLoading: isLoadingHours
-   } = useGelHourFromStateFetching()
+   } = useGelHourFromStateFetching({
+      isValidateDatePassed: !initialValues
+   })
 
    const {
       tables,
       loadTables,
       clearTables,
-      isLoadTables,
       errorMessage: tablesErrorMessage,
       isLoading: isLoadingTables,
    } = useGetTablesFromStateFetching(typeStatusTable.AVAILABLE)
@@ -135,6 +150,7 @@ export const FromReservation = ({
          diners,
          name,
          restaurant,
+         reason,
          date,
          hour
       },
@@ -144,7 +160,8 @@ export const FromReservation = ({
          dinersValid,
          nameValid,
          restaurantValid,
-         hourValid
+         reasonValid,
+         hourValid,
       },
       onValueChange,
       onSubmitForm,
@@ -157,22 +174,25 @@ export const FromReservation = ({
          initial: schema.initial,
          newInitial: {
             ...initialValues,
-            hour: '',
-            restaurant: '',
          },
       }),
+
       changeValueCallback: ({ name, value }) => {
+         if (name === 'email') {
+            onChangeEmailOrClear({ name, value });
+            return;
+         }
+
+         if (!['restaurant', 'date', 'hour', 'diners'].includes(name)) return;
+
          if (name === 'restaurant') {
             const idRestaurant = getIdRestaurantByName(value);
             if (!idRestaurant) return;
             loadHours({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
-               diners: diners
+               diners: Number(diners),
             });
-
-            setSelectedTables([])
-            return;
          };
 
          if (name === 'date') {
@@ -182,11 +202,8 @@ export const FromReservation = ({
             loadHours({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(value),
-               diners: diners
+               diners: Number(diners),
             });
-
-            setSelectedTables([])
-            return;
          }
 
          if (name === 'hour') {
@@ -196,30 +213,33 @@ export const FromReservation = ({
             loadTables({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
+               diners: Number(diners),
                hour: value,
-               diners: diners
             });
-
-            setSelectedTables([])
-            return;
          }
 
          if (name === 'diners') {
             const idRestaurant = getIdRestaurantByName(restaurant);
             if (!idRestaurant) return;
 
-            loadTables({
+            loadHours({
                idRestaurant: idRestaurant,
                dateStr: DateParser.toString(date),
-               hour: hour,
-               diners: value,
+               diners: Number(value),
             });
+            
+            onInitialValues({
+               hour: '',
+            })
 
-            setSelectedTables([])
-            return;
+            // loadTables({
+            //    idRestaurant: idRestaurant,
+            //    dateStr: DateParser.toString(date),
+            //    diners: Number(value),
+            //    hour: hour,
+            // });
          }
-
-         onChangeEmailOrClear({ name, value });
+         setSelectedTables([])
       }
    });
 
@@ -228,12 +248,6 @@ export const FromReservation = ({
       clearHours();
       clearTables();
       onResetForm();
-      setSelectedTables([])
-   }
-   const handleCloseModal = () => {
-      onValueChange({ name: 'restaurant', value: '' });
-      clearHours();
-      clearTables();
       setSelectedTables([])
    }
 
@@ -250,14 +264,14 @@ export const FromReservation = ({
       loadHours({
          idRestaurant: initialValues?.idRestaurant,
          dateStr: DateParser.toString(date),
-         diners: initialValues?.diners
+         diners: Math.max(initialValues?.diners - chairsInitialValueRef.current, 0)
       });
 
       loadTables({
          idRestaurant: initialValues?.idRestaurant,
          dateStr: DateParser.toString(date),
          hour: initialValues?.hour,
-         diners: initialValues?.diners
+         diners: Math.max(initialValues?.diners - chairsInitialValueRef.current, 0)
       });
    }, [isEdit])
 
@@ -270,33 +284,55 @@ export const FromReservation = ({
    }, [isEdit, hours])
 
    useEffect(() => {
-      if (!isOpen) handleCloseModal();
+      if (!isOpen) resetForm();
    }, [isOpen])
 
-   // TODO: Mas adelante agregar validaciones con animaciones en cada input de la sección de reserva 
+   useEffect(() => {
+      if (!user?.phone) return;
+      onInitialValues({
+         phone: user?.phone
+      })
+   }, [user])
+
    const onSubmitReservation = onSubmitForm((data) => {
       if (!hasSearched && !isEdit) {
          animateSearchButton();
          return;
       }
 
+      if (selectedTables.length === 0) {
+         toast.error('Debes seleccionar al menos una mesa');
+         return
+      };
+
       onSubmit({
          resetForm,
          selectedTables,
          formState: {
-            tables: selectedTables,
-            idRestaurant: getIdRestaurantByName(restaurant),
-            dateStr: DateParser.toString(date),
-            hour: data.hour,
+            tables: selectedTables || initialValues?.tables,
+            idRestaurant: getIdRestaurantByName(restaurant) || initialValues?.idRestaurant,
+            dateStr: DateParser.toString(date) || initialValues?.dateStr,
+            hour: data.hour || initialValues?.hour,
+            reason: data.reason || initialValues?.reason,
             idUser: user?.id || initialValues?.idUser,
             name: data.name || user?.name,
             email: data.email || user?.email,
             phone: data.phone || user?.phone,
-            diners: Number(data.diners),
+            diners: Number(data.diners) || initialValues?.diners,
             ...(isEdit && { idReservation: initialValues?.id })
          },
       })
    });
+
+   const handleSelectedTables = (table) => {
+      const chairsNew = table.reduce((acc, table) => acc + table.chairs, 0);
+      if (chairsNew > diners) {
+         toast.error('La cantidad de asientos no puede superar a la cantidad de comensales');
+         return
+      };
+
+      setSelectedTables(table);
+   }
 
    const renderEmailIcon = (
       <Button
@@ -330,54 +366,36 @@ export const FromReservation = ({
             Información del cliente
          </FormLabel>
 
-         <FormItem>
-            <FormLabel htmlFor='email'>
-               Email
-            </FormLabel>
-            <Input
-               id='email'
-               name='email'
-               type='email'
-               value={email}
-               onChange={onValueChange}
-               isError={!!emailValid}
-               variant='crystal'
-               icon={initialValues?.idUser ? null : renderEmailIcon}
-               disabled={!!initialValues?.idUser || isReadOnly}
-               iconPosition='right'
-               activeEventIcon
-            />
-
-            {
-               !initialValues?.idUser && (
-                  user
-                     ? <UserCard
-                        className={'text-accent-foreground'}
-                        user={user}
-                     />
-                     : <span className='text-sm text-muted-foreground'>Buscar por email</span>
-               )
-            }
-         </FormItem>
-
          <FromGroup className={'grid md:grid-cols-2 gap-4'}>
             <FormItem>
-               <FormLabel htmlFor='name'>
-                  Nombre
+               <FormLabel htmlFor='email'>
+                  Email
                </FormLabel>
                <Input
-                  id='name'
-                  name='name'
-                  type='text'
-                  value={user?.name || name}
+                  id='email'
+                  name='email'
+                  type='email'
+                  value={email}
                   onChange={onValueChange}
-                  isError={!!nameValid}
+                  isError={!!emailValid}
                   variant='crystal'
-                  disabled={isBlockedFields || isReadOnly}
+                  icon={initialValues?.idUser ? null : renderEmailIcon}
+                  disabled={!!initialValues?.idUser || isReadOnly}
+                  iconPosition='right'
+                  activeEventIcon
                />
 
+               {
+                  !initialValues?.idUser && (
+                     user
+                        ? <UserCard
+                           className={'text-accent-foreground'}
+                           user={user}
+                        />
+                        : <span className='text-sm text-muted-foreground'>Buscar por email</span>
+                  )
+               }
             </FormItem>
-
             <FormItem>
                <FormLabel htmlFor='phone'>
                   Teléfono
@@ -392,8 +410,57 @@ export const FromReservation = ({
                   variant='crystal'
                   disabled={(isBlockedFields && initialValues?.user) || isReadOnly}
                />
+               {
+                  !initialValues?.idUser && <span className='text-sm text-muted-foreground'>Es necesario ingresar el teléfono</span>
+               }
             </FormItem>
+         </FromGroup>
 
+         <FromGroup className={'grid md:grid-cols-2 gap-4'}>
+            <FormItem>
+               <FormLabel htmlFor='name'>
+                  Nombre
+               </FormLabel>
+               <Input
+                  id='name'
+                  name='name'
+                  type='text'
+                  value={name || user?.name || ''}
+                  onChange={onValueChange}
+                  isError={!!nameValid}
+                  variant='crystal'
+                  disabled={isBlockedFields || isReadOnly}
+               />
+
+            </FormItem>
+            <FormItem>
+               <FormLabel htmlFor='reason'>
+                  Motivo
+               </FormLabel>
+               <Select
+                  name='reason'
+                  value={reason || undefined}
+                  onValueChange={onValueChange}
+               >
+                  <SelectTrigger
+                     isError={!!reasonValid}
+                     variant='crystal'
+                     className='w-full'
+                  >
+                     <SelectValue placeholder='Seleccione un motivo' />
+                  </SelectTrigger>
+                  <SelectContent>
+                     {reasonData.map((item) => (
+                        <SelectItem
+                           key={item.id}
+                           value={item.name}
+                        >
+                           {item.name}
+                        </SelectItem>
+                     ))}
+                  </SelectContent>
+               </Select>
+            </FormItem>
          </FromGroup>
 
          <FormLabel
@@ -402,8 +469,6 @@ export const FromReservation = ({
          >
             Información de la reserva
          </FormLabel>
-
-         {/* Informacion de la reserva */}
 
          <FromGroup className={'md:grid md:grid-cols-2 gap-4'}>
             <FormItem>
@@ -415,13 +480,13 @@ export const FromReservation = ({
 
                <Select
                   name={'diners'}
+                  type='number'
                   value={String(diners) || undefined}
                   onValueChange={onValueChange}
                   disabled={isReadOnly}
                >
                   <SelectTrigger
                      isError={!!dinersValid}
-                     // disabled={isBlockedFields}
                      variant='crystal'
                      className='w-full shadow-xl'
                   >
@@ -549,10 +614,8 @@ export const FromReservation = ({
             <MultiSelect
                options={tables}
                selected={selectedTables}
-               onChange={setSelectedTables}
-               disabled={isLoadingTables || isReadOnly}
+               onChange={handleSelectedTables}
                isLoading={isLoadingTables}
-               placeholder='Seleccione mesas'
                className='w-full'
             />
          </FormItem>
@@ -569,7 +632,7 @@ export const FromReservation = ({
                            type={item.type || 'button'}
                            variant={item.variant || 'default'}
                            onClick={item.type !== 'submit' ? item.onClick : null}
-                           disabled={item.disabled || item.disabledBySelected && selectedTables.length === 0 || isReadOnly}
+                           disabled={item.disabled || (initialValues?.tables && item.disabledBySelected && selectedTables.length === 0) || (!initialValues?.tables && selectedTables.length === 0) || isReadOnly}
                         >
                            {item.label}
                         </Button>
@@ -581,4 +644,7 @@ export const FromReservation = ({
          }
       </Form>
    )
-}
+})
+
+FromReservation.displayName = 'FormReservation'
+

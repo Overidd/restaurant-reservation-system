@@ -1,6 +1,7 @@
 
 import { fixupPluginRules } from '@eslint/compat';
 import js from '@eslint/js';
+
 import pluginImport from 'eslint-plugin-import';
 import pluginJSXAccessibility from 'eslint-plugin-jsx-a11y';
 import pluginReact from 'eslint-plugin-react';
@@ -72,21 +73,74 @@ export default defineConfig([
 
       //TODOD temporalmente desactivado 
       'import/no-named-as-default': 'warn',
+
       // 'import/order': ['warn', {
-      //   groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
-      //   pathGroups: [
-      //     { pattern: 'react', group: 'builtin', position: 'before' },
-      //     { pattern: 'react-dom', group: 'builtin', position: 'before' },
-      //     { pattern: 'react-router-dom', group: 'builtin', position: 'before' },
-      //     { pattern: 'lucide-react', group: 'external', position: 'after' },
-      //     { pattern: '@/hooks/**', group: 'internal', position: 'after' },
-      //     { pattern: '@/components/**', group: 'internal', position: 'after' }
+      //   groups: [
+      //     'builtin',
+      //     'external',
+      //     'internal',
+      //     'parent',
+      //     'sibling',
+      //     'index',
+      //     'object',
+      //     'type'
       //   ],
+
+      //   pathGroups: [
+      //     {
+      //       pattern: 'react',
+      //       group: 'builtin',
+      //       position: 'before'
+      //     },
+      //     {
+      //       pattern: 'react-dom',
+      //       group: 'builtin',
+      //       position: 'before'
+      //     },
+      //     {
+      //       pattern: 'react-router-dom',
+      //       group: 'builtin',
+      //       position: 'before'
+      //     },
+      //     {
+      //       pattern: '*',
+      //       group: 'external',
+      //       position: 'after'
+      //     },
+      //     {
+      //       pattern: 'lucide-react',
+      //       group: 'external',
+      //       position: 'after'
+      //     },
+      //     {
+      //       pattern: '@/domain/**',
+      //       group: 'internal',
+      //       position: 'after'
+      //     },
+      //     {
+      //       pattern: '@/hooks/**',
+      //       group: 'internal',
+      //       position: 'after'
+      //     },
+      //     {
+      //       pattern: '@/components/**',
+      //       group: 'internal',
+      //       position: 'after'
+      //     },
+      //     {
+      //       pattern: '@/utils/**',
+      //       group: 'internal',
+      //       position: 'after'
+      //     }
+      //   ],
+
       //   pathGroupsExcludedImportTypes: ['builtin'],
+
       //   alphabetize: {
       //     order: 'asc',
       //     caseInsensitive: true
       //   },
+
       //   'newlines-between': 'always'
       // }],
 

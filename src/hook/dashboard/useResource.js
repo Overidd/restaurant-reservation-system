@@ -1,5 +1,5 @@
 import { dasboardServiceProvider } from '@/doman/services';
-import { deleteObjectAction, deleteTableAction, setObjectAction, setSelectedResourceAction, setTableAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction, updateTableAction } from '@/doman/store/dashboard';
+import { deleteObjectAction, deleteTableAction, setObjectAction, setSelectedResourceAction, setTableAction, toggleIsTempResourceChangeAction, updateSelectedResourceAction, updateTableAction } from '@/doman/store/mapPage';
 import { typeObj, typeStatusTable, validateObject } from '@/ultils';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -30,8 +30,6 @@ export const useResource = () => {
          image: data.image,
          isCursor: true
       }
-
-      console.log('dataObject', dataObject);
 
       dispatch(setSelectedResourceAction(dataObject));
    }

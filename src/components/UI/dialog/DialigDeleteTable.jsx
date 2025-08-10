@@ -1,5 +1,5 @@
 import { Card2 } from '../card';
-import { Button } from '../common';
+import { Button, CardTitle } from '../common';
 
 export const DialigDeleteTable = ({
    onConfirm,
@@ -8,11 +8,14 @@ export const DialigDeleteTable = ({
 }) => {
 
    return (
-      <Card2 className='flex flex-col gap-4 justify-center items-center text-card-foreground'>
-         <h2 className='text-sm text-card-primary'>¿Estás seguro de eliminar la mesa {table.name}?</h2>
+      <Card2 className='flex flex-col gap-4 justify-center items-center'>
+         <CardTitle>
+            ¿Estás seguro de eliminar la mesa? <br />
+            <span className='block text-center'>{table.name}</span>
+         </CardTitle>
          <div className='flex gap-2 justify-end'>
             <Button
-            className={'w-full'}
+               className={'w-full'}
                variant='destructive'
                onClick={onConfirm}
                size={'sm'}

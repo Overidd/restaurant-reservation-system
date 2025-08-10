@@ -1,6 +1,6 @@
-import { MapEditManager, MapStateManager } from '@/components/mapScreen';
+import { MapEditManager, MapStateManager } from '@/components/mapPage';
 import { CardTable } from '@/components/UI/table';
-import { useGenerateResources, useLoadRestaurantResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
+import { useGenerateResources, useLoadMapResource, useRestaurantUi, useStateFilterRestaurant } from '@/hook/dashboard';
 import { cn } from '@/ultils';
 import { Children, isValidElement, useMemo, useRef } from 'react';
 import { MapManagerContext } from './MapManagerContext';
@@ -26,7 +26,7 @@ export const MapManagerProvider = ({
       tables,
       objects,
       isLoading,
-   } = useLoadRestaurantResource({
+   } = useLoadMapResource({
       lastParams,
       restaurants,
       restaurant,

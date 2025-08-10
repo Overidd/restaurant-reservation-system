@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { toggleIsEditAction } from '@/doman/store/dashboard';
-import { useModalTableEditProperty } from '../map/useModalTableEditProperty';
+import { useModalTableEditProperty } from '../mapPage/useModalTableEditProperty';
 import { useSlideOverObjectCreate } from '../slideover';
 import { useDimensionMap } from './useDimensionMap';
 import { useModalTableEdit } from './useModalTableEdit';
 import { useResource } from './useResource';
 import { useStateFilterRestaurant } from './useStateFilterRestaurant';
+import { toggleIsEditAction } from '@/doman/store/mapPage';
 
 export const useEditTables = () => {
-   const isEdit = useSelector((state) => state.restaurantUiReducer.isEdit);
+   const isEdit = useSelector((state) => state.mapUiReducer.isEdit);
    const dispatch = useDispatch();
 
    const {

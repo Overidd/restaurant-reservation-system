@@ -4,8 +4,8 @@ export * from './useEditTables';
 export * from './useGenerateResources';
 export * from './useLoadDashboard';
 export * from './useLoadDataCalendar';
-export * from './useLoadFilterRestaurant';
-export * from './useLoadRestaurantResource';
+export * from './useLoadFilterMap';
+export * from './useLoadMapResource';
 export * from './useModalTableEdit';
 export * from './usePaginatedUsers';
 export * from './useReservation';
@@ -15,4 +15,4 @@ export * from './useStateFilterRestaurant';
 export * from './useTableStats';
 export * from './useUserDetail';
 export * from './useReservationFilter';
-export * from './useReservationActions'
+export * from './useReservationWithToast'

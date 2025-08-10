@@ -79,6 +79,37 @@ export class DateDiff {
          return `${totalMinutes}m`;
       }
    }
+
+   static isSameDate(dateStr) {
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!regex.test(dateStr)) {
+         throw new Error('Formato de fecha inválido');
+      }
+
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+
+      if (
+         date.getFullYear() !== year ||
+         date.getMonth() + 1 !== month ||
+         date.getDate() !== day
+      ) {
+         return false;
+      }
+
+      const todayString = new Date().toLocaleDateString('es-PE', {
+         timeZone: 'America/Lima',
+         year: 'numeric',
+         month: '2-digit',
+         day: '2-digit',
+      })
+         .split('/')
+         .reverse()
+         .join('-');
+
+      return todayString === dateStr;
+   }
+
 }
 
 export class DateFormat {

@@ -1,5 +1,5 @@
 import { userSettingProvider } from '@/doman/services';
-import { updateUserDetailAction } from '@/doman/store/dashboard';
+import { updateUserDetailAction } from '@/doman/store/userDetailsPage';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 

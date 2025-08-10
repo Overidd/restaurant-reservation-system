@@ -3,26 +3,13 @@ import { ChevronDown, Dice1, LoaderCircle, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../common';
 
-// interface Option {
-//    id: string;
-//    name: string;
-// }
-
-// interface MultiSelectProps {
-//    options: Option[];
-//    selected: Option[];
-//    onChange: (options: Option[]) => void;
-//    placeholder?: string;
-//    className?: string;
-// }
-
 export const MultiSelect = ({
+   onChange,
    options = [],
    selected = [],
-   onChange,
+   className = '',
    placeholder = 'Selecciona',
    isLoading = false,
-   className = '',
    disabled = false
 }) => {
    const [isOpen, setIsOpen] = useState(false);
@@ -127,7 +114,7 @@ export const MultiSelect = ({
                      }}
                      className='group relative'
                   >
-                     <Dice1 /> {option.name}
+                     <Dice1 /> {option.name} (sillas: {option.chairs})
                      <X className='opacity-50 transition-opacity duration-300 group-hover:opacity-100 ml-1' />
                   </Button>
                ))}
@@ -178,7 +165,7 @@ export const MultiSelect = ({
                            >
                               <Dice1 className='inline-block align-middle mr-2' />
                               <span className='align-middle'>
-                                 {option.name}
+                                 {option.name} (sillas: {option.chairs})
                               </span>
                            </button>
                         </li>

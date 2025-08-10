@@ -8,7 +8,7 @@ import {
    reserveTableThunks,
    unblockTempTableThunks,
    updateReservationThunks
-} from '@/doman/store/dashboard';
+} from '@/doman/store/reservation';
 import { useDispatch } from 'react-redux';
 
 export const useReservation = () => {
@@ -20,7 +20,7 @@ export const useReservation = () => {
          setIsLoading(true);
          return await fn();
       } catch (error) {
-         console.log('');
+         console.log(error);
          throw error;
       }
       finally {
@@ -43,7 +43,8 @@ export const useReservation = () => {
    const reserveTable = async (data) =>
       withLoading(() => dispatch(reserveTableThunks(data)));
 
-   const updateReservation = async (data) => withLoading(() => dispatch(updateReservationThunks(data)));
+   const updateReservation = async (data) =>
+      withLoading(() => dispatch(updateReservationThunks(data)));
 
    const blockTempTable = (data) => {
       if (!data) return;

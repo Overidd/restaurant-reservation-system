@@ -8,11 +8,12 @@ export const Modal = ({
    isOpen,
    onClose,
    children,
-   direction = 'center',
-   showBtnClose = true,
-   preventBackdropClose = false,
    className = '',
    overlayClassName = '',
+   direction = 'center',
+   showBtnClose = true,
+   isActiveOverflow = true,
+   preventBackdropClose = false,
 }) => {
    const [isVisible, setIsVisible] = useState(false)
    const [isAnimating, setIsAnimating] = useState(false)
@@ -34,7 +35,7 @@ export const Modal = ({
 
       closeTimeoutRef.current = setTimeout(() => { // Espera la animación antes de cerrar
          setIsVisible(false)
-         document.body.style.overflow = 'unset'
+         if (isActiveOverflow) document.body.style.overflow = 'unset';
          onClose()
       }, 300)
    }
@@ -51,7 +52,7 @@ export const Modal = ({
          openTimeoutRef.current = setTimeout(() => {
             setIsAnimating(true)
          }, 10)
-         document.body.style.overflow = 'hidden'
+         if (isActiveOverflow) document.body.style.overflow = 'hidden';
       } else if (isVisible) {
          setIsAnimating(false)
 
@@ -61,7 +62,8 @@ export const Modal = ({
          }
          closeTimeoutRef.current = setTimeout(() => {
             setIsVisible(false)
-            document.body.style.overflow = 'unset'
+            if (isActiveOverflow) document.body.style.overflow = 'unset';
+
          }, 300)
       }
 
@@ -69,7 +71,7 @@ export const Modal = ({
          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
          if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
 
-         if (isVisible) {
+         if (isVisible && isActiveOverflow) {
             document.body.style.overflow = 'unset'
          }
       }

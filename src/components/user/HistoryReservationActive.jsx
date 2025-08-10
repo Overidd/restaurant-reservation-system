@@ -12,9 +12,10 @@ export const HistoryReservationActive = () => {
    const [selectReserve, setSelectReserve] = useState(null);
 
    const {
-      reservations,
       isLoading,
-      changeReservation,
+      reservations,
+      changeReservations,
+      deleteByIdReservation,
       loadReservationsActive
    } = useGetReservationsByUser();
 
@@ -23,7 +24,9 @@ export const HistoryReservationActive = () => {
    } = useModalAsync();
 
    const {
-      cancelReservation
+      cancelReservation,
+      updateReservation,
+      loading
    } = useUserSettings()
 
    const handleSelectReserve = (reserve) => {
@@ -43,13 +46,25 @@ export const HistoryReservationActive = () => {
 
       AdminTableToasts.cancelFullReservation(
          cancelReservation(reservation.id), {
-         onSuccess: changeReservation
+         onSuccess: () => {
+            deleteByIdReservation(reservation.id)
+         }
+      });
+   }
+
+   const handleUpdateReservation = async (reservation) => {
+      AdminTableToasts.updateReservation(
+         updateReservation(reservation), {
+         onSuccess: () => {
+            changeReservations(reservation)
+         }
       });
    }
 
    useEffect(() => {
       loadReservationsActive()
    }, [])
+
 
    return (
       <>
@@ -88,10 +103,13 @@ export const HistoryReservationActive = () => {
          {
             isOpenEdit && (
                <EditReservationModal
+                  isActiveOverflow={false}
                   className={'md:w-[35rem]'}
-                  isOpen={isOpenEdit}
                   onClose={() => setIsOpenEdit(false)}
+                  updateReservation={handleUpdateReservation}
                   reservation={selectReserve}
+                  isOpen={isOpenEdit}
+                  loading={loading}
                />
             )
          }

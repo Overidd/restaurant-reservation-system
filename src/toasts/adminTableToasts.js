@@ -2,12 +2,15 @@ import { isObjetError } from '@/ultils';
 import { toast } from 'react-hot-toast';
 
 export class AdminTableToasts {
-   static cancelFullReservation(promise) {
+   static cancelFullReservation(promise, { onSuccess, onError, onFinally } = {}) {
       return toast.promise(promise, {
          loading: 'Cancelando reserva...',
          success: 'Reserva cancelada correctamente.',
          error: (err) => isObjetError(err) ? err?.message : err || 'Error al cancelar reserva.',
-      });
+      })
+         .then(() => onSuccess?.())
+         .catch((err) => onError?.(err))
+         .finally(() => onFinally?.());
    }
 
    static updateReservation(promise, { onSuccess, onError, onFinally } = {}) {

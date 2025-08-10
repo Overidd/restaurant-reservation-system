@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { serviceProvider } from '@/doman/services';
 
@@ -63,23 +63,35 @@ export const useGetReservationsByUser = () => {
       })
    }
 
-   const changeReservation = (reservation) => {
+   const changeReservations = (reservation) => {
       setUser({
-         reservations: state.reservations.map(res => res.id === reservation.id ? reservation : res),
+         reservations: state.reservations.map(res => res.id === reservation.id ? { ...res, ...reservation } : res),
          isLoading: false,
          errorMessage: null
       })
    }
 
+   const deleteByIdReservation = (id) => setUser(prev => ({
+      ...prev,
+      reservations: prev.reservations.filter(res => res.id !== id),
+      isLoading: false,
+      errorMessage: null,
+   }))
+
+   const reservations = useMemo(() => {
+      return Array.isArray(state.reservations) ? state.reservations?.sort((a, b) => b.updatedAt - a.updatedAt) : [];
+   }, [state.reservations]);
+
    return {
       // Valores
-      reservations: state.reservations,
+      reservations: reservations,
       isLoading: state.isLoading,
       errorMessage: state.errorMessage,
 
       // Funciones
-      changeReservation,
+      changeReservations,
       loadReservationsActive,
-      loadReservationsCancel
+      loadReservationsCancel,
+      deleteByIdReservation
    }
 }

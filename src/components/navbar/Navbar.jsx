@@ -83,10 +83,11 @@ export const Navbar = ({ className }) => {
          />
 
          <ul className='ml-auto flex gap-3 items-center select-none'>
-            <ShoppingCart className='w-7 h-7 text-primary-foreground' />
             <UserMenuPopover
                isAuthenticated={isAuthenticated}
             />
+
+            <ShoppingCart className='w-7 h-7 text-primary-foreground' />
 
             <LinkCustom to={'reserve'}>
                <Button

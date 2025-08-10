@@ -1,4 +1,4 @@
-import { getAllUsersThunk, getByIdUserReservationThunk, setSelectedUserAction } from '@/doman/store/dashboard';
+import { getAllUsersThunk, getByIdUserReservationThunk, setSelectedUserAction } from '@/doman/store/userDetailsPage';
 import { DateParser, typeStatusTable } from '@/ultils';
 import { Users } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
@@ -78,9 +78,9 @@ export const useLoadUsers = () => {
          return {
             ...user,
             metrics,
-            updatedAt: DateParser.toString(new Date(user.updatedAt)),
             rate: rate,
-            rateSuccess
+            rateSuccess,
+            updatedAt: DateParser.toString(new Date(user.updatedAt)),
          };
       })
    }, [state.users])

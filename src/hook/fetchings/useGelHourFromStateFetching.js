@@ -1,7 +1,9 @@
 import { serviceProvider } from '@/doman/services';
 import { useState } from 'react';
 
-export const useGelHourFromStateFetching = () => {
+export const useGelHourFromStateFetching = ({
+   isValidateDatePassed = true
+}) => {
 
    const [state, setState] = useState({
       hours: [],
@@ -23,7 +25,13 @@ export const useGelHourFromStateFetching = () => {
          errorMessage: null,
       }));
 
-      const { availableHours, ok, messageError } = await serviceProvider.getAvailableHours({ dateStr, idRestaurant, diners, isValidateHourCurrent: false });
+      const { availableHours, ok, messageError } = await serviceProvider.getAvailableHours({
+         dateStr,
+         idRestaurant,
+         diners,
+         isValidateHourCurrent: false,
+         isValidateDatePassed: isValidateDatePassed,
+      });
 
       if (!ok) {
          setState(prev => ({

@@ -1,9 +1,9 @@
-import { useReserve, useStepFormContext } from '@/hook/reservation';
+import { useReservationFromStep, useStepFormContext } from '@/hook/reservationFromStep';
 
 export const StepFromContextProvider = ({ children }) => {
    const ctx = useStepFormContext();
 
-   const { from } = useReserve()
+   const { from } = useReservationFromStep()
 
    if (Array.isArray(children)) {
       const [child] = children;

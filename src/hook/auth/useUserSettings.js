@@ -29,9 +29,19 @@ export const useUserSettings = () => {
 
       setLoading(prev => ({ ...prev, updateReservation: true }));
 
-      const { reservation, ok, errorMessage } = await userSettingProvider.updateReservation(data);
+      const { reservation, ok, errorMessage } = await userSettingProvider.updateReservation({
+         ...data,
+         tables: data.tables.map(t => ({ id: t.id, name: t.name, chairs: t.chairs }))
+      });
+
+      const updatePhone = await userSettingProvider.updatePhone({
+         phone: data.phone,
+         idUser: data.idUser
+      });
 
       setLoading(prev => ({ ...prev, updateReservation: false }));
+
+      dispatch(updateProfileAction(updatePhone.user));
 
       if (!ok) throw errorMessage;
       return reservation;

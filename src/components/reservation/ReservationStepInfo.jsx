@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { cn } from '@/ultils/cn';
 
 import { useForm } from '@/hook/common';
-import { useGetAllRestaurants, useReserve, useStepFormContext } from '@/hook/reservation';
+import { useGetAllRestaurants, useReservationFromStep, useStepFormContext } from '@/hook/reservationFromStep';
 import { Button } from '../UI/common';
 import {
    Form,
@@ -16,25 +16,9 @@ import {
    SelectTrigger,
    SelectValue
 } from '../UI/from';
+import { reasonData } from '@/data';
 
-const reasonData = [
-   {
-      id: 1,
-      name: 'Cumpleaños',
-   },
-   {
-      id: 2,
-      name: 'Fiesta',
-   },
-   {
-      id: 3,
-      name: 'Aniversario',
-   },
-   {
-      id: 4,
-      name: 'Otros',
-   }
-]
+
 
 const schema = {
    valid: {
@@ -66,7 +50,7 @@ export const ReservationStepInfo = ({
 
    const { restaurants } = useGetAllRestaurants();
    const { nextStep } = useStepFormContext();
-   const { reserveSetInfo, from } = useReserve();
+   const { reserveSetInfo, from } = useReservationFromStep();
 
    const {
       onSubmitForm,

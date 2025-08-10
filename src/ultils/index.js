@@ -6,4 +6,5 @@ export * from './generateId';
 export * from './typeObj';
 export * from './typeStatusTable';
 export * from './validations';
-
+export * from './validDateReservation';
+export * from './validHourReservation';

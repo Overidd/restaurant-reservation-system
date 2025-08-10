@@ -10,7 +10,7 @@ import {
    where,
 } from 'firebase/firestore/lite';
 
-import { DateParser, typeStatusTable } from '@/ultils';
+import { DateParser, typeStatusTable, ValidationReservation, validDateReservation } from '@/ultils';
 
 import { FirebaseDB } from './config';
 
@@ -31,29 +31,13 @@ export class FirebaseReserveService {
       this.MINUTES_tolerance = 15 * 60 * 1000;
    }
 
-
-   isValidReservationDate(dateStr) {
-      const inputDate = new Date(dateStr);
-      const now = new Date();
-
-      const normalizeDate = (date) =>
-         new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-      const today = normalizeDate(now);
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-
-      const target = normalizeDate(inputDate);
-
-      return target >= yesterday;
-   }
-
    /**
-    * @param {{ dateStr: string, idRestaurant: string, diners: number,isValidateHourCurrent: boolean }} param0 
+    * @param {{ dateStr: string, idRestaurant: string, diners: number,isValidateHourCurrent: boolean,isValidateDatePassed: boolean }} param0 
     */
-   async getAvailableHours({ dateStr, idRestaurant, diners, isValidateHourCurrent = true }) {
+   async getAvailableHours({ dateStr, idRestaurant, diners, isValidateHourCurrent = true, isValidateDatePassed = true }) {
       try {
-         if (!this.isValidReservationDate(dateStr)) {
+
+         if (isValidateDatePassed && !validDateReservation(dateStr)) {
             throw new Error('No se pueden reservar fechas pasadas');
          }
          const restaurantSnap = await getDoc(doc(FirebaseDB, 'restaurants', idRestaurant));
@@ -163,6 +147,7 @@ export class FirebaseReserveService {
     * @returns 
     */
    async getTables({ dateStr, idRestaurant, hour, diners }) {
+
       if (!idRestaurant) {
          throw new Error('No se proporciono el id del restaurante');
       }
@@ -214,9 +199,6 @@ export class FirebaseReserveService {
 
       const blockTempTablesSet = new Set(blockTempTables.docs.map(doc => doc.data().idTable));
 
-      // Debemos obtener el restaurante y sus mesas corespodientes
-      // Obtener las reservas en esa fecha
-      // Construir la información de las mesas, si esta reservada o no, En cuanto tiempo se va desocupar
       return tables.docs.map((doc) => {
          const data = doc.data();
          return {
@@ -300,17 +282,32 @@ export class FirebaseReserveService {
          const auth = getAuth();
          const user = auth.currentUser;
 
-         if (!user) {
-            throw new Error('Usuario no autenticado');
-         }
+         ValidationReservation({
+            dateStr,
+            hour,
+            tables,
+            diners,
+            idRestaurant,
+            idUser: user.uid,
+            idReservation: null,
+         })
 
-         const userSnap = await getDoc(doc(FirebaseDB, 'users', user.uid));
+         const [userSnap, restaurant] = await Promise.all([
+            getDoc(doc(FirebaseDB, 'users', user.uid)),
+            getDoc(doc(FirebaseDB, 'restaurants', idRestaurant))
+         ]);
 
          if (!userSnap.exists()) {
             throw new Error('El usuario no existe');
          }
 
-         // TODO faltaria validar si la mesa fue bloqueada
+         if (!restaurant.exists()) {
+            throw new Error('El restaurante no existe');
+         }
+
+         if (restaurant.data().status === false) {
+            throw new Error('El restaurante se encuentra cerrado');
+         }
 
          const querySnapshot = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
@@ -325,8 +322,6 @@ export class FirebaseReserveService {
             throw new Error('Ya realizaste una reserva en hora la ' + hour);
          }
 
-         // Buscar todas las reservas confirmadas para ese restaurante, fecha y hora
-
          const reservations = await getDocs(query(
             collection(FirebaseDB, 'reservations'),
             where('idRestaurant', '==', idRestaurant),
@@ -335,7 +330,6 @@ export class FirebaseReserveService {
             where('status', 'in', ['confirmed', 'pending'])
          ));
 
-         // Verificamos si alguna mesa ya está reservada
          const reservedTables = new Set();
          const existingCodes = new Set();
 
@@ -372,6 +366,7 @@ export class FirebaseReserveService {
             ion: reservationRef.id,
             idUser: uid,
             idRestaurant,
+            restaurantName: restaurant.data().name,
             diners,
             reason,
             hour,

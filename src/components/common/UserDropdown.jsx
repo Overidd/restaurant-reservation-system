@@ -1,5 +1,5 @@
 import { useAuthStore, useUser } from '@/hook/auth';
-import { useModalUser } from '@/hook/modals';
+import { useUserModal } from '@/hook/modals';
 import { UserToasts } from '@/toasts/UserToasts';
 import { cn } from '@/ultils';
 import { CalendarCheck, CircleAlert, CircleUser, LayoutDashboard, LogOut } from 'lucide-react';
@@ -24,7 +24,7 @@ export const UserDropdown = ({
 
    const {
       openModal
-   } = useModalUser()
+   } = useUserModal()
 
    const handleLogout = () => {
       UserToasts.logout(logoutPermanently())

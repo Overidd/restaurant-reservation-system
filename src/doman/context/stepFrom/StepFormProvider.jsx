@@ -14,7 +14,7 @@ import {
    StepFormHeader,
 } from '@/components/UI/stepForm';
 
-import { useStepForm } from '@/hook/reservation';
+import { useStepForm } from '@/hook/reservationFromStep';
 import { StepFromContext } from './StepFromContext';
 
 

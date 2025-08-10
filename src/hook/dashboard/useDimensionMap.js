@@ -1,9 +1,6 @@
 import { dasboardServiceProvider } from '@/doman/services';
-import {
-   changeValueTempRestaurantAction,
-   setTempRestaurantAction,
-   updateDimensionRestaurantAction
-} from '@/doman/store/dashboard';
+import { changeValueTempRestaurantAction, setTempRestaurantAction, updateDimensionRestaurantAction } from '@/doman/store/mapPage';
+
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 

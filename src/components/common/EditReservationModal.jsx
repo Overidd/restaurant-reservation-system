@@ -12,6 +12,7 @@ export const EditReservationModal = ({
    isOpen,
    onClose,
    reservation,
+   isActiveOverflow = true,
    activaBtns = ['update', 'cancel'],
 }) => {
    const {
@@ -48,6 +49,7 @@ export const EditReservationModal = ({
       <Modal
          isOpen={isOpen}
          onClose={onClose}
+         isActiveOverflow={isActiveOverflow}
       >
          <Card2 className={cn(
             className

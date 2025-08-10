@@ -12,7 +12,7 @@ export const DialogCancelReserve2 = ({
 
    const handleConfirm = () => {
       onConfirm({
-         noShow: isCheck
+         isCheck,
       })
    }
 
@@ -44,10 +44,11 @@ export const DialogCancelReserve2 = ({
             <div className='flex items-center gap-4'>
                <Checkbox
                   name={'noShow'}
+                  id={'noShow'}
                   checked={isCheck}
                   onChange={({ value }) => setIsCheck(value)}
                />
-               <Label>
+               <Label htmlFor={'noShow'}>
                   Marcar como no presentado
                </Label>
             </div>

@@ -6,12 +6,12 @@ import { cn } from '@/ultils/cn';
 import { CalendarButton } from '../UI/calendar';
 import { DayPicker } from '../UI/common';
 
-import { useReserve, useStepFormContext } from '@/hook/reservation';
+import { useReservationFromStep, useStepFormContext } from '@/hook/reservationFromStep';
 import { ReservationTitle } from '.';
 
 
 export const ReservationStepDate = ({ className }) => {
-   const { reserveSetDate } = useReserve();
+   const { reserveSetDate } = useReservationFromStep();
    const { nextStep } = useStepFormContext();
 
    const onValueChange = ({ value }) => {

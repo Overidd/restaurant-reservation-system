@@ -9,6 +9,7 @@ export const UserCard = ({
       email
    },
    className,
+   classNamePhoto,
    mustShow = ['name', 'lastName'],
    size = 'md' // 'sm' | 'md' | 'lg'
 }) => {
@@ -65,6 +66,7 @@ export const UserCard = ({
             className={cn(
                'bg-background rounded-full flex items-center justify-center overflow-hidden relative',
                config.container,
+               classNamePhoto,
             )}
          >
             {photoURL ? (
@@ -92,20 +94,19 @@ export const UserCard = ({
                }
             </div>
          </div>
-
-         <div className='flex-1 min-w-0'>
-            <p className={cn('space-x-1', config.text)}>
-               <strong className='font-semibold block truncate truncate-text-nowarp w-full text-left capitalize'>
-                  {mustShow.includes('name') && name}
-                  {mustShow.includes('lastName') && ' '}
-                  {mustShow.includes('lastName') && lastName}
-               </strong>
-               {email && mustShow.includes('email') &&
-                  <span className='text-sm block truncate'>
-                     {email}
-                  </span>}
-            </p>
-         </div>
+         {mustShow.length > 0 &&
+            <div className='flex-1 min-w-0'>
+               <p className={cn('space-x-1', config.text)}>
+                  <strong className='font-semibold block truncate truncate-text-nowarp w-full text-left capitalize'>
+                     {mustShow.includes('name') && name}
+                  </strong>
+                  {email && mustShow.includes('email') &&
+                     <span className='text-sm block truncate'>
+                        {email}
+                     </span>}
+               </p>
+            </div>
+         }
       </div>
    )
 }

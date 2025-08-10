@@ -1,16 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-   setChangeFilterAction
-} from '@/doman/store/dashboard';
 import { useMemo, useRef } from 'react';
+import { setChangeFilterAction } from '@/doman/store/mapPage';
 
 export const useStateFilterRestaurant = ({
    tempRestaurant = {},
    isEdit = false,
 } = {}) => {
 
-   const state = useSelector((state) => state.stateFilterRestaurantReducer)
+   const state = useSelector((state) => state.filterMapReducer)
    const dispatch = useDispatch();
    const changeFilterRef = useRef(false)
 

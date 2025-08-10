@@ -4,7 +4,7 @@ import { closeModalUserAction, openModalUserAction } from '@/doman/store';
 
 
 let paramsRef = null
-export const useModalUser = () => {
+export const useUserModal = () => {
    const dispatch = useDispatch();
    const isOpen = useSelector((state) => state.UIReducer.isOpenModalUser);
    

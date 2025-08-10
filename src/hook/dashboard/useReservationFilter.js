@@ -6,6 +6,9 @@ export const useReservationFilter = (reservations) => {
 
    useEffect(() => {
       let filtered = [...reservations];
+
+      filtered = filtered.sort((a, b) => b.updatedAt - a.updatedAt);
+      
       if (selectedStatus !== 'all') {
          filtered = filtered.filter((reserve) => reserve.status === selectedStatus);
       }

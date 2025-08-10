@@ -23,7 +23,7 @@ const statsData = [
 ]
 // typeStatusTable
 export const useTableStats = () => {
-   const tables = useSelector((state) => state.restaurantResourceReducer.tables)
+   const tables = useSelector((state) => state.mapResource.tables)
 
 
    const stats = useMemo(() => {

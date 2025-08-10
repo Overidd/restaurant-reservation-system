@@ -1,3 +1,6 @@
+import { DateDiff } from "./DateUtils";
+import { validDateReservation } from "./validDateReservation";
+import { validHourReservation } from "./validHourReservation";
 
 export class Validations {
    static email(value) {
@@ -34,4 +37,49 @@ export const isObjetError = (err) => {
       return true;
    }
    return false;
+}
+
+export const ValidationReservation = ({
+   dateStr,
+   hour,
+   tables,
+   diners,
+   idRestaurant,
+   idReservation,
+   idUser,
+}) => {
+
+   if (!validDateReservation(dateStr)) {
+      if (!validHourReservation(hour)) {
+         throw new Error('No se pueden reservar horas pasadas');
+      }
+      throw new Error('No se pueden reservar fechas pasadas');
+   }
+
+   if (DateDiff.isSameDate(dateStr)) {
+      if (!validHourReservation(hour)) {
+         throw new Error('No se pueden reservar horas pasadas');
+      }
+   }
+
+   if (!idUser) {
+      throw new Error('No se proporciono un usuario');
+   }
+
+   if (idRestaurant !== null && !idRestaurant) {
+      throw new Error('Seleccione un restaurante');
+   }
+
+   if (idReservation !== null && !idReservation) {
+      throw new Error('No se proporciono la reserva');
+   }
+
+   if (!Array.isArray(tables) || tables.length <= 0) {
+      throw new Error('No se proporciono las mesas');
+   }
+
+   if (typeof diners !== 'number' || diners <= 0) {
+      throw new Error('El número de comensales no es válido');
+   }
+
 }

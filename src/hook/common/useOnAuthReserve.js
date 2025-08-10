@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { startReserveTable, typeStatus } from '@/doman/store/reserve';
+import { startReserveTable, typeStatus } from '@/doman/store/reservation';
 
 export const useOnAuthReserve = () => {
    const dispatch = useDispatch();

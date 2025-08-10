@@ -1,45 +1,34 @@
-import { useUserSettings } from "@/hook/auth";
-import { AdminTableToasts } from "@/toasts";
-import { cn, DateParser } from "@/ultils";
-import { FromReservation } from "../common";
-import { Card2 } from "../UI/card";
-import { Modal } from "../UI/common";
-import { Label } from "../UI/from";
+import { cn, DateParser } from '@/ultils';
+import { FromReservation } from '../common';
+import { Card2 } from '../UI/card';
+import { Modal } from '../UI/common';
+import { Label } from '../UI/from';
 
 
 export const EditReservationModal = ({
    className,
    isOpen,
    onClose,
+   loading,
    reservation,
+   updateReservation,
+   isActiveOverflow = true
 }) => {
-   const {
-      updateReservation,
-      cancelReservation,
-      loading
-   } = useUserSettings()
 
    const onSubmit = (({
       formState,
    }) => {
-      AdminTableToasts.updateReservation(
-         updateReservation(formState),
-      );
-   });
-
-   const handleCancelReservation = () => {
-      AdminTableToasts.cancelFullReservation(
-         cancelReservation(reservation.id), {
-         onSuccess: () => {
-            window.requestAnimationFrame(() => onClose());
-         },
+      updateReservation({
+         ...reservation,
+         ...formState,
       });
-   }
+   });
 
    return (
       <Modal
          isOpen={isOpen}
          onClose={onClose}
+         isActiveOverflow={isActiveOverflow}
       >
          <Card2 className={cn(
             className
@@ -56,25 +45,14 @@ export const EditReservationModal = ({
                   ...reservation,
                   date: DateParser.toDate(reservation?.dateStr),
                }}
-               btns={[
-                  {
-                     label: 'Actualizar',
-                     variant: 'default',
-                     disabledBySelected: true,
-                     disabled: loading.updateReservation || loading.cancelReservation,
-                     type: 'submit',
-                     size: 'lg',
-                  },
-                  {
-                     label: 'Cancelar',
-                     variant: 'destructive',
-                     onClick: handleCancelReservation,
-                     disabledBySelected: false,
-                     disabled: loading.cancelReservation || loading.updateReservation,
-                     type: 'button',
-                     size: 'lg',
-                  },
-               ]}
+               btns={[{
+                  label: 'Actualizar',
+                  variant: 'default',
+                  disabledBySelected: true,
+                  disabled: loading.updateReservation || loading.cancelReservation,
+                  type: 'submit',
+                  size: 'lg',
+               }]}
             />
          </Card2>
       </Modal>
