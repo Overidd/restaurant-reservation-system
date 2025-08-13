@@ -7,7 +7,7 @@ import { useLoadUsers } from '@/hook/dashboard/useLoadUsers';
 import { useModalUserDetail } from '@/hook/modals';
 import { FileText, LoaderCircle } from 'lucide-react';
 
-export const UserDetailScreen = () => {
+export const UserDetailPage = () => {
 
    const {
       users,
@@ -77,4 +77,4 @@ export const UserDetailScreen = () => {
    )
 }
 
-export default UserDetailScreen;
+export default UserDetailPage;

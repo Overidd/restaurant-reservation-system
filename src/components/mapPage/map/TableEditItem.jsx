@@ -1,4 +1,4 @@
-import { Table } from '@/components/UI/table';
+import { ResourceTable } from '@/components/UI/table';
 import { typeStatusTable } from '@/ultils';
 import { Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -59,7 +59,7 @@ export const TableEditItem = ({
    return (
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild>
-            <Table
+            <ResourceTable
                hasConflict={hasConflict}
                onClick={handleClick}
                color={table?.status}

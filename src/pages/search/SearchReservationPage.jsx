@@ -8,7 +8,7 @@ import { Calendar, CheckCircle, Clock, LoaderCircle, MapPin, MessageSquare, Sear
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
-export const SearchReservationScreen = () => {
+export const SearchReservationPage = () => {
    const { errorMessage, reservation, searchReserveByCode } = useGetReserveFetchin()
    const [searchCode, setSearchCode] = useState('')
    const [searchState, setSearchState] = useState('idle')
@@ -239,4 +239,4 @@ export const SearchReservationScreen = () => {
    )
 }
 
-export default SearchReservationScreen;
+export default SearchReservationPage;

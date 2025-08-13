@@ -6,7 +6,7 @@ import { useLoadRestaurant } from '@/hook/restaurantPage';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-export const RestaurantScreen = () => {
+export const RestaurantPage = () => {
    const [isOpenModalCreate, setOpenModalCreate] = useState(false)
    const [isOpenModalEdit, setOpenModalEdit] = useState(false)
 
@@ -77,4 +77,4 @@ export const RestaurantScreen = () => {
    )
 }
 
-export default RestaurantScreen;
+export default RestaurantPage;

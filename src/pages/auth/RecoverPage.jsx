@@ -15,7 +15,7 @@ const initValidation = {
    ]
 };
 
-export const RecoverScreen = () => {
+export const RecoverPage = () => {
    const [isSubmitted, setIsSubmitted] = useState(false)
 
    const {
@@ -104,4 +104,4 @@ export const RecoverScreen = () => {
    )
 }
 
-export default RecoverScreen;
+export default RecoverPage;

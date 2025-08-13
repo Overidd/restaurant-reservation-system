@@ -23,7 +23,7 @@ import {
 import { ModalAsyncProvider } from '@/doman/context/dialogAsync';
 import { useModalReserve } from '@/hook/reservationFromStep';
 
-export const ReservationScreen = () => {
+export const ReservationPage = () => {
    const {
       isOpenModal,
       closeModal
@@ -106,4 +106,4 @@ export const ReservationScreen = () => {
    )
 }
 
-export default ReservationScreen;
+export default ReservationPage;

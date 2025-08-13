@@ -20,19 +20,19 @@ import {
 } from '.';
 
 import {
-   CalendarScreen,
-   DashboardScreen,
-   HomeScreen,
-   LocationScreen,
-   LoginScreen,
-   MapScreen,
-   ProductScreen,
-   RecoverScreen,
-   RegisterScreen,
-   ReservationScreen,
-   RestaurantScreen,
-   SearchReservationScreen,
-   UserDetailScreen,
+   CalendarPage,
+   DashboardPage,
+   HomePage,
+   LocationPage,
+   LoginPage,
+   MapPage,
+   ProductPage,
+   RecoverPage,
+   RegisterPage,
+   ReservationPage,
+   RestaurantPage,
+   SearchReservationPage,
+   UserDetailPage,
 } from './lazyRoutes';
 
 const AppRoutes = () => {
@@ -41,46 +41,46 @@ const AppRoutes = () => {
          <Routes>
             <Route element={<PublicRoute />}>
                <Route path='/' element={<AppLayout />}>
-                  <Route path='home' element={<HomeScreen />}>
-                     <Route path='reserve' element={<ReservationScreen />} />
+                  <Route path='home' element={<HomePage />}>
+                     <Route path='reserve' element={<ReservationPage />} />
                      <Route element={<PublicOnlyRoute />}>
                         <Route element={<AuthLayout />}>
-                           <Route path='login' element={<LoginScreen />} />
-                           <Route path='register' element={<RegisterScreen />} />
-                           <Route path='recover' element={<RecoverScreen />} />
+                           <Route path='login' element={<LoginPage />} />
+                           <Route path='register' element={<RegisterPage />} />
+                           <Route path='recover' element={<RecoverPage />} />
                         </Route>
                      </Route>
                   </Route>
 
-                  <Route path='product' element={<ProductScreen />}>
-                     <Route path='reserve' element={<ReservationScreen />} />
+                  <Route path='product' element={<ProductPage />}>
+                     <Route path='reserve' element={<ReservationPage />} />
                      <Route element={<PublicOnlyRoute />}>
                         <Route element={<AuthLayout />}>
-                           <Route path='login' element={<LoginScreen />} />
-                           <Route path='register' element={<RegisterScreen />} />
-                           <Route path='recover' element={<RecoverScreen />} />
+                           <Route path='login' element={<LoginPage />} />
+                           <Route path='register' element={<RegisterPage />} />
+                           <Route path='recover' element={<RecoverPage />} />
                         </Route>
                      </Route>
                   </Route>
 
-                  <Route path='location' element={<LocationScreen />}>
-                     <Route path='reserve' element={<ReservationScreen />} />
+                  <Route path='location' element={<LocationPage />}>
+                     <Route path='reserve' element={<ReservationPage />} />
                      <Route element={<PublicOnlyRoute />}>
                         <Route element={<AuthLayout />}>
-                           <Route path='login' element={<LoginScreen />} />
-                           <Route path='register' element={<RegisterScreen />} />
-                           <Route path='recover' element={<RecoverScreen />} />
+                           <Route path='login' element={<LoginPage />} />
+                           <Route path='register' element={<RegisterPage />} />
+                           <Route path='recover' element={<RecoverPage />} />
                         </Route>
                      </Route>
                   </Route>
 
-                  <Route path='search-reservation' element={<SearchReservationScreen />}>
-                     <Route path='reserve' element={<ReservationScreen />} />
+                  <Route path='search-reservation' element={<SearchReservationPage />}>
+                     <Route path='reserve' element={<ReservationPage />} />
                      <Route element={<PublicOnlyRoute />}>
                         <Route element={<AuthLayout />}>
-                           <Route path='login' element={<LoginScreen />} />
-                           <Route path='register' element={<RegisterScreen />} />
-                           <Route path='recover' element={<RecoverScreen />} />
+                           <Route path='login' element={<LoginPage />} />
+                           <Route path='register' element={<RegisterPage />} />
+                           <Route path='recover' element={<RecoverPage />} />
                         </Route>
                      </Route>
                   </Route>
@@ -92,11 +92,11 @@ const AppRoutes = () => {
 
             <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/home' />}>
                <Route path='/dashboard' element={<DashboardLayout />} >
-                  <Route index element={<DashboardScreen />} />
-                  <Route path='tables' element={<MapScreen />} />
-                  <Route path='calendar' element={<CalendarScreen />} />
-                  <Route path='details' element={<UserDetailScreen />} />
-                  <Route path='store' element={<RestaurantScreen />} />
+                  <Route index element={<DashboardPage />} />
+                  <Route path='tables' element={<MapPage />} />
+                  <Route path='calendar' element={<CalendarPage />} />
+                  <Route path='details' element={<UserDetailPage />} />
+                  <Route path='store' element={<RestaurantPage />} />
                   <Route index element={<Navigate to='/dashboard' />} />
                </Route>
             </Route>

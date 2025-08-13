@@ -2,7 +2,7 @@ import { HomeHeader } from '@/components/homePage';
 import { HomeMain } from '@/components/homePage/HomeMain';
 import { Outlet } from 'react-router-dom';
 
-export const HomeScreen = () => {
+export const HomePage = () => {
    return (
       <div className='overflow-hidden'>
          <HomeHeader />
@@ -13,4 +13,4 @@ export const HomeScreen = () => {
       </div>
    )
 }
-export default HomeScreen;
+export default HomePage;

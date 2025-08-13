@@ -23,7 +23,7 @@ export const localizer = dateFnsLocalizer({
    locales,
 })
 
-export const CalendarScreen = () => {
+export const CalendarPage = () => {
    const [isOpenCreateReserve, setisOpenCreateReserve] = useState(false)
    const [isOpenStateReserve, setisOpenStateReserve] = useState(false)
    const [isOpenEditReserve, setIsOpenEditReserve] = useState(false)
@@ -156,4 +156,4 @@ export const CalendarScreen = () => {
    )
 }
 
-export default CalendarScreen;
+export default CalendarPage;

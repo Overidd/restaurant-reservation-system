@@ -40,7 +40,7 @@ const initValidation = {
   ],
 }
 
-export const RegisterScreen = () => {
+export const RegisterPage = () => {
   const {
     register,
     loginGoogle,
@@ -233,4 +233,4 @@ export const RegisterScreen = () => {
   )
 }
 
-export default RegisterScreen;
+export default RegisterPage;

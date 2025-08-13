@@ -10,7 +10,7 @@ import {
    TableStats,
 } from '@/components/mapPage';
 
-export const MapScreen = () => {
+export const MapPage = () => {
    return (
       <main
          className={cn(
@@ -45,4 +45,4 @@ export const MapScreen = () => {
    )
 }
 
-export default MapScreen;
+export default MapPage;

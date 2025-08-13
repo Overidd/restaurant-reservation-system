@@ -1,5 +1,5 @@
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '@/components/UI/common';
-import { Object } from '@/components/UI/resource';
+import { ResourceObject } from '@/components/UI/resource';
 import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
@@ -60,7 +60,7 @@ export const ObjectEditItem = ({
          onOpenChange={setOpen}
       >
          <PopoverTrigger asChild>
-            <Object
+            <ResourceObject
                object={object}
                highlighted={highlighted}
                hasConflict={hasConflict}

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { LocationsList, MapaLoactions } from '@/components/locationPage';
 import { useLoadRestaurantActive } from '@/hook/locationPage';
 
-export const LocationScreen = () => {
+export const LocationPage = () => {
   const {
     isLoading,
     restaurants
@@ -27,4 +27,4 @@ export const LocationScreen = () => {
   )
 }
 
-export default LocationScreen;
+export default LocationPage;

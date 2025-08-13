@@ -15,7 +15,7 @@ import {
 } from '@/components/UI/text';
 
 
-export const ProductScreen = () => {
+export const ProductPage = () => {
    return (
       <div className='mt-40 max-w-6xl w-[90%] mx-auto space-y-10'>
          <header className='space-y-10'>
@@ -36,4 +36,4 @@ export const ProductScreen = () => {
    )
 }
 
-export default ProductScreen;
+export default ProductPage;

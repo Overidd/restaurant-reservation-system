@@ -2,7 +2,7 @@ import { cn } from '@/ultils';
 import { Cuboid } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export const Object = ({
+export const ResourceObject = ({
    object,
    isCursorPreview = false,
    highlighted = false,

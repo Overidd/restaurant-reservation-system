@@ -97,20 +97,7 @@ const getChairPositions = (chairCount, size) => {
    return positions
 }
 
-// interface TableItemProps {
-//    className?: string
-//    onClick?: () => void
-//    name?: string
-//    size?: 'small' | 'medium' | 'big'
-//    color?: keyof typeof colors
-//    user?: any
-//    chairs?: number
-//    rotation?: number
-//    isHighlighted?: boolean
-//    [key: string]: any
-// }
-
-export const Table = ({
+export const ResourceTable = ({
    className,
    onClick,
    name,
@@ -245,7 +232,7 @@ export const Table = ({
    )
 }
 
-Table.propTypes = {
+ResourceTable.propTypes = {
    className: PropTypes.string,
    onClick: PropTypes.func,
    name: PropTypes.string,

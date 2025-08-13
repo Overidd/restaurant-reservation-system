@@ -2,7 +2,7 @@ import { DateDiff, typeStatusTable } from '@/ultils';
 import { CalendarPlus, CheckCircle, Lock, LockOpen, OctagonX, Unlink2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipTrigger } from '../../UI/common';
-import { Table } from '../../UI/table';
+import { ResourceTable } from '../../UI/table';
 
 
 export const TableItem = ({
@@ -138,7 +138,7 @@ export const TableItem = ({
          <Tooltip asChild>
             <PopoverTrigger asChild>
                <TooltipTrigger asChild>
-                  <Table
+                  <ResourceTable
                      tabIndex={0}
                      role='button'
                      onClick={handleClick}

@@ -1,4 +1,4 @@
-import { Object } from '@/components/UI/resource';
+import { ResourceObject } from '@/components/UI/resource';
 import { usePaintedGrid } from '@/hook/common';
 import { useReservationWithToast } from '@/hook/dashboard';
 import { typeResource } from '@/ultils';
@@ -81,7 +81,7 @@ export const MapState = ({
                </div>
             case typeResource.OBJECT:
                return <div key={resource.id} style={style}>
-                  <Object
+                  <ResourceObject
                      object={resource}
                   />
                </div>

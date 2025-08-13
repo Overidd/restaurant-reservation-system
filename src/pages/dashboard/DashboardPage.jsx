@@ -4,7 +4,7 @@ import { Button } from '@/components/UI/common'
 import { useDownloadPdf, useLoadDashboard } from '@/hook/dashboard'
 import { FileText, LoaderCircle } from 'lucide-react'
 
-export const DashboardScreen = () => {
+export const DashboardPage = () => {
    const {
       metrics,
       trends,
@@ -64,4 +64,4 @@ export const DashboardScreen = () => {
       </div>
    )
 }
-export default DashboardScreen; 
+export default DashboardPage; 

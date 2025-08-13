@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --no-ignore",
     "preview": "vite preview",
+    "test": "vitest --watch",
     "seed-firestore": "node ./src/doman/services/firebase/seed.js"
   },
   "dependencies": {
@@ -41,6 +42,10 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.3.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
@@ -53,8 +58,10 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "jsdom": "^26.1.0",
     "prop-types": "^15.8.1",
     "tw-animate-css": "^1.3.4",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
   }
 }

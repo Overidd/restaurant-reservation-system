@@ -1,9 +1,8 @@
 import { usePaintedGrid } from '@/hook/common';
 import { typeResource } from '@/ultils';
+import { ResourceObject } from '../resource';
+import { CardTable, ResourceTable } from '.';
 import { cn } from '@/ultils/cn';
-import PropTypes from 'prop-types';
-import { CardTable, Table } from '.';
-import { Object } from '../resource';
 
 export const TableList = ({
    rows,
@@ -14,7 +13,6 @@ export const TableList = ({
    isLoading = false,
    resources = []
 }) => {
-
    const paintedBoard = usePaintedGrid({
       rows: rows,
       columns: columns,
@@ -26,10 +24,19 @@ export const TableList = ({
                   key={resource.id}
                   style={style}
                >
-                  <TableListAction
-                     resource={resource}
-                     onSelectTables={onSelectTables}
-                     onCurrentTable={onCurrentTable}
+                  <ResourceTable
+                     color={resource.status}
+                     size={resource?.size}
+                     chairs={resource?.chairs}
+                     name={resource?.name}
+                     rotation={resource?.rotation}
+                     onClick={() =>
+                        onSelectTables(resource)
+                     }
+                     onPreview={(e) => {
+                        e.stopPropagation();
+                        onCurrentTable(resource);
+                     }}
                   />
                </div>
             case typeResource.OBJECT:
@@ -37,7 +44,7 @@ export const TableList = ({
                   key={resource.id}
                   style={style}
                >
-                  <Object
+                  <ResourceObject
                      object={resource}
                   />
                </div>
@@ -45,7 +52,8 @@ export const TableList = ({
                break;
          }
       },
-      renderEmptyCell: (x, y) => <div key={`empty-node-${x}-${y}`} />
+      renderEmptyCell: (x, y) =>
+         <div key={`empty-node-${x}-${y}`} />
    })
 
    return (
@@ -62,35 +70,3 @@ export const TableList = ({
       </CardTable>
    );
 };
-
-TableList.propTypes = {
-   className: PropTypes.string,
-   onChangeTable: PropTypes.func,
-   selectedTables: PropTypes.array,
-   dataTables: PropTypes.array,
-   rows: PropTypes.number,
-   columns: PropTypes.number
-};
-
-
-const TableListAction = ({
-   onSelectTables,
-   onCurrentTable,
-   resource,
-}) => {
-
-   return (
-      <Table
-         onClick={() => onSelectTables(resource)}
-         onPreview={(e) => {
-            e.stopPropagation();
-            onCurrentTable(resource);
-         }}
-         color={resource.status}
-         size={resource?.size}
-         chairs={resource?.chairs}
-         name={resource?.name}
-         rotation={resource?.rotation}
-      />
-   )
-}

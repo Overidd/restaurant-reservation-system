@@ -1,4 +1,4 @@
 export * from './CardTable';
-export * from './Table';
+export * from './ResourceTable';
 export * from './TableList';
 

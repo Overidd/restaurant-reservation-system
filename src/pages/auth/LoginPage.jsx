@@ -27,7 +27,7 @@ const initValidation = {
    ]
 };
 
-export const LoginScreen = () => {
+export const LoginPage = () => {
    const {
       login,
       loginGoogle,
@@ -160,4 +160,4 @@ export const LoginScreen = () => {
    )
 }
 
-export default LoginScreen;
+export default LoginPage;
