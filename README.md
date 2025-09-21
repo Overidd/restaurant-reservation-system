@@ -1,5 +1,6 @@
 # **La Canga 2**
 
+
 ## Pasos para iniciar el proyecto
 
 1. Clona el repositorio:
